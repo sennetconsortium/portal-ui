@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import SidebarBtn from "../../components/SidebarBtn";
 import NotFound from "../../components/custom/NotFound";
 import AppFooter from "../../components/custom/layout/AppFooter";
@@ -9,6 +9,7 @@ import Samples from "../../components/custom/organ/Samples";
 import OrganViewHeader from "../../components/custom/organ/ViewHeader";
 import AppContext from "../../context/AppContext";
 import useOrganDetail from "../../hooks/organ/useOrganDetail";
+import HumanReferenceAtlas from "../../components/custom/organ/HumanReferenceAtlas";
 
 const Organ = () => {
     const { isRegisterHidden } = useContext(AppContext);
@@ -38,6 +39,15 @@ const Organ = () => {
                             >
                                 <li className="nav-item">
                                     <a
+                                        href="#HumanReferenceAtlas"
+                                        className="nav-link "
+                                        data-bs-parent="#sidebar"
+                                    >
+                                        Human Reference Atlas
+                                    </a>
+                                </li>
+                                <li className="nav-item">
+                                    <a
                                         href="#DataTypes"
                                         className="nav-link "
                                         data-bs-parent="#sidebar"
@@ -63,6 +73,9 @@ const Organ = () => {
 
                         {/* Title and badges */}
                         <OrganViewHeader organ={organDetail} />
+
+                        {/* Human Reference Atlas */}
+                        <HumanReferenceAtlas id="HumanReferenceAtlas" uberonUrl={organDetail.uberonUrl}/>
 
                         {/* Data Types */}
                         <DataTypeQuantities
