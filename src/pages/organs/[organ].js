@@ -37,15 +37,17 @@ const Organ = () => {
                                 id="sidebar-nav"
                                 className="nav list-group rounded-1 text-sm-start"
                             >
-                                <li className="nav-item">
-                                    <a
-                                        href="#HumanReferenceAtlas"
-                                        className="nav-link "
-                                        data-bs-parent="#sidebar"
-                                    >
-                                        Human Reference Atlas
-                                    </a>
-                                </li>
+                                {organDetail.hraSupport && ( 
+                                    <li className="nav-item">
+                                        <a
+                                            href="#HumanReferenceAtlas"
+                                            className="nav-link "
+                                            data-bs-parent="#sidebar"
+                                        >
+                                            Human Reference Atlas
+                                        </a>
+                                    </li>
+                                )}
                                 <li className="nav-item">
                                     <a
                                         href="#DataTypes"
@@ -75,7 +77,9 @@ const Organ = () => {
                         <OrganViewHeader organ={organDetail} />
 
                         {/* Human Reference Atlas */}
-                        <HumanReferenceAtlas id="HumanReferenceAtlas" uberonUrl={organDetail.uberonUrl}/>
+                        {organDetail.hraSupport && ( 
+                            <HumanReferenceAtlas id="HumanReferenceAtlas" uberonUrl={organDetail.uberonUrl}/>
+                        )}
 
                         {/* Data Types */}
                         <DataTypeQuantities
