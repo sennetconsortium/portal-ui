@@ -77,9 +77,9 @@ function EditUpload() {
                 // Set state with default values that will be PUT to Entity API to update
                 let _values = {
                     'title': data.title,
-                    'ingest_task': data.ingest_task,
+                    'ingest_task': adminGroup ? data.ingest_task : undefined,
                     'description': data.description,
-                    'assigned_to_group_name': data.assigned_to_group_name,
+                    'assigned_to_group_name': adminGroup ? data.assigned_to_group_name : undefined,
                     'status': data.status,
                 }
 

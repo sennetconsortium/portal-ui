@@ -169,8 +169,8 @@ export default function EditDataset() {
                     'description': data.description,
                     'dataset_info': data.dataset_info,
                     'direct_ancestor_uuids': immediate_ancestors,
-                    'assigned_to_group_name': data.assigned_to_group_name,
-                    'ingest_task': data.ingest_task,
+                    'assigned_to_group_name': adminGroup ? data.assigned_to_group_name : undefined,
+                    'ingest_task': adminGroup ? data.ingest_task : undefined,
                     'contains_human_genetic_sequences': data.contains_human_genetic_sequences
                 })
                 setEditMode("Edit")
