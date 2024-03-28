@@ -34,6 +34,7 @@
     "sass": "^1.57.1",
     "search-ui": "file:search-ui",
     "sharp": "^0.32.3",
-    "vitessce": "^3.3.7"
+    "vitessce": "^3.3.7",
+    "ws": "^8.16.0"
   }
 }

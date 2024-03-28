@@ -158,3 +158,14 @@ fieldset[disabled] .btn-dataset.active {
   background-color: #000000;
 }
 
+.btn-illusion-secondary {
+   border-color: hsl(0, 0%, 80%);
+   border-radius: 4px;
+   border-style: solid;
+   border-width: 1px;
+   padding: 9px;
+  .form-check {
+    min-height: inherit;
+    margin-bottom: 0;
+  }
+ }

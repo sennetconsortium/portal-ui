@@ -230,39 +230,89 @@ export function getStatusDefinition(status) {
     return msg;
 }
 
+export function getJobStatusDefinition(status) {
+    let msg
+    if (status) {
+        status = status.toUpperCase();
+        switch (status) {
+            case 'QUEUED':
+                msg = <span>Queued in the rq service.</span>
+                break;
+            case 'COMPLETE':
+                msg = <span>Job returned successfully.</span>
+                break;
+            case 'ERROR':
+                msg = <span>Job returned with errors.</span>
+                break;
+            case 'FAILED':
+                msg = <span>Exception thrown in job.</span>
+                break;
+            case 'STARTED':
+                msg = <span>Job started.</span>
+                break;
+            case 'STOPPED':
+                msg = <span>Job stopped.</span>
+                break;
+            case 'CANCELED':
+                msg = <span>Job cancelled.</span>
+                break;
+            default:
+                msg = <span>The job has been {status}.</span>
+                break;
+        }
+    }
+    return msg;
+}
+
+export function getJobTypeColor(type) {
+    if (type) {
+        switch (type.toLowerCase()) {
+            case "metadata validation":
+                return '#ffc766'
+            case "metadata registration":
+                return '#fcea7e'
+            case "entity validation":
+                return '#3b6b23'
+            case "entity registration":
+                return '#47991f'
+            default:
+                break;
+        }
+    }
+}
+
 export function getStatusColor(status) {
     let badge_class = '';
 
     if (status) {
         switch (status.toUpperCase()) {
             case "NEW":
-                badge_class = "badge-purple";
-                break;
-            case "INCOMPLETE":
-                badge_class = "badge-warning";
-                break;
             case "REOPENED":
                 badge_class = "badge-purple";
                 break;
-            case "REORGANIZED":
-                badge_class = "badge-info";
-                break;
-            case "VALID":
-                badge_class = "badge-success";
+            case "INCOMPLETE":
+            case "CANCELED":
+            case "STOPPED":
+                badge_class = "badge-warning";
                 break;
             case "INVALID":
+            case "ERROR":
+            case "FAILED":
                 badge_class = "badge-danger";
                 break;
             case "QA":
+            case "REORGANIZED":
+            case "SUBMITTED":
                 badge_class = "badge-info";
                 break;
             case "LOCKED":
-                badge_class = "badge-secondary";
-                break;
             case "PROCESSING":
+            case "STARTED":
                 badge_class = "badge-secondary";
                 break;
             case "PUBLISHED":
+            case "COMPLETE":
+            case "VALID":
                 badge_class = "badge-success";
                 break;
             case "UNPUBLISHED":
@@ -270,14 +320,9 @@ export function getStatusColor(status) {
                 break;
             case "DEPRECATED":
                 break;
-            case "ERROR":
-                badge_class = "badge-danger";
-                break;
             case "HOLD":
+            case "QUEUED":
                 badge_class = "badge-dark";
-                break;
-            case "SUBMITTED":
-                badge_class = "badge-info";
                 break;
             default:
                 break;
@@ -364,7 +409,7 @@ export function urlify(text, blank = true, max = 40) {
 export function eq(s1, s2, insensitive = true) {
     let res = s1 === s2
     if (insensitive && s1 !== undefined && s2 !== undefined) {
-        res = s1.toLowerCase() === s2.toLowerCase()
+        res = s1?.toLowerCase() === s2?.toLowerCase()
     }
     return res
 }
@@ -444,3 +489,29 @@ export const deleteFromLocalStorage = (needle, fn = 'startsWith') => {
 }
 
 export const deleteFromLocalStorageWithSuffix = (needle) => deleteFromLocalStorage(needle, 'endsWith')
+
+export const THEME = {
+    getRGB: (color) => {
+        color = +("0x" + color.slice(1).replace(
+            color.length < 5 && /./g, '$&$&'));
+
+        let r = color >> 16;
+        let g = color >> 8 & 255;
+        let b = color & 255;
+        return {r, g, b}
+    },
+    isLightColor: (color) => {
+        const {r, g, b} = THEME.getRGB(color)
+        let hsp = Math.sqrt(0.299 * (r * r) + 0.587 * (g * g) + 0.114 * (b * b))
+        return hsp > 127.5
+    },
+    randomColor: () => {
+        let hexTab = "5553336789ABCDE0";
+        let r1 = hexTab[ Math.floor( Math.random() * 16) ];
+        let g1 = hexTab[ Math.floor( Math.random() * 16) ];
+        let b1 = hexTab[ Math.floor( Math.random() * 16) ];
+        let color = "#" + r1 + g1 + b1
+        const {r, g, b} = THEME.getRGB(color)
+        return {color, light: THEME.isLightColor(color), r, g, b};
+    },
+}

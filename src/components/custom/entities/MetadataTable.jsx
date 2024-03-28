@@ -36,7 +36,7 @@ export default function MetadataTable({data, metadata, metadataKey, filename}) {
         })
     }
 
-    const {filteredItems, filterText, searchBarComponent} = useDataTableSearch(tableData, null, ['value', 'key'])
+    const {filteredItems, filterText, searchBarComponent} = useDataTableSearch({data: tableData, fieldsToSearch: ['value', 'key']})
 
     const tableDataTSV = tableDataToTSV(metadataValues);
     const downloadURL = createDownloadUrl(tableDataTSV, 'text/tab-separated-values')

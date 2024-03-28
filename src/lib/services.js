@@ -9,7 +9,7 @@ export async function update_create_entity(uuid, body, action = "Edit", entity_t
     let url = getEntityEndPoint() + "entities/" + (action === 'Register' ? entity_type : uuid)
     let method = (action === 'Register' ? "POST" : "PUT")
 
-    return call_service(raw, url, method, headers)
+    return callService(raw, url, method, headers)
 }
 
 export async function update_create_dataset(uuid, body, action = "Edit", entityType = 'datasets') {
@@ -23,7 +23,7 @@ export async function update_create_dataset(uuid, body, action = "Edit", entityT
         let method = (action === 'Register' ? "POST" : "PUT")
         log.debug(url)
 
-        return call_service(raw, url, method)
+        return callService(raw, url, method)
     }
 }
 
@@ -193,7 +193,7 @@ export async function get_user_write_groups() {
     return await call_privs_service('user-write-groups')
 }
 
-async function call_service(raw, url, method, headers) {
+export async function callService(raw, url, method, headers) {
     headers = headers ? headers : get_headers()
     return await fetch(url, {
         method: method,

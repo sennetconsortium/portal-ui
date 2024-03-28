@@ -208,6 +208,11 @@ const AppNavbar = ({hidden, signoutHidden, innerRef}) => {
                                                       onClick={(e) => deleteTutorialCookies(e)}>
                                         {_t('Show Tutorial')}
                                     </NavDropdown.Item>
+                                    <NavDropdown.Item key={`dd-user-jobs`}
+                                                      hidden={signoutHidden}
+                                                      href='/user/jobs'>
+                                        {_t('Current Jobs')}
+                                    </NavDropdown.Item>
                                     <NavDropdown.Item key={`dd-user-logout`}
                                                       hidden={signoutHidden}
                                                       href='#'

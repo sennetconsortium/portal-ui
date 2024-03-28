@@ -1,0 +1,6 @@
+.swal2-actions .btn.btn-danger {
+  background-color: #dc3545 !important;
+  &:focus {
+    box-shadow: 0 0 0 3px rgba(216, 81, 81, 0.5);
+  }
+}

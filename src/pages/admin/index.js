@@ -9,6 +9,7 @@ import {APP_ROUTES} from "../../config/constants";
 import Spinner, {SpinnerEl} from "../../components/custom/Spinner";
 import {toast} from "react-toastify";
 import Unauthorized from '../../components/custom/layout/Unauthorized';
+import {Grid} from "@mui/material";
 
 function Login() {
     const { _t, authorized, isUnauthorized, checkUIAdminStatus, router} = useContext(AppContext)
@@ -62,6 +63,54 @@ function Login() {
         return <Unauthorized />
     }
 
+    const goToLink = (item) => window.location = item.btn.href
+
+    const adminItems = [
+        {
+            title: 'Clear Cache',
+            desc: 'Quickly refresh ontology cache.',
+            btn: {
+                text: 'Clear Cache',
+                handler: clearCache
+            },
+            img: 'static/clear-cache.jpg'
+        },
+        {
+            title: 'Jobs',
+            desc: 'View user related jobs',
+            btn: {
+                text: 'View Jobs Dashboard',
+                handler: goToLink,
+                href: '/admin/jobs'
+            },
+            img: 'static/jobs.jpg'
+        }
+    ]
+
+    const getCards = () => {
+        let results = []
+        for (let item of adminItems) {
+            results.push(
+                <Grid item xs={2} sm={4} md={3} key={item.title}>
+                    <Card className={'px-2 py-2 tooly'} style={{width: '18rem'}}>
+                        <Card.Img variant="top" src={item.img} />
+                        <Card.Body className={'mt-2 mb-2'}>
+                            <Card.Title>{item.title}</Card.Title>
+                            <Card.Text>
+                                {item.desc}
+                            </Card.Text>
+                            <Row>
+                                <Col sm={10}><Button variant="primary" onClick={() => item.btn.handler(item)}>{item.btn.text}</Button></Col>
+                                <Col sm={2}>{busy && <SpinnerEl />}</Col>
+                            </Row>
+                        </Card.Body>
+                    </Card>
+                </Grid>
+            )
+        }
+        return results
+    }
+
     return (
         <div>
             <Header title={APP_TITLE}/>
@@ -70,22 +119,11 @@ function Login() {
                 <Row md={12} className={'mt-3 mb-3'}>
                     <h4>{_t(`Administrative`)}</h4>
                 </Row>
+
                 <Row>
-                    <Col>
-                        <Card className={'px-2 py-2 tooly'} style={{width: '18rem'}}>
-                            <Card.Img variant="top" src="clear-cache.jpeg"/>
-                            <Card.Body className={'mt-2 mb-2'}>
-                                <Card.Title>Clear Cache</Card.Title>
-                                <Card.Text>
-                                    Quickly refresh ontology cache.
-                                </Card.Text>
-                                <Row>
-                                    <Col sm={10}><Button variant="primary" onClick={clearCache}>Clear Cache</Button></Col>
-                                    <Col sm={2}>{busy && <SpinnerEl />}</Col>
-                                </Row>
-                            </Card.Body>
-                        </Card>
-                    </Col>
+                    <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
+                        {getCards()}
+                    </Grid>
                 </Row>
             </Container>
             <AppFooter />

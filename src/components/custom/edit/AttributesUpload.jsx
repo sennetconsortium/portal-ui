@@ -11,7 +11,7 @@ import SenNetPopover, {SenPopoverOptions} from "../../SenNetPopover";
 import {eq, urlify} from "../js/functions";
 
 const handleErrorRow = (row) => {
-    let err = row.error
+    let err = row.error || row.message
     if (typeof row.error === 'object') {
         err = err.msg
         if (row.error.data) {
@@ -36,7 +36,16 @@ export const tableColumns = (d = '"') => [
         },
         sortable: true,
         format: (row) => {
-            const formatError = (val) => val.replaceAll(' '+d, ' <code>').replaceAll(' "', ' <code>').replaceAll(d, '</code>').replaceAll('"', '</code>')
+            const formatError = (val) => {
+                let del = d
+                if (!Array.isArray(d)) {
+                    del = [d]
+                }
+                for (let l of del) {
+                    val = val.replaceAll(' '+l, ' <code>').replaceAll(' "', ' <code>').replaceAll(l, '</code>').replaceAll('"', '</code>')
+                }
+                return val
+            }
             let err = handleErrorRow(row)
             err = formatError(err)
             return <span dangerouslySetInnerHTML={{__html: urlify(err)}} />
