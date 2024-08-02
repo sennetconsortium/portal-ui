@@ -8,7 +8,11 @@ import {
     getEntityViewUrl,
     getRequestHeaders
 } from "@/components/custom/js/functions";
-import {get_write_privilege_for_group_uuid, getAncestry} from "@/lib/services";
+import {
+    get_write_privilege_for_group_uuid,
+    getAncestryData,
+    getEntityData
+} from "@/lib/services";
 import AppContext from "@/context/AppContext";
 import Alert from 'react-bootstrap/Alert';
 import {EntityViewHeader} from "@/components/custom/layout/entity/ViewHeader";
@@ -28,8 +32,6 @@ const Metadata = dynamic(() => import("@/components/custom/entities/Metadata"))
 const Provenance = dynamic(() => import("@/components/custom/entities/Provenance"))
 const SennetVitessce = dynamic(() => import("@/components/custom/vitessce/SennetVitessce"))
 const SidebarBtn = dynamic(() => import("@/components/SidebarBtn"))
-const Spinner = dynamic(() => import("@/components/custom/Spinner"))
-const Unauthorized = dynamic(() => import("@/components/custom/layout/Unauthorized"))
 const Upload = dynamic(() => import("@/components/custom/entities/dataset/Upload"))
 
 function ViewDataset() {
@@ -56,7 +58,7 @@ function ViewDataset() {
                 // convert the data to json
                 let primary = await response.json();
                 if (!primary.error) {
-                    const ancestry = await getAncestry(primary.uuid, {})
+                    const ancestry = await getAncestryData(primary.uuid)
                     Object.assign(primary, ancestry)
                     setPrimaryDatasetInfo(primary)
                     setDatasetCategories(getAssaySplitData(primary))
@@ -69,7 +71,7 @@ function ViewDataset() {
     }
 
     useEffect(() => {
-        if (data) {
+        if (data && data.ancestors) {
             initVitessceConfig(data)
             if (datasetIs.primary(data.creation_action)) {
                 setDatasetCategories(getAssaySplitData(data))
@@ -78,7 +80,7 @@ function ViewDataset() {
             }
             fetchDataProducts(data)
         }
-    }, [data])
+    }, [data?.ancestors])
 
     // only executed on init rendering, see the []
     useEffect(() => {
@@ -86,9 +88,7 @@ function ViewDataset() {
         const fetchData = async (uuid) => {
             log.debug('dataset: getting data...', uuid)
             // get the data from the api
-            const response = await fetch("/api/find?uuid=" + uuid, getRequestHeaders());
-            // convert the data to json
-            let _data = await response.json();
+            const _data = await getEntityData(uuid);
 
             log.debug('dataset: Got data', _data)
             if (_data.hasOwnProperty("error")) {
@@ -96,10 +96,12 @@ function ViewDataset() {
                 setErrorMessage(_data["error"])
                 setData(false)
             } else {
-                const ancestry = await getAncestry(_data.uuid, {})
-                Object.assign(_data, ancestry)
                 // set state with the result
-                setData(_data);
+                setData(_data)
+                const ancestry = await getAncestryData(_data.uuid)
+                Object.assign(_data, ancestry)
+                setData(_data)
+
                 const doi = await fetchDataCite(_data.doi_url)
                 setDoiData(doi?.data)
                 for (const ancestor of ancestry.ancestors) {
@@ -127,7 +129,7 @@ function ViewDataset() {
         }
     }, [router]);
 
-    if (isPreview(data))  {
+    if (isPreview(data, error))  {
         return getPreviewView(data)
     } else {
         return (
@@ -272,7 +274,7 @@ function ViewDataset() {
                                                     data={data}
                                                     metadata={data?.ingest_metadata?.metadata}
                                                     mappedMetadata={data?.cedar_mapped_metadata}
-                                                    hasLineageMetadata={true}/>
+                                                />
                                             }
 
                                             {/*Files*/}

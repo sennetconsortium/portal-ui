@@ -12,7 +12,7 @@ import {
 } from '../lib/services'
 import {deleteCookies} from "../lib/auth";
 import {APP_ROUTES} from "../config/constants";
-import {getIngestEndPoint, STORAGE_KEY} from "../config/config";
+import {STORAGE_KEY} from "../config/config";
 import AppModal from "../components/AppModal";
 import Spinner from "../components/custom/Spinner";
 import Unauthorized from "@/components/custom/layout/Unauthorized";
@@ -267,12 +267,14 @@ export const AppProvider = ({ cache, banners, children }) => {
         setSidebarVisible(!sidebarVisible)
     }
 
-    const isPreview = (data) => {
+    const isPreview = (data, error) => {
+        log.debug('isPreview', data, error, authorized)
+        if (error && hasPublicAccess(data)) return false
         return ((isUnauthorized(data) || isAuthorizing()) || !data)
     }
 
     const getPreviewView = (data) => {
-        return data == null ? <Spinner/> : <Unauthorized/>
+        return isUnauthorized(data) && data != null ? <Unauthorized/> : <Spinner/>
     }
     
     return (

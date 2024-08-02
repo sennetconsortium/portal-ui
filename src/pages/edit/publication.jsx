@@ -8,7 +8,7 @@ import Form from 'react-bootstrap/Form';
 import {Layout} from '@elastic/react-search-ui-views'
 import '@elastic/react-search-ui-views/lib/styles/styles.css'
 import log from 'loglevel'
-import {getAncestry, update_create_entity} from '../../lib/services'
+import {getAncestryData, getEntityData, update_create_entity} from '../../lib/services'
 import {
     cleanJson,
     eq,
@@ -28,8 +28,6 @@ const EntityFormGroup = dynamic(() => import('../../components/custom/layout/ent
 const Header = dynamic(() => import("../../components/custom/layout/Header"))
 const NotFound = dynamic(() => import("../../components/custom/NotFound"))
 const SenNetPopover = dynamic(() => import("../../components/SenNetPopover"))
-const Spinner = dynamic(() => import("../../components/custom/Spinner"))
-const Unauthorized = dynamic(() => import("../../components/custom/layout/Unauthorized"))
 
 
 export default function EditPublication() {
@@ -67,18 +65,17 @@ export default function EditPublication() {
         const fetchData = async (uuid) => {
             log.debug('editPublication: getting data...', uuid)
             // get the data from the api
-            const response = await fetch("/api/find?uuid=" + uuid, getRequestHeaders());
-            // convert the data to json
-            const _data = await response.json();
+            const _data = await getEntityData(uuid)
 
             log.debug('editPublication: Got data', _data)
             if (_data.hasOwnProperty("error")) {
                 setError(true)
                 setErrorMessage(_data["error"])
             } else {
-                const ancestry = await getAncestry(_data.uuid, {otherEndpoints: ['immediate_ancestors']})
+                setData(_data)
+                const ancestry = await getAncestryData(_data.uuid, {otherEndpoints: ['immediate_ancestors']})
                 Object.assign(_data, ancestry)
-                setData(_data);
+                setData(_data)
 
                 let immediate_ancestors = []
                 if (_data.hasOwnProperty("immediate_ancestors")) {
@@ -203,7 +200,7 @@ export default function EditPublication() {
     // TODO: remove this return when ready to support
     return <NotFound />
 
-    if (isPreview())  {
+    if (isPreview(error))  {
         return getPreviewView(data)
     } else {
 

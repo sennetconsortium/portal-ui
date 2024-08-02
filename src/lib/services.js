@@ -2,6 +2,7 @@ import { getCookie } from "cookies-next";
 import log from "loglevel";
 import { getAuth, getEntityEndPoint, getIngestEndPoint, getSearchEndPoint, getUUIDEndpoint } from "../config/config";
 import { SEARCH_ENTITIES } from "../config/search/entities";
+import {getHeaders, getRequestHeaders} from "@/components/custom/js/functions";
 
 // After creating or updating an entity, send to Entity API. Search API will be triggered during this process automatically
 
@@ -210,7 +211,7 @@ export async function get_user_write_groups() {
     return await call_privs_service('user-write-groups')
 }
 
-export async function getAncestry(uuid, {endpoints = ['ancestors', 'descendants'], otherEndpoints = []}) {
+export function getAncestry(uuid, {endpoints = ['ancestors', 'descendants'], otherEndpoints = []}) {
     const propertyNameMap = {
         'immediate_ancestors': 'parents',
         'immediate_descendants': 'children'
@@ -219,9 +220,26 @@ export async function getAncestry(uuid, {endpoints = ['ancestors', 'descendants'
     let result = {}
     for (let key of allEndpoints) {
         let endpoint = propertyNameMap[key] || key
-        result[key] = await callService(null,  `${getEntityEndPoint()}${endpoint}/${uuid}`)
+        result[key] = callService(null,  `${getEntityEndPoint()}${endpoint}/${uuid}`)
     }
     return result
+}
+
+export async function getEntityData(uuid) {
+    return await callService(null,  "/api/find?uuid=" + uuid, 'GET', getHeaders())
+}
+
+export async function getAncestryData(uuid, ops = {endpoints: ['ancestors', 'descendants'], otherEndpoints: []}) {
+
+    const ancestryPromises = getAncestry(uuid, ops)
+    const promiseSettled = await Promise.allSettled([...Object.values(ancestryPromises)])
+    let _data = {};
+    let i = 0;
+    for (let key of Object.keys(ancestryPromises)){
+        _data[key] = promiseSettled[i].value;
+        i++;
+    }
+    return _data;
 }
 
 export async function callService(raw, url, method, headers) {

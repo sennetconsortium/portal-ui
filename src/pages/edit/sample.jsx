@@ -7,7 +7,7 @@ import Form from 'react-bootstrap/Form';
 import {Layout} from "@elastic/react-search-ui-views";
 import log from "loglevel";
 import {cleanJson, eq, fetchEntity, getDOIPattern, getRequestHeaders} from "../../components/custom/js/functions";
-import {get_ancestor_organs, getAncestry, parseJson, update_create_entity} from "../../lib/services";
+import {get_ancestor_organs, getAncestryData, getEntityData, parseJson, update_create_entity} from "../../lib/services";
 import AppContext from '../../context/AppContext'
 import EntityContext, {EntityProvider} from '../../context/EntityContext'
 import {getUserName, isRuiSupported} from "../../config/config";
@@ -27,9 +27,7 @@ const RUIIntegration = dynamic(() => import("../../components/custom/edit/sample
 const RUIButton = dynamic(() => import("../../components/custom/edit/sample/rui/RUIButton"))
 const SampleCategory = dynamic(() => import("../../components/custom/edit/sample/SampleCategory"))
 const SenNetAlert = dynamic(() => import("../../components/SenNetAlert"))
-const Spinner = dynamic(() => import("../../components/custom/Spinner"))
 const ThumbnailSelector = dynamic(() => import("../../components/custom/edit/ThumbnailSelector"))
-const Unauthorized = dynamic(() => import("../../components/custom/layout/Unauthorized"))
 
 function EditSample() {
     const {
@@ -112,18 +110,18 @@ function EditSample() {
         const fetchData = async (uuid) => {
             log.debug('editSample: getting data...', uuid)
             // get the data from the api
-            const response = await fetch("/api/find?uuid=" + uuid, getRequestHeaders());
-            // convert the data to json
-            const _data = await response.json();
+            const _data = await getEntityData(uuid)
 
             log.debug('editSample: Got data', _data)
             if (_data.hasOwnProperty("error")) {
                 setError(true)
                 setErrorMessage(_data["error"])
             } else {
-                const ancestry = await getAncestry(_data.uuid, {otherEndpoints: ['immediate_ancestors']})
+
+                setData(_data)
+                const ancestry = await getAncestryData(_data.uuid, {otherEndpoints: ['immediate_ancestors']})
                 Object.assign(_data, ancestry)
-                setData(_data);
+                setData(_data)
 
                 checkProtocolUrl(_data.protocol_url)
 
@@ -377,7 +375,7 @@ function EditSample() {
         }
     }
 
-    if (isPreview())  {
+    if (isPreview(error))  {
         return getPreviewView(data)
     } else {
         return (

@@ -3,7 +3,7 @@ import React, {useContext, useEffect, useState} from "react";
 import {useRouter} from 'next/router';
 import log from "loglevel";
 import {getRequestHeaders} from "@/components/custom/js/functions";
-import {get_write_privilege_for_group_uuid, getAncestry} from "@/lib/services";
+import {get_write_privilege_for_group_uuid, getAncestryData, getEntityData} from "@/lib/services";
 import AppContext from "@/context/AppContext";
 import Alert from 'react-bootstrap/Alert';
 import {EntityViewHeader} from "@/components/custom/layout/entity/ViewHeader";
@@ -18,9 +18,7 @@ const Metadata = dynamic(() => import("@/components/custom/entities/Metadata"))
 const Protocols = dynamic(() => import("@/components/custom/entities/sample/Protocols"))
 const Provenance = dynamic(() => import( "@/components/custom/entities/Provenance"))
 const SidebarBtn = dynamic(() => import("@/components/SidebarBtn"))
-const Spinner = dynamic(() => import("@/components/custom/Spinner"))
 const Tissue = dynamic(() => import("@/components/custom/entities/sample/Tissue"))
-const Unauthorized = dynamic(() => import("@/components/custom/layout/Unauthorized"))
 
 
 function ViewSample() {
@@ -39,9 +37,7 @@ function ViewSample() {
         const fetchData = async (uuid) => {
             log.debug('sample: getting data...', uuid)
             // get the data from the api
-            const response = await fetch("/api/find?uuid=" + uuid, getRequestHeaders());
-            // convert the data to json
-            let _data = await response.json();
+            const _data = await getEntityData(uuid)
 
             log.debug('sample: Got data', _data)
             if (_data.hasOwnProperty("error")) {
@@ -49,10 +45,10 @@ function ViewSample() {
                 setErrorMessage(_data["error"])
                 setData(false)
             } else {
-                const ancestry = await getAncestry(_data.uuid, {})
+                setData(_data)
+                const ancestry = await getAncestryData(_data.uuid)
                 Object.assign(_data, ancestry)
-                // set state with the result
-                setData(_data);
+                setData(_data)
                 for (const ancestor of _data.ancestors) {
                     log.debug(ancestor)
                     if (ancestor.metadata && Object.keys(ancestor.metadata).length) {
@@ -80,7 +76,7 @@ function ViewSample() {
         }
     }, [router]);
 
-    if (isPreview(data))  {
+    if (isPreview(data, error))  {
         return getPreviewView(data)
     } else {
         return (
@@ -173,7 +169,7 @@ function ViewSample() {
                                                     data={data}
                                                     metadata={data?.metadata}
                                                     mappedMetadata={data?.cedar_mapped_metadata}
-                                                    hasLineageMetadata={true}/>
+                                                    />
                                             }
 
                                             {/*Protocols*/}

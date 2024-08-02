@@ -385,7 +385,7 @@ function Provenance({nodeData}) {
             const graph = new GraphGeneric(graphOps)
             graph.service({callback: handleResult, url: url.replace('{id}', itemId)})
         }
-    }, [data])
+    }, [data?.ancestors, data?.descendants])
 
     const handleModal = (e) => {
         setShowModal(!showModal)

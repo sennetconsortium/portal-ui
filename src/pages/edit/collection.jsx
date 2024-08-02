@@ -8,7 +8,7 @@ import Alert from 'react-bootstrap/Alert';
 import {Layout} from '@elastic/react-search-ui-views'
 import '@elastic/react-search-ui-views/lib/styles/styles.css'
 import log from 'loglevel'
-import {update_create_entity} from '../../lib/services'
+import {getEntityData, update_create_entity} from '../../lib/services'
 import {cleanJson, eq, fetchEntity, getIdRegEx, getRequestHeaders} from '../../components/custom/js/functions'
 import AppContext from '../../context/AppContext'
 import EntityContext, {EntityProvider} from '../../context/EntityContext'
@@ -31,8 +31,6 @@ const EntityFormGroup = dynamic(() => import('../../components/custom/layout/ent
 const GroupSelect = dynamic(() => import("../../components/custom/edit/GroupSelect"))
 const Header = dynamic(() => import("../../components/custom/layout/Header"))
 const NotFound = dynamic(() => import("../../components/custom/NotFound"))
-const Spinner = dynamic(() => import("../../components/custom/Spinner"))
-const Unauthorized = dynamic(() => import("../../components/custom/layout/Unauthorized"))
 
 export default function EditCollection() {
     const {
@@ -87,9 +85,7 @@ export default function EditCollection() {
         const fetchData = async (uuid) => {
             log.debug('editCollection: getting data...', uuid)
             // get the data from the api
-            const response = await fetch("/api/find?uuid=" + uuid, getRequestHeaders());
-            // convert the data to json
-            const data = await response.json();
+            const data = await getEntityData(uuid)
 
             log.debug('editCollection: Got data', data)
             if (data.hasOwnProperty("error")) {
@@ -313,7 +309,7 @@ export default function EditCollection() {
     // TODO: remove this return when ready to support
     return <NotFound/>
 
-    if (isPreview() || (!isAuthorizing() && !adminGroup))  {
+    if (isPreview(error) || (!isAuthorizing() && !adminGroup))  {
         return getPreviewView(data)
     } else {
 

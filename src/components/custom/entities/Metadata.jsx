@@ -22,7 +22,7 @@ import {ViewHeaderBadges} from "../layout/entity/ViewHeaderBadges";
  * @param {Record<string, string>} [props.groups] - The groups object used to create a GroupedDataTable (i.e. Human sources) (optional)
  * @param {boolean} [props.hasLineageMetadata=false] - A boolean indicating whether lineage metadata is present (default: false)
  */
-function Metadata({data, metadata, mappedMetadata, groups, hasLineageMetadata = false}) {
+function Metadata({data, metadata, mappedMetadata, groups}) {
     const {cache} = useContext(AppContext)
     const [headerBadges, setHeaderBadges] = useState(null)
 
@@ -87,7 +87,7 @@ function Metadata({data, metadata, mappedMetadata, groups, hasLineageMetadata = 
 
     return (
         <SenNetAccordion title={'Metadata'} afterTitle={headerBadges}>
-            {hasLineageMetadata ? (
+            {data.ancestors ? (
                     <Tab.Container defaultActiveKey={data.sennet_id}>
                         <Nav variant="pills" className={"mb-3 flex-nowrap overflow-auto"}>
                             {/*Create metadata table for current entity*/}
@@ -193,8 +193,7 @@ Metadata.propTypes = {
     data: PropTypes.object.isRequired,
     metadata: PropTypes.object,
     mappedMetadata: PropTypes.object,
-    groups: PropTypes.object,
-    hasLineageMetadata: PropTypes.bool
+    groups: PropTypes.object
 }
 
 export default Metadata

@@ -3,7 +3,7 @@ import React, {useContext, useEffect, useState} from "react";
 import {useRouter} from 'next/router';
 import log from "loglevel";
 import {eq, extractSourceMappedMetadataInfo, getRequestHeaders} from "@/components/custom/js/functions";
-import {get_write_privilege_for_group_uuid, getAncestry} from "@/lib/services";
+import {get_write_privilege_for_group_uuid, getAncestryData, getEntityData} from "@/lib/services";
 import AppContext from "@/context/AppContext";
 import Alert from 'react-bootstrap/Alert';
 import {EntityViewHeader} from "@/components/custom/layout/entity/ViewHeader";
@@ -17,9 +17,6 @@ const Metadata = dynamic(() => import("@/components/custom/entities/Metadata"))
 const Protocols = dynamic(() => import("@/components/custom/entities/sample/Protocols"))
 const Provenance = dynamic(() => import( "@/components/custom/entities/Provenance"))
 const SidebarBtn = dynamic(() => import("@/components/SidebarBtn"))
-const Spinner = dynamic(() => import("@/components/custom/Spinner"))
-const Unauthorized = dynamic(() => import("@/components/custom/layout/Unauthorized"))
-
 
 function ViewSource() {
     const router = useRouter()
@@ -39,9 +36,7 @@ function ViewSource() {
 
             log.debug('source: getting data...', uuid)
             // get the data from the api
-            const response = await fetch("/api/find?uuid=" + uuid, getRequestHeaders());
-            // convert the data to json
-            let _data = await response.json();
+            const _data = await getEntityData(uuid)
 
             log.debug('source: Got data', _data)
             if (_data.hasOwnProperty("error")) {
@@ -60,10 +55,10 @@ function ViewSource() {
                     setMappedMetadata(_data.cedar_mapped_metadata)
                     setMetadata(_data.metadata)
                 }
-                const ancestry = await getAncestry(_data.uuid, {})
+                setData(_data)
+                const ancestry = await getAncestryData(_data.uuid)
                 Object.assign(_data, ancestry)
-                // set state with the result
-                setData(_data);
+                setData(_data)
 
                 get_write_privilege_for_group_uuid(_data.group_uuid).then(response => {
                     setHasWritePrivilege(response.has_write_privs)
@@ -82,7 +77,7 @@ function ViewSource() {
         }
     }, [router]);
 
-    if (isPreview(data))  {
+    if (isPreview(data, error))  {
         return getPreviewView(data)
     } else {
         return (

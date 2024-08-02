@@ -297,7 +297,8 @@ export const EntityProvider = ({ children }) => {
         setDisableSubmit(true)
     }
 
-    const isPreview = () => {
+    const isPreview = (error) => {
+        if (error  && hasPublicAccess(data)) return false
         return ((isUnauthorized() || isAuthorizing()) || !data)
     }
 

@@ -3,7 +3,7 @@ import React, {useContext, useEffect, useState} from "react";
 import {useRouter} from 'next/router';
 import log from "loglevel";
 import {getRequestHeaders} from "@/components/custom/js/functions";
-import {get_write_privilege_for_group_uuid, getAncestry} from "@/lib/services";
+import {get_write_privilege_for_group_uuid, getAncestryData, getEntityData} from "@/lib/services";
 import AppContext from "@/context/AppContext";
 import Alert from 'react-bootstrap/Alert';
 import {EntityViewHeader} from "@/components/custom/layout/entity/ViewHeader";
@@ -16,8 +16,6 @@ const Description = dynamic(() => import("@/components/custom/entities/sample/De
 const Header = dynamic(() => import("@/components/custom/layout/Header"))
 const FileTreeView = dynamic(() => import("@/components/custom/entities/dataset/FileTreeView"))
 const SidebarBtn = dynamic(() => import("@/components/SidebarBtn"))
-const Spinner = dynamic(() => import("@/components/custom/Spinner"))
-const Unauthorized = dynamic(() => import("@/components/custom/layout/Unauthorized"))
 
 
 function ViewUpload() {
@@ -35,9 +33,7 @@ function ViewUpload() {
 
             log.debug('upload: getting data...', uuid)
             // get the data from the api
-            const response = await fetch("/api/find?uuid=" + uuid, getRequestHeaders());
-            // convert the data to json
-            const _data = await response.json();
+            const _data = await getEntityData(uuid)
 
             log.debug('upload: Got data', _data)
             if (_data.hasOwnProperty("error")) {
@@ -45,10 +41,11 @@ function ViewUpload() {
                 setErrorMessage(_data["error"])
                 setData(false)
             } else {
-                const ancestry = await getAncestry(_data.uuid, {})
+                setData(_data)
+                const ancestry = await getAncestryData(_data.uuid)
                 Object.assign(_data, ancestry)
-                // set state with the result
-                setData(_data);
+                setData(_data)
+
                 get_write_privilege_for_group_uuid(_data.group_uuid).then(response => {
                     setHasWritePrivilege(response.has_write_privs)
                 }).catch(log.error)
@@ -69,7 +66,7 @@ function ViewUpload() {
 
     console.log("Test cache in source: ", cache)
 
-    if (isPreview(data))  {
+    if (isPreview(data, error))  {
         return getPreviewView(data)
     } else {
         return (
