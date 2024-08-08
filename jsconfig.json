@@ -2,6 +2,7 @@
     "compilerOptions": {
         "baseUrl": ".",
         "paths": {
+            "search-ui/*": ["src/search-ui/src/*"],
             "@/*": ["src/*"]
         }
     },
