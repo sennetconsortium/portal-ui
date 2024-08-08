@@ -1,258 +1,311 @@
-import {FilterIsSelected, getAuth, getEntitiesIndex, getSearchEndPoint} from "../config";
-import SearchAPIConnector from "search-ui/packages/search-api-connector";
+import { getUBKGFullName } from "@/components/custom/js/functions";
+import { getAuth, getSearchEntitiesIndexEndPoint } from "@/config/config";
 
-const connector = new SearchAPIConnector({
-    indexName: getEntitiesIndex(),
-    indexUrl: getSearchEndPoint(),
-    accessToken: getAuth(),
-})
+function isTermAggregationActive(field, values) {
+    return (filters, authenticated) => {
+        for (let filter of filters) {
+            if (filter.type !== 'term')
+                continue
+            if (filter.field === field && values.includes(filter.value))
+                return true
+        }
+        return false
+    }
+}
+
+function isTermFacetVisible(field) {
+    return (filters, aggregations) => {
+        return aggregations[field] && aggregations[field].length > 0
+    }
+}
+
+function isDateFacetVisible(filters, aggregations) {
+    return Object.keys(aggregations).length > 0
+}
 
 export const SEARCH_ENTITIES = {
-    alwaysSearchOnInitialLoad: true,
-    searchQuery: {
-        excludeFilters: [
-            {
-                keyword: "entity_type.keyword",
-                value: "Publication"
-            },
-            {
-                keyword: "dataset_category.keyword",
-                value: ["codcc-processed", "lab-processed"]
-            }
-        ],
-        facets: {
-            entity_type: {
-                label: 'Entity Type',
-                type: 'value',
-                field: 'entity_type.keyword',
-                isExpanded: true,
-                filterType: 'any',
-                isFilterable: false,
-            },
-            // Used for when "Sample" is selected to show organs
-            source_type: {
-                label: 'Source Type',
-                type: 'value',
-                field: 'source_type.keyword',
-                filterType: 'any',
-                isExpanded: false,
-                isFilterable: false,
-            },
-            sample_category: {
-                label: 'Sample Category',
-                type: 'value',
-                field: 'sample_category.keyword',
-                isExpanded: false,
-                filterType: 'any',
-                isFilterable: false,
-            },
-            dataset_type: {
-                label: 'Dataset Type',
-                type: 'value',
-                field: 'dataset_type.keyword',
-                isExpanded: false,
-                filterType: 'any',
-                isFilterable: false,
-                groupBy: 'dataset_type_hierarchy.keyword',
-                groupAll: true,
-            },
-            'sources.source_type': {
-                label: 'Source Type',
-                type: 'value',
-                field: 'sources.source_type.keyword',
-                filterType: 'any',
-                isExpanded: false,
-                isFilterable: false,
-            },
-            organ: {
-                label: 'Organ',
-                type: 'value',
-                field: 'organ.keyword',
-                isExpanded: false,
-                filterType: 'any',
-                isFilterable: false,
-                groupBy: 'organ_hierarchy.keyword',
-                groupAll: false,
-            },
-            // Used for when "Dataset" or Sample Block/Section/Suspension is selected to show related organs
-            "origin_sample.organ": {
-                label: 'Organ',
-                type: 'value',
-                field: 'origin_sample.organ.keyword',
-                isExpanded: false,
-                filterType: 'any',
-                isFilterable: false,
-                groupBy: 'origin_sample.organ_hierarchy.keyword',
-                groupAll: false,
-            },
-            // Used for when "Dataset/Sample" is selected to show related sources
-            "source.source_type": {
-                label: 'Source Type',
-                type: 'value',
-                field: 'source.source_type.keyword',
-                filterType: 'any',
-                isExpanded: false,
-                isFilterable: false,
-            },
-            has_rui_information: {
-                label: 'Is Spatially Registered',
-                type: 'value',
-                field: 'has_rui_information.keyword',
-                isExpanded: false,
-                filterType: 'any',
-                isFilterable: false,
-            },
-            'rui_location_anatomical_locations.label': {
-                label: 'Anatomical Locations',
-                type: 'value',
-                field: 'rui_location_anatomical_locations.label.keyword',
-                isExpanded: false,
-                filterType: 'any',
-                isFilterable: false,
-            },
-             'metadata': {
-                label: 'Has Metadata',
-                type: 'exists',
-                field: 'metadata',
-                isExpanded: false,
-                filterType: 'any',
-                isFilterable: false,
-            },
-            'ingest_metadata.metadata': {
-                label: 'Has Metadata',
-                type: 'exists',
-                field: 'ingest_metadata.metadata',
-                isExpanded: false,
-                filterType: 'any',
-                isFilterable: false,
-            },
-            status: {
-                label: 'Status',
-                type: 'value',
-                field: 'status.keyword',
-                isExpanded: false,
-                filterType: 'any',
-                isFilterable: false,
-            },
-            group_name: {
-                label: 'Data Provider Group',
-                type: 'value',
-                field: 'group_name.keyword',
-                isExpanded: false,
-                filterType: 'any',
-                isFilterable: false,
-            },
-            created_by_user_displayname: {
-                label: 'Registered By',
-                type: 'value',
-                field: 'created_by_user_displayname.keyword',
-                isExpanded: false,
-                filterType: 'any',
-                isFilterable: false,
-            },
-            created_timestamp: {
-                label: 'Creation Date',
-                type: 'range',
-                field: 'created_timestamp',
-                isExpanded: false,
-                filterType: 'any',
-                isFilterable: true,
-                uiType: 'daterange',
-            },
-            last_modified_timestamp: {
-                label: 'Modification Date',
-                type: 'range',
-                field: 'last_modified_timestamp',
-                isExpanded: false,
-                filterType: 'any',
-                isFilterable: true,
-                uiType: 'daterange',
-            },
-        },
-        disjunctiveFacets: [],
-        conditionalFacets: {
-            // Show 'origin_sample.organ' facet if 'Dataset' or Sample Block/Section/Suspension is selected
-            "origin_sample.organ": ({filters}) => {
-                return filters.some(
-                    (filter) =>
-                        (filter.field === 'entity_type' && filter.values.includes('Dataset')) ||
-                        (filter.field === 'sample_category' && (filter.values.includes('Block') ||
-                            filter.values.includes('Section') || filter.values.includes('Suspension')))
-                )
-            },
-            // Show 'metadata' facet if 'Sample' or Sample Block/Section/Suspension is selected
-            'metadata': ({filters}) => {
-                return filters.some(
-                    (filter) =>
-                        (filter.field === 'entity_type' && filter.values.some(r=> ['Source', 'Collection', 'Publication'].includes(r))  ) ||
-                        (filter.field === 'sample_category' && (filter.values.includes('Block') ||
-                            filter.values.includes('Section') || filter.values.includes('Suspension')))
-                )
-            },
-             'ingest_metadata.metadata': ({filters}) => {
-                return filters.some(
-                    (filter) =>
-                        (filter.field === 'entity_type' && filter.values.includes('Dataset'))
-                )
-            },
-            // Only show 'organ' facet if 'Sample' is selected from the entity type facet
-            organ: FilterIsSelected('entity_type', 'Sample'),
-            'rui_location_anatomical_locations.label': FilterIsSelected('entity_type', 'Sample'),
-
-            sample_category: FilterIsSelected('entity_type', 'Sample'),
-
-            // Only show 'source.source_type' facet if 'Sample' is selected from the entity type facet
-            "source.source_type": ({filters}) => {
-                return filters.some(
-                    (filter) =>
-                        filter.field === 'entity_type' && filter.values.includes('Sample')
-                )
-            },
-            // Only show 'source' facet if 'Source' is selected from the entity type facet
-            source_type: FilterIsSelected('entity_type', 'Source'),
-            // Only show 'sources' facet if 'Dataset' is selected from the entity type facet
-            'sources.source_type': FilterIsSelected('entity_type', 'Dataset'),
-        },
-        search_fields: {
-            "sennet_id^4": {type: 'value'},
-            "group_name^3": {type: 'value'},
-            "dataset_type^2": {type: 'value'},
-            "sample_category^2": {type: 'value'},
-            "entity_type^2": {type: 'value'},
-            "status^2": {type: 'value'},
-            all_text: {type: 'value'},
-        },
-        source_fields: [
-            'sennet_id',
-            'entity_type',
-            'uuid',
-            'lab_tissue_sample_id',
-            'lab_source_id',
-            'lab_dataset_id',
-            'sample_category',
-            'group_uuid',
-            'group_name',
-            'source_type',
-            'dataset_type',
-            'status',
-            'origin_sample.organ',
-            'organ',
-            'title',
-            'description',
-        ],
+    connection: {
+        url: getSearchEntitiesIndexEndPoint(),
+        token: getAuth,
     },
-    initialState: {
-        resultsPerPage: 10000,
-        sortList: [{
+    initial: {
+        filters: [],
+        sort: {
             field: "last_modified_timestamp",
-            direction: "desc"
-        }]
+            order: "desc"
+        },
+        pageNumber: 1,
+        pageSize: 10,
     },
+    trackTotalHits: true,
     trackUrlState: true,
-    apiConnector: connector,
-    hasA11yNotifications: true,
-    a11yNotificationMessages: {
-        searchResults: ({start, end, totalResults, searchTerm}) =>
-            `Searching for "${searchTerm}". Showing ${start} to ${end} results out of ${totalResults}.`,
-    },
+    facets: [
+        {
+            label: 'Entity Type',
+            name: 'entity_type',
+            field: 'entity_type.keyword',
+            type: 'term',
+            aggregation: {
+                type: 'term',
+                isActive: true,
+                size: 40,
+            },
+            transformFunction: getUBKGFullName,
+            isVisible: isTermFacetVisible('entity_type'),
+            isOptionVisible: (option, _, _) => option.count > 0
+        },
+        {
+            label: 'Source Type',
+            name: 'source_type',
+            field: 'source_type.keyword',
+            type: 'term',
+            aggregation: {
+                type: 'term',
+                isActive: isTermAggregationActive('entity_type', ['Source']),
+                size: 40,
+            },
+            transformFunction: getUBKGFullName,
+            isVisible: isTermFacetVisible('source_type'),
+            isOptionVisible: (option, _, _) => option.count > 0
+        },
+        {
+            label: 'Sample Category',
+            name: 'sample_category',
+            field: 'sample_category.keyword',
+            type: 'term',
+            aggregation: {
+                type: 'term',
+                isActive: isTermAggregationActive('entity_type', ['Sample']),
+                size: 40,
+            },
+            transformFunction: getUBKGFullName,
+            isVisible: isTermFacetVisible('sample_category'),
+            isOptionVisible: (option, _, _) => option.count > 0
+        },
+        {
+            label: 'Dataset Type',
+            name: 'dataset_type',
+            field: 'dataset_type.keyword',
+            type: 'term',
+            aggregation: {
+                type: 'term',
+                isActive: true,
+                size: 40,
+            },
+            transformFunction: getUBKGFullName,
+            isVisible: isTermFacetVisible('dataset_type'),
+            isOptionVisible: (option, _, _) => option.count > 0
+        },
+        {
+            label: 'Source Type',
+            name: 'sources.source_type',
+            field: 'sources.source_type.keyword',
+            type: 'term',
+            aggregation: {
+                type: 'term',
+                isActive: isTermAggregationActive('entity_type', ['Dataset']),
+                size: 40,
+            },
+            transformFunction: getUBKGFullName,
+            isVisible: isTermFacetVisible('sources.source_type'),
+            isOptionVisible: (option, _, _) => option.count > 0
+        },
+        {
+            label: 'Organ',
+            name: 'organ',
+            field: 'organ.keyword',
+            type: 'term',
+            aggregation: {
+                type: 'term',
+                isActive: isTermAggregationActive('entity_type', ['Sample']),
+                size: 40,
+            },
+            transformFunction: getUBKGFullName,
+            isVisible: isTermFacetVisible('organ'),
+            isOptionVisible: (option, _, _) => option.count > 0
+        },
+        {
+            label: 'Organ',
+            name: 'origin_sample.organ',
+            field: 'origin_sample.organ.keyword',
+            type: 'term',
+            aggregation: {
+                type: 'term',
+                isActive: (filters, authenticated) => {
+                    for (let filter of filters) {
+                        if (filter.type !== 'term')
+                            continue
+                        if (filter.field === 'entity_type' && filter.value === 'Dataset')
+                            return true
+                        if (filter.field === 'sample_category' && ['Block', 'Section', 'Suspension'].includes(filter.value))
+                            return true
+                    }
+                    return false
+                },
+                size: 40,
+            },
+            transformFunction: getUBKGFullName,
+            isVisible: isTermFacetVisible('origin_sample.organ'),
+            isOptionVisible: (option, _, _) => option.count > 0
+        },
+        {
+            label: 'Source Type',
+            name: 'source.source_type',
+            field: 'source.source_type.keyword',
+            type: 'term',
+            aggregation: {
+                type: 'term',
+                isActive: isTermAggregationActive('entity_type', ['Sample']),
+                size: 40,
+            },
+            transformFunction: getUBKGFullName,
+            isVisible: isTermFacetVisible('source.source_type'),
+            isOptionVisible: (option, _, _) => option.count > 0
+        },
+        {
+            label: 'Is Spatially Registered',
+            name: 'has_rui_information',
+            field: 'has_rui_information.keyword',
+            type: 'term',
+            aggregation: {
+                type: 'term',
+                isActive: true,
+                size: 40,
+            },
+            transformFunction: getUBKGFullName,
+            isVisible: isTermFacetVisible('has_rui_information'),
+            isOptionVisible: (option, _, _) => option.count > 0
+        },
+        {
+            label: 'Anatomical Locations',
+            name: 'rui_location_anatomical_locations.label',
+            field: 'rui_location_anatomical_locations.label.keyword',
+            type: 'term',
+            aggregation: {
+                type: 'term',
+                isActive: isTermAggregationActive('entity_type', ['Sample']),
+                size: 40,
+            },
+            transformFunction: getUBKGFullName,
+            isVisible: isTermFacetVisible('rui_location_anatomical_locations.label'),
+            isOptionVisible: (option, _, _) => option.count > 0
+        },
+        {
+            label: 'Has Metadata',
+            name: 'has_metadata',
+            field: 'has_metadata.keyword',
+            type: 'term',
+            aggregation: {
+                type: 'term',
+                isActive: (filters, authenticated) => {
+                    for (let filter of filters) {
+                        if (filter.type !== 'term')
+                            continue
+                        if (filter.field === 'entity_type' && ['Source', 'Collection', 'Publication'].includes(filter.value))
+                            return true
+                        if (filter.field === 'sample_category' && ['Block', 'Section', 'Suspension'].includes(filter.value))
+                            return true
+                    }
+                    return false
+                },
+                size: 40,
+            },
+            transformFunction: getUBKGFullName,
+            isVisible: isTermFacetVisible('has_metadata'),
+            isOptionVisible: (option, _, _) => option.count > 0
+        },
+        {
+            label: 'Has Metadata',
+            name: 'ingest_metadata.metadata',
+            field: 'ingest_metadata.metadata.keyword',
+            type: 'term',
+            aggregation: {
+                type: 'term',
+                isActive: isTermAggregationActive('entity_type', ['Dataset']),
+                size: 40,
+            },
+            transformFunction: getUBKGFullName,
+            isVisible: isTermFacetVisible('ingest_metadata.metadata'),
+            isOptionVisible: (option, _, _) => option.count > 0
+        },
+        {
+            label: 'Status',
+            name: 'status',
+            field: 'status.keyword',
+            type: 'term',
+            aggregation: {
+                type: 'term',
+                isActive: true,
+                size: 40,
+            },
+            transformFunction: getUBKGFullName,
+            isVisible: isTermFacetVisible('status'),
+            isOptionVisible: (option, _, _) => option.count > 0
+        },
+        {
+            label: 'Data Provider Group',
+            name: 'group_name',
+            field: 'group_name.keyword',
+            type: 'term',
+            aggregation: {
+                type: 'term',
+                isActive: true,
+                size: 40,
+            },
+            transformFunction: getUBKGFullName,
+            isVisible: isTermFacetVisible('group_name'),
+            isOptionVisible: (option, _, _) => option.count > 0
+        },
+        {
+            label: 'Registered By',
+            name: 'created_by_user_displayname',
+            field: 'created_by_user_displayname.keyword',
+            type: 'term',
+            aggregation: {
+                type: 'term',
+                isActive: true,
+                size: 40,
+            },
+            transformFunction: getUBKGFullName,
+            isVisible: isTermFacetVisible('created_by_user_displayname'),
+            isOptionVisible: (option, _, _) => option.count > 0
+        },
+        {
+            label: 'Creation Date',
+            name: 'created_timestamp',
+            field: 'created_timestamp',
+            type: 'daterange',
+            isVisible: isDateFacetVisible
+        },
+        {
+            label: 'Modification Date',
+            name: 'last_modified_timestamp',
+            field: 'last_modified_timestamp',
+            type: 'daterange',
+            isVisible: isDateFacetVisible
+        },
+    ],
+    exclude: [
+        { type: 'term', field: 'entity_type.keyword', value: 'Publication' },
+        { type: 'term', field: 'dataset_category.keyword', value: 'codcc-processed' },
+        { type: 'term', field: 'dataset_category.keyword', value: 'lab-processed' },
+    ],
+    sourceFields: [
+        'sennet_id',
+        'entity_type',
+        'uuid',
+        'lab_tissue_sample_id',
+        'lab_source_id',
+        'lab_dataset_id',
+        'sample_category',
+        'group_uuid',
+        'group_name',
+        'source_type',
+        'dataset_type',
+        'status',
+        'origin_sample.organ',
+        'organ',
+        'title',
+        'description',
+    ],
 }

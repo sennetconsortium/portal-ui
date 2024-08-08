@@ -70,6 +70,10 @@ export function getSearchEndPoint() {
     return process.env.NEXT_PUBLIC_SEARCH_API_ENDPOINT
 }
 
+export function getSearchEntitiesIndexEndPoint() {
+    return process.env.NEXT_PUBLIC_SEARCH_API_ENDPOINT + process.env.NEXT_PUBLIC_ENTITIES_INDEX
+}
+
 export function getUbkgEndPoint() {
     return process.env.NEXT_PUBLIC_UBKG_API_ENDPOINT
 }
@@ -132,31 +136,18 @@ export function getCookieDomain() {
 
 export const RESULTS_PER_PAGE = [10, 20, 30, 50, 100]
 
-//Config options to exclude datasets from results
+// Config options to exclude datasets from results
 export let ancestor_config = _.cloneDeep(SEARCH_ENTITIES)
 ancestor_config['trackUrlState'] = false;
 
 export let valid_dataset_ancestor_config = _.cloneDeep(ancestor_config)
 
-valid_dataset_ancestor_config['searchQuery']['disjunctiveFacets'] = ["group_name", "created_by_user_displayname"]
-
 export let exclude_dataset_config = _.cloneDeep(ancestor_config);
-exclude_dataset_config['searchQuery']['excludeFilters'].push(
-    {
-        keyword: "entity_type.keyword",
-        value: "Dataset"
-    },
-    {
-        keyword: "entity_type.keyword",
-        value: "Upload"
-    },
-    {
-        "keyword": "entity_type.keyword",
-        "value": "Collection"
-    }
-);
-exclude_dataset_config['searchQuery']['disjunctiveFacets'] = ["group_name", "created_by_user_displayname"]
-
+exclude_dataset_config['exclude'].push(
+    { type: 'term', field: 'entity_type.keyword', value: 'Dataset' },
+    { type: 'term', field: 'entity_type.keyword', value: 'Upload' },
+    { type: 'term', field: 'entity_type.keyword', value: 'Collection' },
+)
 
 export function FilterIsSelected(fieldName, value) {
     return ({filters}) => {
