@@ -28,7 +28,8 @@ WORKDIR /usr/src/app/src
 # Install npm dependencies and build app
 RUN npm install && \
     npm run sass-build && \
-    npm run build
+    npm run build && \
+    npm uninstall sass
 
 
 # The EXPOSE instruction informs Docker that the container listens on the specified network ports at runtime.
