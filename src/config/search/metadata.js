@@ -511,6 +511,7 @@ export const SEARCH_METADATA = {
             'dataset_type',
             'status',
             'origin_samples.organ',
+            'origin_samples.organ_hierarchy',
             'organ',
             'title',
             'description',
