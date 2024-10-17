@@ -83,7 +83,7 @@ function ViewHeaderBadges({data, uniqueHeader, uniqueHeaderUrl, isMetadataHeader
                 <Fragment>
                     {organs && organs.length > 0 &&
                         organs.map(organ => (
-                            <>
+                            <Fragment key={organ}>
                                 {/* Some organs don't have an organ page */}
                                 {getOrganRoute(organ) ? (
                                     <a href={getOrganRoute(organ)}>
@@ -100,7 +100,7 @@ function ViewHeaderBadges({data, uniqueHeader, uniqueHeaderUrl, isMetadataHeader
                                     </span>
                                     </h5>
                                 )}
-                            </>
+                            </Fragment>
                         ))
                     }
 
@@ -151,10 +151,10 @@ function ViewHeaderBadges({data, uniqueHeader, uniqueHeaderUrl, isMetadataHeader
 
             {(data?.doi_url || data?.publication_doi) &&
                 <h5 className={"title_badge"}>
-                            <span className={`${getStatusColor(data.status)} badge`}>
-                                DOI: <a href={data.doi_url || data?.publication_doi} className={'lnk--nodecor'} style={{color: 'white'}}>{data.registered_doi || data?.publication_doi}</a>
-                                &nbsp;<ClipboardCopy text={data.registered_doi || data?.publication_doi} className={'lnk--white'} />
-                            </span>
+                    <span className={`${getStatusColor(data.status)} badge`}>
+                        DOI: <a href={data.doi_url || data?.publication_url} className={'lnk--nodecor'} style={{color: 'white'}}>{data.registered_doi || data?.publication_doi}</a>
+                        &nbsp;<ClipboardCopy text={data.registered_doi || data?.publication_doi} className={'lnk--white'} />
+                    </span>
                 </h5>
             }
 

@@ -269,6 +269,16 @@ function TableResultsEntities({children, filters, onRowClicked, currentColumns, 
         }
     ]
 
+    const publicationColumns = [
+        {
+            name: 'Title',
+            id: 'title',
+            selector: row => raw(row.title),
+            sortable: true,
+            reorder: true,
+        }
+    ]
+
     const getTableColumns = (columnsToHide) => {
         let cols;
         if (checkFilterType(filters) === false) {
@@ -304,6 +314,9 @@ function TableResultsEntities({children, filters, onRowClicked, currentColumns, 
                         includeLabIdCol = false
                         includeGroupCol = false
                         columns = collectionColumns
+                    } else if (hasOneEntity && eq(entityType, cache.entities.publication)) {
+                        includeLabIdCol = false
+                        columns = publicationColumns
                     } else {
                         tableContext.current = 'multi'
                         log.debug('Table Results', hasMultipleEntityTypes)

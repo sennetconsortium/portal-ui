@@ -33,6 +33,15 @@
   padding-right: 10px;
 }
 
+.accordion--vignette {
+  width: 100%;
+  position: relative;
+  .accordion-body {
+    min-height: 925px;
+    overflow-y: hidden;
+  }
+}
+
 .accordion--vitessce {
   width: 100%;
   position: relative;
