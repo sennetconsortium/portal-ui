@@ -218,7 +218,7 @@ function Metadata({data, metadata, mappedMetadata, groups}) {
                                 // Handle dataset table
                                 // Datasets have their metadata inside "metadata.metadata"
                                 return (
-                                    tabPaneCommon('2', index, ancestor, ancestor.ingest_metadata.metadata, ancestor.cedar_mapped_metadata)
+                                    tabPaneCommon('2', index, ancestor, ancestor.metadata, ancestor.cedar_mapped_metadata)
                                 )
                             }
                         })}
