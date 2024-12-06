@@ -57,10 +57,10 @@ function ViewPublication() {
                     // get the most recent ancillary publication
                     ancillaryPublication = _data.descendants
                         .sort((a, b) => new Date(b.last_modified_timestamp) - new Date(a.last_modified_timestamp))
-                        .find(d => d.dataset_type === 'Publication [ancillary]' && d.ingest_metadata?.files[0]?.rel_path)
+                        .find(d => d.dataset_type === 'Publication [ancillary]' && d?.files[0]?.rel_path)
                 } else {
                     ancillaryPublication = _data.descendants
-                        .find(d => d.dataset_type === 'Publication [ancillary]' && d.ingest_metadata?.files[0]?.rel_path)
+                        .find(d => d.dataset_type === 'Publication [ancillary]' && d?.files[0]?.rel_path)
                 }
 
                 setAncillaryPublicationData(ancillaryPublication || {})

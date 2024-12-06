@@ -149,15 +149,15 @@ export const DerivedProvider = ({children, showVitessceList, setShowVitessceList
                 if (datasetIs.processed(entity.creation_action)) {
                     const response = await fetch("/api/find?uuid=" + entity.uuid, getRequestHeaders())
                     const processed = await response.json()
-                    if (processed.ingest_metadata && processed.ingest_metadata.files && processed.ingest_metadata.files.length) {
-                        let dataProducts = filterFilesForDataProducts(processed.ingest_metadata.files, processed)
+                    if (processed.files && processed.files.length) {
+                        let dataProducts = filterFilesForDataProducts(processed.files, processed)
                         _files = _files.concat(dataProducts)
                     }
                 }
             }
             setDataProducts(_files)
         } else {
-            _files = data.ingest_metadata?.files || []
+            _files = data?.files || []
             setDataProducts(filterFilesForDataProducts(_files, data))
 
         }

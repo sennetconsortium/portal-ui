@@ -15,7 +15,7 @@ function VignetteList({ publication, ancillaryPublication }) {
         const fetchVignettesData = async (uuid) => {
             log.debug('==== Fetching vignettes data')
             // ancillaryPublication should have a json config file
-            const fileName = ancillaryPublication.ingest_metadata.files[0].rel_path
+            const fileName = ancillaryPublication.files[0].rel_path
             const path = `${uuid}/${fileName}`
             const publicationAncillaryConfig = await getJSONFromAssetsEndpoint(path)
 

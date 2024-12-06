@@ -437,60 +437,60 @@ export const SEARCH_METADATA = {
             },
 
             // Dataset
-            'ingest_metadata.metadata.acquisition_instrument_model': {
+            'metadata.acquisition_instrument_model': {
                 label: 'Acquisition Instrument Model',
                 type: 'value',
-                field: 'ingest_metadata.metadata.acquisition_instrument_model.keyword',
+                field: 'metadata.acquisition_instrument_model.keyword',
                 isExpanded: false,
                 filterType: 'any',
                 isFilterable: false,
                 facetType: 'term',
                 isAggregationActive: doesTermFilterContainValues('entity_type', ['Dataset']),
-                isFacetVisible: doesAggregationHaveBuckets('ingest_metadata.metadata.acquisition_instrument_model')
+                isFacetVisible: doesAggregationHaveBuckets('metadata.acquisition_instrument_model')
             },
-            'ingest_metadata.metadata.acquisition_instrument_vendor': {
+            'metadata.acquisition_instrument_vendor': {
                 label: 'Acquisition Instrument Vendor',
                 type: 'value',
-                field: 'ingest_metadata.metadata.acquisition_instrument_vendor.keyword',
+                field: 'metadata.acquisition_instrument_vendor.keyword',
                 isExpanded: false,
                 filterType: 'any',
                 isFilterable: false,
                 facetType: 'term',
                 isAggregationActive: doesTermFilterContainValues('entity_type', ['Dataset']),
-                isFacetVisible: doesAggregationHaveBuckets('ingest_metadata.metadata.acquisition_instrument_vendor')
+                isFacetVisible: doesAggregationHaveBuckets('metadata.acquisition_instrument_vendor')
             },
-            'ingest_metadata.metadata.analyte_class': {
+            'metadata.analyte_class': {
                 label: 'Analyte Class',
                 type: 'value',
-                field: 'ingest_metadata.metadata.analyte_class.keyword',
+                field: 'metadata.analyte_class.keyword',
                 isExpanded: false,
                 filterType: 'any',
                 isFilterable: false,
                 facetType: 'term',
                 isAggregationActive: doesTermFilterContainValues('entity_type', ['Dataset']),
-                isFacetVisible: doesAggregationHaveBuckets('ingest_metadata.metadata.analyte_class')
+                isFacetVisible: doesAggregationHaveBuckets('metadata.analyte_class')
             },
-            'ingest_metadata.metadata.assay_category': {
+            'metadata.assay_category': {
                 label: 'Assay Category',
                 type: 'value',
-                field: 'ingest_metadata.metadata.assay_category.keyword',
+                field: 'metadata.assay_category.keyword',
                 isExpanded: false,
                 filterType: 'any',
                 isFilterable: false,
                 facetType: 'term',
                 isAggregationActive: doesTermFilterContainValues('entity_type', ['Dataset']),
-                isFacetVisible: doesAggregationHaveBuckets('ingest_metadata.metadata.assay_category')
+                isFacetVisible: doesAggregationHaveBuckets('metadata.assay_category')
             },
-            'ingest_metadata.metadata.operator': {
+            'metadata.operator': {
                 label: 'Operator',
                 type: 'value',
-                field: 'ingest_metadata.metadata.operator.keyword',
+                field: 'metadata.operator.keyword',
                 isExpanded: false,
                 filterType: 'any',
                 isFilterable: false,
                 facetType: 'term',
                 isAggregationActive: doesTermFilterContainValues('entity_type', ['Dataset']),
-                isFacetVisible: doesAggregationHaveBuckets('ingest_metadata.metadata.operator')
+                isFacetVisible: doesAggregationHaveBuckets('metadata.operator')
             },
         },
         disjunctiveFacets: [],
@@ -599,7 +599,7 @@ export const SEARCH_METADATA = {
             entityType: 'dataset',
             queryString: searchUIQueryString([
                 {field: 'entity_type', values: ['Dataset'], type: 'any'},
-                {field: 'ingest_metadata.metadata.analyte_class', values: ['Nucleic acid and protein'], type: 'any'}
+                {field: 'metadata.analyte_class', values: ['Nucleic acid and protein'], type: 'any'}
             ])
         },
         {
@@ -608,7 +608,7 @@ export const SEARCH_METADATA = {
             entityType: 'dataset',
             queryString: searchUIQueryString([
                 {field: 'entity_type', values: ['Dataset'], type: 'any'},
-                {field: 'ingest_metadata.metadata.analyte_class', values: ['RNA'], type: 'any'}
+                {field: 'metadata.analyte_class', values: ['RNA'], type: 'any'}
             ])
         },
         {
@@ -617,7 +617,7 @@ export const SEARCH_METADATA = {
             entityType: 'dataset',
             queryString: searchUIQueryString([
                 {field: 'entity_type', values: ['Dataset'], type: 'any'},
-                {field: 'ingest_metadata.metadata.assay_category', values: ['sequence'], type: 'any'}
+                {field: 'metadata.assay_category', values: ['sequence'], type: 'any'}
             ])
         },
     ],
