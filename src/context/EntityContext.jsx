@@ -1,6 +1,7 @@
 import React, {createContext, useEffect, useState, useContext} from 'react'
 import { useRouter } from 'next/router'
 import {
+    get_provider_groups,
     get_read_write_privileges,
     get_user_write_groups,
 } from '@/lib/services'
@@ -34,6 +35,7 @@ export const EntityProvider = ({ children }) => {
     const [disableSubmit, setDisableSubmit] = useState(false)
     const [dataAccessPublic, setDataAccessPublic] = useState(null)
     const [userWriteGroups, setUserWriteGroups] = useState([])
+    const [providerGroups, setProviderGroups] = useState([])
     const [selectedUserWriteGroupUuid, setSelectedUserWriteGroupUuid] =
         useState(null)
 
@@ -86,6 +88,12 @@ export const EntityProvider = ({ children }) => {
         get_read_write_privileges()
             .then((response) => {
                 setAuthorized(response.write_privs)
+            })
+            .catch((error) => log.error(error))
+
+        get_provider_groups()
+            .then((response) => {
+                setProviderGroups(response.groups || [])
             })
             .catch((error) => log.error(error))
 
@@ -272,7 +280,7 @@ export const EntityProvider = ({ children }) => {
 
     const getAssignedToGroupNames = (adminGroup) => {
         if (adminGroup) {
-            return userWriteGroups.map(item => {if (item.data_provider) return item})
+            return providerGroups.map(item => {if (item.data_provider) return item})
         } else {
             return [
                 {
