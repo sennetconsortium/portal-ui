@@ -1,7 +1,8 @@
 import {createContext, useCallback, useRef, useState} from "react";
 import $ from "jquery";
-import {datasetIs, fetchEntity, getRequestHeaders} from "@/components/custom/js/functions";
-import {fetchVitessceConfiguration, get_prov_info} from "@/lib/services";
+import log from "loglevel";
+import {datasetIs, fetchEntity} from "@/components/custom/js/functions";
+import {fetchVitessceConfiguration, get_prov_info, getEntityData} from "@/lib/services";
 import useVitessceEncoder from "@/hooks/useVitessceEncoder";
 
 const DerivedContext = createContext({})
@@ -36,7 +37,7 @@ export const DerivedProvider = ({children, showVitessceList, setShowVitessceList
                 setShowVitessce(true)
             }
         }).catch(error => {
-            console.error(error)
+            log.error(error)
             if (setShowVitessceList && showVitessceList === 1) {
                 setShowVitessceList(false)
             }
@@ -59,11 +60,12 @@ export const DerivedProvider = ({children, showVitessceList, setShowVitessceList
             if (!is_primary_dataset) {
                 await set_vitessce_config(data, data.uuid, dataset_type)
             } else {
-                //Call `/prov-info` and check if processed datasets are returned
+                // Call `/prov-info` and check if processed datasets are returned
                 const prov_info = await get_prov_info(data.uuid)
-                if (prov_info !== {}) {
+                if (Object.keys(prov_info).length) {
                     const processed_datasets = prov_info['processed_dataset_uuid']
                     const processed_dataset_statuses = prov_info['processed_dataset_status']
+
                     // Iterate over processed datasets and check that the status is valid
                     for (let i = 0; i < processed_dataset_statuses?.length; i++) {
                         if (isDatasetStatusPassed(processed_dataset_statuses[i])) {
@@ -140,24 +142,35 @@ export const DerivedProvider = ({children, showVitessceList, setShowVitessceList
         }
         return _files
     }
+
     const fetchDataProducts = useCallback(async (data) => {
-        let _files = []
         if (datasetIs.primary(data.creation_action)) {
-            for (let entity of data.descendants) {
-                if (datasetIs.processed(entity.creation_action)) {
-                    const response = await fetch("/api/find?uuid=" + entity.uuid, getRequestHeaders())
-                    const processed = await response.json()
-                    if (processed.ingest_metadata && processed.ingest_metadata.files && processed.ingest_metadata.files.length) {
-                        let dataProducts = filterFilesForDataProducts(processed.ingest_metadata.files, processed)
-                        _files = _files.concat(dataProducts)
-                    }
+            const promises = []
+            for (let descendant of data.descendants) {
+                if (datasetIs.processed(descendant.creation_action)) {
+                    const promise = getEntityData(descendant.uuid);
+                    promises.push(promise)
                 }
             }
-            setDataProducts(_files)
-        } else {
-            _files = data.ingest_metadata?.files || []
-            setDataProducts(filterFilesForDataProducts(_files, data))
 
+            const processedDatasets = await Promise.all(promises)
+            const files = []
+            for (let processed of processedDatasets) {
+                if (processed.hasOwnProperty("error")) {
+                    log.error("Error fetching data products", processed)
+                    continue
+                }
+
+                if (processed.ingest_metadata && processed.ingest_metadata.files && processed.ingest_metadata.files.length) {
+                    let dataProducts = filterFilesForDataProducts(processed.ingest_metadata.files, processed)
+                    files.push(...dataProducts)
+                }
+            }
+
+            setDataProducts(files)
+        } else {
+            const files = data.ingest_metadata?.files || []
+            setDataProducts(filterFilesForDataProducts(files, data))
         }
     })
 
