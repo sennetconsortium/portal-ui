@@ -91,60 +91,57 @@ export default function EditCollection({collectionType='Collection', entitiesTab
         fetchAncestorConstraints()
     }, [])
 
-    // only executed on init rendering, see the []
     useEffect(() => {
-
-        // declare the async data fetching function
         const fetchData = async (uuid) => {
             log.debug('editCollection: getting data...', uuid)
-            // get the data from the api
+            // fetch collection data
             const _data = await getEntityData(uuid, ['ancestors', 'descendants']);
 
             log.debug('editCollection: Got data', _data)
-            if (_data.hasOwnProperty("error")) {
+            if (_data.hasOwnProperty('error')) {
                 setError(true)
                 setData(false)
-                setErrorMessage(_data["error"])
-            } else {
-                setData(_data)
-                const entities = await callService(filterProperties.collectionEntities, `${getEntityEndPoint()}collections/${_data.uuid}/entities`, 'POST')
+                setErrorMessage(_data['error'])
+                return
+            }
+
+            // set state with the result
+            setData(_data)
+
+            callService(filterProperties.collectionEntities, `${getEntityEndPoint()}collections/${_data.uuid}/entities`, 'POST').then(entities => {
                 Object.assign(_data, {entities})
                 setData(_data)
 
-                let entity_uuids = []
-
-                if (_data.hasOwnProperty("entities")) {
-                    for (const ancestor of _data.entities) {
-                        entity_uuids.push(ancestor.uuid)
-                    }
-                    await fetchLinkedEntity(entity_uuids)
+                if (entities) {
+                    const uuids = entities.map((entity) => entity.uuid)
+                    setValues(prevValue => ({...prevValue, entity_uuids: uuids}))
+                    fetchLinkedEntities(uuids).catch(log.error)
                 }
+            }).catch(log.error)
 
-                if (_data.contacts) {
-                    setContacts({description: {records: _data.contacts, headers: contactsTSV.headers}})
-                }
-
-                // Set state with default values that will be PUT to Entity API to update
-                setValues({
-                    'title': _data.title,
-                    'description': _data.description,
-                    'entity_uuids': entity_uuids,
-                    'contacts': _data.contacts,
-                    'contributors': _data.contributors
-                })
-                setEditMode("Edit")
-                setDataAccessPublic(_data.data_access_level === 'public')
+            if (_data.contacts) {
+                setContacts({description: {records: _data.contacts, headers: contactsTSV.headers}})
             }
+
+            // Set state with default values that will be PUT to Entity API to update
+            setValues(prevState => ({
+                'title': _data.title,
+                'description': _data.description,
+                'entity_uuids': prevState.entity_uuids || [],
+                'contacts': _data.contacts,
+                'contributors': _data.contributors
+            }))
+            setEditMode('Edit')
+            setDataAccessPublic(_data.data_access_level === 'public')
         }
 
-        if (router.query.hasOwnProperty("uuid")) {
+        if (router.query.hasOwnProperty('uuid')) {
             if (eq(router.query.uuid, 'register')) {
                 setData(true)
-                setEditMode("Register")
+                setEditMode('Register')
             } else {
-                // call the function
+                // fetch collection data
                 fetchData(router.query.uuid)
-                    // make sure to catch any error
                     .catch(console.error);
             }
         } else {
@@ -153,15 +150,17 @@ export default function EditCollection({collectionType='Collection', entitiesTab
         }
     }, [router]);
 
-    async function fetchLinkedEntity(datasetUuids, errMsgs) {
+    async function fetchLinkedEntities(datasetUuids, errMsgs) {
         let newDatasets = []
         if (ancestors) {
             newDatasets = [...ancestors];
         }
+
         let notSupported = []
         for (const uuid of datasetUuids) {
             let paramKey = getIdRegEx().exec(uuid) ? 'sennet_id' : 'uuid'
             let entity = await fetchEntity(uuid, paramKey)
+
             if (entity.hasOwnProperty("error")) {
                 if (isBulkHandling.current) {
                     setBulkPopover(true)
@@ -342,7 +341,7 @@ export default function EditCollection({collectionType='Collection', entitiesTab
             if (invalidFormat.length) {
                 errMsg = <>{errMsg}<span>Invalid dataset{invalidFormat.length > 1 ? 's' : ''} id format <code>{invalidFormat.join(',')}</code>.</span></>
             }
-            let datasets = await fetchLinkedEntity(validIds, errMsg)
+            let datasets = await fetchLinkedEntities(validIds, errMsg)
             if (datasets.length) {
                 onChange(null, 'entity_uuids', datasets.map((item) => item.uuid))
 
@@ -473,7 +472,7 @@ export default function EditCollection({collectionType='Collection', entitiesTab
                                                  formLabel={entitiesButtonLabel} formLabelPlural={entitiesTableLabel} values={values}
                                                  ancestors={ancestors} onChange={onChange}
                                                  onShowModal={clearBulkPopover}
-                                                 fetchAncestors={fetchLinkedEntity}
+                                                 fetchAncestors={fetchLinkedEntities}
                                                  deleteAncestor={deleteLinkedEntity}/>
 
                                     {/*/!*Lab Name or ID*!/*/}
