@@ -3,7 +3,7 @@ import {Form} from 'react-bootstrap';
 import SenNetPopover from '../../../SenNetPopover'
 import AppContext from '../../../../context/AppContext'
 
-function SourceType( { data, dataValue, onChange, label, labelDescription} ) {
+function SourceType( { data, dataValue, onChange, label, labelDescription, isDisabled} ) {
     const { cache } = useContext(AppContext)
 
     useEffect(() => {
@@ -23,7 +23,7 @@ function SourceType( { data, dataValue, onChange, label, labelDescription} ) {
                     </SenNetPopover>
                 </Form.Label>
 
-                <Form.Select required aria-label={label ? label : `Source Type`}
+                <Form.Select required aria-label={label ? label : `Source Type`} disabled={isDisabled}
                              onChange={e => { onChange(e, dataValue ? dataValue : 'source_type', e.target.value) }}
                              defaultValue={dataValue ? data?.[dataValue] : data?.source_type}>
                     <option value="">----</option>
