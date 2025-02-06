@@ -141,13 +141,10 @@ export default function EditDataset() {
         }
     }, [dataAccessPublic, data, dataTypes, editMode])
 
-    // only executed on init rendering, see the []
     useEffect(() => {
-
-        // declare the async data fetching function
         const fetchData = async (uuid) => {
             log.debug('editDataset: getting data...', uuid)
-            // get the data from the api
+            // fetch dataset data
             const _data = await getEntityData(uuid, ['ancestors', 'descendants']);
 
             log.debug('editDataset: Got data', _data)
@@ -155,43 +152,44 @@ export default function EditDataset() {
                 setError(true)
                 setData(false)
                 setErrorMessage(_data["error"])
-            } else {
-                setData(_data)
-                const ancestry = await getAncestryData(_data.uuid, {endpoints: ['ancestors'], otherEndpoints: ['immediate_ancestors']})
+                return
+            }
+
+            // set state with the result
+            setData(_data)
+
+            getAncestryData(_data.uuid, {endpoints: ['ancestors'], otherEndpoints: ['immediate_ancestors']}).then(ancestry => {
                 Object.assign(_data, ancestry)
                 setData(_data)
-
-                isPrimary.current = getIsPrimaryDataset(_data)
-                let immediate_ancestors = []
-                if (_data.hasOwnProperty("immediate_ancestors")) {
-                    for (const ancestor of _data.immediate_ancestors) {
-                        immediate_ancestors.push(ancestor.uuid)
-                    }
-                    await fetchAncestors(immediate_ancestors)
+                if (ancestry.immediate_ancestors) {
+                    const uuids = ancestry.immediate_ancestors.map(ancestor => ancestor.uuid)
+                    setValues(prevState => ({...prevState, direct_ancestor_uuids: uuids}))
+                    fetchAncestors(uuids).catch(log.error)
                 }
+            }).catch(log.error)
 
-                if (_data.contacts) {
-                    setContacts({description: {records: _data.contacts, headers: contactsTSV.headers}})
-                }
-
-                // Set state with default values that will be PUT to Entity API to update
-                setValues({
-                    'status': _data.status,
-                    'lab_dataset_id': _data.lab_dataset_id,
-                    'dataset_type': _data.dataset_type,
-                    'description': _data.description,
-                    'dataset_info': _data.dataset_info,
-                    'direct_ancestor_uuids': immediate_ancestors,
-                    'assigned_to_group_name': adminGroup ? _data.assigned_to_group_name : undefined,
-                    'ingest_task': adminGroup ? _data.ingest_task : undefined,
-                    'contains_human_genetic_sequences': _data.contains_human_genetic_sequences,
-                    'contacts': _data.contacts,
-                    'contributors': _data.contributors
-                })
-                setEditMode("Edit")
-                setContainsHumanGeneticSequences(_data.contains_human_genetic_sequences)
-                setDataAccessPublic(_data.data_access_level === 'public')
+            isPrimary.current = getIsPrimaryDataset(_data)
+            if (_data.contacts) {
+                setContacts({description: {records: _data.contacts, headers: contactsTSV.headers}})
             }
+
+            // Set state with default values that will be PUT to Entity API to update
+            setValues(prevState => ({
+                'status': _data.status,
+                'lab_dataset_id': _data.lab_dataset_id,
+                'dataset_type': _data.dataset_type,
+                'description': _data.description,
+                'dataset_info': _data.dataset_info,
+                'direct_ancestor_uuids': prevState.direct_ancestor_uuids || [],
+                'assigned_to_group_name': adminGroup ? _data.assigned_to_group_name : undefined,
+                'ingest_task': adminGroup ? _data.ingest_task : undefined,
+                'contains_human_genetic_sequences': _data.contains_human_genetic_sequences,
+                'contacts': _data.contacts,
+                'contributors': _data.contributors
+            }))
+            setEditMode('Edit')
+            setContainsHumanGeneticSequences(_data.contains_human_genetic_sequences)
+            setDataAccessPublic(_data.data_access_level === 'public')
         }
 
         if (router.query.hasOwnProperty("uuid")) {
@@ -199,10 +197,9 @@ export default function EditDataset() {
                 setData(true)
                 setEditMode("Register")
             } else {
-                // call the function
+                // fetch dataset data
                 fetchData(router.query.uuid)
-                    // make sure to catch any error
-                    .catch(console.error);
+                    .catch(log.error);
             }
         } else {
             setData(null);
