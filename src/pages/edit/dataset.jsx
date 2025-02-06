@@ -8,7 +8,7 @@ import Form from 'react-bootstrap/Form';
 import {Layout} from '@elastic/react-search-ui-views'
 import '@elastic/react-search-ui-views/lib/styles/styles.css'
 import log from 'loglevel'
-import {get_headers, getAncestryData, getEntityData, update_create_dataset} from '../../lib/services'
+import {get_headers, getAncestryData, getEntityData, update_create_dataset} from '@/lib/services'
 import {
     cleanJson,
     eq,
@@ -16,29 +16,28 @@ import {
     fetchProtocols,
     getEntityViewUrl,
     getIsPrimaryDataset,
-    getRequestHeaders,
     getStatusColor,
-} from '../../components/custom/js/functions'
-import AppContext from '../../context/AppContext'
-import EntityContext, {EntityProvider} from '../../context/EntityContext'
-import {getIngestEndPoint, valid_dataset_ancestor_config} from "../../config/config";
+} from '@/components/custom/js/functions'
+import AppContext from '@/context/AppContext'
+import EntityContext, {EntityProvider} from '@/context/EntityContext'
+import {getIngestEndPoint, valid_dataset_ancestor_config} from "@/config/config";
 import $ from 'jquery'
-import DatasetRevertButton, {statusRevertTooltip} from "../../components/custom/edit/dataset/DatasetRevertButton";
+import DatasetRevertButton, {statusRevertTooltip} from "@/components/custom/edit/dataset/DatasetRevertButton";
 import DataTable from "react-data-table-component";
 import AttributesUpload, {getResponseList} from "@/components/custom/edit/AttributesUpload";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 
-const AncestorIds = dynamic(() => import('../../components/custom/edit/dataset/AncestorIds'))
-const AppFooter = dynamic(() => import("../../components/custom/layout/AppFooter"))
-const AppNavbar = dynamic(() => import("../../components/custom/layout/AppNavbar"))
-const DatasetSubmissionButton = dynamic(() => import("../../components/custom/edit/dataset/DatasetSubmissionButton"))
-const DatasetType = dynamic(() => import('../../components/custom/edit/dataset/DatasetType'))
-const EntityHeader = dynamic(() => import('../../components/custom/layout/entity/Header'))
-const EntityFormGroup = dynamic(() => import('../../components/custom/layout/entity/FormGroup'))
-const GroupSelect = dynamic(() => import("../../components/custom/edit/GroupSelect"))
-const Header = dynamic(() => import("../../components/custom/layout/Header"))
-const SenNetPopover = dynamic(() => import("../../components/SenNetPopover"))
-const Spinner = dynamic(() => import("../../components/custom/Spinner"))
+const AncestorIds = dynamic(() => import('@/components/custom/edit/dataset/AncestorIds'))
+const AppFooter = dynamic(() => import("@/components/custom/layout/AppFooter"))
+const AppNavbar = dynamic(() => import("@/components/custom/layout/AppNavbar"))
+const DatasetSubmissionButton = dynamic(() => import("@/components/custom/edit/dataset/DatasetSubmissionButton"))
+const DatasetType = dynamic(() => import('@/components/custom/edit/dataset/DatasetType'))
+const EntityHeader = dynamic(() => import('@/components/custom/layout/entity/Header'))
+const EntityFormGroup = dynamic(() => import('@/components/custom/layout/entity/FormGroup'))
+const GroupSelect = dynamic(() => import("@/components/custom/edit/GroupSelect"))
+const Header = dynamic(() => import("@/components/custom/layout/Header"))
+const SenNetPopover = dynamic(() => import("@/components/SenNetPopover"))
+const Spinner = dynamic(() => import("@/components/custom/Spinner"))
 
 export default function EditDataset() {
     const {
@@ -57,7 +56,7 @@ export default function EditDataset() {
         getEntityConstraints,
         buildConstraint, successIcon, errIcon, getCancelBtn,
         isAdminOrHasValue, getAssignedToGroupNames,
-        contactsTSV, contacts, setContacts, contributors, setContributors, setContactsAttributes, setContactsAttributesOnFail
+        contactsTSV, contacts, setContacts, contributors, setContactsAttributes, setContactsAttributesOnFail
     } = useContext(EntityContext)
     const {_t, cache, adminGroup, isLoggedIn, getBusyOverlay, toggleBusyOverlay, getPreviewView} = useContext(AppContext)
     const router = useRouter()
