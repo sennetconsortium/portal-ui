@@ -9,7 +9,8 @@ function SampleCategory({
                             set_organ_group_hide,
                             data,
                             onChange,
-                            sample_categories
+                            sample_categories,
+                            isDisabled
                         }) {
 
     const {cache} = useContext(AppContext)
@@ -53,7 +54,7 @@ function SampleCategory({
 
                 </Form.Label>
 
-                <Form.Select required aria-label="Sample Category"
+                <Form.Select required aria-label="Sample Category" disabled={isDisabled}
                              onChange={e => {
                                  handleSampleCategoryChange(e, onChange);
                                  onChange(e, e.target.id, e.target.value)
@@ -77,7 +78,7 @@ function SampleCategory({
                 <Form.Label column sm="2">Organ Type <span
                     className="required">*</span></Form.Label>
                 <Col sm="10">
-                    <Form.Select aria-label="Organ Type" id="organ" onChange={e => {
+                    <Form.Select aria-label="Organ Type" id="organ" disabled={isDisabled} onChange={e => {
                         onChange(e, e.target.id, e.target.value)
                     }}
                                  defaultValue={data.organ}>

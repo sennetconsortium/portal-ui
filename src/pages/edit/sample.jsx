@@ -447,7 +447,9 @@ function EditSample() {
                                                 sample_categories={sampleCategories === null ? cache.sampleCategories : sampleCategories}
                                                 data={values}
                                                 source={source}
-                                                onChange={_onChange}/>
+                                                onChange={_onChange}
+                                                isDisabled={editMode === 'Edit'}
+                                            />
                                             <RUIButton
                                                 showRegisterLocationButton={showRuiButton}
                                                 ruiSex={ruiSex}
