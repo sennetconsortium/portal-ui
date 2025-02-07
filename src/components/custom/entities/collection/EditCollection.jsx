@@ -348,21 +348,25 @@ export default function EditCollection({collectionType='Collection', entitiesTab
 
                 const $field = document.getElementById('ancestor_ids')
                 // Clear textfield if all went well
-                if (datasets.length === ids.length) {
-                    $field.value = ''
-                } else {
-                    const idsDict = {}
-                    for (let d of datasets) {
-                        // delete what can be deleted, i.e. those user inputs that match normalized casing, making list smaller to deal with
-                        idsSet.delete(d.uuid)
-                        idsSet.delete(d.sennet_id)
-                        //flag them to not be included in userReducedInput below
-                        idsDict[d.uuid.toLowerCase()] = false
-                        idsDict[d.sennet_id.toLowerCase()] = false
-                    }
+                try {
+                    if (datasets.length === ids.length) {
+                        $field.value = ''
+                    } else {
+                        const idsDict = {}
+                        for (let d of datasets) {
+                            // delete what can be deleted, i.e. those user inputs that match normalized casing, making list smaller to deal with
+                            idsSet.delete(d.uuid)
+                            idsSet.delete(d.sennet_id)
+                            //flag them to not be included in userReducedInput below
+                            idsDict[d.uuid.toLowerCase()] = false
+                            idsDict[d.sennet_id.toLowerCase()] = false
+                        }
 
-                    const userReducedInput = Array.from(idsSet).filter((x) => idsDict[x.trim().toLowerCase()] === undefined)
-                    $field.value = userReducedInput.join(',')
+                        const userReducedInput = Array.from(idsSet).filter((x) => idsDict[x.trim().toLowerCase()] === undefined)
+                        $field.value = userReducedInput.join(',')
+                    }
+                } catch (e) {
+                    console.error(e)
                 }
             }
         }
