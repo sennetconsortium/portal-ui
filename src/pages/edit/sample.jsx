@@ -94,9 +94,9 @@ function EditSample() {
     // Disable all form elements if data_access_level is "public"
     // Wait until "sampleCategories" and "editMode" are set prior to running this
     useEffect(() => {
-        if (dataAccessPublic === true) {
+        const form = document.getElementById("sample-form");
+        if (dataAccessPublic === true && form !== null) {
             const excludedElementIds = ['view-rui-json-btn']
-            const form = document.getElementById("sample-form");
             const elements = form.elements;
             for (let i = 0, len = elements.length; i < len; ++i) {
                 if (excludedElementIds.includes(elements[i].id))
