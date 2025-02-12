@@ -264,7 +264,7 @@ function EditSource() {
                                                      </>}/>
 
                                     {/*Source Type*/}
-                                    <SourceType data={data} onChange={onChange}/>
+                                    <SourceType data={data} onChange={onChange} isDisabled={editMode === 'Edit'}/>
 
                                     {/*Case Selection Protocol*/}
                                     <EntityFormGroup label="Case Selection Protocol" placeholder='protocols.io DOI'
