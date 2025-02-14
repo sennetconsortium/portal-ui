@@ -264,7 +264,7 @@ function AttributesUpload({ setAttribute, attribute = 'metadata', ingestEndpoint
                 {(error || showAllInTable) && table?.data && <div className={`c-metadataUpload__table table-responsive ${error ? 'has-error' : ''}`}>
                     {title}
                     <DataTable
-                        defaultSortFieldId={'row'}
+                        defaultSortFieldId={error ? 'row' : null}
                         columns={table.columns}
                         data={table.data}
                         pagination />
