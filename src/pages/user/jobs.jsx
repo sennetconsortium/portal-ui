@@ -376,7 +376,7 @@ function ViewJobs({isAdmin = false}) {
     }
 
     const handleViewErrorDetailsModal = (row) => {
-        const columns = tableColumns(['`', '"', "'"])
+        const columns = tableColumns()
         setErrorModal(false)
         let errors = flatten(row.errors)
         log.debug('JOB ERRORS', errors)

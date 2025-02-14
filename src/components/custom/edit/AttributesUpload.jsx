@@ -19,9 +19,9 @@ const handleErrorRow = (row) => {
             err += ' http://local/api/json?view='+btoa(jsonStr)
         }
     }
-    return err
+    return row.column ? `Column '${row.column}' ` + err : err
 }
-export const tableColumns = (d = '"') => [
+export const tableColumns = (d = ['`', '"', "'"]) => [
     {
         name: 'Row',
         selector: row => row.row,
