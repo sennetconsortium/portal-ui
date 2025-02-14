@@ -53,7 +53,7 @@ function Metadata({data, metadata, mappedMetadata, groups}) {
         if (!downloadRef.current) {
             return
         }
-        
+
         if (!downloadRef.current.href) {
             // This is a bit of a hack to lazy download the provenance metadata
             try {
@@ -161,7 +161,7 @@ function Metadata({data, metadata, mappedMetadata, groups}) {
                                     }
                                     // The dataset nav link
                                 } else if (eq(ancestor.entity_type, cache.entities.dataset)) {
-                                    if (ancestor.ingest_metadata && Object.keys(ancestor.ingest_metadata).length && 'metadata' in ancestor.ingest_metadata) {
+                                        if (ancestor.metadata && Object.keys(ancestor.metadata).length > 0) {
                                         return (
                                             popoverCommon(index, 'dataset', ancestor)
                                         )
@@ -208,17 +208,9 @@ function Metadata({data, metadata, mappedMetadata, groups}) {
                                         tabPaneCommon('0', index, ancestor, metadata, undefined, groups)
                                     )
                                 }
-                            } else if (!eq(ancestor.entity_type, cache.entities.dataset) && ancestor.metadata && Object.keys(ancestor.metadata).length > 0) {
-                                // Handle mouse source and sample table
-                                // Mice sources and all samples have their metadata inside "metadata"
+                            } else if ( ancestor.metadata && Object.keys(ancestor.metadata).length > 0) {
                                 return (
                                     tabPaneCommon('1', index, ancestor, ancestor.metadata, ancestor.cedar_mapped_metadata)
-                                )
-                            } else if (ancestor.ingest_metadata && Object.keys(ancestor.ingest_metadata).length && 'metadata' in ancestor.ingest_metadata) {
-                                // Handle dataset table
-                                // Datasets have their metadata inside "metadata.metadata"
-                                return (
-                                    tabPaneCommon('2', index, ancestor, ancestor.ingest_metadata.metadata, ancestor.cedar_mapped_metadata)
                                 )
                             }
                         })}

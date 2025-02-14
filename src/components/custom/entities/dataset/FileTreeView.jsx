@@ -15,7 +15,7 @@ import InputGroup from 'react-bootstrap/InputGroup';
 import {Tree} from 'primereact/tree';
 import 'primeicons/primeicons.css';
 
-export const FileTreeView = ({data, selection = {}, keys = {files: 'ingest_metadata', uuid: 'uuid'},
+export const FileTreeView = ({data, selection = {}, keys = {files: 'files', uuid: 'uuid'},
                                  loadDerived = true, treeViewOnly = false, className = '', filesClassName = '',
                                  showQAButton = true, showDataProductButton = true, includeDescription= false,
                                  showDownloadAllButton = false}) => {
@@ -45,14 +45,6 @@ export const FileTreeView = ({data, selection = {}, keys = {files: 'ingest_metad
         return Array.isArray(obj) ? obj.length : Object.keys(obj).length
     }
 
-    const getFiles = (data) => {
-        if (keys.files.contains('ingest_metadata')) {
-            return data?.ingest_metadata?.files
-        } else {
-            return data[keys.files]
-        }
-    }
-
     useEffect( () => {
         async function fetchData() {
             await fetch_globus_filepath(data[keys.uuid]).then((globusData) => {
@@ -64,17 +56,17 @@ export const FileTreeView = ({data, selection = {}, keys = {files: 'ingest_metad
         fetchData()
 
         //Default to use files, otherwise wait until derivedDataset is populated
-        if (getFiles(data) && getLength(getFiles(data))) {
+        if (data[keys.files] && getLength(data[keys.files])) {
             setHasData(true)
-            buildTree(data[keys.uuid], getFiles(data))
+            buildTree(data[keys.uuid], data[keys.files])
         }
     }, [])
 
     useEffect(() => {
         if (loadDerived) {
-            if (isPrimaryDataset && getFiles(derivedDataset) && getLength(getFiles(derivedDataset))) {
+            if (isPrimaryDataset && derivedDataset[keys.files] && getLength(derivedDataset[keys.files])) {
                 setHasData(true)
-                buildTree(derivedDataset[keys.uuid], getFiles(derivedDataset))
+                buildTree(derivedDataset[keys.uuid], derivedDataset[keys.files])
             }
         }
 
