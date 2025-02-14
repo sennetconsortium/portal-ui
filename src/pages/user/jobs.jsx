@@ -383,7 +383,7 @@ function ViewJobs({isAdmin = false}) {
         setShowModal(true)
         setModalTitle(<h3>Job Error Details</h3>)
         setModalSize('xl')
-        setModalBody(<div className={'table-responsive has-error'}><DataTable columns={columns} data={errors}
+        setModalBody(<div className={'table-responsive has-error'}><DataTable defaultSortFieldId={'row'} columns={columns} data={errors}
                                                                               pagination/></div>)
     }
 
@@ -825,8 +825,6 @@ function ViewJobs({isAdmin = false}) {
         )
     }
 }
-
-ViewJobs.defaultProps = {}
 
 ViewJobs.propTypes = {
     children: PropTypes.node
