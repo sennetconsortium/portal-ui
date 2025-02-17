@@ -599,7 +599,7 @@ export const SEARCH_METADATA = {
             entityType: 'dataset',
             queryString: searchUIQueryString([
                 {field: 'entity_type', values: ['Dataset'], type: 'any'},
-                {field: 'metadata.analyte_class', values: ['Nucleic acid and protein'], type: 'any'}
+                {field: 'metadata.analyte_class', values: ['Nucleic acid + protein'], type: 'any'}
             ])
         },
         {
