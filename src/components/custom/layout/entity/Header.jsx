@@ -16,7 +16,7 @@ function EntityHeader({entity, data, isEditMode, values, showGroup = true, admin
 
     useEffect(() => {
         const fetchPipelineMessage = async () => {
-            if ((data.status === 'Invalid' || data.status === 'Error') && (data.has_pipeline_message || data.has_validation_message)) {
+            if ((data.status === 'Invalid' || data.status === 'Error') && [data.has_pipeline_message, data.has_validation_message].contains('true')) {
                 await fetch_pipeline_message(data.uuid, data.entity_type).then((pipelineMessage) => {
                     setPipelineMessage(pipelineMessage);
                 });
@@ -36,7 +36,7 @@ function EntityHeader({entity, data, isEditMode, values, showGroup = true, admin
                                                                                               className={'status-info'}>{values.status}</SenNetPopover></span>}</h4>
             </Row>
             {adminGroup && pipelineMessage &&
-                <SenNetAlert className={"h6"} variant={'warning'}
+                <SenNetAlert className={"h6 auto-scroll"} variant={'warning'}
                              text={<span style={{wordWrap: 'break-word'}}
                                          dangerouslySetInnerHTML={{__html: pipelineMessage}}/>}
                              icon={<i className="bi bi-exclamation-triangle-fill"></i>}
