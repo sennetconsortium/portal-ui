@@ -161,7 +161,7 @@ export const DerivedProvider = ({children, showVitessceList, setShowVitessceList
                     continue
                 }
 
-                if (processed.ingest_metadata && processed.ingest_metadata.files && processed.ingest_metadata.files.length) {
+                if (processed.files && processed.files.length) {
                     let dataProducts = filterFilesForDataProducts(processed.ingest_metadata.files, processed)
                     files.push(...dataProducts)
                 }
@@ -169,8 +169,9 @@ export const DerivedProvider = ({children, showVitessceList, setShowVitessceList
 
             setDataProducts(files)
         } else {
-            const files = data.ingest_metadata?.files || []
-            setDataProducts(filterFilesForDataProducts(files, data))
+            _files = data?.files || []
+            setDataProducts(filterFilesForDataProducts(_files, data))
+
         }
     })
 

@@ -48,8 +48,8 @@ function EditUpload() {
     // Disable all form elements if data_access_level is "public"
     // Wait until "sampleCategories" and "editMode" are set prior to running this
     useEffect(() => {
-        if (dataAccessPublic === true) {
-            const form = document.getElementById("upload-form");
+        const form = document.getElementById("upload-form");
+        if (dataAccessPublic === true && form != null) {
             const elements = form?.elements;
             for (let i = 0, len = elements?.length; i < len; ++i) {
                 elements[i].setAttribute('disabled', true);

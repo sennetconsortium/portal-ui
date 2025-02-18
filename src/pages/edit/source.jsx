@@ -51,8 +51,8 @@ function EditSource() {
     // Disable all form elements if data_access_level is "public"
     // Wait until "sampleCategories" and "editMode" are set prior to running this
     useEffect(() => {
-        if (dataAccessPublic === true) {
-            const form = document.getElementById("source-form");
+        const form = document.getElementById("source-form");
+        if (dataAccessPublic === true && form !== null) {
             const elements = form.elements;
             for (let i = 0, len = elements.length; i < len; ++i) {
                 elements[i].setAttribute('disabled', true);
@@ -262,7 +262,7 @@ function EditSource() {
                                                      </>}/>
 
                                     {/*Source Type*/}
-                                    <SourceType data={data} onChange={onChange}/>
+                                    <SourceType data={data} onChange={onChange} isDisabled={editMode === 'Edit'}/>
 
                                     {/*Case Selection Protocol*/}
                                     <EntityFormGroup label="Case Selection Protocol" placeholder='protocols.io DOI'

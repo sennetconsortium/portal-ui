@@ -131,8 +131,8 @@ export default function EditDataset() {
     // Wait until "dataTypes" and "editMode" are set prior to running this
     useEffect(() => {
         if (data != null && isLoggedIn()) {
-            if (dataAccessPublic === true || data.status === 'Published') {
-                const form = document.getElementById("dataset-form");
+            const form = document.getElementById("dataset-form");
+            if (dataAccessPublic === true || data.status === 'Published' && form !== null) {
                 const elements = form?.elements;
                 for (let i = 0, len = elements?.length; i < len; ++i) {
                     elements[i].setAttribute('disabled', true);
