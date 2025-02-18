@@ -19,12 +19,13 @@ const handleErrorRow = (row) => {
             err += ' http://local/api/json?view='+btoa(jsonStr)
         }
     }
-    return err
+    return row.column ? `Column '${row.column}' ` + err : err
 }
-export const tableColumns = (d = '"') => [
+export const tableColumns = (d = ['`', '"', "'"]) => [
     {
         name: 'Row',
         selector: row => row.row,
+        id: 'row',
         sortable: true,
         width: '100px',
     },
@@ -263,6 +264,7 @@ function AttributesUpload({ setAttribute, attribute = 'metadata', ingestEndpoint
                 {(error || showAllInTable) && table?.data && <div className={`c-metadataUpload__table table-responsive ${error ? 'has-error' : ''}`}>
                     {title}
                     <DataTable
+                        defaultSortFieldId={error ? 'row' : null}
                         columns={table.columns}
                         data={table.data}
                         pagination />
