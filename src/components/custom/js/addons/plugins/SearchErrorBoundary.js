@@ -20,13 +20,12 @@ class SearchErrorBoundary extends Addon {
     }
 
     prettyError() {
-        const error = this.el.html().trim()
-        if (error.contains("The globus token in the HTTP 'Authorization: Bearer <globus-token>' header is either invalid or expired")) {
+        const error = this.el.html().trim().toLowerCase()
+        if (error.contains("header is either invalid or expired")) {
             this.getComponent('token')
         } else {
             this.getComponent('notFound')
         }
-
     }
 
 
