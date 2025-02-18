@@ -36,7 +36,8 @@ function SearchFiles() {
         authorized,
         isAuthorizing,
         isUnauthorized,
-        hasAuthenticationCookie
+        hasAuthenticationCookie,
+        getStringifiedComponents
     } = useContext(AppContext);
 
     function handleSearchFormSubmit(event, onSubmit) {
@@ -66,7 +67,7 @@ function SearchFiles() {
 
                 <SearchUIContainer config={SEARCH_FILES} name='files' authState={authState}>
                     <AppNavbar hidden={isRegisterHidden}/>
-                    <ErrorBoundary>
+                    <ErrorBoundary className={'js-app--searchErrorBoundary'} data-components={getStringifiedComponents()}>
                         <Layout
                             header={
                                 <>
