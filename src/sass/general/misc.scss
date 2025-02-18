@@ -153,3 +153,9 @@ p {
 #unityContainer {
   overflow: auto;
 }
+
+.auto-scroll {
+  display: block;
+  max-height: 300px;
+  overflow-y: auto;
+}
