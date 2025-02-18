@@ -13,7 +13,7 @@ function VignetteList({ publication, ancillaryPublication }) {
 
     useEffect(() => {
         const fetchVignettesData = async (uuid) => {
-            log.debug('==== Fetching vignettes data')
+            log.debug('vignettes: getting data...', uuid)
             // ancillaryPublication should have a json config file
             const fileName = ancillaryPublication.files[0].rel_path
             const path = `${uuid}/${fileName}`

@@ -6,7 +6,7 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import {Layout} from "@elastic/react-search-ui-views";
 import log from "loglevel";
-import {cleanJson, eq, getRequestHeaders, getStatusColor, getUBKGFullName} from "@/components/custom/js/functions";
+import {cleanJson, eq, getStatusColor} from "@/components/custom/js/functions";
 import {getEntityData, update_create_dataset} from "@/lib/services";
 import AppContext from '@/context/AppContext'
 import EntityContext, {EntityProvider} from '@/context/EntityContext'
@@ -44,7 +44,6 @@ function EditUpload() {
     const {_t, cache, adminGroup, getBusyOverlay, toggleBusyOverlay, getPreviewView} = useContext(AppContext)
     const router = useRouter()
     const [source, setSource] = useState(null)
-
 
     // Disable all form elements if data_access_level is "public"
     // Wait until "sampleCategories" and "editMode" are set prior to running this

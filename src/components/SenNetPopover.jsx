@@ -103,7 +103,7 @@ function SenNetPopover({children, text, placement = SenPopoverOptions.placement.
 SenNetPopover.propTypes = {
     children: PropTypes.node,
     placement: PropTypes.string,
-    className: PropTypes.string.isRequired,
+    className: PropTypes.string,
     trigger: PropTypes.any,
 }
 
