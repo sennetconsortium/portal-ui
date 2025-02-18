@@ -60,6 +60,31 @@ class Addon {
         return e.code === this.keycodes.esc
     }
 
+    static observeMutations(apps, args) {
+
+        const targetNode = document.getElementById("__next")
+        const config = { attributes: true, childList: true, subtree: true }
+
+        const callback = (mutationList, observer) => {
+            for (const mutation of mutationList) {
+
+                if (mutation.type === "childList") {
+                    for (let app in apps) {
+                        for (let el of mutation.addedNodes) {
+                            if ($(el).hasClass(`js-app--${app}`)) {
+                                new apps[app](el, {app, ...args })
+                            }
+                        }
+                    }
+                }
+            }
+        };
+
+
+        const observer = new MutationObserver(callback)
+        observer.observe(targetNode, config)
+    }
+
     static isLocal() {
         return (location.host.indexOf('localhost') !== -1) || (location.host.indexOf('.dev') !== -1)
     }

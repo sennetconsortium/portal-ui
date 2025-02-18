@@ -18,8 +18,15 @@ function addons(source, args= null) {
         tooltip: Tooltip
     }
 
+    let observedApps = {
+        searchErrorBoundary: SearchErrorBoundary,
+    }
+
+    args = args || window.addons.init
+    Addon.observeMutations(observedApps, args)
+
     setTimeout(() => {
-        args = args || window.addons.init
+
         try {
             for (let app in apps) {
                 document

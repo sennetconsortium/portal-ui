@@ -15,6 +15,9 @@ import {STORAGE_KEY} from "@/config/config";
 import AppModal from "../components/AppModal";
 import Spinner from "../components/custom/Spinner";
 import Unauthorized from "@/components/custom/layout/Unauthorized";
+import ReactDOMServer from "react-dom/server";
+import InvalidToken from "@/components/custom/layout/InvalidToken";
+import NotFound from "@/components/custom/NotFound";
 
 const AppContext = createContext()
 
@@ -277,6 +280,13 @@ export const AppProvider = ({ cache, banners, children }) => {
         return isUnauthorized(data) && data != null ? <Unauthorized/> : <Spinner/>
     }
 
+    const getStringifiedComponents = () => {
+        return btoa(JSON.stringify({
+            token: ReactDOMServer.renderToStaticMarkup(<InvalidToken />).toString(),
+            notFound: ReactDOMServer.renderToStaticMarkup(<NotFound />).toString()
+        }))
+    }
+
     return (
         <AppContext.Provider
             value={{
@@ -308,7 +318,7 @@ export const AppProvider = ({ cache, banners, children }) => {
                 getGroupName,
                 getBusyOverlay,
                 toggleBusyOverlay,
-                tutorialTrigger, setTutorialTrigger,
+                tutorialTrigger, setTutorialTrigger, getStringifiedComponents
             }}
         >
             {children}
