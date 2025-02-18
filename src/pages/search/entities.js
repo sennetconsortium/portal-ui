@@ -1,4 +1,5 @@
 import dynamic from "next/dynamic";
+import ReactDOMServer from "react-dom/server"
 import React, {useContext} from "react";
 import {ErrorBoundary, SearchBox} from "@elastic/react-search-ui";
 import {Layout} from "@elastic/react-search-ui-views";
@@ -37,7 +38,7 @@ function SearchEntities() {
         authorized,
         isAuthorizing,
         isUnauthorized,
-        hasAuthenticationCookie
+        hasAuthenticationCookie, getStringifiedComponents
     } = useContext(AppContext);
 
     function handleSearchFormSubmit(event, onSubmit) {
@@ -67,7 +68,7 @@ function SearchEntities() {
 
                 <SearchUIContainer config={SEARCH_ENTITIES} name='entities' authState={authState}>
                     <AppNavbar hidden={isRegisterHidden}/>
-                    <ErrorBoundary>
+                    <ErrorBoundary className={'js-app--searchErrorBoundary'} data-components={getStringifiedComponents()}>
                         <Layout
                             header={
                                 <>
