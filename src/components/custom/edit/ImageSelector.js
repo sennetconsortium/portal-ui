@@ -4,7 +4,7 @@ import {uploadFile} from "../../../lib/services";
 import SenNetPopover from "../../SenNetPopover";
 
 
-export default function ImageSelector({ editMode, values, setValues, imageByteArray, setImageByteArray }) {
+export default function ImageSelector({ editMode, values, setValues, imageByteArray, setImageByteArray, isDisabled }) {
     const imageInputRef = useRef()
     const [error, setError] = useState(null)
     const [inputInformation, setInputInformation] = useState(null)
@@ -122,8 +122,8 @@ export default function ImageSelector({ editMode, values, setValues, imageByteAr
                         {error}
                     </Alert>
                 }
-                <SenNetPopover className={'image-selector'} placement={'top'} text={'Click here to attach a single image or multiple images'}>
-                    <Button variant={'outline-primary rounded-0'} onClick={handleUploadImagesClick}>
+                <SenNetPopover className={'image-selector'} placement={'top'} text={isDisabled ? 'The image files of the entity cannot be updated' : 'Click here to attach a single image or multiple images'}>
+                    <Button disabled={isDisabled} variant={'outline-primary rounded-0'} onClick={isDisabled ? null : handleUploadImagesClick}>
                         Upload image files
                         <i className={'bi bi-paperclip ms-2'}/>
                     </Button>
