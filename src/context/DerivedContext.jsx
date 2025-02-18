@@ -162,7 +162,7 @@ export const DerivedProvider = ({children, showVitessceList, setShowVitessceList
                 }
 
                 if (processed.files && processed.files.length) {
-                    let dataProducts = filterFilesForDataProducts(processed.ingest_metadata.files, processed)
+                    let dataProducts = filterFilesForDataProducts(processed.files, processed)
                     files.push(...dataProducts)
                 }
             }
