@@ -122,7 +122,7 @@ export default function ImageSelector({ editMode, values, setValues, imageByteAr
                         {error}
                     </Alert>
                 }
-                <SenNetPopover className={'image-selector'} placement={'top'} text={isDisabled ? 'The image files of the entity cannot be updated' : 'Click here to attach a single image or multiple images'}>
+                <SenNetPopover className={'image-selector'} placement={'top'} text={isDisabled ? 'The image files of this entity cannot be updated under its current publication status' : 'Click here to attach a single image or multiple images'}>
                     <Button disabled={isDisabled} variant={'outline-primary rounded-0'} onClick={isDisabled ? null : handleUploadImagesClick}>
                         Upload image files
                         <i className={'bi bi-paperclip ms-2'}/>
