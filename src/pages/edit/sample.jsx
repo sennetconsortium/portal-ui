@@ -1,5 +1,5 @@
 import dynamic from "next/dynamic";
-import React, {useContext, useEffect, useRef, useState} from "react";
+import React, {Suspense, useContext, useEffect, useRef, useState} from "react";
 import {useRouter} from 'next/router';
 import Alert from 'react-bootstrap/Alert';
 import Button from 'react-bootstrap/Button';
@@ -13,6 +13,7 @@ import EntityContext, {EntityProvider} from '../../context/EntityContext'
 import {getUserName, isRuiSupported} from "../../config/config";
 import {SenPopoverOptions} from "../../components/SenNetPopover";
 import $ from "jquery";
+import AppSuspense from "@/components/AppSuspense";
 
 const AncestorId = dynamic(() => import("../../components/custom/edit/sample/AncestorId"))
 const AncestorInformationBox = dynamic(() => import("../../components/custom/entities/sample/AncestorInformationBox"))
@@ -430,9 +431,7 @@ function EditSample() {
                                     }
 
                                     {/*Source Information Box*/}
-                                    {source &&
-                                        <AncestorInformationBox ancestor={source}/>
-                                    }
+                                    <AppSuspense predicate={source} ><AncestorInformationBox ancestor={source}/></AppSuspense>
 
                                     {/*/!*Tissue Sample Type*!/*/}
 
