@@ -115,12 +115,9 @@ export const EntityProvider = ({ children }) => {
         const form = entityForm.current;
         if (data !== null || form !== null) {
             if (data?.data_access_level === 'public' || data?.status === 'Published') {
-                const excludedElementIds = ['view-rui-json-btn']
                 const elements = form.elements;
                 setDisabled(true)
                 for (let i = 0, len = elements.length; i < len; ++i) {
-                    if (excludedElementIds.includes(elements[i].id))
-                        continue
                     elements[i].setAttribute('disabled', true);
                 }
             } else {
