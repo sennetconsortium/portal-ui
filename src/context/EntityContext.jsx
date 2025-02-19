@@ -1,4 +1,4 @@
-import React, {createContext, useEffect, useState, useContext} from 'react'
+import React, {createContext, useEffect, useState, useContext, useRef} from 'react'
 import { useRouter } from 'next/router'
 import {
     get_provider_groups,
@@ -38,6 +38,9 @@ export const EntityProvider = ({ children }) => {
     const [providerGroups, setProviderGroups] = useState([])
     const [selectedUserWriteGroupUuid, setSelectedUserWriteGroupUuid] =
         useState(null)
+
+    const entityForm = useRef(null)
+    const [disabled, setDisabled] = useState(false)
 
     const [response, setResponse] = useState()
     const [warningClasses, setWarningClasses] = useState({})
@@ -108,6 +111,22 @@ export const EntityProvider = ({ children }) => {
             })
             .catch((e) => log.error(e))
     }, [])
+
+    useEffect(() => {
+        const form = entityForm.current;
+        if (data !== null || form !== null) {
+            if (data?.data_access_level === 'public' || data?.status === 'Published') {
+                const excludedElementIds = ['view-rui-json-btn']
+                const elements = form.elements;
+                setDisabled(true)
+                for (let i = 0, len = elements.length; i < len; ++i) {
+                    if (excludedElementIds.includes(elements[i].id))
+                        continue
+                    elements[i].setAttribute('disabled', true);
+                }
+            }
+        }
+    }, [data, editMode, entityForm.current])
 
     const onChange = (e, fieldId, value) => {
         // log.debug('onChange', fieldId, value)
@@ -342,7 +361,7 @@ export const EntityProvider = ({ children }) => {
                 getEntityConstraints, getSampleEntityConstraints, buildConstraint,
                 getMetadataNote, successIcon, errIcon, checkProtocolUrl,
                 warningClasses, setWarningClasses, getCancelBtn,
-                isAdminOrHasValue, getAssignedToGroupNames,
+                isAdminOrHasValue, getAssignedToGroupNames, entityForm, disabled,
                 contactsTSV, contacts, setContacts, contributors, setContributors, setContactsAttributes, setContactsAttributesOnFail
             }}
         >
