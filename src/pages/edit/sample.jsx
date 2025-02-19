@@ -431,7 +431,14 @@ function EditSample() {
                                     }
 
                                     {/*Source Information Box*/}
-                                    <AppSuspense predicate={source} ><AncestorInformationBox ancestor={source}/></AppSuspense>
+                                    <AppSuspense predicate={source} fallbackBuilder={[
+                                        {
+                                            comp: 'text', line: 2, class: 'w-50'
+                                        },
+                                        {
+                                            comp: 'table', row: 1, col: 5
+                                        }
+                                    ]} ><AncestorInformationBox ancestor={source}/></AppSuspense>
 
                                     {/*/!*Tissue Sample Type*!/*/}
 
