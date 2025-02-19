@@ -31,13 +31,10 @@ function ViewPublication() {
     const [hasWritePrivilege, setHasWritePrivilege] = useState(false)
     const {router, isRegisterHidden, _t, cache, isPreview, getPreviewView} = useContext(AppContext)
 
-    // only executed on init rendering, see the []
     useEffect(() => {
-        // declare the async data fetching function
         const fetchData = async (uuid) => {
-
             log.debug('publication: getting data...', uuid)
-            // get the data from the api
+            // fetch publication data
             const _data = await getEntityData(uuid, ['ancestors', 'descendants']);
 
             log.debug('publication: Got data', _data)
@@ -45,20 +42,23 @@ function ViewPublication() {
                 setError(true)
                 setErrorMessage(_data["error"])
                 setData(false)
-            } else {
-                setData(_data)
-                const ancestry = await getAncestryData(_data.uuid)
+                return
+            }
+
+            // set state with the result
+            setData(_data)
+
+            // fetch ancestry data
+            getAncestryData(_data.uuid).then(ancestry => {
                 Object.assign(_data, ancestry)
                 setData(_data)
 
-                const citation = await fetchDataCite(_data.publication_url)
-                setCitationData(citation)
-
+                // get ancillary publication
                 // there could potentially be multiple descendants
                 let ancillaryPublication = null
-                if (_data.descendants.length > 1) {
+                if (ancestry.descendants.length > 1) {
                     // get the most recent ancillary publication
-                    ancillaryPublication = _data.descendants
+                    ancillaryPublication = ancestry.descendants
                         .sort((a, b) => new Date(b.last_modified_timestamp) - new Date(a.last_modified_timestamp))
                         .find(d => d.dataset_type === 'Publication [ancillary]' && d?.files[0]?.rel_path)
                 } else {
@@ -67,19 +67,25 @@ function ViewPublication() {
                 }
 
                 setAncillaryPublicationData(ancillaryPublication || {})
+            }).catch(log.error)
 
-                get_write_privilege_for_group_uuid(_data.group_uuid).then(response => {
-                    setHasWritePrivilege(response.has_write_privs)
+            // fetch citation data
+            if (_data.publication_url) {
+                fetchDataCite(_data.publication_url).then(citation => {
+                    setCitationData(citation)
                 }).catch(log.error)
             }
+
+            // fetch write privilege
+            get_write_privilege_for_group_uuid(_data.group_uuid).then(response => {
+                setHasWritePrivilege(response.has_write_privs)
+            }).catch(log.error)
         }
 
         if (router.query.hasOwnProperty("uuid")) {
-            // call the function
+            // fetch publication data
             fetchData(router.query.uuid)
-                // make sure to catch any error
-                .catch(console.error);
-            ;
+                .catch(log.error);
         } else {
             setData(null);
         }

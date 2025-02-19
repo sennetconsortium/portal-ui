@@ -36,14 +36,10 @@ function ViewCollection({collectionType='Collection', entitiesLabel='Entities'})
 
     const {isRegisterHidden, _t, isPreview, getPreviewView} = useContext(AppContext)
 
-    // only executed on init rendering, see the []
     useEffect(() => {
-        // declare the async data fetching function
         const fetchData = async (uuid) => {
-
-
             log.debug('collection: getting data...', uuid)
-            // get the data from the api
+            // fetch collection data
             const _data = await getEntityData(uuid, ['ancestors', 'descendants']);
 
             log.debug('collection: Got data', _data)
@@ -52,28 +48,36 @@ function ViewCollection({collectionType='Collection', entitiesLabel='Entities'})
                 setErrorMessage(_data["error"])
                 setData(false)
                 setIsEntitiesLoading(false)
-            } else {
-                setData(_data)
-                const entities = await callService(filterProperties.collectionEntities,  `${getEntityEndPoint()}collections/${_data.uuid}/entities`, 'POST')
+                return
+            }
+
+            // set state with the result
+            setData(_data)
+
+            // fetch entities data
+            callService(filterProperties.collectionEntities, `${getEntityEndPoint()}collections/${_data.uuid}/entities`, 'POST').then(entities => {
                 Object.assign(_data, {entities})
                 setData(_data)
                 setIsEntitiesLoading(false)
+            }).catch(log.error)
 
-                const citation = await fetchDataCite(_data.doi_url)
-                setCitationData(citation)
-
-                get_write_privilege_for_group_uuid(_data.group_uuid).then(response => {
-                    setHasWritePrivilege(response.has_write_privs)
+            // fetch citation data
+            if (_data.doi_url) {
+                fetchDataCite(_data.doi_url).then(citation => {
+                    setCitationData(citation)
                 }).catch(log.error)
             }
+
+            // fetch write privilege
+            get_write_privilege_for_group_uuid(_data.group_uuid).then(response => {
+                setHasWritePrivilege(response.has_write_privs)
+            }).catch(log.error)
         }
 
         if (router.query.hasOwnProperty("uuid")) {
-            // call the function
+            // fetch collection data
             fetchData(router.query.uuid)
-                // make sure to catch any error
-                .catch(console.error);
-            ;
+                .catch(log.error);
         } else {
             setData(null);
         }

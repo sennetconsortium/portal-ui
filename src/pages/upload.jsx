@@ -2,7 +2,6 @@ import dynamic from "next/dynamic";
 import React, {useContext, useEffect, useState} from "react";
 import {useRouter} from 'next/router';
 import log from "loglevel";
-import {getRequestHeaders} from "@/components/custom/js/functions";
 import {
     callService,
     filterProperties,
@@ -33,13 +32,10 @@ function ViewUpload() {
     const [hasWritePrivilege, setHasWritePrivilege] = useState(false)
     const {isRegisterHidden, _t, cache, isPreview, getPreviewView} = useContext(AppContext);
 
-    // only executed on init rendering, see the []
     useEffect(() => {
-        // declare the async data fetching function
         const fetchData = async (uuid) => {
-
             log.debug('upload: getting data...', uuid)
-            // get the data from the api
+            // fetch upload data
             const _data = await getEntityData(uuid, ['ancestors', 'descendants']);
 
             log.debug('upload: Got data', _data)
@@ -48,32 +44,33 @@ function ViewUpload() {
                 setErrorMessage(_data["error"])
                 setData(false)
                 setIsDatasetsLoading(false)
-            } else {
-                setData(_data)
-                const datasets = await callService(filterProperties.uploadsDatasets,  `${getEntityEndPoint()}uploads/${_data.uuid}/datasets`, 'POST')
+                return
+            }
+
+            // set state with the result
+            setData(_data)
+
+            // fetch datasets data
+            callService(filterProperties.uploadsDatasets, `${getEntityEndPoint()}uploads/${_data.uuid}/datasets`, 'POST').then(datasets => {
                 Object.assign(_data, {datasets})
                 setData(_data)
                 setIsDatasetsLoading(false)
+            }).catch(log.error)
 
-                get_write_privilege_for_group_uuid(_data.group_uuid).then(response => {
-                    setHasWritePrivilege(response.has_write_privs)
-                }).catch(log.error)
-
-            }
+            // fetch write privilege
+            get_write_privilege_for_group_uuid(_data.group_uuid).then(response => {
+                setHasWritePrivilege(response.has_write_privs)
+            }).catch(log.error)
         }
 
         if (router.query.hasOwnProperty("uuid")) {
-            // call the function
+            // fetch upload data
             fetchData(router.query.uuid)
-                // make sure to catch any error
-                .catch(console.error);
-            ;
+                .catch(log.error);
         } else {
             setData(null);
         }
     }, [router]);
-
-    console.log("Test cache in source: ", cache)
 
     if (isPreview(data, error))  {
         return getPreviewView(data)

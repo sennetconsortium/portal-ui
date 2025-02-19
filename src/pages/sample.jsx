@@ -33,12 +33,10 @@ function ViewSample() {
 
     const {isRegisterHidden, _t, cache, isPreview, getPreviewView} = useContext(AppContext)
 
-    // only executed on init rendering, see the []
     useEffect(() => {
-        // declare the async data fetching function
         const fetchData = async (uuid) => {
             log.debug('sample: getting data...', uuid)
-            // get the data from the api
+            // fetch sample data
             const _data = await getEntityData(uuid, ['ancestors', 'descendants']);
 
             log.debug('sample: Got data', _data)
@@ -46,33 +44,35 @@ function ViewSample() {
                 setError(true)
                 setErrorMessage(_data["error"])
                 setData(false)
-            } else {
-                setData(_data)
-                const ancestry = await getAncestryData(_data.uuid)
+                return
+            }
+
+            // set state with the result
+            setData(_data)
+
+            // fetch ancestry data
+            getAncestryData(_data.uuid).then(ancestry => {
                 Object.assign(_data, ancestry)
                 setData(_data)
-                for (const ancestor of _data.ancestors) {
-                    log.debug(ancestor)
+
+                for (const ancestor of ancestry.ancestors) {
                     if (ancestor.metadata && Object.keys(ancestor.metadata).length) {
                         setAncestorHasMetadata(true)
                         break
                     }
                 }
+            }).catch(log.error)
 
-                get_write_privilege_for_group_uuid(_data.group_uuid)
-                    .then(response => {
-                        setHasWritePrivilege(response.has_write_privs)
-                    }).catch(log.error)
-
-            }
+            // fetch write privilege
+            get_write_privilege_for_group_uuid(_data.group_uuid).then(response => {
+                setHasWritePrivilege(response.has_write_privs)
+            }).catch(log.error)
         }
 
         if (router.query.hasOwnProperty("uuid")) {
-            // call the function
+            // fetch sample data
             fetchData(router.query.uuid)
-                // make sure to catch any error
-                .catch(console.error);
-            ;
+                .catch(log.error);
         } else {
             setData(null);
         }
