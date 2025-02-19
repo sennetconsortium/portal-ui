@@ -41,7 +41,7 @@ function SampleCategory({
             <Form.Group className="mb-3" controlId="sample_category">
                 <Form.Label>Sample Category <span
                     className="required">* </span>
-                    <SenNetPopover text={<>
+                    <SenNetPopover className={'sampleCat--pop'} text={<>
                         The category of this <code>Sample</code>. Choose from one of the available options.<br />
                         <small className='popover-note text-muted mt-2'>Note: CCF Registration User Interface (CCF-RUI)
                             tool becomes available for the <code>{cache.sampleCategories.Block} Sample</code> category
@@ -60,7 +60,7 @@ function SampleCategory({
                                  onChange(e, e.target.id, e.target.value)
                              }}
                              defaultValue={data.sample_category}>
-                    <option value="">----</option>
+                    {!isDisabled && <option value="">----</option>}
                     {Object.entries(sample_categories).map(sample_category => {
                         return (
                             <option key={sample_category[0]} value={sample_category[0]}>

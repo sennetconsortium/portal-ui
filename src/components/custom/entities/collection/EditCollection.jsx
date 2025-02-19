@@ -44,7 +44,7 @@ export default function EditCollection({collectionType='Collection', entitiesTab
         editMode, setEditMode, isEditMode,
         showModal, getEntityConstraints,
         disableSubmit, setDisableSubmit,
-        setDataAccessPublic,
+        entityForm,
         getCancelBtn,
         contactsTSV, contacts, setContacts, contributors, setContactsAttributes, setContactsAttributesOnFail
     } = useContext(EntityContext)
@@ -123,16 +123,16 @@ export default function EditCollection({collectionType='Collection', entitiesTab
                 setContacts({description: {records: _data.contacts, headers: contactsTSV.headers}})
             }
 
-            // Set state with default values that will be PUT to Entity API to update
-            setValues(prevState => ({
-                'title': _data.title,
-                'description': _data.description,
-                'entity_uuids': prevState.entity_uuids || [],
-                'contacts': _data.contacts,
-                'contributors': _data.contributors
-            }))
-            setEditMode('Edit')
-            setDataAccessPublic(_data.data_access_level === 'public')
+                // Set state with default values that will be PUT to Entity API to update
+                setValues({
+                    'title': _data.title,
+                    'description': _data.description,
+                    'entity_uuids': entity_uuids,
+                    'contacts': _data.contacts,
+                    'contributors': _data.contributors
+                })
+                setEditMode("Edit")
+            }
         }
 
         if (router.query.hasOwnProperty('uuid')) {
@@ -395,7 +395,7 @@ export default function EditCollection({collectionType='Collection', entitiesTab
                                               values={values} adminGroup={adminGroup}/>
                             }
                             bodyContent={
-                                <Form noValidate validated={validated} id="collection-form">
+                                <Form noValidate validated={validated} id="collection-form" ref={entityForm}>
                                     {/*Group select*/}
                                     {
                                         !(userWriteGroups.length === 1 || isEditMode()) &&

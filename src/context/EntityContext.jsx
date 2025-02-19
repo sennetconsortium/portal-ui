@@ -1,4 +1,4 @@
-import React, {createContext, useEffect, useState, useContext} from 'react'
+import React, {createContext, useEffect, useState, useContext, useRef} from 'react'
 import { useRouter } from 'next/router'
 import {
     get_provider_groups,
@@ -33,11 +33,13 @@ export const EntityProvider = ({ children }) => {
     const [modalTitle, setModalTitle] = useState(null)
     const [hasSubmissionError, setHasSubmissionError] = useState(false)
     const [disableSubmit, setDisableSubmit] = useState(false)
-    const [dataAccessPublic, setDataAccessPublic] = useState(null)
     const [userWriteGroups, setUserWriteGroups] = useState([])
     const [providerGroups, setProviderGroups] = useState([])
     const [selectedUserWriteGroupUuid, setSelectedUserWriteGroupUuid] =
         useState(null)
+
+    const entityForm = useRef(null)
+    const [disabled, setDisabled] = useState(true)
 
     const [response, setResponse] = useState()
     const [warningClasses, setWarningClasses] = useState({})
@@ -108,6 +110,25 @@ export const EntityProvider = ({ children }) => {
             })
             .catch((e) => log.error(e))
     }, [])
+
+    const disableElements = () => {
+        const form = entityForm.current;
+        if (data !== null && form !== null) {
+            if (data?.data_access_level === 'public' || data?.status === 'Published') {
+                const elements = form.elements;
+                setDisabled(true)
+                for (let i = 0, len = elements.length; i < len; ++i) {
+                    elements[i].setAttribute('disabled', true);
+                }
+            } else {
+                setDisabled(false)
+            }
+        }
+    }
+
+    useEffect(() => {
+        disableElements()
+    }, [data, editMode, entityForm.current])
 
     const onChange = (e, fieldId, value) => {
         // log.debug('onChange', fieldId, value)
@@ -338,11 +359,10 @@ export const EntityProvider = ({ children }) => {
                 userWriteGroups, setUserWriteGroups, onChange, editMode, setEditMode,
                 selectedUserWriteGroupUuid, setSelectedUserWriteGroupUuid,
                 disableSubmit, setDisableSubmit,
-                dataAccessPublic, setDataAccessPublic,
                 getEntityConstraints, getSampleEntityConstraints, buildConstraint,
                 getMetadataNote, successIcon, errIcon, checkProtocolUrl,
                 warningClasses, setWarningClasses, getCancelBtn,
-                isAdminOrHasValue, getAssignedToGroupNames,
+                isAdminOrHasValue, getAssignedToGroupNames, entityForm, disabled, disableElements,
                 contactsTSV, contacts, setContacts, contributors, setContributors, setContactsAttributes, setContactsAttributesOnFail
             }}
         >

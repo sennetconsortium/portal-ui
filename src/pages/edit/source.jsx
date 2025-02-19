@@ -36,7 +36,7 @@ function EditSource() {
         showModal,
         selectedUserWriteGroupUuid,
         disableSubmit, setDisableSubmit,
-        dataAccessPublic, setDataAccessPublic,
+        entityForm, disabled, disableElements,
         getMetadataNote, checkProtocolUrl,
         warningClasses, getCancelBtn
     } = useContext(EntityContext)
@@ -46,20 +46,6 @@ function EditSource() {
     const [source, setSource] = useState(null)
     const [imageByteArray, setImageByteArray] = useState([])
     const alertStyle = useRef('info')
-    const [disabled, setDisabled] = useState(true)
-
-
-    // Disable all form elements if data_access_level is "public"
-    // Wait until "sampleCategories" and "editMode" are set prior to running this
-    useEffect(() => {
-        const form = document.getElementById("source-form");
-        if (dataAccessPublic === true && form !== null) {
-            const elements = form.elements;
-            for (let i = 0, len = elements.length; i < len; ++i) {
-                elements[i].setAttribute('disabled', true);
-            }
-        }
-    }, [dataAccessPublic, editMode])
 
     // only executed on init rendering, see the []
     useEffect(() => {
@@ -93,16 +79,12 @@ function EditSource() {
                 }
                 setValues(_values)
                 setEditMode("Edit")
-                const isPublic = _data.data_access_level === 'public'
-                setDataAccessPublic(isPublic)
-                setDisabled(isPublic)
             }
         }
 
         if (router.query.hasOwnProperty("uuid")) {
             if (eq(router.query.uuid, 'register')) {
                 setData(true)
-                setDisabled(false)
                 setEditMode("Register")
             } else {
                 // call the function
@@ -115,6 +97,10 @@ function EditSource() {
             setSource(null)
         }
     }, [router]);
+
+    useEffect(() => {
+        disableElements()
+    }, [data, editMode, entityForm.current])
 
     const handleSave = async (event) => {
         setDisableSubmit(true);
@@ -243,7 +229,7 @@ function EditSource() {
                                 <EntityHeader entity={cache.entities.source} isEditMode={isEditMode()} data={data}/>
                             }
                             bodyContent={
-                                <Form noValidate validated={validated} onSubmit={handleSave} id={"source-form"}>
+                                <Form noValidate validated={validated} onSubmit={handleSave} id={"source-form"} ref={entityForm}>
                                     {/*Group select*/}
                                     {
                                         !(userWriteGroups.length === 1 || isEditMode()) &&
@@ -255,7 +241,7 @@ function EditSource() {
                                     }
 
                                     {/*Lab's Source Non-PHI ID*/}
-                                    <EntityFormGroup isDisabled={disabled} label="Lab's Source Non-PHI ID or Name"
+                                    <EntityFormGroup label="Lab's Source Non-PHI ID or Name"
                                                      placeholder='A non-PHI ID or deidentified name used by the lab when referring to the source.'
                                                      controlId='lab_source_id' value={data.lab_source_id}
                                                      isRequired={true}
@@ -269,7 +255,7 @@ function EditSource() {
                                     <SourceType data={data} onChange={onChange} isDisabled={isEditMode()}/>
 
                                     {/*Case Selection Protocol*/}
-                                    <EntityFormGroup isDisabled={disabled} label="Case Selection Protocol" placeholder='protocols.io DOI'
+                                    <EntityFormGroup label="Case Selection Protocol" placeholder='protocols.io DOI'
                                                      popoverTrigger={SenPopoverOptions.triggers.hoverOnClickOff}
                                                      controlId='protocol_url' value={data.protocol_url}
                                                      isRequired={true} pattern={getDOIPattern()}
@@ -285,7 +271,7 @@ function EditSource() {
                                                          className="bi bi-box-arrow-up-right"></i></a>.</span>}/>
 
                                     {/*/!*Description*!/*/}
-                                    <EntityFormGroup isDisabled={disabled} label='Lab Notes' type='textarea' controlId='description'
+                                    <EntityFormGroup label='Lab Notes' type='textarea' controlId='description'
                                                      value={data.description}
                                                      onChange={onChange}
                                                      text={<>Free text field to enter a description of

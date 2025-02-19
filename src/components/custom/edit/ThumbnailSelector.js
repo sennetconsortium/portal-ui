@@ -1,10 +1,10 @@
 import React, {useRef, useState} from 'react'
-import {Button, Badge, Alert, CloseButton, OverlayTrigger, Tooltip} from 'react-bootstrap'
-import {uploadFile} from "../../../lib/services";
+import {Button, Badge, Alert, CloseButton} from 'react-bootstrap'
+import {uploadFile} from "@/lib/services";
 import SenNetPopover from "../../SenNetPopover";
 
 
-export default function ThumbnailSelector({ editMode, values, setValues }) {
+export default function ThumbnailSelector({ editMode, values, setValues, isDisabled }) {
     const thumbnailInputRef = useRef()
     const [thumbnail, setThumbnail] = useState(null)
     const [error, setError] = useState(null)
@@ -54,8 +54,8 @@ export default function ThumbnailSelector({ editMode, values, setValues }) {
             </Alert>
         }
 
-        <SenNetPopover className={'thumbnail-selector'} placement={'top'} text={'Click here to attach a single thumbnail image'}>
-            <Button className={'mb-2'} variant={'outline-primary rounded-0'} onClick={handleUploadThumbnailClick}>
+        <SenNetPopover className={'thumbnail-selector'} placement={'top'} text={isDisabled ? 'The thumbnail files of this entity cannot be updated under its current publication status' : 'Click here to attach a single thumbnail image'}>
+            <Button disabled={isDisabled} className={'mb-2'} variant={'outline-primary rounded-0'} onClick={isDisabled ? null : handleUploadThumbnailClick}>
                 Upload a thumbnail file
                 <i className={'bi bi-paperclip ms-2'}/>
             </Button>
