@@ -111,7 +111,7 @@ export const EntityProvider = ({ children }) => {
             .catch((e) => log.error(e))
     }, [])
 
-    useEffect(() => {
+    const disableElements = () => {
         const form = entityForm.current;
         if (data !== null && form !== null) {
             if (data?.data_access_level === 'public' || data?.status === 'Published') {
@@ -124,6 +124,10 @@ export const EntityProvider = ({ children }) => {
                 setDisabled(false)
             }
         }
+    }
+
+    useEffect(() => {
+        disableElements()
     }, [data, editMode, entityForm.current])
 
     const onChange = (e, fieldId, value) => {
@@ -358,7 +362,7 @@ export const EntityProvider = ({ children }) => {
                 getEntityConstraints, getSampleEntityConstraints, buildConstraint,
                 getMetadataNote, successIcon, errIcon, checkProtocolUrl,
                 warningClasses, setWarningClasses, getCancelBtn,
-                isAdminOrHasValue, getAssignedToGroupNames, entityForm, disabled,
+                isAdminOrHasValue, getAssignedToGroupNames, entityForm, disabled, disableElements,
                 contactsTSV, contacts, setContacts, contributors, setContributors, setContactsAttributes, setContactsAttributesOnFail
             }}
         >

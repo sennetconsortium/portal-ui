@@ -37,7 +37,7 @@ function EditSource() {
         showModal,
         selectedUserWriteGroupUuid,
         disableSubmit, setDisableSubmit,
-        entityForm, disabled,
+        entityForm, disabled, disableElements,
         getMetadataNote, checkProtocolUrl,
         warningClasses, getCancelBtn
     } = useContext(EntityContext)
@@ -98,6 +98,10 @@ function EditSource() {
             setSource(null)
         }
     }, [router]);
+
+    useEffect(() => {
+        disableElements()
+    }, [data, editMode, entityForm.current])
 
     const handleSave = async (event) => {
         setDisableSubmit(true);
