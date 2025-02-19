@@ -47,6 +47,7 @@ function EditSource() {
     const [source, setSource] = useState(null)
     const [imageByteArray, setImageByteArray] = useState([])
     const alertStyle = useRef('info')
+    const [disabled, setDisabled] = useState(true)
 
 
     // Disable all form elements if data_access_level is "public"
@@ -93,13 +94,16 @@ function EditSource() {
                 }
                 setValues(_values)
                 setEditMode("Edit")
-                setDataAccessPublic(_data.data_access_level === 'public')
+                const isPublic = _data.data_access_level === 'public'
+                setDataAccessPublic(isPublic)
+                setDisabled(isPublic)
             }
         }
 
         if (router.query.hasOwnProperty("uuid")) {
             if (eq(router.query.uuid, 'register')) {
                 setData(true)
+                setDisabled(false)
                 setEditMode("Register")
             } else {
                 // call the function
@@ -253,7 +257,7 @@ function EditSource() {
                                     }
 
                                     {/*Lab's Source Non-PHI ID*/}
-                                    <EntityFormGroup label="Lab's Source Non-PHI ID or Name"
+                                    <EntityFormGroup isDisabled={disabled} label="Lab's Source Non-PHI ID or Name"
                                                      placeholder='A non-PHI ID or deidentified name used by the lab when referring to the source.'
                                                      controlId='lab_source_id' value={data.lab_source_id}
                                                      isRequired={true}
@@ -264,10 +268,10 @@ function EditSource() {
                                                      </>}/>
 
                                     {/*Source Type*/}
-                                    <SourceType data={data} onChange={onChange} isDisabled={editMode === 'Edit'}/>
+                                    <SourceType data={data} onChange={onChange} isDisabled={isEditMode()}/>
 
                                     {/*Case Selection Protocol*/}
-                                    <EntityFormGroup label="Case Selection Protocol" placeholder='protocols.io DOI'
+                                    <EntityFormGroup isDisabled={disabled} label="Case Selection Protocol" placeholder='protocols.io DOI'
                                                      popoverTrigger={SenPopoverOptions.triggers.hoverOnClickOff}
                                                      controlId='protocol_url' value={data.protocol_url}
                                                      isRequired={true} pattern={getDOIPattern()}
@@ -283,7 +287,7 @@ function EditSource() {
                                                          className="bi bi-box-arrow-up-right"></i></a>.</span>}/>
 
                                     {/*/!*Description*!/*/}
-                                    <EntityFormGroup label='Lab Notes' type='textarea' controlId='description'
+                                    <EntityFormGroup isDisabled={disabled} label='Lab Notes' type='textarea' controlId='description'
                                                      value={data.description}
                                                      onChange={onChange}
                                                      text={<>Free text field to enter a description of
@@ -297,7 +301,7 @@ function EditSource() {
                                                  text='Upload de-identified images only'/>
 
                                     {/* Images */}
-                                    <ImageSelector editMode={editMode}
+                                    <ImageSelector isDisabled={disabled} editMode={editMode}
                                                    values={values}
                                                    setValues={setValues}
                                                    imageByteArray={imageByteArray}
