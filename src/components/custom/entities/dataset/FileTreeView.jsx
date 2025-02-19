@@ -63,7 +63,7 @@ export const FileTreeView = ({data, selection = {}, keys = {files: 'files', uuid
     }, [])
 
     useEffect(() => {
-        if (loadDerived) {
+        if (derivedDataset && loadDerived) {
             if (isPrimaryDataset && derivedDataset[keys.files] && getLength(derivedDataset[keys.files])) {
                 setHasData(true)
                 buildTree(derivedDataset[keys.uuid], derivedDataset[keys.files])
