@@ -426,9 +426,15 @@ function EditSample() {
 
                                     {/*Ancestor ID*/}
                                     {/*editMode is only set when page is ready to load */}
-                                    {editMode &&
-                                        <AncestorId isDisabled={isEditMode()} data={data} source={source} onChange={_onChange} fetchSource={fetchSource}/>
-                                    }
+
+                                    <AppSuspense predicate={editMode} className={'mb-3'} fallbackBuilder={[
+                                        {
+                                            comp: 'text', line: 1, class: 'mb-2 w-20'
+                                        },
+                                        {
+                                            comp: 'text', line: 1, gap: 1, class: 'shimmer-text-block'
+                                        }
+                                    ]}><AncestorId isDisabled={isEditMode()} data={data} source={source} onChange={_onChange} fetchSource={fetchSource}/></AppSuspense>
 
                                     {/*Source Information Box*/}
                                     <AppSuspense predicate={source} fallbackBuilder={[

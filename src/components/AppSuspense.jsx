@@ -8,12 +8,13 @@ import {ShimmerTable, ShimmerText, ShimmerTitle} from "react-shimmer-effects"
  * @param children - a component to show once predicate evals to true
  * @param fallback - a component to show while predicate does not eval to true
  * @param fallbackBuilder - a list of obj describing how to build the fallback component
+ * @param className
  * @returns {*|JSX.Element}
  * @constructor
  */
-function AppSuspense({predicate, children, fallback, fallbackBuilder = []}) {
+function AppSuspense({predicate, children, fallback, fallbackBuilder = [], className = null}) {
     const defaultFallback = (
-        <div className={'sui-result p-4 mb-3'}>
+        <div className={`sui-result p-4 mb-3 ${className}`}>
             <ShimmerTitle line={2} gap={10} variant="secondary"/>
             <ShimmerText line={3} gap={10}/>
         </div>
@@ -33,7 +34,7 @@ function AppSuspense({predicate, children, fallback, fallbackBuilder = []}) {
             }
             x++
         }
-        setBuiltFallback(<div className={'sui-result p-4 mb-3'}>{result}</div>)
+        setBuiltFallback(<div className={className || 'sui-result p-4 mb-3'}>{result}</div>)
     }
 
     useEffect(() => {

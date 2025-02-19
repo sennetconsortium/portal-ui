@@ -113,7 +113,7 @@ export const EntityProvider = ({ children }) => {
 
     useEffect(() => {
         const form = entityForm.current;
-        if (data !== null || form !== null) {
+        if (data !== null && form !== null) {
             if (data?.data_access_level === 'public' || data?.status === 'Published') {
                 const elements = form.elements;
                 setDisabled(true)
