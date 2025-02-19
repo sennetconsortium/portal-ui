@@ -160,23 +160,22 @@ export default function EditDataset() {
                 setContacts({description: {records: _data.contacts, headers: contactsTSV.headers}})
             }
 
-                // Set state with default values that will be PUT to Entity API to update
-                setValues({
-                    'status': _data.status,
-                    'lab_dataset_id': _data.lab_dataset_id,
-                    'dataset_type': _data.dataset_type,
-                    'description': _data.description,
-                    'dataset_info': _data.dataset_info,
-                    'direct_ancestor_uuids': immediate_ancestors,
-                    'assigned_to_group_name': adminGroup ? _data.assigned_to_group_name : undefined,
-                    'ingest_task': adminGroup ? _data.ingest_task : undefined,
-                    'contains_human_genetic_sequences': _data.contains_human_genetic_sequences,
-                    'contacts': _data.contacts,
-                    'contributors': _data.contributors
-                })
-                setEditMode("Edit")
-                setContainsHumanGeneticSequences(_data.contains_human_genetic_sequences)
-            }
+            // Set state with default values that will be PUT to Entity API to update
+            setValues(prevState => ({
+                'status': _data.status,
+                'lab_dataset_id': _data.lab_dataset_id,
+                'dataset_type': _data.dataset_type,
+                'description': _data.description,
+                'dataset_info': _data.dataset_info,
+                'direct_ancestor_uuids': prevState.direct_ancestor_uuids || [],
+                'assigned_to_group_name': adminGroup ? _data.assigned_to_group_name : undefined,
+                'ingest_task': adminGroup ? _data.ingest_task : undefined,
+                'contains_human_genetic_sequences': _data.contains_human_genetic_sequences,
+                'contacts': _data.contacts,
+                'contributors': _data.contributors
+            }))
+            setEditMode('Edit')
+            setContainsHumanGeneticSequences(_data.contains_human_genetic_sequences)
         }
 
         if (router.query.hasOwnProperty("uuid")) {
