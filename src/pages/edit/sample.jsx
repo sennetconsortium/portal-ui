@@ -50,13 +50,12 @@ function EditSample() {
     const {_t, cache, filterImageFilesToAdd, getPreviewView} = useContext(AppContext)
     const router = useRouter()
     const [source, setSource] = useState(null)
-    const [sourceId, setSourceId] = useState(null)
     const [ruiSex, setRuiSex] = useState(undefined)
     const [ruiLocation, setRuiLocation] = useState('')
     const [showRui, setShowRui] = useState(false)
     const [showRuiButton, setShowRuiButton] = useState(false)
     const [ancestorOrgan, setAncestorOrgan] = useState([])
-    const [ancestorSource, setAncestorSource] = useState([])
+    const [ancestorSourceType, setAncestorSourceType] = useState([])
     const [sampleCategories, setSampleCategories] = useState(null)
     const [organ_group_hide, set_organ_group_hide] = useState('none')
 
@@ -147,7 +146,7 @@ function EditSample() {
                 }
 
                 setAncestorOrgan(_data.organ ? [_data.organ] : [_data?.origin_samples[0].organ])
-                setAncestorSource([getSourceType(_data.source)])
+                setAncestorSourceType([getSourceType(_data.source)])
 
                 if (_data['rui_location'] !== undefined) {
                     setRuiLocation(_data['rui_location'])
@@ -167,9 +166,8 @@ function EditSample() {
                     .catch(console.error);
             }
         } else {
-            setData(null);
+            setData(null)
             setSource(null)
-            setSourceId(null)
         }
     }, [router]);
 
@@ -237,8 +235,7 @@ function EditSample() {
             setError(true)
             setErrorMessage(source["error"])
         } else {
-            setSource(source);
-            setSourceId(source.sennet_id)
+            setSource(source)
 
             // Manually set ancestor organs when ancestor is updated via modal
             let ancestor_organ = []
@@ -250,7 +247,7 @@ function EditSample() {
                 }
             }
             setAncestorOrgan(ancestor_organ)
-            setAncestorSource([getSourceType(source)])
+            setAncestorSourceType([getSourceType(source)])
         }
     }
 
@@ -260,7 +257,7 @@ function EditSample() {
         // This Sample must a Sample Category: "Block"
         log.debug(ancestorOrgan)
         if (ancestorOrgan.length > 0) {
-            if (values !== null && values['sample_category'] === cache.sampleCategories.Block && isRuiSupported(ancestorOrgan, ancestorSource)) {
+            if (values !== null && values['sample_category'] === cache.sampleCategories.Block && isRuiSupported(ancestorOrgan, ancestorSourceType)) {
                 if (!showRuiButton) {
                     setShowRuiButton(true)
                 }
