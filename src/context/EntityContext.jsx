@@ -40,7 +40,7 @@ export const EntityProvider = ({ children }) => {
         useState(null)
 
     const entityForm = useRef(null)
-    const [disabled, setDisabled] = useState(false)
+    const [disabled, setDisabled] = useState(true)
 
     const [response, setResponse] = useState()
     const [warningClasses, setWarningClasses] = useState({})
@@ -124,6 +124,8 @@ export const EntityProvider = ({ children }) => {
                         continue
                     elements[i].setAttribute('disabled', true);
                 }
+            } else {
+                setDisabled(false)
             }
         }
     }, [data, editMode, entityForm.current])
