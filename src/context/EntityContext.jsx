@@ -152,11 +152,11 @@ export const EntityProvider = ({ children }) => {
     }
 
     useEffect(() => {
-        if (data !== null) {
+        if (data !== null && isEditMode()) {
             setDisabled(isPublic())
             observePage(document.getElementById('js-entityContext--observable'), observeForm)
         }
-    }, [data])
+    }, [data, editMode])
 
 
     const onChange = (e, fieldId, value) => {
