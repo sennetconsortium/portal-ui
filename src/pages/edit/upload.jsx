@@ -38,7 +38,7 @@ function EditUpload() {
         showModal,
         selectedUserWriteGroupUuid,
         disableSubmit, setDisableSubmit,
-        entityForm, disabled,
+        entityForm,
         getCancelBtn, isAdminOrHasValue, getAssignedToGroupNames
     } = useContext(EntityContext)
     const {_t, cache, adminGroup, getBusyOverlay, toggleBusyOverlay, getPreviewView} = useContext(AppContext)
@@ -395,7 +395,7 @@ function EditUpload() {
                                                         onClick={handleReorganize} disableSubmit={disableSubmit}/>
                                                 </SenNetPopover>}
 
-                                            {!['Processing', 'Published', 'Reorganized'].contains(data['status']) && adminGroup && isEditMode() &&
+                                            {!['Processing', 'Reorganized'].contains(data['status']) && adminGroup && isEditMode() &&
                                                 <SenNetPopover
                                                     text={statusRevertTooltip(cache.entities.upload)}
                                                     className={'initiate-upload-status-change'}>

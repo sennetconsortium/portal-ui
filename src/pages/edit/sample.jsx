@@ -90,21 +90,6 @@ function EditSample() {
         fetchSampleCategories()
     }, [source])
 
-    // Disable all form elements if data_access_level is "public"
-    // Wait until "sampleCategories" and "editMode" are set prior to running this
-    useEffect(() => {
-        const form = entityForm.current;
-        if (data?.data_access_level === 'public' && form !== null) {
-            const excludedElementIds = ['view-rui-json-btn']
-            const elements = form.elements;
-            for (let i = 0, len = elements.length; i < len; ++i) {
-                if (excludedElementIds.includes(elements[i].id))
-                    continue
-                elements[i].setAttribute('disabled', true);
-            }
-        }
-    }, [data, sampleCategories, entityForm.current])
-
     // only executed on init rendering, see the []
     useEffect(() => {
 
