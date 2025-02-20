@@ -44,7 +44,7 @@ export default function EditCollection({collectionType='Collection', entitiesTab
         editMode, setEditMode, isEditMode,
         showModal, getEntityConstraints,
         disableSubmit, setDisableSubmit,
-        entityForm,
+        setDataAccessPublic,
         getCancelBtn,
         contactsTSV, contacts, setContacts, contributors, setContactsAttributes, setContactsAttributesOnFail
     } = useContext(EntityContext)
@@ -133,6 +133,7 @@ export default function EditCollection({collectionType='Collection', entitiesTab
                     'contributors': _data.contributors
                 })
                 setEditMode("Edit")
+                setDataAccessPublic(_data.data_access_level === 'public')
             }
         }
 
@@ -395,7 +396,8 @@ export default function EditCollection({collectionType='Collection', entitiesTab
                                               values={values} adminGroup={adminGroup}/>
                             }
                             bodyContent={
-                                <Form noValidate validated={validated} id="collection-form" ref={entityForm}>                                    {/*Group select*/}
+                                <Form noValidate validated={validated} id="collection-form">
+                                    {/*Group select*/}
                                     {
                                         !(userWriteGroups.length === 1 || isEditMode()) &&
                                         <GroupSelect
