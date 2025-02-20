@@ -399,9 +399,8 @@ export default function EditDataset() {
                 {error &&
                     <div><Alert variant='warning'>{_t(errorMessage)}</Alert></div>
                 }
-
-                    <div className="no_sidebar" id="js-entityContext--observable">
-                        {data && !error &&
+                {data && !error &&
+                    <div className="no_sidebar">
                         <Layout
                             bodyHeader={
                                 <EntityHeader entity={cache.entities.dataset} isEditMode={isEditMode()} data={data}
@@ -618,8 +617,9 @@ export default function EditDataset() {
                                     {getBusyOverlay()}
                                 </Form>
                             }
-                        />}
+                        />
                     </div>
+                }
                 {!showModal && <AppFooter/>}
             </>
         )

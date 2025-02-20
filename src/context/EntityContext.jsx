@@ -115,6 +115,7 @@ export const EntityProvider = ({ children }) => {
 
     const disableElements = () => {
         const form = entityForm.current;
+        log.debug('disableElements observable')
         if (data !== null && form !== null) {
             const excludedElementIds = ['view-rui-json-btn']
             if (isPublic()) {
@@ -145,16 +146,19 @@ export const EntityProvider = ({ children }) => {
     }
 
     const observeForm = (observer) => {
+        log.debug('observeForm observable', entityForm)
         if (entityForm.current !== null && entityForm.current?.elements && entityForm.current?.elements.length) {
-            observer.disconnect()
             observePage(entityForm.current, disableElements)
+            observer.disconnect()
         }
     }
 
     useEffect(() => {
         if (data !== null && isEditMode()) {
             setDisabled(isPublic())
-            observePage(document.getElementById('js-entityContext--observable'), observeForm)
+            const el = document.getElementById('__next')
+            log.debug('useEffect observable', el)
+            observePage(el, observeForm)
         }
     }, [data, editMode])
 
