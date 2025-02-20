@@ -185,8 +185,9 @@ function EditUpload() {
                 {error &&
                     <div><Alert variant='warning'>{_t(errorMessage)}</Alert></div>
                 }
-                {data && !error &&
-                    <div className="no_sidebar">
+
+                    <div className="no_sidebar" id="js-entityContext--observable">
+                        {data && !error &&
                         <Layout
                             bodyHeader={
                                 <EntityHeader adminGroup={adminGroup} entity={cache.entities.upload}
@@ -409,9 +410,9 @@ function EditUpload() {
                                     </Form>
                                 </>
                             }
-                        />
+                        />}
                     </div>
-                }
+
                 {!showModal && <AppFooter/>}
 
             </>

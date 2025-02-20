@@ -133,7 +133,7 @@ export const EntityProvider = ({ children }) => {
         const _callback = (mutationList, observer) => {
             for (const mutation of mutationList) {
                 if (mutation.type === "childList") {
-                    callback()
+                    callback(observer)
                 }
             }
         };
@@ -144,16 +144,19 @@ export const EntityProvider = ({ children }) => {
         }
     }
 
-    const observeForm = () => {
-        observePage(entityForm.current, disableElements)
+    const observeForm = (observer) => {
+        if (entityForm.current !== null && entityForm.current?.elements && entityForm.current?.elements.length) {
+            observer.disconnect()
+            observePage(entityForm.current, disableElements)
+        }
     }
 
     useEffect(() => {
-        if (data !== null) {
+        if (data !== null && isEditMode()) {
             setDisabled(isPublic())
-            observePage(document.getElementsByTagName('form')[0], observeForm)
+            observePage(document.getElementById('js-entityContext--observable'), observeForm)
         }
-    }, [data])
+    }, [data, editMode])
 
 
     const onChange = (e, fieldId, value) => {
