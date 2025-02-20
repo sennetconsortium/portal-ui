@@ -98,10 +98,6 @@ function EditSource() {
         }
     }, [router]);
 
-    useEffect(() => {
-        disableElements()
-    }, [data, editMode, entityForm.current])
-
     const handleSave = async (event) => {
         setDisableSubmit(true);
         const form = $(event.currentTarget.form)[0]

@@ -123,18 +123,17 @@ export default function EditCollection({collectionType='Collection', entitiesTab
                 setContacts({description: {records: _data.contacts, headers: contactsTSV.headers}})
             }
 
-                // Set state with default values that will be PUT to Entity API to update
-                setValues({
-                    'title': _data.title,
-                    'description': _data.description,
-                    'entity_uuids': entity_uuids,
-                    'contacts': _data.contacts,
-                    'contributors': _data.contributors
-                })
-                setEditMode("Edit")
-            }
+            // Set state with default values that will be PUT to Entity API to update
+            setValues({
+                'title': _data.title,
+                'description': _data.description,
+                'entity_uuids': entity_uuids,
+                'contacts': _data.contacts,
+                'contributors': _data.contributors
+            })
+            setEditMode("Edit")
         }
-
+        
         if (router.query.hasOwnProperty('uuid')) {
             if (eq(router.query.uuid, 'register')) {
                 setData(true)

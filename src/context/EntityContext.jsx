@@ -111,24 +111,50 @@ export const EntityProvider = ({ children }) => {
             .catch((e) => log.error(e))
     }, [])
 
+    const isPublic = () => (data?.data_access_level === 'public' || ['Published', 'Reorganized'].contains(data?.status))
+
     const disableElements = () => {
         const form = entityForm.current;
         if (data !== null && form !== null) {
-            if (data?.data_access_level === 'public' || data?.status === 'Published') {
+            const excludedElementIds = ['view-rui-json-btn']
+            if (isPublic()) {
                 const elements = form.elements;
-                setDisabled(true)
                 for (let i = 0, len = elements.length; i < len; ++i) {
+                    if (excludedElementIds.includes(elements[i].id))
+                        continue
                     elements[i].setAttribute('disabled', true);
                 }
-            } else {
-                setDisabled(false)
             }
         }
     }
 
+    const observePage = (targetNode, callback) => {
+        const config = { childList: true, subtree: true }
+        const _callback = (mutationList, observer) => {
+            for (const mutation of mutationList) {
+                if (mutation.type === "childList") {
+                    callback()
+                }
+            }
+        };
+
+        if (targetNode !== null) {
+            const observer = new MutationObserver(_callback)
+            observer.observe(targetNode, config)
+        }
+    }
+
+    const observeForm = () => {
+        observePage(entityForm.current, disableElements)
+    }
+
     useEffect(() => {
-        disableElements()
-    }, [data, editMode, entityForm.current])
+        if (data !== null) {
+            setDisabled(isPublic())
+            observePage(document.getElementsByTagName('form')[0], observeForm)
+        }
+    }, [data])
+
 
     const onChange = (e, fieldId, value) => {
         // log.debug('onChange', fieldId, value)
