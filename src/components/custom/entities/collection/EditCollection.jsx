@@ -124,13 +124,13 @@ export default function EditCollection({collectionType='Collection', entitiesTab
             }
 
             // Set state with default values that will be PUT to Entity API to update
-            setValues({
+            setValues(prevState => ({
                 'title': _data.title,
                 'description': _data.description,
-                'entity_uuids': entity_uuids,
+                'entity_uuids': prevState.entity_uuids || [],
                 'contacts': _data.contacts,
                 'contributors': _data.contributors
-            })
+            }))
             setEditMode("Edit")
         }
         
