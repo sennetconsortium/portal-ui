@@ -388,8 +388,9 @@ function EditSample() {
                     />
                 }
 
-                {!showRui && data && !error &&
-                    <div className="no_sidebar">
+
+                    <div className="no_sidebar" id="js-entityContext--observable">
+                        {!showRui && data && !error &&
                         <Layout
                             bodyHeader={
                                 <EntityHeader entity={cache.entities.sample} isEditMode={isEditMode()} data={data}/>
@@ -509,9 +510,9 @@ function EditSample() {
                                     {getModal()}
                                 </Form>
                             }
-                        />
+                        />}
                     </div>
-                }
+
 
                 {!showRui && !showModal && <AppFooter/>}
             </>
