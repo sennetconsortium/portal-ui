@@ -30,22 +30,10 @@ const Lineage = ({ lineage }) => {
             selector: row => row.entity_type,
             sortable: true,
         })
-    columns.push(
-        {
-            name: 'Source Type',
-            selector: row => {
-                updateCount('source_type', row.source_type)
-                return row.source_type
-            },
-            sortable: true,
-            omit: columnVisibility.source_type
-        })
     columns.push({
         name: 'Subtype',
         selector: row => {
-            const subType = (row.sample_category ? (
-                row.sample_category
-            ) : getDatasetTypeDisplay(row))
+            const subType = row.source_type || row.sample_category || getDatasetTypeDisplay(row)
             updateCount('sub_type', subType)
             return subType || ''
         },
