@@ -30,18 +30,16 @@ const Lineage = ({ lineage }) => {
             selector: row => row.entity_type,
             sortable: true,
         })
-    if (isLoggedIn()) {
-        columns.push({
-            name: 'Lab ID',
+    columns.push(
+        {
+            name: 'Source Type',
             selector: row => {
-                const labId = row.lab_tissue_sample_id || row.lab_source_id || row.lab_dataset_id
-                updateCount('lab_id', labId)
-                return labId || ''
+                updateCount('source_type', row.source_type)
+                return row.source_type
             },
             sortable: true,
-            omit: columnVisibility.lab_id
+            omit: columnVisibility.source_type
         })
-    }
     columns.push({
         name: 'Subtype',
         selector: row => {
@@ -64,6 +62,18 @@ const Lineage = ({ lineage }) => {
         sortable: true,
         omit: columnVisibility.organ,
     })
+    if (isLoggedIn()) {
+        columns.push({
+            name: 'Lab ID',
+            selector: row => {
+                const labId = row.lab_tissue_sample_id || row.lab_source_id || row.lab_dataset_id
+                updateCount('lab_id', labId)
+                return labId || ''
+            },
+            sortable: true,
+            omit: columnVisibility.lab_id
+        })
+    }
     columns.push({
         name: 'Group Name',
         selector: row => row.group_name,
