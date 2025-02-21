@@ -1,6 +1,6 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext} from 'react';
 import DataTable from 'react-data-table-component';
-import {getDatasetTypeDisplay, getUBKGFullName} from "../../js/functions";
+import {getDatasetTypeDisplay, getSubtypeProvenanceShape, getUBKGFullName} from "../../js/functions";
 import ClipboardCopy from "../../../ClipboardCopy";
 import AppContext from "@/context/AppContext";
 import {RESULTS_PER_PAGE} from "@/config/config";
@@ -38,7 +38,11 @@ const Lineage = ({ lineage }) => {
             return subType || ''
         },
         sortable: true,
-        omit: columnVisibility.sub_type
+        omit: columnVisibility.sub_type,
+        format: col => {
+            const subType = col.source_type || col.sample_category || getDatasetTypeDisplay(col)
+            return getSubtypeProvenanceShape(subType, col.creation_action)
+        }
     })
     columns.push({
         name: 'Organ',

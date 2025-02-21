@@ -1,6 +1,7 @@
 import { getAuth, getRootURL } from "@/config/config";
 import { APP_ROUTES } from "@/config/constants";
 import log from "loglevel";
+import React from "react";
 
 export function getHeaders() {
     const myHeaders = new Headers();
@@ -249,6 +250,42 @@ export function getJobStatusDefinition(status) {
         }
     }
     return msg;
+}
+
+export const getSubtypeProvenanceShape = (t, cat) => {
+    let s = 'circle'
+    let c = 'pink'
+    let title = t
+    switch (t) {
+        case 'Organ':
+            s = 'diamond'
+            break
+        case 'Block':
+            s = 'sq'
+            break
+        case 'Section':
+            s = 'rect'
+            break
+        case 'Human':
+            c = 'yellow'
+            break
+        case 'Mouse':
+            c = 'yellow'
+            s = 'stadium'
+            break
+        default:
+            c = 'green'
+            title = getCreationActionRelationName(cat)
+            if (datasetIs.processed(cat)) {
+                s = 'blob'
+                c = ''
+            }
+            if (datasetIs.component(cat)) {
+                s = 'triangle'
+            }
+
+    }
+    return <span className={'c-help'}><span className={`shape shape--sm ${c} shape--${s}`} title={title}>{t}</span></span>
 }
 
 export function getJobTypeColor(type) {

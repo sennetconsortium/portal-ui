@@ -71,6 +71,13 @@
       content: ' ';
       display: inline-block;
     }
+    &--sm {
+      padding: 3px;
+      &:after {
+        width: 10px !important;
+        height: 10px !important;
+      }
+    }
   }
 
   .swal2-close:hover {
