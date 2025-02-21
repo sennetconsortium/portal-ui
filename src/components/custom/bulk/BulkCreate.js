@@ -525,7 +525,7 @@ export default function BulkCreate({
                     boxShadow: 3,
                 }}>
                     <div>
-                        {subType || !isCedarSupported() && <a
+                        {subType != null || !isCedarSupported() && <a
                             download
                             className={buttonVariant}
                             href={isCedarSupported() ? `https://raw.githubusercontent.com/hubmapconsortium/dataset-metadata-spreadsheet/main/${entityType}-${subType.toLowerCase()}/latest/${entityType}-${subType.toLowerCase()}.tsv` : `/bulk/${getFilename().toLowerCase()}.tsv`}
