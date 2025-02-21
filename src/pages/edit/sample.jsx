@@ -42,7 +42,7 @@ function EditSample() {
         showModal,
         selectedUserWriteGroupUuid,
         disableSubmit, setDisableSubmit,
-        dataAccessPublic, setDataAccessPublic,
+        entityForm, disabled,
         getSampleEntityConstraints,
         getMetadataNote, checkProtocolUrl,
         warningClasses, getCancelBtn
@@ -50,13 +50,12 @@ function EditSample() {
     const {_t, cache, filterImageFilesToAdd, getPreviewView} = useContext(AppContext)
     const router = useRouter()
     const [source, setSource] = useState(null)
-    const [sourceId, setSourceId] = useState(null)
     const [ruiSex, setRuiSex] = useState(undefined)
     const [ruiLocation, setRuiLocation] = useState('')
     const [showRui, setShowRui] = useState(false)
     const [showRuiButton, setShowRuiButton] = useState(false)
     const [ancestorOrgan, setAncestorOrgan] = useState([])
-    const [ancestorSource, setAncestorSource] = useState([])
+    const [ancestorSourceType, setAncestorSourceType] = useState([])
     const [sampleCategories, setSampleCategories] = useState(null)
     const [organ_group_hide, set_organ_group_hide] = useState('none')
 
@@ -91,21 +90,6 @@ function EditSample() {
         fetchSampleCategories()
     }, [source])
 
-    // Disable all form elements if data_access_level is "public"
-    // Wait until "sampleCategories" and "editMode" are set prior to running this
-    useEffect(() => {
-        const form = document.getElementById("sample-form");
-        if (dataAccessPublic === true && form !== null) {
-            const excludedElementIds = ['view-rui-json-btn']
-            const elements = form.elements;
-            for (let i = 0, len = elements.length; i < len; ++i) {
-                if (excludedElementIds.includes(elements[i].id))
-                    continue
-                elements[i].setAttribute('disabled', true);
-            }
-        }
-    }, [dataAccessPublic, sampleCategories, editMode])
-
     // only executed on init rendering, see the []
     useEffect(() => {
 
@@ -127,6 +111,7 @@ function EditSample() {
                 Object.assign(_data, ancestry)
                 setData(_data)
                 setRuiSex(extractSourceSex(_data.source))
+                setSource(_data.source)
 
                 checkProtocolUrl(_data.protocol_url)
 
@@ -155,14 +140,13 @@ function EditSample() {
                 setImageFilesToAdd(_data.image_files)
                 setThumbnailFileToAdd(_data.thumbnail_file)
                 setEditMode("Edit")
-                setDataAccessPublic(_data.data_access_level === 'public')
 
                 if (_data.hasOwnProperty("immediate_ancestors")) {
                     await fetchSource(_data.immediate_ancestors[0].uuid);
                 }
 
                 setAncestorOrgan(_data.organ ? [_data.organ] : [_data?.origin_samples[0].organ])
-                setAncestorSource([getSourceType(_data.source)])
+                setAncestorSourceType([getSourceType(_data.source)])
 
                 if (_data['rui_location'] !== undefined) {
                     setRuiLocation(_data['rui_location'])
@@ -182,9 +166,8 @@ function EditSample() {
                     .catch(console.error);
             }
         } else {
-            setData(null);
+            setData(null)
             setSource(null)
-            setSourceId(null)
         }
     }, [router]);
 
@@ -252,8 +235,7 @@ function EditSample() {
             setError(true)
             setErrorMessage(source["error"])
         } else {
-            setSource(source);
-            setSourceId(source.sennet_id)
+            setSource(source)
 
             // Manually set ancestor organs when ancestor is updated via modal
             let ancestor_organ = []
@@ -265,7 +247,7 @@ function EditSample() {
                 }
             }
             setAncestorOrgan(ancestor_organ)
-            setAncestorSource([getSourceType(source)])
+            setAncestorSourceType([getSourceType(source)])
         }
     }
 
@@ -275,7 +257,7 @@ function EditSample() {
         // This Sample must a Sample Category: "Block"
         log.debug(ancestorOrgan)
         if (ancestorOrgan.length > 0) {
-            if (values !== null && values['sample_category'] === cache.sampleCategories.Block && isRuiSupported(ancestorOrgan, ancestorSource)) {
+            if (values !== null && values['sample_category'] === cache.sampleCategories.Block && isRuiSupported(ancestorOrgan, ancestorSourceType)) {
                 if (!showRuiButton) {
                     setShowRuiButton(true)
                 }
@@ -415,7 +397,7 @@ function EditSample() {
                             }
                             bodyContent={
 
-                                <Form noValidate validated={validated} id={"sample-form"}>
+                                <Form noValidate validated={validated} id={"sample-form"} ref={entityForm}>
                                     {/*Group select*/}
                                     {
                                         !(userWriteGroups.length === 1 || isEditMode()) &&
@@ -429,7 +411,7 @@ function EditSample() {
                                     {/*Ancestor ID*/}
                                     {/*editMode is only set when page is ready to load */}
                                     {editMode &&
-                                        <AncestorId data={data} source={source} onChange={_onChange} fetchSource={fetchSource}/>
+                                        <AncestorId isDisabled={isEditMode()} data={data} source={source} onChange={_onChange} fetchSource={fetchSource}/>
                                     }
 
                                     {/*Source Information Box*/}
@@ -448,7 +430,7 @@ function EditSample() {
                                                 data={values}
                                                 source={source}
                                                 onChange={_onChange}
-                                                isDisabled={editMode === 'Edit'}
+                                                isDisabled={isEditMode()}
                                             />
                                             <RUIButton
                                                 showRegisterLocationButton={showRuiButton}
@@ -502,6 +484,7 @@ function EditSample() {
 
                                     {/* Images */}
                                     <ImageSelector editMode={editMode}
+                                                   isDisabled={disabled}
                                                    values={values}
                                                    setValues={setValues}
                                                    imageByteArray={imageByteArray}
@@ -509,6 +492,7 @@ function EditSample() {
 
                                     {/* Thumbnail */}
                                     <ThumbnailSelector editMode={editMode}
+                                                       isDisabled={disabled}
                                                        values={values}
                                                        setValues={setValues}/>
 
@@ -528,7 +512,6 @@ function EditSample() {
                         />
                     </div>
                 }
-
                 {!showRui && !showModal && <AppFooter/>}
             </>
         )

@@ -38,25 +38,12 @@ function EditUpload() {
         showModal,
         selectedUserWriteGroupUuid,
         disableSubmit, setDisableSubmit,
-        dataAccessPublic, setDataAccessPublic,
+        entityForm,
         getCancelBtn, isAdminOrHasValue, getAssignedToGroupNames
     } = useContext(EntityContext)
     const {_t, cache, adminGroup, getBusyOverlay, toggleBusyOverlay, getPreviewView} = useContext(AppContext)
     const router = useRouter()
     const [source, setSource] = useState(null)
-
-
-    // Disable all form elements if data_access_level is "public"
-    // Wait until "sampleCategories" and "editMode" are set prior to running this
-    useEffect(() => {
-        const form = document.getElementById("upload-form");
-        if (dataAccessPublic === true && form != null) {
-            const elements = form?.elements;
-            for (let i = 0, len = elements?.length; i < len; ++i) {
-                elements[i].setAttribute('disabled', true);
-            }
-        }
-    }, [dataAccessPublic, editMode])
 
     // only executed on init rendering, see the []
     useEffect(() => {
@@ -86,7 +73,6 @@ function EditUpload() {
 
                 setValues(_values)
                 setEditMode("Edit")
-                setDataAccessPublic(_data.data_access_level === 'public')
             }
         }
 
@@ -234,7 +220,7 @@ function EditUpload() {
                                                      </>}
                                                      icon={<i className="bi bi-exclamation-triangle-fill"></i>}/>
                                     }
-                                    <Form noValidate validated={validated} onSubmit={handleSave} id={"upload-form"}>
+                                    <Form noValidate validated={validated} onSubmit={handleSave} id={"upload-form"} ref={entityForm}>
                                         {/*Group select*/}
                                         {
                                             !(userWriteGroups.length === 1 || isEditMode()) &&
@@ -409,7 +395,7 @@ function EditUpload() {
                                                         onClick={handleReorganize} disableSubmit={disableSubmit}/>
                                                 </SenNetPopover>}
 
-                                            {!['Processing', 'Published', 'Reorganized'].contains(data['status']) && adminGroup && isEditMode() &&
+                                            {!['Processing', 'Reorganized'].contains(data['status']) && adminGroup && isEditMode() &&
                                                 <SenNetPopover
                                                     text={statusRevertTooltip(cache.entities.upload)}
                                                     className={'initiate-upload-status-change'}>

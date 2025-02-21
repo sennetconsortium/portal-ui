@@ -53,7 +53,7 @@ export default function EditDataset() {
         showModal, setShowModal,
         selectedUserWriteGroupUuid,
         disableSubmit, setDisableSubmit,
-        dataAccessPublic, setDataAccessPublic,
+        entityForm, disabled,
         getEntityConstraints,
         buildConstraint, successIcon, errIcon, getCancelBtn,
         isAdminOrHasValue, getAssignedToGroupNames,
@@ -128,20 +128,6 @@ export default function EditDataset() {
         fetchDataTypes()
     }, [ancestors])
 
-    // Disable all form elements if data_access_level is "public"
-    // Wait until "dataTypes" and "editMode" are set prior to running this
-    useEffect(() => {
-        if (data != null && isLoggedIn()) {
-            const form = document.getElementById("dataset-form");
-            if (dataAccessPublic === true || data.status === 'Published' && form !== null) {
-                const elements = form?.elements;
-                for (let i = 0, len = elements?.length; i < len; ++i) {
-                    elements[i].setAttribute('disabled', true);
-                }
-            }
-        }
-    }, [dataAccessPublic, data, dataTypes, editMode])
-
     // only executed on init rendering, see the []
     useEffect(() => {
 
@@ -191,7 +177,6 @@ export default function EditDataset() {
                 })
                 setEditMode("Edit")
                 setContainsHumanGeneticSequences(_data.contains_human_genetic_sequences)
-                setDataAccessPublic(_data.data_access_level === 'public')
             }
         }
 
@@ -422,7 +407,7 @@ export default function EditDataset() {
                                               values={values} adminGroup={adminGroup}/>
                             }
                             bodyContent={
-                                <Form noValidate validated={validated} id="dataset-form">
+                                <Form noValidate validated={validated} id="dataset-form" ref={entityForm}>
                                     {/*Group select*/}
                                     {
                                         userWriteGroups && !(userWriteGroups?.length === 1 || isEditMode()) &&
@@ -462,9 +447,9 @@ export default function EditDataset() {
                                     {/*editMode is only set when page is ready to load */}
                                     {editMode &&
                                         <AncestorIds data={data} values={values} ancestors={ancestors} onChange={onChange}
-                                                     disableDelete={data.dataset_category!=='primary'}
+                                                     disableDelete={data.dataset_category !=='primary' || disabled}
                                                      fetchAncestors={fetchAncestors} deleteAncestor={deleteAncestor}
-                                                     addButtonDisabled={data.dataset_category != null && data.dataset_category !== 'primary' }/>
+                                                     addButtonDisabled={disabled || isEditMode() }/>
                                     }
 
                                     {/*/!*Lab Name or ID*!/*/}

@@ -51,7 +51,7 @@ function BodyContent({ handleChangeSource, data }) {
     )
 }
 
-const AncestorId = ({fetchSource, onChange, source, data}) => {
+const AncestorId = ({fetchSource, onChange, source, data, isDisabled}) => {
     const {
         adminGroup,
         authorized,
@@ -106,7 +106,7 @@ const AncestorId = ({fetchSource, onChange, source, data}) => {
                               disabled
                               onChange={e => onChange(e, e.target.id, e.target.value)}
                               defaultValue={source?.sennet_id}/>
-                <Button variant="primary" onClick={showModal}>
+                <Button disabled={isDisabled} variant="primary" onClick={isDisabled ? null : showModal}>
                     <i className="bi bi-search"></i>
                 </Button>
             </InputGroup>

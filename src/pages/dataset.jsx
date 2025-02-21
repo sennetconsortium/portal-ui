@@ -302,7 +302,7 @@ function ViewDataset() {
                                             }
 
                                         {/*Files*/}
-                                        <FileTreeView data={data}/>
+                                        {data && <FileTreeView data={data}/>}
 
                                         {/*Contributors*/}
                                         {!!(data.contributors && Object.keys(data.contributors).length) &&

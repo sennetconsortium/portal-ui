@@ -133,7 +133,7 @@ export default function AncestorIds({values, onChange, fetchAncestors, deleteAnc
             }
 
             {/*Disable the button if the dataset is not 'primary'*/}
-            <InputGroup className="mb-3 ancestor-ctas" id="direct_ancestor_uuid_button">
+            <InputGroup className="mb-5 ancestor-ctas" id="direct_ancestor_uuid_button">
                 <Button variant="outline-primary rounded-0 mt-1" onClick={showModal} aria-controls='js-modal' disabled={addButtonDisabled}>
                     Add another {formLabel} <i className="bi bi-plus-lg"></i>
                 </Button>

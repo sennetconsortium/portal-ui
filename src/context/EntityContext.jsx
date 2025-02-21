@@ -1,4 +1,4 @@
-import React, {createContext, useEffect, useState, useContext} from 'react'
+import React, {createContext, useEffect, useState, useContext, useRef} from 'react'
 import { useRouter } from 'next/router'
 import {
     get_provider_groups,
@@ -33,11 +33,13 @@ export const EntityProvider = ({ children }) => {
     const [modalTitle, setModalTitle] = useState(null)
     const [hasSubmissionError, setHasSubmissionError] = useState(false)
     const [disableSubmit, setDisableSubmit] = useState(false)
-    const [dataAccessPublic, setDataAccessPublic] = useState(null)
     const [userWriteGroups, setUserWriteGroups] = useState([])
     const [providerGroups, setProviderGroups] = useState([])
     const [selectedUserWriteGroupUuid, setSelectedUserWriteGroupUuid] =
         useState(null)
+
+    const entityForm = useRef(null)
+    const [disabled, setDisabled] = useState(true)
 
     const [response, setResponse] = useState()
     const [warningClasses, setWarningClasses] = useState({})
@@ -108,6 +110,58 @@ export const EntityProvider = ({ children }) => {
             })
             .catch((e) => log.error(e))
     }, [])
+
+    const isPublic = () => (data?.data_access_level === 'public' || ['Published', 'Reorganized'].contains(data?.status))
+
+    const disableElements = () => {
+        const form = entityForm.current;
+        log.debug('disableElements observable')
+        if (data !== null && form !== null) {
+            const excludedElementIds = ['view-rui-json-btn']
+            if (isPublic()) {
+                const elements = form.elements;
+                for (let i = 0, len = elements.length; i < len; ++i) {
+                    if (excludedElementIds.includes(elements[i].id))
+                        continue
+                    elements[i].setAttribute('disabled', true);
+                }
+            }
+        }
+    }
+
+    const observePage = (targetNode, callback) => {
+        const config = { childList: true, subtree: true }
+        const _callback = (mutationList, observer) => {
+            for (const mutation of mutationList) {
+                if (mutation.type === "childList") {
+                    callback(observer)
+                }
+            }
+        };
+
+        if (targetNode !== null) {
+            const observer = new MutationObserver(_callback)
+            observer.observe(targetNode, config)
+        }
+    }
+
+    const observeForm = (observer) => {
+        log.debug('observeForm observable', entityForm)
+        if (entityForm.current !== null && entityForm.current?.elements && entityForm.current?.elements.length) {
+            observePage(entityForm.current, disableElements)
+            observer.disconnect()
+        }
+    }
+
+    useEffect(() => {
+        if (data !== null && isEditMode()) {
+            setDisabled(isPublic())
+            const el = document.getElementById('__next')
+            log.debug('useEffect observable', el)
+            observePage(el, observeForm)
+        }
+    }, [data, editMode])
+
 
     const onChange = (e, fieldId, value) => {
         // log.debug('onChange', fieldId, value)
@@ -338,11 +392,10 @@ export const EntityProvider = ({ children }) => {
                 userWriteGroups, setUserWriteGroups, onChange, editMode, setEditMode,
                 selectedUserWriteGroupUuid, setSelectedUserWriteGroupUuid,
                 disableSubmit, setDisableSubmit,
-                dataAccessPublic, setDataAccessPublic,
                 getEntityConstraints, getSampleEntityConstraints, buildConstraint,
                 getMetadataNote, successIcon, errIcon, checkProtocolUrl,
                 warningClasses, setWarningClasses, getCancelBtn,
-                isAdminOrHasValue, getAssignedToGroupNames,
+                isAdminOrHasValue, getAssignedToGroupNames, entityForm, disabled, disableElements,
                 contactsTSV, contacts, setContacts, contributors, setContributors, setContactsAttributes, setContactsAttributesOnFail
             }}
         >
