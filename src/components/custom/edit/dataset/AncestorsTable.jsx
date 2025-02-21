@@ -5,12 +5,10 @@ import SenNetPopover from '@/components/SenNetPopover';
 import ClipboardCopy from '@/components/ClipboardCopy';
 import DataTable from 'react-data-table-component';
 import log from 'loglevel'
+import useAutoHideColumns from "@/hooks/useAutoHideColumns";
 
 export default function AncestorsTable({formLabel, onChange, deleteAncestor, values, controlId, ancestors, disableDelete}) {
-    const [columnVisibility, setColumnVisibility] = useState({})
-    const counter = {}
-    const [tableData, setTableData] = useState(ancestors)
-    const [tableReady, setTableReady] = useState(false)
+    const {columnVisibility, tableData, updateCount} = useAutoHideColumns( {data: ancestors})
 
     const _deleteAncestor = async (e, ancestorId) => {
         const old_uuids = [...values[controlId]]
@@ -19,14 +17,7 @@ export default function AncestorsTable({formLabel, onChange, deleteAncestor, val
         onChange(e, controlId, updated_uuids);
         deleteAncestor(ancestorId);
     }
-    const updateCount = (id, cond) => {
-        if (!counter[id]) {
-            counter[id] = 0
-        }
-        if (cond) {
-            counter[id]++
-        }
-    }
+
 
     const tableColumns = () => {
         return [
@@ -134,25 +125,7 @@ export default function AncestorsTable({formLabel, onChange, deleteAncestor, val
         ]
     }
 
-    useEffect(() => {
-        if (ancestors && ancestors.length > 0 && !tableReady) {
-            setTableData(ancestors)
-            setTableReady(true)
-            // This will run after the table is initially rendered with data
-            afterTableBuild()
-        }
-    }, [ancestors, tableReady])
 
-    const afterTableBuild = () => {
-
-        const columnsToOmit = {}
-        for (let c in counter) {
-            if (!counter[c]) {
-                columnsToOmit[c] = true
-            }
-        }
-        setColumnVisibility(columnsToOmit)
-    }
 
     return (
         <div className={'table--ancestors'}>
