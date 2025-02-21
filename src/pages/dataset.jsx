@@ -89,12 +89,10 @@ function ViewDataset() {
         }
     }, [data?.ancestors])
 
-    // only executed on init rendering, see the []
     useEffect(() => {
-        // declare the async data fetching function
         const fetchData = async (uuid) => {
             log.debug('dataset: getting data...', uuid)
-            // get the data from the api
+            // fetch dataset data
             const _data = await getEntityData(uuid, ['ancestors', 'descendants']);
 
             log.debug('dataset: Got data', _data)
@@ -102,37 +100,42 @@ function ViewDataset() {
                 setError(true)
                 setErrorMessage(_data["error"])
                 setData(false)
-            } else {
-                // set state with the result
-                setData(_data)
-                const ancestry = await getAncestryData(_data.uuid)
+                return
+            }
+
+            // set state with the result
+            setData(_data)
+
+            // fetch ancestry data
+            getAncestryData(_data.uuid).then(ancestry => {
                 Object.assign(_data, ancestry)
                 setData(_data)
 
-                fetchDataCite(_data.doi_url).then((citation) => {
-                    setCitationData(citation)
-                }).catch((e)=>{})
-
                 for (const ancestor of ancestry.ancestors) {
-                    console.log(ancestor)
                     if ((ancestor.metadata && Object.keys(ancestor.metadata).length)) {
                         setAncestorHasMetadata(true)
                         break
                     }
                 }
+            }).catch(log.error)
 
-                get_write_privilege_for_group_uuid(_data.group_uuid).then(response => {
-                    setHasWritePrivilege(response.has_write_privs)
+            // fetch citation data
+            if (_data.doi_url) {
+                fetchDataCite(_data.doi_url).then(citation => {
+                    setCitationData(citation)
                 }).catch(log.error)
             }
+
+            // fetch write privilege
+            get_write_privilege_for_group_uuid(_data.group_uuid).then(response => {
+                setHasWritePrivilege(response.has_write_privs)
+            }).catch(log.error)
         }
 
         if (router.query.hasOwnProperty("uuid")) {
-            // call the function
+            // fetch dataset data
             fetchData(router.query.uuid)
-                // make sure to catch any error
-                .catch(console.error);
-            ;
+                .catch(log.error);
         } else {
             setData(null);
         }

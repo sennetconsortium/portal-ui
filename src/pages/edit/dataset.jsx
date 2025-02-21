@@ -8,7 +8,7 @@ import Form from 'react-bootstrap/Form';
 import {Layout} from '@elastic/react-search-ui-views'
 import '@elastic/react-search-ui-views/lib/styles/styles.css'
 import log from 'loglevel'
-import {get_headers, getAncestryData, getEntityData, update_create_dataset} from '../../lib/services'
+import {get_headers, getAncestryData, getEntityData, update_create_dataset} from '@/lib/services'
 import {
     cleanJson,
     eq,
@@ -16,29 +16,28 @@ import {
     fetchProtocols,
     getEntityViewUrl,
     getIsPrimaryDataset,
-    getRequestHeaders,
     getStatusColor,
-} from '../../components/custom/js/functions'
-import AppContext from '../../context/AppContext'
-import EntityContext, {EntityProvider} from '../../context/EntityContext'
-import {getIngestEndPoint, valid_dataset_ancestor_config} from "../../config/config";
+} from '@/components/custom/js/functions'
+import AppContext from '@/context/AppContext'
+import EntityContext, {EntityProvider} from '@/context/EntityContext'
+import {getIngestEndPoint, valid_dataset_ancestor_config} from "@/config/config";
 import $ from 'jquery'
-import DatasetRevertButton, {statusRevertTooltip} from "../../components/custom/edit/dataset/DatasetRevertButton";
+import DatasetRevertButton, {statusRevertTooltip} from "@/components/custom/edit/dataset/DatasetRevertButton";
 import DataTable from "react-data-table-component";
 import AttributesUpload, {getResponseList} from "@/components/custom/edit/AttributesUpload";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 
-const AncestorIds = dynamic(() => import('../../components/custom/edit/dataset/AncestorIds'))
-const AppFooter = dynamic(() => import("../../components/custom/layout/AppFooter"))
-const AppNavbar = dynamic(() => import("../../components/custom/layout/AppNavbar"))
-const DatasetSubmissionButton = dynamic(() => import("../../components/custom/edit/dataset/DatasetSubmissionButton"))
-const DatasetType = dynamic(() => import('../../components/custom/edit/dataset/DatasetType'))
-const EntityHeader = dynamic(() => import('../../components/custom/layout/entity/Header'))
-const EntityFormGroup = dynamic(() => import('../../components/custom/layout/entity/FormGroup'))
-const GroupSelect = dynamic(() => import("../../components/custom/edit/GroupSelect"))
-const Header = dynamic(() => import("../../components/custom/layout/Header"))
-const SenNetPopover = dynamic(() => import("../../components/SenNetPopover"))
-const Spinner = dynamic(() => import("../../components/custom/Spinner"))
+const AncestorIds = dynamic(() => import('@/components/custom/edit/dataset/AncestorIds'))
+const AppFooter = dynamic(() => import("@/components/custom/layout/AppFooter"))
+const AppNavbar = dynamic(() => import("@/components/custom/layout/AppNavbar"))
+const DatasetSubmissionButton = dynamic(() => import("@/components/custom/edit/dataset/DatasetSubmissionButton"))
+const DatasetType = dynamic(() => import('@/components/custom/edit/dataset/DatasetType'))
+const EntityHeader = dynamic(() => import('@/components/custom/layout/entity/Header'))
+const EntityFormGroup = dynamic(() => import('@/components/custom/layout/entity/FormGroup'))
+const GroupSelect = dynamic(() => import("@/components/custom/edit/GroupSelect"))
+const Header = dynamic(() => import("@/components/custom/layout/Header"))
+const SenNetPopover = dynamic(() => import("@/components/SenNetPopover"))
+const Spinner = dynamic(() => import("@/components/custom/Spinner"))
 
 export default function EditDataset() {
     const {
@@ -57,7 +56,7 @@ export default function EditDataset() {
         getEntityConstraints,
         buildConstraint, successIcon, errIcon, getCancelBtn,
         isAdminOrHasValue, getAssignedToGroupNames,
-        contactsTSV, contacts, setContacts, contributors, setContributors, setContactsAttributes, setContactsAttributesOnFail
+        contactsTSV, contacts, setContacts, contributors, setContactsAttributes, setContactsAttributesOnFail
     } = useContext(EntityContext)
     const {_t, cache, adminGroup, isLoggedIn, getBusyOverlay, toggleBusyOverlay, getPreviewView} = useContext(AppContext)
     const router = useRouter()
@@ -130,11 +129,9 @@ export default function EditDataset() {
 
     // only executed on init rendering, see the []
     useEffect(() => {
-
-        // declare the async data fetching function
         const fetchData = async (uuid) => {
             log.debug('editDataset: getting data...', uuid)
-            // get the data from the api
+            // fetch dataset data
             const _data = await getEntityData(uuid, ['ancestors', 'descendants']);
 
             log.debug('editDataset: Got data', _data)
@@ -142,42 +139,43 @@ export default function EditDataset() {
                 setError(true)
                 setData(false)
                 setErrorMessage(_data["error"])
-            } else {
-                setData(_data)
-                const ancestry = await getAncestryData(_data.uuid, {endpoints: ['ancestors'], otherEndpoints: ['immediate_ancestors']})
+                return
+            }
+
+            // set state with the result
+            setData(_data)
+
+            getAncestryData(_data.uuid, {endpoints: ['ancestors'], otherEndpoints: ['immediate_ancestors']}).then(ancestry => {
                 Object.assign(_data, ancestry)
                 setData(_data)
-
-                isPrimary.current = getIsPrimaryDataset(_data)
-                let immediate_ancestors = []
-                if (_data.hasOwnProperty("immediate_ancestors")) {
-                    for (const ancestor of _data.immediate_ancestors) {
-                        immediate_ancestors.push(ancestor.uuid)
-                    }
-                    await fetchAncestors(immediate_ancestors)
+                if (ancestry.immediate_ancestors) {
+                    const uuids = ancestry.immediate_ancestors.map(ancestor => ancestor.uuid)
+                    setValues(prevState => ({...prevState, direct_ancestor_uuids: uuids}))
+                    fetchAncestors(uuids).catch(log.error)
                 }
+            }).catch(log.error)
 
-                if (_data.contacts) {
-                    setContacts({description: {records: _data.contacts, headers: contactsTSV.headers}})
-                }
-
-                // Set state with default values that will be PUT to Entity API to update
-                setValues({
-                    'status': _data.status,
-                    'lab_dataset_id': _data.lab_dataset_id,
-                    'dataset_type': _data.dataset_type,
-                    'description': _data.description,
-                    'dataset_info': _data.dataset_info,
-                    'direct_ancestor_uuids': immediate_ancestors,
-                    'assigned_to_group_name': adminGroup ? _data.assigned_to_group_name : undefined,
-                    'ingest_task': adminGroup ? _data.ingest_task : undefined,
-                    'contains_human_genetic_sequences': _data.contains_human_genetic_sequences,
-                    'contacts': _data.contacts,
-                    'contributors': _data.contributors
-                })
-                setEditMode("Edit")
-                setContainsHumanGeneticSequences(_data.contains_human_genetic_sequences)
+            isPrimary.current = getIsPrimaryDataset(_data)
+            if (_data.contacts) {
+                setContacts({description: {records: _data.contacts, headers: contactsTSV.headers}})
             }
+
+            // Set state with default values that will be PUT to Entity API to update
+            setValues(prevState => ({
+                'status': _data.status,
+                'lab_dataset_id': _data.lab_dataset_id,
+                'dataset_type': _data.dataset_type,
+                'description': _data.description,
+                'dataset_info': _data.dataset_info,
+                'direct_ancestor_uuids': prevState.direct_ancestor_uuids || [],
+                'assigned_to_group_name': adminGroup ? _data.assigned_to_group_name : undefined,
+                'ingest_task': adminGroup ? _data.ingest_task : undefined,
+                'contains_human_genetic_sequences': _data.contains_human_genetic_sequences,
+                'contacts': _data.contacts,
+                'contributors': _data.contributors
+            }))
+            setEditMode('Edit')
+            setContainsHumanGeneticSequences(_data.contains_human_genetic_sequences)
         }
 
         if (router.query.hasOwnProperty("uuid")) {
@@ -185,10 +183,9 @@ export default function EditDataset() {
                 setData(true)
                 setEditMode("Register")
             } else {
-                // call the function
+                // fetch dataset data
                 fetchData(router.query.uuid)
-                    // make sure to catch any error
-                    .catch(console.error);
+                    .catch(log.error);
             }
         } else {
             setData(null);

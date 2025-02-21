@@ -6,23 +6,22 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import {Layout} from "@elastic/react-search-ui-views";
 import log from "loglevel";
-import {cleanJson, eq, getDOIPattern, getRequestHeaders} from "../../components/custom/js/functions";
-import {getEntityData, update_create_entity} from "../../lib/services";
-import AppContext from '../../context/AppContext'
-import EntityContext, {EntityProvider} from '../../context/EntityContext'
-import {SenPopoverOptions} from "../../components/SenNetPopover";
+import {cleanJson, eq, getDOIPattern} from "@/components/custom/js/functions";
+import {getEntityData, update_create_entity} from "@/lib/services";
+import AppContext from '@/context/AppContext'
+import EntityContext, {EntityProvider} from '@/context/EntityContext'
+import {SenPopoverOptions} from "@/components/SenNetPopover";
 import $ from "jquery";
 
-const AppFooter = dynamic(() => import("../../components/custom/layout/AppFooter"))
-const AppNavbar = dynamic(() => import("../../components/custom/layout/AppNavbar"))
-const EntityHeader = dynamic(() => import('../../components/custom/layout/entity/Header'))
-const EntityFormGroup = dynamic(() => import('../../components/custom/layout/entity/FormGroup'))
-const GroupSelect = dynamic(() => import("../../components/custom/edit/GroupSelect"))
-const Header = dynamic(() => import("../../components/custom/layout/Header"))
-const ImageSelector = dynamic(() => import("../../components/custom/edit/ImageSelector"))
-const SenNetAlert = dynamic(() => import("../../components/SenNetAlert"))
-const SourceType = dynamic(() => import("../../components/custom/edit/source/SourceType"))
-
+const AppFooter = dynamic(() => import("@/components/custom/layout/AppFooter"))
+const AppNavbar = dynamic(() => import("@/components/custom/layout/AppNavbar"))
+const EntityHeader = dynamic(() => import('@/components/custom/layout/entity/Header'))
+const EntityFormGroup = dynamic(() => import('@/components/custom/layout/entity/FormGroup'))
+const GroupSelect = dynamic(() => import("@/components/custom/edit/GroupSelect"))
+const Header = dynamic(() => import("@/components/custom/layout/Header"))
+const ImageSelector = dynamic(() => import("@/components/custom/edit/ImageSelector"))
+const SenNetAlert = dynamic(() => import("@/components/SenNetAlert"))
+const SourceType = dynamic(() => import("@/components/custom/edit/source/SourceType"))
 
 function EditSource() {
     const {
@@ -91,7 +90,7 @@ function EditSource() {
                 // call the function
                 fetchData(router.query.uuid)
                     // make sure to catch any error
-                    .catch(console.error);
+                    .catch(log.error);
             }
         } else {
             setData(null);
@@ -208,7 +207,6 @@ function EditSource() {
     if (isPreview(error))  {
         return getPreviewView(data)
     } else {
-        console.log(values)
         return (
             <>
                 {editMode &&
