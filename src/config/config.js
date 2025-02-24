@@ -56,6 +56,11 @@ export function getUserName() {
     return JSON.parse(info).name
 }
 
+export function getUserEmail() {
+    const info = atob(getCookie('info'))
+    return JSON.parse(info).email
+}
+
 export function getEntitiesIndex() {
     return process.env.NEXT_PUBLIC_ENTITIES_INDEX
 }
