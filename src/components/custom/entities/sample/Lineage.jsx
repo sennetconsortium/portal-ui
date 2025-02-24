@@ -1,6 +1,6 @@
 import React, {useContext} from 'react';
 import DataTable from 'react-data-table-component';
-import {getDatasetTypeDisplay, getSubtypeProvenanceShape, getUBKGFullName} from "../../js/functions";
+import {getDatasetTypeDisplay, getOrganMeta, getSubtypeProvenanceShape, getUBKGFullName} from "../../js/functions";
 import ClipboardCopy from "../../../ClipboardCopy";
 import AppContext from "@/context/AppContext";
 import {RESULTS_PER_PAGE} from "@/config/config";
@@ -39,20 +39,26 @@ const Lineage = ({ lineage }) => {
         },
         sortable: true,
         omit: columnVisibility.sub_type,
-        format: col => {
-            const subType = col.source_type || col.sample_category || getDatasetTypeDisplay(col)
-            return getSubtypeProvenanceShape(subType, col.creation_action)
+        format: row => {
+            const subType = row.source_type || row.sample_category || getDatasetTypeDisplay(row)
+            return getSubtypeProvenanceShape(subType, row.creation_action)
         }
     })
     columns.push({
         name: 'Organ',
         selector: row => {
-            const organ = getUBKGFullName(row?.origin_samples?.[0]?.organ || row.organ)
+            const code = row?.origin_samples?.[0]?.organ || row.organ
+            const organ = getUBKGFullName(code)
             updateCount('organ', organ)
             return organ || ''
         },
         sortable: true,
         omit: columnVisibility.organ,
+        format: row => {
+            const code = row?.origin_samples?.[0]?.organ || row.organ
+            const organ = getUBKGFullName(code)
+            return <span>{organ} {code && <img alt={organ} src={getOrganMeta(code).icon} width={'20px'} />}</span>
+        }
     })
     if (isLoggedIn()) {
         columns.push({

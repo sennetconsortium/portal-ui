@@ -3,7 +3,7 @@ import SenNetAccordion from "../../layout/SenNetAccordion";
 import Card from 'react-bootstrap/Card';
 import CardGroup from 'react-bootstrap/CardGroup';
 import AppContext from "../../../../context/AppContext";
-import {eq, formatCitation, getProtocolId, getUBKGFullName} from "../../js/functions";
+import {eq, getOrganMeta, getProtocolId, getUBKGFullName} from "../../js/functions";
 import SenNetPopover, {SenPopoverOptions} from "../../../SenNetPopover";
 import {getOrganByCode, organIcons} from "@/config/organs";
 import {Avatar, Chip} from "@mui/material";
@@ -51,11 +51,8 @@ export default function Description({data, citationData, labId, primaryDateTitle
             return res
         }
 
-        const getOrganMeta = () => {
-            const code = data.intended_organ
-            const organ = getOrganByCode(code)
-            const icon = organIcons[code] || organIcons.OT
-            return {icon, organ}
+        const _getOrganMeta = () => {
+            return getOrganMeta(data.intended_organ)
         }
 
     return (
@@ -83,13 +80,13 @@ export default function Description({data, citationData, labId, primaryDateTitle
                     <Card.Body>
                         <Card.Subtitle>Intended Organ</Card.Subtitle>
                         <Chip
-                            className={`no-focus bg--none ${getOrganMeta().organ?.path ? 'fs-6 lnk--txt' : 'pe-none'}`}
-                            aria-disabled={getOrganMeta().organ?.path === undefined}
-                            avatar={<Avatar alt={getUBKGFullName(data.intended_organ)} src={getOrganMeta().icon}/>}
+                            className={`no-focus bg--none ${_getOrganMeta().organ?.path ? 'fs-6 lnk--txt' : 'pe-none'}`}
+                            aria-disabled={_getOrganMeta().organ?.path === undefined}
+                            avatar={<Avatar alt={getUBKGFullName(data.intended_organ)} src={_getOrganMeta().icon}/>}
                             label={getUBKGFullName(data.intended_organ)}
                             onClick={() => {
-                                if (!getOrganMeta().organ) return
-                                window.location = `${APP_ROUTES.organs}/${getOrganMeta().organ.path}`
+                                if (!_getOrganMeta().organ) return
+                                window.location = `${APP_ROUTES.organs}/${_getOrganMeta().organ.path}`
                             }}
                         />
                     </Card.Body>

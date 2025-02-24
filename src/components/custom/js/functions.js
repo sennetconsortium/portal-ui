@@ -2,6 +2,7 @@ import { getAuth, getRootURL } from "@/config/config";
 import { APP_ROUTES } from "@/config/constants";
 import log from "loglevel";
 import React from "react";
+import {getOrganByCode, organIcons} from "@/config/organs";
 
 export function getHeaders() {
     const myHeaders = new Headers();
@@ -250,6 +251,12 @@ export function getJobStatusDefinition(status) {
         }
     }
     return msg;
+}
+
+export const getOrganMeta = (code) => {
+    const organ = getOrganByCode(code)
+    const icon = organIcons[code] || organIcons.OT
+    return {icon, organ}
 }
 
 export const getSubtypeProvenanceShape = (t, cat) => {
