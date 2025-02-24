@@ -128,9 +128,6 @@ function TableResultsEntities({children, filters, onRowClicked, currentColumns, 
         },
         sortable: true,
         reorder: true,
-        format: row => {
-            return formatOrganRow(raw(row.origin_samples), row)
-        }
     }
 
     reusableColumns['SourceType'] = {
@@ -139,10 +136,6 @@ function TableResultsEntities({children, filters, onRowClicked, currentColumns, 
         selector: row => raw(row.source_type),
         sortable: true,
         reorder: true,
-        format: row => {
-            const subType = raw(row.source_type)
-            return getSubtypeProvenanceShape(subType)
-        }
     }
 
     reusableColumns['SampleCategory'] = {
@@ -151,10 +144,6 @@ function TableResultsEntities({children, filters, onRowClicked, currentColumns, 
         selector: row => raw(row.sample_category) ? displayBodyHeader(raw(row.sample_category)) : '',
         sortable: true,
         reorder: true,
-        format: row => {
-            const subType = raw(row.sample_category) ? displayBodyHeader(raw(row.sample_category)) : ''
-            return getSubtypeProvenanceShape(subType)
-        }
     }
 
     reusableColumns['DatasetType'] = {
@@ -386,7 +375,7 @@ TableResultsEntities.propTypes = {
     onRowClicked: PropTypes.func
 }
 
-const formatOrganRow = (organRow, row) => {
+const formatOrganRow = (organRow, row, withAvatar = true) => {
     let organs = new Set()
     let organsCodes = new Set()
     if(row.origin_samples) {
@@ -395,13 +384,16 @@ const formatOrganRow = (organRow, row) => {
             organs.add(getUBKGFullName(origin_sample.organ_hierarchy))
         })
         if (organs.size > 0) {
-            const codes = [...organsCodes]
-            console.log(codes)
-            const imgs = []
-            for (let c of codes) {
-                imgs.push(<img key={c} alt={c} src={getOrganMeta(c).icon} width={'20px'} />)
+            if (withAvatar) {
+                const codes = [...organsCodes]
+                const imgs = []
+                for (let c of codes) {
+                    imgs.push(<img key={c} alt={c} src={getOrganMeta(c).icon} width={'20px'} />)
+                }
+                return  <span>{[...organs].join(', ')} {imgs}</span>
+            } else {
+                return  [...organs].join(', ')
             }
-            return <span>{[...organs].join(', ')} {imgs}</span>
         }
     }
     return ''

@@ -49,13 +49,13 @@ const Lineage = ({ lineage }) => {
         selector: row => {
             const code = row?.origin_samples?.[0]?.organ || row.organ
             const organ = getUBKGFullName(code)
-            updateCount('organ', organ)
             return organ || ''
         },
         sortable: true,
         omit: columnVisibility.organ,
         format: row => {
             const code = row?.origin_samples?.[0]?.organ || row.organ
+            updateCount('organ', code)
             const organ = getUBKGFullName(code)
             return <span>{organ} {code && <img alt={organ} src={getOrganMeta(code).icon} width={'20px'} />}</span>
         }

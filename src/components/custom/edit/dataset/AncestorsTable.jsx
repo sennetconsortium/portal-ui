@@ -61,18 +61,14 @@ export default function AncestorsTable({formLabel, onChange, deleteAncestor, val
                 id: 'organ',
                 omit: columnVisibility.organ,
                 selector: row => {
-                    const organs = row.origin_samples?.map((origin_sample) => {
-                        return getUBKGFullName(origin_sample.organ_hierarchy)
-                    }) || []
-
-                    if (organs.length > 0) {
-                        updateCount('organ', true)
-                        return organs.join(', ')
-                    }
-                    return ''
+                    return formatOrganRow(row.origin_samples, row, false)
                 },
                 sortable: true,
                 format: row => {
+                    const r = formatOrganRow(row.origin_samples, row, false)
+                    if (r.length) {
+                        updateCount('organ', true)
+                    }
                     return formatOrganRow(row.origin_samples, row)
                 }
             },

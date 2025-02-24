@@ -24,15 +24,8 @@ export default function Tissue({ data }) {
                 const icon = organIcons[code] || organIcons.OT
                 return (
                     <span title={name}>
-                        <Chip className={`no-focus bg--none ${organ?.path ? 'lnk--txt' : 'pe-none'}`}
-                              aria-disabled={organ?.path === undefined}
-                              avatar={<Avatar alt={name} src={icon} />}
-                              label={name}
-                              onClick={() => {
-                                  if (!organ) return
-                                  window.location = `${APP_ROUTES.organs}/${organ.path}`}
-                              }
-                        />
+                        <a href={`${APP_ROUTES.organs}/${organ.path}`}>{name}</a> <img alt={name} src={icon} width={'24px'} />
+
                     </span>
                 )
             },
