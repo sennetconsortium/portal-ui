@@ -79,16 +79,10 @@ export default function Description({data, citationData, labId, primaryDateTitle
                 <Card border={'0'} className={'pb-3'}>
                     <Card.Body>
                         <Card.Subtitle>Intended Organ</Card.Subtitle>
-                        <Chip
-                            className={`no-focus bg--none ${_getOrganMeta().organ?.path ? 'fs-6 lnk--txt' : 'pe-none'}`}
-                            aria-disabled={_getOrganMeta().organ?.path === undefined}
-                            avatar={<Avatar alt={getUBKGFullName(data.intended_organ)} src={_getOrganMeta().icon}/>}
-                            label={getUBKGFullName(data.intended_organ)}
-                            onClick={() => {
-                                if (!_getOrganMeta().organ) return
-                                window.location = `${APP_ROUTES.organs}/${_getOrganMeta().organ.path}`
-                            }}
-                        />
+                        <span><a className={'icon_inline'} href={`${APP_ROUTES.organs}/${_getOrganMeta().organ.path}`}>{getUBKGFullName(data.intended_organ)}</a>&nbsp;
+                        <img alt={getUBKGFullName(data.intended_organ)} src={_getOrganMeta().icon} width={'24px'} />
+                        </span>
+
                     </Card.Body>
                 </Card>
 
