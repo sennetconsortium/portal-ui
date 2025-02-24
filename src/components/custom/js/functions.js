@@ -269,8 +269,11 @@ export const getSubtypeProvenanceShape = (t, cat) => {
         case 'Human':
             c = 'yellow'
             break
+        case 'Publication':
+            c = 'purple'
+            break
         case 'Mouse':
-            c = 'yellow'
+            c = ''
             s = 'stadium'
             break
         default:
@@ -282,6 +285,7 @@ export const getSubtypeProvenanceShape = (t, cat) => {
             }
             if (datasetIs.component(cat)) {
                 s = 'triangle'
+                c = ''
             }
 
     }
