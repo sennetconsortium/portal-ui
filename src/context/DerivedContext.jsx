@@ -144,6 +144,7 @@ export const DerivedProvider = ({children, showVitessceList, setShowVitessceList
     }
 
     const fetchDataProducts = useCallback(async (data) => {
+        let files = []
         if (datasetIs.primary(data.creation_action)) {
             const promises = []
             for (let descendant of data.descendants) {
@@ -154,7 +155,6 @@ export const DerivedProvider = ({children, showVitessceList, setShowVitessceList
             }
 
             const processedDatasets = await Promise.all(promises)
-            const files = []
             for (let processed of processedDatasets) {
                 if (processed.hasOwnProperty("error")) {
                     log.error("Error fetching data products", processed)
@@ -169,8 +169,8 @@ export const DerivedProvider = ({children, showVitessceList, setShowVitessceList
 
             setDataProducts(files)
         } else {
-            _files = data?.files || []
-            setDataProducts(filterFilesForDataProducts(_files, data))
+            files = data?.files || []
+            setDataProducts(filterFilesForDataProducts(files, data))
 
         }
     })
