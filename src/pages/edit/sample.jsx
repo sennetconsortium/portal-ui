@@ -10,7 +10,7 @@ import {cleanJson, eq, extractSourceSex, fetchEntity, getDOIPattern} from "@/com
 import {getAncestryData, getEntityData, parseJson, update_create_entity} from "@/lib/services";
 import AppContext from '@/context/AppContext'
 import EntityContext, {EntityProvider} from '@/context/EntityContext'
-import {getUserName, isRuiSupported} from "@/config/config";
+import {getUserEmail, getUserName, isRuiSupported} from "@/config/config";
 import {SenPopoverOptions} from "@/components/SenNetPopover";
 import $ from "jquery";
 import AppSuspense from "@/components/AppSuspense";
@@ -384,6 +384,7 @@ function EditSample() {
                         organ={ancestorOrgan}
                         sex={ruiSex}
                         user={getUserName()}
+                        email={getUserEmail()}
                         blockStartLocation={ruiLocation}
                         setRuiLocation={setRuiLocation}
                         setShowRui={setShowRui}

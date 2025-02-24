@@ -90,11 +90,14 @@ class RUIIntegration extends Component {
         const self = this;
 
         const rui = this.ruiRef.current;
+        console.log(this.props.user)
         rui.baseHref = "https://cdn.humanatlas.io/ui/ccf-rui/"
         rui.user = {
             firstName: firstName || "",
             lastName: lastName || "",
+            email: this.props.email || ""
         };
+        rui.consortium = "SenNet"
         rui.organ = {
             ontologyId: completeOrgan["organ_uberon_url"],
             name: organType.toLowerCase(),

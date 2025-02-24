@@ -131,9 +131,9 @@ export default function EditCollection({collectionType='Collection', entitiesTab
                 'contacts': _data.contacts,
                 'contributors': _data.contributors
             }))
-            setEditMode("Edit")
+            setEditMode('Edit')
         }
-        
+
         if (router.query.hasOwnProperty('uuid')) {
             if (eq(router.query.uuid, 'register')) {
                 setData(true)
