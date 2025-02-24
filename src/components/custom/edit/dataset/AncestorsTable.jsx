@@ -1,11 +1,17 @@
 import React, {useEffect, useState, useRef} from 'react';
-import {getStatusColor, getStatusDefinition, getUBKGFullName} from '@/components/custom/js/functions'
+import {
+    getStatusColor,
+    getStatusDefinition,
+    getSubtypeProvenanceShape,
+    getUBKGFullName
+} from '@/components/custom/js/functions'
 import Button from 'react-bootstrap/Button';
 import SenNetPopover from '@/components/SenNetPopover';
 import ClipboardCopy from '@/components/ClipboardCopy';
 import DataTable from 'react-data-table-component';
 import log from 'loglevel'
 import useAutoHideColumns from "@/hooks/useAutoHideColumns";
+import {formatOrganRow} from "@/components/custom/TableResultsEntities";
 
 export default function AncestorsTable({formLabel, onChange, deleteAncestor, values, controlId, ancestors, disableDelete}) {
     const {columnVisibility, tableData, updateCount} = useAutoHideColumns( {data: ancestors})
@@ -17,7 +23,6 @@ export default function AncestorsTable({formLabel, onChange, deleteAncestor, val
         onChange(e, controlId, updated_uuids);
         deleteAncestor(ancestorId);
     }
-
 
     const tableColumns = () => {
         return [
@@ -40,25 +45,15 @@ export default function AncestorsTable({formLabel, onChange, deleteAncestor, val
                 sortable: true
             },
             {
-                name: 'Sample Category',
-                id: 'sample_category',
-                omit: columnVisibility.sample_category,
-                selector: row => row.sample_category,
+                name: 'Subtype',
+                id: 'sub_type',
+                omit: columnVisibility.sub_type,
+                selector: row => row.sample_category || row.dataset_type,
                 sortable: true,
-                format: col => {
-                    updateCount('sample_category', col.sample_category)
-                    return col.sample_category
-                }
-            },
-            {
-                name: 'Dataset Type',
-                id: 'dataset_type',
-                omit: columnVisibility.dataset_type,
-                selector: row => row.dataset_type,
-                sortable: true,
-                format: col => {
-                    updateCount('dataset_type', col.dataset_type)
-                    return col.dataset_type
+                format: row => {
+                    const subType = row.sample_category || row.dataset_type
+                    updateCount('sub_type', subType)
+                    return getSubtypeProvenanceShape(subType)
                 }
             },
             {
@@ -76,7 +71,10 @@ export default function AncestorsTable({formLabel, onChange, deleteAncestor, val
                     }
                     return ''
                 },
-                sortable: true
+                sortable: true,
+                format: row => {
+                    return formatOrganRow(row.origin_samples, row)
+                }
             },
             {
                 name: `Status`,

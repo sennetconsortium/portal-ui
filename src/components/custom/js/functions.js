@@ -273,24 +273,28 @@ export const getSubtypeProvenanceShape = (t, cat) => {
         case 'Section':
             s = 'rect'
             break
+        case 'Suspension':
+            break
         case 'Human':
+        case 'Human Organoid':
             c = 'yellow'
             break
         case 'Publication':
             c = 'purple'
             break
         case 'Mouse':
+        case 'Mouse Organoid':
             c = ''
             s = 'stadium'
             break
         default:
             c = 'green'
-            title = getCreationActionRelationName(cat)
-            if (datasetIs.processed(cat)) {
+            title = cat ? getCreationActionRelationName(cat) : ''
+            if (cat && datasetIs.processed(cat)) {
                 s = 'blob'
                 c = ''
             }
-            if (datasetIs.component(cat)) {
+            if (cat && datasetIs.component(cat)) {
                 s = 'triangle'
                 c = ''
             }
