@@ -6,28 +6,28 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import {Layout} from "@elastic/react-search-ui-views";
 import log from "loglevel";
-import {cleanJson, eq, extractSourceSex, fetchEntity, getDOIPattern} from "../../components/custom/js/functions";
-import {getAncestryData, getEntityData, parseJson, update_create_entity} from "../../lib/services";
-import AppContext from '../../context/AppContext'
-import EntityContext, {EntityProvider} from '../../context/EntityContext'
-import {getUserName, isRuiSupported} from "../../config/config";
-import {SenPopoverOptions} from "../../components/SenNetPopover";
+import {cleanJson, eq, extractSourceSex, fetchEntity, getDOIPattern} from "@/components/custom/js/functions";
+import {getAncestryData, getEntityData, parseJson, update_create_entity} from "@/lib/services";
+import AppContext from '@/context/AppContext'
+import EntityContext, {EntityProvider} from '@/context/EntityContext'
+import {getUserEmail, getUserName, isRuiSupported} from "@/config/config";
+import {SenPopoverOptions} from "@/components/SenNetPopover";
 import $ from "jquery";
 
-const AncestorId = dynamic(() => import("../../components/custom/edit/sample/AncestorId"))
-const AncestorInformationBox = dynamic(() => import("../../components/custom/entities/sample/AncestorInformationBox"))
-const AppFooter = dynamic(() => import("../../components/custom/layout/AppFooter"))
-const AppNavbar = dynamic(() => import("../../components/custom/layout/AppNavbar"))
-const EntityHeader = dynamic(() => import('../../components/custom/layout/entity/Header'))
-const EntityFormGroup = dynamic(() => import('../../components/custom/layout/entity/FormGroup'))
-const GroupSelect = dynamic(() => import("../../components/custom/edit/GroupSelect"))
-const Header = dynamic(() => import("../../components/custom/layout/Header"))
-const ImageSelector = dynamic(() => import("../../components/custom/edit/ImageSelector"))
-const RUIIntegration = dynamic(() => import("../../components/custom/edit/sample/rui/RUIIntegration"))
-const RUIButton = dynamic(() => import("../../components/custom/edit/sample/rui/RUIButton"))
-const SampleCategory = dynamic(() => import("../../components/custom/edit/sample/SampleCategory"))
-const SenNetAlert = dynamic(() => import("../../components/SenNetAlert"))
-const ThumbnailSelector = dynamic(() => import("../../components/custom/edit/ThumbnailSelector"))
+const AncestorId = dynamic(() => import("@/components/custom/edit/sample/AncestorId"))
+const AncestorInformationBox = dynamic(() => import("@/components/custom/entities/sample/AncestorInformationBox"))
+const AppFooter = dynamic(() => import("@/components/custom/layout/AppFooter"))
+const AppNavbar = dynamic(() => import("@/components/custom/layout/AppNavbar"))
+const EntityHeader = dynamic(() => import('@/components/custom/layout/entity/Header'))
+const EntityFormGroup = dynamic(() => import('@/components/custom/layout/entity/FormGroup'))
+const GroupSelect = dynamic(() => import("@/components/custom/edit/GroupSelect"))
+const Header = dynamic(() => import("@/components/custom/layout/Header"))
+const ImageSelector = dynamic(() => import("@/components/custom/edit/ImageSelector"))
+const RUIIntegration = dynamic(() => import("@/components/custom/edit/sample/rui/RUIIntegration"))
+const RUIButton = dynamic(() => import("@/components/custom/edit/sample/rui/RUIButton"))
+const SampleCategory = dynamic(() => import("@/components/custom/edit/sample/SampleCategory"))
+const SenNetAlert = dynamic(() => import("@/components/SenNetAlert"))
+const ThumbnailSelector = dynamic(() => import("@/components/custom/edit/ThumbnailSelector"))
 
 function EditSample() {
     const {
@@ -42,7 +42,7 @@ function EditSample() {
         showModal,
         selectedUserWriteGroupUuid,
         disableSubmit, setDisableSubmit,
-        dataAccessPublic, setDataAccessPublic,
+        entityForm, disabled,
         getSampleEntityConstraints,
         getMetadataNote, checkProtocolUrl,
         warningClasses, getCancelBtn
@@ -50,13 +50,12 @@ function EditSample() {
     const {_t, cache, filterImageFilesToAdd, getPreviewView} = useContext(AppContext)
     const router = useRouter()
     const [source, setSource] = useState(null)
-    const [sourceId, setSourceId] = useState(null)
     const [ruiSex, setRuiSex] = useState(undefined)
     const [ruiLocation, setRuiLocation] = useState('')
     const [showRui, setShowRui] = useState(false)
     const [showRuiButton, setShowRuiButton] = useState(false)
     const [ancestorOrgan, setAncestorOrgan] = useState([])
-    const [ancestorSource, setAncestorSource] = useState([])
+    const [ancestorSourceType, setAncestorSourceType] = useState([])
     const [sampleCategories, setSampleCategories] = useState(null)
     const [organ_group_hide, set_organ_group_hide] = useState('none')
 
@@ -91,28 +90,11 @@ function EditSample() {
         fetchSampleCategories()
     }, [source])
 
-    // Disable all form elements if data_access_level is "public"
-    // Wait until "sampleCategories" and "editMode" are set prior to running this
-    useEffect(() => {
-        const form = document.getElementById("sample-form");
-        if (dataAccessPublic === true && form !== null) {
-            const excludedElementIds = ['view-rui-json-btn']
-            const elements = form.elements;
-            for (let i = 0, len = elements.length; i < len; ++i) {
-                if (excludedElementIds.includes(elements[i].id))
-                    continue
-                elements[i].setAttribute('disabled', true);
-            }
-        }
-    }, [dataAccessPublic, sampleCategories, editMode])
-
     // only executed on init rendering, see the []
     useEffect(() => {
-
-        // declare the async data fetching function
         const fetchData = async (uuid) => {
             log.debug('editSample: getting data...', uuid)
-            // get the data from the api
+            // fetch sample data
             const _data = await getEntityData(uuid, ['ancestors', 'descendants']);
 
             log.debug('editSample: Got data', _data)
@@ -120,71 +102,74 @@ function EditSample() {
                 setError(true)
                 setData(false)
                 setErrorMessage(_data["error"])
-            } else {
+                return
+            }
 
-                setData(_data)
-                const ancestry = await getAncestryData(_data.uuid, {endpoints: ['ancestors'], otherEndpoints: ['immediate_ancestors']})
+            setData(_data)
+            setRuiSex(extractSourceSex(_data.source))
+            checkProtocolUrl(_data.protocol_url)
+            setSource(_data.source)
+
+            // Show organ input group if sample category is 'organ'
+            if (eq(_data.sample_category, cache.sampleCategories.Organ)) {
+                set_organ_group_hide('')
+            }
+
+            getAncestryData(_data.uuid, {endpoints: ['ancestors'], otherEndpoints: ['immediate_ancestors']}).then(ancestry => {
                 Object.assign(_data, ancestry)
                 setData(_data)
-                setRuiSex(extractSourceSex(_data.source))
+                setValues(prevState => ({...prevState, direct_ancestor_uuid: ancestry.immediate_ancestors[0].uuid}))
 
-                checkProtocolUrl(_data.protocol_url)
-
-                // Show organ input group if sample category is 'organ'
-                if (eq(_data.sample_category, cache.sampleCategories.Organ)) {
-                    set_organ_group_hide('')
+                if (ancestry.hasOwnProperty("immediate_ancestors")) {
+                    fetchSource(ancestry.immediate_ancestors[0].uuid)
+                        .catch(log.error);
                 }
+            }).catch(log.error)
 
-                // Set state with default values that will be PUT to Entity API to update
-                setValues({
-                    'sample_category': _data.sample_category,
-                    'organ': _data.organ,
-                    'organ_other': _data.organ_other,
-                    'protocol_url': _data.protocol_url,
-                    'lab_tissue_sample_id': _data.lab_tissue_sample_id,
-                    'description': _data.description,
-                    'direct_ancestor_uuid': _data.immediate_ancestors[0].uuid,
-                    'metadata': _data.metadata
-                })
-                if (_data.image_files) {
-                    setValues(prevState => ({...prevState, image_files: _data.image_files}))
-                }
-                if (_data.thumbnail_file) {
-                    setValues(prevState => ({...prevState, thumbnail_file: _data.thumbnail_file}))
-                }
-                setImageFilesToAdd(_data.image_files)
-                setThumbnailFileToAdd(_data.thumbnail_file)
-                setEditMode("Edit")
-                setDataAccessPublic(_data.data_access_level === 'public')
+            // Set state with default values that will be PUT to Entity API to update
+            const vals = {
+                'sample_category': _data.sample_category,
+                'organ': _data.organ,
+                'organ_other': _data.organ_other,
+                'protocol_url': _data.protocol_url,
+                'lab_tissue_sample_id': _data.lab_tissue_sample_id,
+                'description': _data.description,
+                'direct_ancestor_uuid': values.direct_ancestor_uuid || '',
+                'metadata': _data.metadata
+            }
+            if (_data.image_files) {
+                vals['image_files'] = _data.image_files
+            }
+            if (_data.thumbnail_file) {
+                vals['thumbnail_file'] = _data.thumbnail_file
+            }
+            setValues(vals)
 
-                if (_data.hasOwnProperty("immediate_ancestors")) {
-                    await fetchSource(_data.immediate_ancestors[0].uuid);
-                }
+            setImageFilesToAdd(_data.image_files)
+            setThumbnailFileToAdd(_data.thumbnail_file)
+            setEditMode('Edit')
 
-                setAncestorOrgan(_data.organ ? [_data.organ] : [_data?.origin_samples[0].organ])
-                setAncestorSource([getSourceType(_data.source)])
+            setAncestorOrgan(_data.organ ? [_data.organ] : [_data?.origin_samples[0].organ])
+            setAncestorSourceType([getSourceType(_data.source)])
 
-                if (_data['rui_location'] !== undefined) {
-                    setRuiLocation(_data['rui_location'])
-                    setShowRuiButton(true)
-                }
+            if (_data['rui_location'] !== undefined) {
+                setRuiLocation(_data['rui_location'])
+                setShowRuiButton(true)
             }
         }
 
-        if (router.query.hasOwnProperty("uuid")) {
+        if (router.query.hasOwnProperty('uuid')) {
             if (eq(router.query.uuid, 'register')) {
                 setData(true)
-                setEditMode("Register")
+                setEditMode('Register')
             } else {
-                // call the function
+                // fetch sample data
                 fetchData(router.query.uuid)
-                    // make sure to catch any error
-                    .catch(console.error);
+                    .catch(log.error);
             }
         } else {
-            setData(null);
+            setData(null)
             setSource(null)
-            setSourceId(null)
         }
     }, [router]);
 
@@ -252,8 +237,7 @@ function EditSample() {
             setError(true)
             setErrorMessage(source["error"])
         } else {
-            setSource(source);
-            setSourceId(source.sennet_id)
+            setSource(source)
 
             // Manually set ancestor organs when ancestor is updated via modal
             let ancestor_organ = []
@@ -265,7 +249,7 @@ function EditSample() {
                 }
             }
             setAncestorOrgan(ancestor_organ)
-            setAncestorSource([getSourceType(source)])
+            setAncestorSourceType([getSourceType(source)])
         }
     }
 
@@ -275,7 +259,7 @@ function EditSample() {
         // This Sample must a Sample Category: "Block"
         log.debug(ancestorOrgan)
         if (ancestorOrgan.length > 0) {
-            if (values !== null && values['sample_category'] === cache.sampleCategories.Block && isRuiSupported(ancestorOrgan, ancestorSource)) {
+            if (values !== null && values['sample_category'] === cache.sampleCategories.Block && isRuiSupported(ancestorOrgan, ancestorSourceType)) {
                 if (!showRuiButton) {
                     setShowRuiButton(true)
                 }
@@ -399,6 +383,7 @@ function EditSample() {
                         organ={ancestorOrgan}
                         sex={ruiSex}
                         user={getUserName()}
+                        email={getUserEmail()}
                         blockStartLocation={ruiLocation}
                         setRuiLocation={setRuiLocation}
                         setShowRui={setShowRui}
@@ -415,7 +400,7 @@ function EditSample() {
                             }
                             bodyContent={
 
-                                <Form noValidate validated={validated} id={"sample-form"}>
+                                <Form noValidate validated={validated} id={"sample-form"} ref={entityForm}>
                                     {/*Group select*/}
                                     {
                                         !(userWriteGroups.length === 1 || isEditMode()) &&
@@ -429,7 +414,7 @@ function EditSample() {
                                     {/*Ancestor ID*/}
                                     {/*editMode is only set when page is ready to load */}
                                     {editMode &&
-                                        <AncestorId data={data} source={source} onChange={_onChange} fetchSource={fetchSource}/>
+                                        <AncestorId isDisabled={isEditMode()} data={data} source={source} onChange={_onChange} fetchSource={fetchSource}/>
                                     }
 
                                     {/*Source Information Box*/}
@@ -448,7 +433,7 @@ function EditSample() {
                                                 data={values}
                                                 source={source}
                                                 onChange={_onChange}
-                                                isDisabled={editMode === 'Edit'}
+                                                isDisabled={isEditMode()}
                                             />
                                             <RUIButton
                                                 showRegisterLocationButton={showRuiButton}
@@ -502,6 +487,7 @@ function EditSample() {
 
                                     {/* Images */}
                                     <ImageSelector editMode={editMode}
+                                                   isDisabled={disabled}
                                                    values={values}
                                                    setValues={setValues}
                                                    imageByteArray={imageByteArray}
@@ -509,6 +495,7 @@ function EditSample() {
 
                                     {/* Thumbnail */}
                                     <ThumbnailSelector editMode={editMode}
+                                                       isDisabled={disabled}
                                                        values={values}
                                                        setValues={setValues}/>
 
@@ -528,7 +515,6 @@ function EditSample() {
                         />
                     </div>
                 }
-
                 {!showRui && !showModal && <AppFooter/>}
             </>
         )

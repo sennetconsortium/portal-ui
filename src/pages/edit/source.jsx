@@ -6,23 +6,22 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import {Layout} from "@elastic/react-search-ui-views";
 import log from "loglevel";
-import {cleanJson, eq, getDOIPattern, getRequestHeaders} from "../../components/custom/js/functions";
-import {getEntityData, update_create_entity} from "../../lib/services";
-import AppContext from '../../context/AppContext'
-import EntityContext, {EntityProvider} from '../../context/EntityContext'
-import {SenPopoverOptions} from "../../components/SenNetPopover";
+import {cleanJson, eq, getDOIPattern} from "@/components/custom/js/functions";
+import {getEntityData, update_create_entity} from "@/lib/services";
+import AppContext from '@/context/AppContext'
+import EntityContext, {EntityProvider} from '@/context/EntityContext'
+import {SenPopoverOptions} from "@/components/SenNetPopover";
 import $ from "jquery";
 
-const AppFooter = dynamic(() => import("../../components/custom/layout/AppFooter"))
-const AppNavbar = dynamic(() => import("../../components/custom/layout/AppNavbar"))
-const EntityHeader = dynamic(() => import('../../components/custom/layout/entity/Header'))
-const EntityFormGroup = dynamic(() => import('../../components/custom/layout/entity/FormGroup'))
-const GroupSelect = dynamic(() => import("../../components/custom/edit/GroupSelect"))
-const Header = dynamic(() => import("../../components/custom/layout/Header"))
-const ImageSelector = dynamic(() => import("../../components/custom/edit/ImageSelector"))
-const SenNetAlert = dynamic(() => import("../../components/SenNetAlert"))
-const SourceType = dynamic(() => import("../../components/custom/edit/source/SourceType"))
-
+const AppFooter = dynamic(() => import("@/components/custom/layout/AppFooter"))
+const AppNavbar = dynamic(() => import("@/components/custom/layout/AppNavbar"))
+const EntityHeader = dynamic(() => import('@/components/custom/layout/entity/Header'))
+const EntityFormGroup = dynamic(() => import('@/components/custom/layout/entity/FormGroup'))
+const GroupSelect = dynamic(() => import("@/components/custom/edit/GroupSelect"))
+const Header = dynamic(() => import("@/components/custom/layout/Header"))
+const ImageSelector = dynamic(() => import("@/components/custom/edit/ImageSelector"))
+const SenNetAlert = dynamic(() => import("@/components/SenNetAlert"))
+const SourceType = dynamic(() => import("@/components/custom/edit/source/SourceType"))
 
 function EditSource() {
     const {
@@ -37,7 +36,7 @@ function EditSource() {
         showModal,
         selectedUserWriteGroupUuid,
         disableSubmit, setDisableSubmit,
-        dataAccessPublic, setDataAccessPublic,
+        entityForm, disabled, disableElements,
         getMetadataNote, checkProtocolUrl,
         warningClasses, getCancelBtn
     } = useContext(EntityContext)
@@ -47,19 +46,6 @@ function EditSource() {
     const [source, setSource] = useState(null)
     const [imageByteArray, setImageByteArray] = useState([])
     const alertStyle = useRef('info')
-
-
-    // Disable all form elements if data_access_level is "public"
-    // Wait until "sampleCategories" and "editMode" are set prior to running this
-    useEffect(() => {
-        const form = document.getElementById("source-form");
-        if (dataAccessPublic === true && form !== null) {
-            const elements = form.elements;
-            for (let i = 0, len = elements.length; i < len; ++i) {
-                elements[i].setAttribute('disabled', true);
-            }
-        }
-    }, [dataAccessPublic, editMode])
 
     // only executed on init rendering, see the []
     useEffect(() => {
@@ -93,7 +79,6 @@ function EditSource() {
                 }
                 setValues(_values)
                 setEditMode("Edit")
-                setDataAccessPublic(_data.data_access_level === 'public')
             }
         }
 
@@ -105,7 +90,7 @@ function EditSource() {
                 // call the function
                 fetchData(router.query.uuid)
                     // make sure to catch any error
-                    .catch(console.error);
+                    .catch(log.error);
             }
         } else {
             setData(null);
@@ -222,7 +207,6 @@ function EditSource() {
     if (isPreview(error))  {
         return getPreviewView(data)
     } else {
-        console.log(values)
         return (
             <>
                 {editMode &&
@@ -241,7 +225,7 @@ function EditSource() {
                                 <EntityHeader entity={cache.entities.source} isEditMode={isEditMode()} data={data}/>
                             }
                             bodyContent={
-                                <Form noValidate validated={validated} onSubmit={handleSave} id={"source-form"}>
+                                <Form noValidate validated={validated} onSubmit={handleSave} id={"source-form"} ref={entityForm}>
                                     {/*Group select*/}
                                     {
                                         !(userWriteGroups.length === 1 || isEditMode()) &&
@@ -264,7 +248,7 @@ function EditSource() {
                                                      </>}/>
 
                                     {/*Source Type*/}
-                                    <SourceType data={data} onChange={onChange} isDisabled={editMode === 'Edit'}/>
+                                    <SourceType data={data} onChange={onChange} isDisabled={isEditMode()}/>
 
                                     {/*Case Selection Protocol*/}
                                     <EntityFormGroup label="Case Selection Protocol" placeholder='protocols.io DOI'
@@ -297,7 +281,7 @@ function EditSource() {
                                                  text='Upload de-identified images only'/>
 
                                     {/* Images */}
-                                    <ImageSelector editMode={editMode}
+                                    <ImageSelector isDisabled={disabled} editMode={editMode}
                                                    values={values}
                                                    setValues={setValues}
                                                    imageByteArray={imageByteArray}
@@ -318,7 +302,6 @@ function EditSource() {
                     </div>
                 }
                 {!showModal && <AppFooter/>}
-
             </>
         )
     }

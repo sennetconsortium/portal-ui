@@ -1,7 +1,7 @@
 import React from 'react';
 import {Col, Form, Row} from 'react-bootstrap';
 import SenNetPopover from "../../../SenNetPopover";
-import {getUBKGFullName} from "../../js/functions";
+import {eq, getUBKGFullName} from "../../js/functions";
 
 export default function DatasetType({datasetTypes, data, label, labelDescription, dataValue, onChange}) {
     return (
@@ -19,7 +19,7 @@ export default function DatasetType({datasetTypes, data, label, labelDescription
                 </Form.Label>
 
                 {/*Check that there exists a data type for this dataset and if it is not a part of the list of primary assay types*/}
-                {data?.dataset_category && data.dataset_category !== 'primary' ?
+                {(data?.dataset_category && data.dataset_category !== 'primary') || eq(data['status'], 'Published') ?
                     (
                         <Form.Select required aria-label={label ? label : `Dataset Type`} disabled>
                             <option

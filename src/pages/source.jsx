@@ -33,13 +33,10 @@ function ViewSource() {
     const [hasWritePrivilege, setHasWritePrivilege] = useState(false)
     const {isRegisterHidden, _t, cache, isPreview, getPreviewView} = useContext(AppContext);
 
-    // only executed on init rendering, see the []
     useEffect(() => {
-        // declare the async data fetching function
         const fetchData = async (uuid) => {
-
             log.debug('source: getting data...', uuid)
-            // get the data from the api
+            // fetch source data
             const _data = await getEntityData(uuid, ['ancestors', 'descendants']);
 
             log.debug('source: Got data', _data)
@@ -47,34 +44,37 @@ function ViewSource() {
                 setError(true)
                 setErrorMessage(_data["error"])
                 setData(false)
-            } else {
+                return
+            }
                 
-                if (eq(_data.source_type, cache.sourceTypes.Human) && _data.source_mapped_metadata) {
-                    // Humans have their metadata inside "source_mapped_metadata" while mice have theirs inside "metadata"
-                    // Humans have grouped metadata
-                    const {groups, metadata} = extractSourceMappedMetadataInfo(_data.source_mapped_metadata)
-                    setGroups(groups)
-                    setMetadata(metadata)
-                } else if (eq(_data.source_type, cache.sourceTypes.Mouse) && _data.metadata) {
-                    setMappedMetadata(_data.cedar_mapped_metadata)
-                    setMetadata(_data.metadata)
-                }
-                setData(_data)
-                const ancestry = await getAncestryData(_data.uuid)
+            // set state with the result
+            if (eq(_data.source_type, cache.sourceTypes.Human) && _data.source_mapped_metadata) {
+                // Humans have their metadata inside "source_mapped_metadata" while mice have theirs inside "metadata"
+                // Humans have grouped metadata
+                const {groups, metadata} = extractSourceMappedMetadataInfo(_data.source_mapped_metadata)
+                setGroups(groups)
+                setMetadata(metadata)
+            } else if (eq(_data.source_type, cache.sourceTypes.Mouse) && _data.metadata) {
+                setMappedMetadata(_data.cedar_mapped_metadata)
+                setMetadata(_data.metadata)
+            }
+            setData(_data)
+
+            // fetch ancestry data
+            getAncestryData(_data.uuid).then(ancestry => {
                 Object.assign(_data, ancestry)
                 setData(_data)
+            }).catch(log.error)
 
-                get_write_privilege_for_group_uuid(_data.group_uuid).then(response => {
-                    setHasWritePrivilege(response.has_write_privs)
-                }).catch(log.error)
-
-            }
+            // fetch write privilege
+            get_write_privilege_for_group_uuid(_data.group_uuid).then(response => {
+                setHasWritePrivilege(response.has_write_privs)
+            }).catch(log.error)
         }
 
         if (router.query.hasOwnProperty("uuid")) {
-            // call the function
+            // fetch source data
             fetchData(router.query.uuid)
-                // make sure to catch any error
                 .catch(console.error);
         } else {
             setData(null);

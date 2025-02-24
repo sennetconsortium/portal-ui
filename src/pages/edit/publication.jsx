@@ -44,62 +44,60 @@ export default function EditPublication() {
     const [ancestors, setAncestors] = useState(null)
     const [publicationStatus, setPublicationStatus] = useState(null)
 
-    // only executed on init rendering, see the []
     useEffect(() => {
         // Update valid_dataset_ancestor_config to only display `Dataset` as valid ancestors
         valid_dataset_ancestor_config['searchQuery']['includeFilters'] = [{
-            "type": 'term',
-            "field": 'entity_type.keyword',
-            "values": ['Dataset']
+            'type': 'term',
+            'field': 'entity_type.keyword',
+            'values': ['Dataset']
         }]
 
-        // declare the async data fetching function
         const fetchData = async (uuid) => {
             log.debug('editPublication: getting data...', uuid)
-            // get the data from the api
+            // fetch publication data
             const _data = await getEntityData(uuid, ['ancestors', 'descendants']);
 
             log.debug('editPublication: Got data', _data)
-            if (_data.hasOwnProperty("error")) {
+            if (_data.hasOwnProperty('error')) {
                 setError(true)
                 setData(false)
-                setErrorMessage(_data["error"])
-            } else {
-                setData(_data)
-                const ancestry = await getAncestryData(_data.uuid, {endpoints: ['ancestors'], otherEndpoints: ['immediate_ancestors']})
+                setErrorMessage(_data['error'])
+                return
+            }
+
+            // set state with the result
+            setData(_data)
+
+            getAncestryData(_data.uuid, {endpoints: ['ancestors'], otherEndpoints: ['immediate_ancestors']}).then(ancestry => {
                 Object.assign(_data, ancestry)
                 setData(_data)
-
-                let immediate_ancestors = []
-                if (_data.hasOwnProperty("immediate_ancestors")) {
-                    for (const ancestor of _data.immediate_ancestors) {
-                        immediate_ancestors.push(ancestor.uuid)
-                    }
-                    await fetchAncestors(immediate_ancestors)
+                if (ancestry.immediate_ancestors) {
+                    const uuids = ancestry.immediate_ancestors.map(ancestor => ancestor.uuid)
+                    setValues(prevState => ({...prevState, direct_ancestor_uuids: uuids}))
+                    fetchAncestors(uuids).catch(log.error)
                 }
+            }).catch(log.error)
 
-                // Set state with default values that will be PUT to Entity API to update
-                setValues({
-                    'lab_dataset_id': _data.lab_dataset_id || _data.title,
-                    'dataset_type': _data.dataset_type,
-                    'description': _data.description,
-                    'dataset_info': _data.dataset_info,
-                    'direct_ancestor_uuids': immediate_ancestors,
-                    'publication_status': _data.publication_status
-                })
-                setEditMode("Edit")
-            }
+            // Set state with default values that will be PUT to Entity API to update
+            setValues(prevState => ({
+                'lab_dataset_id': _data.lab_dataset_id || _data.title,
+                'dataset_type': _data.dataset_type,
+                'description': _data.description,
+                'dataset_info': _data.dataset_info,
+                'direct_ancestor_uuids': prevState.direct_ancestor_uuids || [],
+                'publication_status': _data.publication_status
+            }))
+            setEditMode('Edit')
         }
 
-        if (router.query.hasOwnProperty("uuid")) {
+        if (router.query.hasOwnProperty('uuid')) {
             if (eq(router.query.uuid, 'register')) {
                 setData(true)
-                setEditMode("Register")
+                setEditMode('Register')
             } else {
-                // call the function
+                // fetch publication data
                 fetchData(router.query.uuid)
-                    // make sure to catch any error
-                    .catch(console.error);
+                    .catch(log.error);
             }
         } else {
             setData(null);
@@ -107,27 +105,31 @@ export default function EditPublication() {
         }
     }, [router]);
 
-    async function fetchAncestors(ancestor_uuids) {
-        let new_ancestors = []
+    async function fetchAncestors(ancestorUuids) {
+        let newAncestors = []
         if (ancestors) {
-            new_ancestors = [...ancestors];
+            newAncestors = [...ancestors];
         }
 
-        for (const ancestor_uuid of ancestor_uuids) {
-            let ancestor = await fetchEntity(ancestor_uuid);
-            if (ancestor.hasOwnProperty("error")) {
+        const ancestorPromises = ancestorUuids.map(ancestorUuid => fetchEntity(ancestorUuid))
+        const ancestorResults = await Promise.allSettled(ancestorPromises)
+        for (const result of ancestorResults) {
+            if (result.status !== 'fulfilled' || result.value.hasOwnProperty('error')) {
                 setError(true)
-                setErrorMessage(ancestor["error"])
-            } else {
-                // delete the ancestor if it already exists, append the new one
-                let idx = new_ancestors.findIndex((d) => d.uuid === ancestor.uuid)
-                if (idx > -1) {
-                    new_ancestors.splice(idx, 1)
-                }
-                new_ancestors.push(ancestor)
+                setErrorMessage(result.value['error'])
+                break
             }
+
+            // delete the ancestor if it already exists, append the new one
+            const ancestor = result.value
+            let idx = newAncestors.findIndex((d) => d.uuid === ancestor.uuid)
+            if (idx > -1) {
+                newAncestors.splice(idx, 1)
+            }
+            newAncestors.push(ancestor)
         }
-        setAncestors(new_ancestors)
+
+        setAncestors(newAncestors)
     }
 
     const deleteAncestor = (ancestor_uuid) => {
