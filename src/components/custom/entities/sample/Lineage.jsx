@@ -1,18 +1,27 @@
 import React, {useContext} from 'react';
 import DataTable from 'react-data-table-component';
-import {getDatasetTypeDisplay, getUBKGFullName} from "../../js/functions";
+import {getDatasetTypeDisplay, getOrganMeta, getSubtypeProvenanceShape, getUBKGFullName} from "../../js/functions";
 import ClipboardCopy from "../../../ClipboardCopy";
 import AppContext from "@/context/AppContext";
 import {RESULTS_PER_PAGE} from "@/config/config";
+import useAutoHideColumns from "@/hooks/useAutoHideColumns";
 
 const Lineage = ({ lineage }) => {
     const {isLoggedIn} = useContext(AppContext)
+    const {columnVisibility, tableData, updateCount} = useAutoHideColumns( {data: lineage})
 
     let columns = []
     columns.push({
         name: 'SenNet ID',
         selector: row => row.sennet_id,
         sortable: false,
+        format: col => {
+            return <span className={'has-supIcon'}><a
+                href={'/' + col.entity_type.toLowerCase() + '?uuid=' + col.uuid}
+                className="icon_inline">{col.sennet_id}</a><ClipboardCopy text={col.sennet_id}
+                                                                                   size={10}
+                                                                                   title={'Copy SenNet ID {text} to clipboard'}/></span>
+        }
     })
 
     columns.push(
@@ -21,55 +30,58 @@ const Lineage = ({ lineage }) => {
             selector: row => row.entity_type,
             sortable: true,
         })
-    if (isLoggedIn()) {
-        columns.push({
-            name: 'Lab ID',
-            selector:
-                row => row.lab_id,
-            sortable:
-                true,
-        })
-    }
     columns.push({
         name: 'Subtype',
-        selector: row => getDatasetTypeDisplay(row),
+        selector: row => {
+            const subType = row.source_type || row.sample_category || getDatasetTypeDisplay(row)
+            updateCount('sub_type', subType)
+            return subType || ''
+        },
         sortable: true,
+        omit: columnVisibility.sub_type,
+        format: row => {
+            const subType = row.source_type || row.sample_category || getDatasetTypeDisplay(row)
+            return getSubtypeProvenanceShape(subType, row.creation_action)
+        }
     })
     columns.push({
         name: 'Organ',
-        selector: row => row.organ,
+        selector: row => {
+            const code = row?.origin_samples?.[0]?.organ || row.organ
+            const organ = getUBKGFullName(code)
+            return organ || ''
+        },
         sortable: true,
+        omit: columnVisibility.organ,
+        format: row => {
+            const code = row?.origin_samples?.[0]?.organ || row.organ
+            updateCount('organ', code)
+            const organ = getUBKGFullName(code)
+            return <span>{organ} {code && <img alt={organ} src={getOrganMeta(code).icon} width={'20px'} />}</span>
+        }
     })
+    if (isLoggedIn()) {
+        columns.push({
+            name: 'Lab ID',
+            selector: row => {
+                const labId = row.lab_tissue_sample_id || row.lab_source_id || row.lab_dataset_id
+                updateCount('lab_id', labId)
+                return labId || ''
+            },
+            sortable: true,
+            omit: columnVisibility.lab_id
+        })
+    }
     columns.push({
         name: 'Group Name',
         selector: row => row.group_name,
         sortable: true,
     })
 
-    const data = [];
-    {
-        lineage.map((lineage_data, index) => {
-            data.push({
-                sennet_id: <span className={'has-supIcon'}><a href={'/' + lineage_data.entity_type.toLowerCase() + '?uuid=' + lineage_data.uuid}
-                                                              className="icon_inline">{lineage_data.sennet_id}</a><ClipboardCopy text={lineage_data.sennet_id} size={10} title={'Copy SenNet ID {text} to clipboard'} /></span>,
-                entity_type: lineage_data.entity_type,
-                lab_id: lineage_data.lab_tissue_sample_id ? lineage_data.lab_tissue_sample_id
-                    : lineage_data.lab_source_id ? lineage_data.lab_source_id
-                        : lineage_data.lab_dataset_id ? lineage_data.lab_dataset_id
-                            : null,
-                display_subtype: (lineage_data.sample_category ? (
-                    lineage_data.sample_category
-                ) : getDatasetTypeDisplay(lineage_data)),
-                organ: getUBKGFullName(lineage_data?.origin_samples?.[0]?.organ || lineage_data.organ),
-                group_name: lineage_data.group_name
-            });
-        })
-    }
-
     return (
         <DataTable
             columns={columns}
-            data={data}
+            data={tableData}
             fixedHeader={true}
             paginationRowsPerPageOptions={RESULTS_PER_PAGE}
             pagination/>

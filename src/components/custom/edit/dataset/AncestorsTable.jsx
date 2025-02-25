@@ -1,12 +1,21 @@
-import React from 'react';
-import {getStatusColor, getStatusDefinition, getUBKGFullName} from '@/components/custom/js/functions'
+import React, {useEffect, useState, useRef} from 'react';
+import {
+    getStatusColor,
+    getStatusDefinition,
+    getSubtypeProvenanceShape,
+    getUBKGFullName
+} from '@/components/custom/js/functions'
 import Button from 'react-bootstrap/Button';
 import SenNetPopover from '@/components/SenNetPopover';
 import ClipboardCopy from '@/components/ClipboardCopy';
 import DataTable from 'react-data-table-component';
 import log from 'loglevel'
+import useAutoHideColumns from "@/hooks/useAutoHideColumns";
+import {formatOrganRow} from "@/components/custom/TableResultsEntities";
 
 export default function AncestorsTable({formLabel, onChange, deleteAncestor, values, controlId, ancestors, disableDelete}) {
+    const {columnVisibility, tableData, updateCount} = useAutoHideColumns( {data: ancestors})
+
     const _deleteAncestor = async (e, ancestorId) => {
         const old_uuids = [...values[controlId]]
         let updated_uuids = old_uuids.filter(e => e !== ancestorId)
@@ -36,29 +45,41 @@ export default function AncestorsTable({formLabel, onChange, deleteAncestor, val
                 sortable: true
             },
             {
-                name: 'Dataset Type',
-                selector: row => row.dataset_type,
-                sortable: true
+                name: 'Subtype',
+                id: 'sub_type',
+                omit: columnVisibility.sub_type,
+                selector: row => row.sample_category || row.dataset_type,
+                sortable: true,
+                format: row => {
+                    const subType = row.sample_category || row.dataset_type
+                    updateCount('sub_type', subType)
+                    return getSubtypeProvenanceShape(subType)
+                }
             },
             {
                 name: 'Organ',
+                id: 'organ',
+                omit: columnVisibility.organ,
                 selector: row => {
-                    const organs = row.origin_samples?.map((origin_sample) => {
-                        return getUBKGFullName(origin_sample.organ_hierarchy)
-                    }) || []
-
-                    if (organs.length > 0) {
-                        return organs.join(', ')
-                    }
-                    return ''
+                    return formatOrganRow(row.origin_samples, row, false)
                 },
-                sortable: true
+                sortable: true,
+                format: row => {
+                    const r = formatOrganRow(row.origin_samples, row, false)
+                    if (r.length) {
+                        updateCount('organ', true)
+                    }
+                    return formatOrganRow(row.origin_samples, row)
+                }
             },
             {
                 name: `Status`,
+                id: 'status',
                 selector: row => row.status,
                 sortable: true,
+                omit: columnVisibility.status,
                 format: col => {
+                    updateCount('status', col.status)
                     return (
                         <span className={`${getStatusColor(col?.status)} badge`}>
                             <SenNetPopover text={getStatusDefinition(col?.status)}
@@ -70,7 +91,7 @@ export default function AncestorsTable({formLabel, onChange, deleteAncestor, val
                 },
             },
             {
-                name: 'Lab Dataset ID',
+                name: 'Lab ID',
                 selector: row => row?.lab_tissue_sample_id || row?.lab_dataset_id,
                 sortable: true
             },
@@ -99,11 +120,12 @@ export default function AncestorsTable({formLabel, onChange, deleteAncestor, val
     }
 
 
+
     return (
         <div className={'table--ancestors'}>
             <DataTable
                 columns={tableColumns()}
-                data={ancestors}
+                data={tableData}
                 pagination />
         </div>
     )

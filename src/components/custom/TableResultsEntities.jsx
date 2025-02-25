@@ -4,7 +4,7 @@ import {
     checkFilterType,
     checkMultipleFilterType,
     displayBodyHeader, eq, getEntityViewUrl, getUBKGFullName,
-    getStatusColor, getStatusDefinition, matchArrayOrder
+    getStatusColor, getStatusDefinition, matchArrayOrder, getOrganMeta, getDatasetTypeDisplay, getSubtypeProvenanceShape
 } from './js/functions'
 import AppContext from "../../context/AppContext"
 import log from 'loglevel'
@@ -375,4 +375,28 @@ TableResultsEntities.propTypes = {
     onRowClicked: PropTypes.func
 }
 
-export {TableResultsEntities}
+const formatOrganRow = (organRow, row, withAvatar = true) => {
+    let organs = new Set()
+    let organsCodes = new Set()
+    if(row.origin_samples) {
+        organRow.forEach((origin_sample) => {
+            organsCodes.add(origin_sample.organ)
+            organs.add(getUBKGFullName(origin_sample.organ_hierarchy))
+        })
+        if (organs.size > 0) {
+            if (withAvatar) {
+                const codes = [...organsCodes]
+                const imgs = []
+                for (let c of codes) {
+                    imgs.push(<img key={c} alt={c} src={getOrganMeta(c).icon} width={'20px'} />)
+                }
+                return  <span>{[...organs].join(', ')} {imgs}</span>
+            } else {
+                return  [...organs].join(', ')
+            }
+        }
+    }
+    return ''
+}
+
+export {TableResultsEntities, formatOrganRow}
