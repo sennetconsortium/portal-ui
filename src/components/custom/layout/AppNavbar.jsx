@@ -1,10 +1,11 @@
 import {Container, Nav, Navbar, NavDropdown} from 'react-bootstrap'
 import {getDataIngestBoardEndpoint, NAVBAR_TITLE} from '../../../config/config'
-import {APP_ROUTES} from '../../../config/constants'
-import {useContext, useEffect} from 'react'
+import {APP_ROUTES, SWAL_DEL_CONFIG} from '../../../config/constants'
+import React, {useContext, useEffect} from 'react'
 import AppContext from '../../../context/AppContext'
 import {eq} from "../js/functions";
 import {deleteCookie, getCookie} from "cookies-next";
+import Swal from 'sweetalert2'
 
 const AppNavbar = ({hidden, signoutHidden, innerRef}) => {
     const {_t, isLoggedIn, logout, cache, supportedMetadata, adminGroup, tutorialTrigger, setTutorialTrigger} = useContext(AppContext)
@@ -22,6 +23,18 @@ const AppNavbar = ({hidden, signoutHidden, innerRef}) => {
             url = APP_ROUTES.logout //getLogoutURL()
         }
         window.location.replace(url)
+    }
+
+    const clearBrowsing = (e) => {
+        e.preventDefault()
+
+        Swal.fire(SWAL_DEL_CONFIG).then(result => {
+            if (result.isConfirmed) {
+                localStorage.clear()
+                window.location.reload()
+            }
+        }).catch(error => {})
+
     }
 
     const supportedSingleRegister = () => {
@@ -192,6 +205,12 @@ const AppNavbar = ({hidden, signoutHidden, innerRef}) => {
                                                       hidden={signoutHidden}
                                                       href='/user/jobs'>
                                         {_t('Job Dashboard')}
+                                    </NavDropdown.Item>
+                                    <NavDropdown.Item key={`dd-clear-browsing`}
+                                                      hidden={signoutHidden}
+                                                      href='#'
+                                                      onClick={(e) => clearBrowsing(e)}>
+                                        {_t('Clear Browsing Data')}
                                     </NavDropdown.Item>
                                     <NavDropdown.Item key={`dd-user-logout`}
                                                       hidden={signoutHidden}
