@@ -191,7 +191,7 @@ const AppNavbar = ({hidden, signoutHidden, innerRef}) => {
                         </NavDropdown>
                         {isLoggedIn() ?
                             (
-                                <NavDropdown active={false}
+                                <NavDropdown style={{minWidth: '180px'}} active={false}
                                              variant={'primary'}
                                              title={userEmail}
                                              id="nav-dropdown--user">
