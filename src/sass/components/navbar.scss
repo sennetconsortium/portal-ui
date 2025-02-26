@@ -33,6 +33,12 @@
   }
 }
 
+#nav-dropdown--user {
+  + .dropdown-menu {
+    left: inherit;
+    right: 0;
+  }
+}
 
 // Set this so tutorial overlay can be above navbar sticky
 .sticky-top.navbar {
