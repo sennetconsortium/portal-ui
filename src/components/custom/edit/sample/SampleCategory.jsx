@@ -63,7 +63,7 @@ function SampleCategory({
                     {!isDisabled && <option value="">----</option>}
                     {Object.entries(sample_categories).map(sample_category => {
                         return (
-                            <option key={sample_category[0]} value={sample_category[0]} selected={sample_category[0] === data.sample_category}>
+                            <option key={sample_category[0]} value={sample_category[0]}>
                                 {sample_category[1]}
                             </option>
                         );
