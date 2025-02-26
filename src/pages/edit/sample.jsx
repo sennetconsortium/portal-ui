@@ -122,6 +122,8 @@ function EditSample() {
                 if (ancestry.hasOwnProperty("immediate_ancestors")) {
                     fetchSource(ancestry.immediate_ancestors[0].uuid)
                         .catch(log.error);
+                } else {
+                    setSource(_data.source)
                 }
             }).catch(log.error)
 
