@@ -108,7 +108,6 @@ function EditSample() {
             setData(_data)
             setRuiSex(extractSourceSex(_data.source))
             checkProtocolUrl(_data.protocol_url)
-            setSource(_data.source)
 
             // Show organ input group if sample category is 'organ'
             if (eq(_data.sample_category, cache.sampleCategories.Organ)) {
