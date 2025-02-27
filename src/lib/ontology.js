@@ -1,9 +1,15 @@
 import { getUbkgCodes, getUbkgCodesPath, getUbkgEndPoint, getUbkgValuesetPath } from '@/config/config'
 import { get_json_header } from './services'
+import log from 'loglevel'
 
 export async function get_onotology_valueset(code) {
+    const valuesetPath = getUbkgValuesetPath()
     const path = getUbkgCodesPath() ? getUbkgCodesPath()[code] : null
-    const ep = path ? path : getUbkgValuesetPath().replace('{code}', code)
+    if (!path && !valuesetPath) {
+        log.debug(`ONTOLOGY API > Missing UBKG_VALUESET_PATH configuration on code ${code}`)
+        return []
+    }
+    const ep = path ? path : valuesetPath?.replace('{code}', code)
     const url = getUbkgEndPoint() + ep
     const request_options = {
         method: 'GET',
@@ -58,8 +64,8 @@ export async function get_sample_categories() {
 export async function get_dataset_types() {
     let list = await get_ontology_from_cache(getUbkgCodes().dataset_types) //C000001
     // Filter out 'UNKNOWN' from list
-    list = list.filter(dataset_type => dataset_type.term != 'UNKNOWN');
-    return to_key_val(list)
+    list = list.filter(dataset_type => dataset_type.dataset_type !== 'UNKNOWN');
+    return to_key_val(list, false, 'dataset_type', 'dataset_type')
 }
 
 const uberon_url_base = "http://purl.obolibrary.org/obo/UBERON_"
