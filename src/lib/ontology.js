@@ -1,9 +1,15 @@
 import { getUbkgCodes, getUbkgCodesPath, getUbkgEndPoint, getUbkgValuesetPath } from '@/config/config'
 import { get_json_header } from './services'
+import log from 'loglevel'
 
 export async function get_onotology_valueset(code) {
+    const valuesetPath = getUbkgValuesetPath()
     const path = getUbkgCodesPath() ? getUbkgCodesPath()[code] : null
-    const ep = path ? path : getUbkgValuesetPath().replace('{code}', code)
+    if (!path && !valuesetPath) {
+        log.debug(`ONTOLOGY API > Missing UBKG_VALUESET_PATH configuration on code ${code}`)
+        return []
+    }
+    const ep = path ? path : valuesetPath?.replace('{code}', code)
     const url = getUbkgEndPoint() + ep
     const request_options = {
         method: 'GET',
