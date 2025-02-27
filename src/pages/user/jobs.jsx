@@ -30,7 +30,7 @@ import WarningAmberIcon from "@mui/icons-material/WarningAmber";
 import Stack from '@mui/material/Stack';
 import JobQueueContext, {JobQueueProvider} from "../../context/JobQueueContext";
 import Joyride, {STATUS} from "react-joyride";
-import {TUTORIAL_THEME} from "../../config/constants";
+import {SWAL_DEL_CONFIG, TUTORIAL_THEME} from "../../config/constants";
 import JobDashboardTutorialSteps from "../../components/custom/layout/JobDashboardTutorialSteps";
 import Spinner, {SpinnerEl} from "../../components/custom/Spinner";
 
@@ -163,27 +163,13 @@ function ViewJobs({isAdmin = false}) {
         }
     }
 
-    const deleteConfig = {
-        title: 'Are you sure?',
-        text: 'This cannot be undone once deleted.',
-        dangerMode: true,
-        buttons: true,
-        showCancelButton: true,
-        confirmButtonText: 'Delete',
-        cancelButtonText: 'Keep',
-        customClass: {
-            cancelButton: 'btn btn-secondary',
-            confirmButton: 'btn btn-danger',
-        }
-    }
-
     const urlPrefix = () => {
         const pre = isAdmin ? 'admin/jobs' : 'jobs'
         return getIngestEndPoint() + pre
     }
 
     const flushAllData = () => {
-        Swal.fire(deleteConfig).then(result => {
+        Swal.fire(SWAL_DEL_CONFIG).then(result => {
             if (result.isConfirmed && isAdmin) {
                 fetch(urlPrefix() + `/flush`, {method: 'DELETE', headers: getHeaders()}).then(async (res) => {
                     setErrorModal(false)
@@ -210,7 +196,7 @@ function ViewJobs({isAdmin = false}) {
     }
 
     const handleSingleJobCancellation = (e, row, action) => {
-        let cancelConfig = JSON.parse(JSON.stringify(deleteConfig))
+        let cancelConfig = JSON.parse(JSON.stringify(SWAL_DEL_CONFIG))
         cancelConfig.text = 'This cannot be undone once cancelled.'
         cancelConfig.confirmButtonText = 'Cancel'
         cancelConfig.customClass = {
@@ -226,7 +212,7 @@ function ViewJobs({isAdmin = false}) {
     }
 
     const handleSingleJobDeletion = (e, row, action) => {
-        Swal.fire(deleteConfig).then(result => {
+        Swal.fire(SWAL_DEL_CONFIG).then(result => {
             if (result.isConfirmed) {
                 handleResponseModal(e, row, urlPrefix() + `/${row.job_id}`, 'DELETE', action, 'deleted')
             }

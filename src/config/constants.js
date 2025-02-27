@@ -20,3 +20,17 @@ export const TUTORIAL_THEME = {
         zIndex: 1000,
     }
 }
+
+export const SWAL_DEL_CONFIG = {
+    title: 'Are you sure?',
+    text: 'This cannot be undone once deleted.',
+    dangerMode: true,
+    buttons: true,
+    showCancelButton: true,
+    confirmButtonText: 'Delete',
+    cancelButtonText: 'Keep',
+    customClass: {
+        cancelButton: 'btn btn-secondary',
+        confirmButton: 'btn btn-danger',
+    }
+}
