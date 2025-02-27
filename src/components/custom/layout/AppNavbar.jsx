@@ -27,7 +27,8 @@ const AppNavbar = ({hidden, signoutHidden, innerRef}) => {
 
     const clearBrowsing = (e) => {
         e.preventDefault()
-
+        SWAL_DEL_CONFIG.confirmButtonText = 'Clear'
+        SWAL_DEL_CONFIG.html = '<span class="fs-6">This will clear cookies and local storage data for this website only. If you are experiencing issues or inconsistencies while searching on the Portal, this may help resolve the problem.</span>'
         Swal.fire(SWAL_DEL_CONFIG).then(result => {
             if (result.isConfirmed) {
                 localStorage.clear()
