@@ -1,6 +1,8 @@
 import { getAuth, getRootURL } from "@/config/config";
 import { APP_ROUTES } from "@/config/constants";
 import log from "loglevel";
+import React from "react";
+import {getOrganByCode, organIcons} from "@/config/organs";
 
 export function getHeaders() {
     const myHeaders = new Headers();
@@ -249,6 +251,56 @@ export function getJobStatusDefinition(status) {
         }
     }
     return msg;
+}
+
+export const getOrganMeta = (code) => {
+    const organ = getOrganByCode(code)
+    const icon = organIcons[code] || organIcons.OT
+    return {icon, organ}
+}
+
+export const getSubtypeProvenanceShape = (t, cat) => {
+    let s = 'circle'
+    let c = 'pink'
+    let title = t
+    switch (t) {
+        case 'Organ':
+            s = 'diamond'
+            break
+        case 'Block':
+            s = 'sq'
+            break
+        case 'Section':
+            s = 'rect'
+            break
+        case 'Suspension':
+            break
+        case 'Human':
+        case 'Human Organoid':
+            c = 'yellow'
+            break
+        case 'Publication':
+            c = 'purple'
+            break
+        case 'Mouse':
+        case 'Mouse Organoid':
+            c = ''
+            s = 'stadium'
+            break
+        default:
+            c = 'green'
+            title = cat ? getCreationActionRelationName(cat) : ''
+            if (cat && datasetIs.processed(cat)) {
+                s = 'blob'
+                c = ''
+            }
+            if (cat && datasetIs.component(cat)) {
+                s = 'triangle'
+                c = ''
+            }
+
+    }
+    return <span className={'c-help'}><span className={`shape shape--sm ${c} shape--${s}`} title={title}>{t}</span></span>
 }
 
 export function getJobTypeColor(type) {
