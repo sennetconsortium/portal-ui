@@ -58,8 +58,8 @@ export async function get_sample_categories() {
 export async function get_dataset_types() {
     let list = await get_ontology_from_cache(getUbkgCodes().dataset_types) //C000001
     // Filter out 'UNKNOWN' from list
-    list = list.filter(dataset_type => dataset_type.term != 'UNKNOWN');
-    return to_key_val(list)
+    list = list.filter(dataset_type => dataset_type.dataset_type !== 'UNKNOWN');
+    return to_key_val(list, false, 'dataset_type', 'dataset_type')
 }
 
 const uberon_url_base = "http://purl.obolibrary.org/obo/UBERON_"
