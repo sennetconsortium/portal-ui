@@ -79,10 +79,13 @@ export default function Description({data, citationData, labId, primaryDateTitle
                 <Card border={'0'} className={'pb-3'}>
                     <Card.Body>
                         <Card.Subtitle>Intended Organ</Card.Subtitle>
-                        <span><a className={'icon_inline'} href={`${APP_ROUTES.organs}/${_getOrganMeta().organ.path}`}>{getUBKGFullName(data.intended_organ)}</a>&nbsp;
-                        <img alt={getUBKGFullName(data.intended_organ)} src={_getOrganMeta().icon} width={'24px'} />
+                        {data?.intended_organ &&
+                            <span><a className={'icon_inline'}
+                                     href={`${APP_ROUTES.organs}/${_getOrganMeta().organ.path}`}>{getUBKGFullName(data.intended_organ)}</a>&nbsp;
+                                <img alt={getUBKGFullName(data.intended_organ)} src={_getOrganMeta().icon}
+                                     width={'24px'}/>
                         </span>
-
+                        }
                     </Card.Body>
                 </Card>
 
