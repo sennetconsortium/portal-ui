@@ -4,9 +4,9 @@ import {
     checkFilterType,
     checkMultipleFilterType,
     displayBodyHeader, eq, getEntityViewUrl, getUBKGFullName,
-    getStatusColor, getStatusDefinition, matchArrayOrder, getOrganMeta, getDatasetTypeDisplay, getSubtypeProvenanceShape
+    getStatusColor, getStatusDefinition, matchArrayOrder, getOrganMeta
 } from './js/functions'
-import AppContext from "../../context/AppContext"
+import AppContext from "@/context/AppContext"
 import log from 'loglevel'
 import ClipboardCopy from "../ClipboardCopy";
 import BulkExport, {handleCheckbox} from "./BulkExport";
@@ -20,11 +20,9 @@ import AppModal from "../AppModal";
 import {parseJson} from "@/lib/services";
 import {COLS_ORDER_KEY} from "@/config/config";
 
-function TableResultsEntities({children, filters, onRowClicked, currentColumns, forData = false, rowFn, inModal = false, rawResponse}) {
-
+function TableResultsEntities({children, filters, onRowClicked, currentColumns = useRef([]), forData = false, rowFn, inModal = false, rawResponse}) {
     let hasMultipleEntityTypes = checkMultipleFilterType(filters);
     const {isLoggedIn, cache, getGroupName} = useContext(AppContext)
-    currentColumns = currentColumns || useRef([])
     const hiddenColumns = useRef(null)
     const [showModal, setShowModal] = useState(false)
     const [modalTitle, setModalTitle] = useState(null)
