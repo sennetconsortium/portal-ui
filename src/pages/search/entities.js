@@ -1,5 +1,4 @@
 import dynamic from "next/dynamic";
-import ReactDOMServer from "react-dom/server"
 import React, {useContext} from "react";
 import {ErrorBoundary, SearchBox} from "@elastic/react-search-ui";
 import {Layout} from "@elastic/react-search-ui-views";
