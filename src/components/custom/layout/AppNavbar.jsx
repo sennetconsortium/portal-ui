@@ -69,15 +69,14 @@ const AppNavbar = ({hidden, signoutHidden, innerRef}) => {
         }
     }
 
-    const  deleteTutorialCookies = () => {
+    const deleteTutorialCookies = () => {
         deleteCookie(`${tutorialCookieKey}true`)
         deleteCookie(`${tutorialCookieKey}false`)
         setTutorialTrigger(tutorialTrigger+1)
     }
 
     const getShowTutorialLink = () => {
-        const tutorialCompleted = getCookie(`${tutorialCookieKey}${isLoggedIn()}`)
-        return tutorialCompleted || false
+        return eq(getCookie(`${tutorialCookieKey}${isLoggedIn()}`), 'true')
     }
 
     return (

@@ -18,10 +18,8 @@
     "@mui/icons-material": "^5.10.9",
     "@mui/material": "^5.14.2",
     "bootstrap-icons": "^1.11.3",
-    "cookies-next": "^2.1.1",
-    "core-js": "^3.26.0",
-    "next": "14.2.10",
-    "npm-run-all": "^4.1.5",
+    "cookies-next": "^4.3.0",
+    "next": "14.2.24",
     "primeicons": "^7.0.0",
     "primereact": "^9.6.0",
     "provenance-ui": "github:sennetconsortium/provenance-ui#v2.6.5-rc",
@@ -32,15 +30,15 @@
     "react-toastify": "^9.1.1",
     "sass": "^1.57.1",
     "search-ui": "file:search-ui",
-    "sharp": "0.32.6",
-    "styled-components": "^5.3.3",
-    "vitessce": "^3.5.1"
+    "vitessce": "^3.5.7"
   },
   "devDependencies": {
     "@babel/cli": "^7.24.6",
     "@babel/core": "^7.24.6",
     "@babel/polyfill": "^7.12.1",
     "babel-preset-minify": "^0.5.2",
+    "core-js": "^3.26.0",
+    "npm-run-all": "^4.1.5",
     "watch": "^1.0.2"
   }
 }

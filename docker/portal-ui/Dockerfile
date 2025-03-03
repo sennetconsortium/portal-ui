@@ -26,10 +26,11 @@ RUN curl -fsSL https://rpm.nodesource.com/setup_20.x | bash - && \
 WORKDIR /usr/src/app/src
 
 # Install npm dependencies and build app
+ENV NODE_ENV=production
 RUN npm install && \
     npm run sass-build && \
-    npm run build
-
+    npm run build && \
+    npm uninstall sass
 
 # The EXPOSE instruction informs Docker that the container listens on the specified network ports at runtime.
 EXPOSE 3000
