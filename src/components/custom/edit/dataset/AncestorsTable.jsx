@@ -112,7 +112,7 @@ export default function AncestorsTable({formLabel, onChange, deleteAncestor, val
                 format: col => {
                     // Disable this button when the dataset is not 'primary'
                     return (
-                        <Button className="pt-0 pb-0"
+                        <Button className="pt-0 pb-0 btn-delete-ancestor"
                                 variant="link"
                                 onClick={(e) => _deleteAncestor(e, col.uuid)}
                                 disabled={disableDelete}>
