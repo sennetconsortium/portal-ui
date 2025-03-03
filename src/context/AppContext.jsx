@@ -279,7 +279,7 @@ export const AppProvider = ({ cache, banners, children }) => {
     const getStringifiedComponents = () => {
         return btoa(JSON.stringify({
             token: ReactDOMServer.renderToStaticMarkup(<InvalidToken />).toString(),
-            notFound: ReactDOMServer.renderToStaticMarkup(<NotFound />).toString()
+            notFound: ReactDOMServer.renderToStaticMarkup(<NotFound includeHeader={false} />).toString()
         }))
     }
 
