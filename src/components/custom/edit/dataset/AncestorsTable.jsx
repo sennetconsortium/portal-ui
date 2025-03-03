@@ -92,8 +92,13 @@ export default function AncestorsTable({formLabel, onChange, deleteAncestor, val
             },
             {
                 name: 'Lab ID',
-                selector: row => row?.lab_tissue_sample_id || row?.lab_dataset_id,
-                sortable: true
+                id: 'lab_id',
+                selector: row => {
+                    updateCount('lab_id', row?.lab_tissue_sample_id || row?.lab_dataset_id)
+                    return row?.lab_tissue_sample_id || row?.lab_dataset_id
+                },
+                sortable: true,
+                omit: columnVisibility.lab_id
             },
             {
                 name: 'Group',
@@ -107,7 +112,7 @@ export default function AncestorsTable({formLabel, onChange, deleteAncestor, val
                 format: col => {
                     // Disable this button when the dataset is not 'primary'
                     return (
-                        <Button className="pt-0 pb-0"
+                        <Button className="pt-0 pb-0 btn-delete-ancestor"
                                 variant="link"
                                 onClick={(e) => _deleteAncestor(e, col.uuid)}
                                 disabled={disableDelete}>

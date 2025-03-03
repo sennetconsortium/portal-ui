@@ -4,7 +4,7 @@ import {
     checkFilterType,
     checkMultipleFilterType,
     displayBodyHeader, eq, getEntityViewUrl, getUBKGFullName,
-    getStatusColor, getStatusDefinition, matchArrayOrder, getOrganMeta, getDatasetTypeDisplay, getSubtypeProvenanceShape
+    getStatusColor, getStatusDefinition, matchArrayOrder, getOrganMeta,
 } from './js/functions'
 import AppContext from "../../context/AppContext"
 import log from 'loglevel'

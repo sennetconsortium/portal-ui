@@ -96,3 +96,11 @@
     }
   }
 }
+
+.accordion-button {
+  .title_badge {
+    @include md-mx {
+      margin-top: 5px;
+    }
+  }
+}
