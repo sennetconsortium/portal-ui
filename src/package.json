@@ -32,9 +32,7 @@
     "react-toastify": "^9.1.1",
     "sass": "^1.57.1",
     "search-ui": "file:search-ui",
-    "sharp": "0.32.6",
-    "styled-components": "^5.3.3",
-    "vitessce": "^3.5.1"
+    "vitessce": "^3.5.7"
   },
   "devDependencies": {
     "@babel/cli": "^7.24.6",
