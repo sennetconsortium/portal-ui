@@ -47,11 +47,7 @@ export const AppProvider = ({ cache, banners, children }) => {
         let groups_token = ""
         if (info) {
             info = atob(info)
-            setCookie(
-                'groups_token',
-                JSON.parse(info).groups_token,
-                {sameSite: "Lax"},
-            )
+            setCookie('groups_token', JSON.parse(info).groups_token, {sameSite: "Lax"})
             groups_token = JSON.parse(info).groups_token
         } else {
             // Delete in the event info doesn't exist as might have been logged out the system elsewhere.
@@ -130,7 +126,7 @@ export const AppProvider = ({ cache, banners, children }) => {
     }
 
     const hasAuthenticationCookie = () => {
-        return getCookie(authKey)
+        return eq(getCookie(authKey), 'true')
     }
 
     const isLoggedIn = () => {
@@ -318,7 +314,9 @@ export const AppProvider = ({ cache, banners, children }) => {
                 getGroupName,
                 getBusyOverlay,
                 toggleBusyOverlay,
-                tutorialTrigger, setTutorialTrigger, getStringifiedComponents
+                tutorialTrigger,
+                setTutorialTrigger,
+                getStringifiedComponents
             }}
         >
             {children}

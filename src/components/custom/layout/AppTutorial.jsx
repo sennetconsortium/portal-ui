@@ -15,7 +15,7 @@ function AppTutorial() {
     const cookieKey = `tutorialCompleted_${isLoggedIn()}`
 
     useEffect(() => {
-        const tutorialCompleted = getCookie(cookieKey)
+        const tutorialCompleted = eq(getCookie(cookieKey), 'true')
         if (!tutorialCompleted) {
             setShowAlert(true)
             setSteps(TutorialSteps(isLoggedIn()))
