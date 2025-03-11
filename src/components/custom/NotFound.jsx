@@ -1,11 +1,11 @@
 import React from 'react'
-import Header from "./layout/Header"
+import dynamic from "next/dynamic";
 
-function NotFound() {
-
+function NotFound({ includeHeader = true}) {
+    const Header = includeHeader ? dynamic(() => import("./layout/Header")) : null
     return (
         <>
-            <Header title="Page Not Found | SenNet"></Header>
+        {includeHeader && <Header title="Page Not Found | SenNet"></Header>}
 
             <div className={"container"}>
                 <div className={"row align-items-center error-row"}>
