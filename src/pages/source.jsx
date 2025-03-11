@@ -163,7 +163,7 @@ function ViewSource() {
                                             )}
 
                                             {/*Provenance*/}
-                                            <Provenance nodeData={data}/>
+                                            <Provenance data={data}/>
 
                                             {/*Metadata*/}
                                             {metadata &&

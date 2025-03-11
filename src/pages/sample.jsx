@@ -170,7 +170,7 @@ function ViewSample() {
                                             )}
 
                                             {/*Provenance*/}
-                                            <Provenance nodeData={data}/>
+                                            <Provenance data={data}/>
 
                                             {/*Metadata*/}
                                             {/*Samples have their metadata inside "metadata"*/}

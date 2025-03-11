@@ -197,7 +197,7 @@ function ViewPublication() {
                                                 ancillaryPublication={ancillaryPublicationData}/>
 
                                             {/*Provenance*/}
-                                            <Provenance nodeData={data}/>
+                                            <Provenance data={data}/>
 
                                             {/*Files*/}
                                             <FileTreeView data={data}/>

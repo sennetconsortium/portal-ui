@@ -292,7 +292,7 @@ function ViewDataset() {
                                         {showVitessce && <SennetVitessce data={data}/>}
 
                                         {/*Provenance*/}
-                                        <Provenance nodeData={data}/>
+                                        <Provenance data={data}/>
 
                                             {/*Metadata*/}
                                             {/*Datasets have their metadata inside "metadata.metadata"*/}
