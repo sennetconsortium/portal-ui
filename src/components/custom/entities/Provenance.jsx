@@ -7,7 +7,7 @@ import SenNetAccordion from "../layout/SenNetAccordion";
 import ProvenanceGraph from "@/components/custom/entities/ProvenanceGraph";
 
 
-function Provenance({ data }) {
+function Provenance({ data, hasAncestry }) {
     const [ancestors, setAncestors] = useState(null)
     const [descendants, setDescendants] = useState(null)
 
@@ -18,7 +18,7 @@ function Provenance({ data }) {
         if (data.hasOwnProperty("ancestors")) {
             setAncestors(data.ancestors)
         }
-    }, [data?.ancestors, data?.descendants])
+    }, [hasAncestry])
 
 
     return (

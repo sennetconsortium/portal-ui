@@ -24,6 +24,7 @@ const SidebarBtn = dynamic(() => import("@/components/SidebarBtn"))
 
 function ViewPublication() {
     const [data, setData] = useState(null)
+    const [hasAncestry, setHasAncestry] = useState(false)
     const [citationData, setCitationData] = useState(null)
     const [ancillaryPublicationData, setAncillaryPublicationData] = useState(null)
     const [error, setError] = useState(false)
@@ -52,6 +53,7 @@ function ViewPublication() {
             getAncestryData(_data.uuid).then(ancestry => {
                 Object.assign(_data, ancestry)
                 setData(_data)
+                setHasAncestry(true)
 
                 // get ancillary publication
                 // there could potentially be multiple descendants
@@ -197,7 +199,7 @@ function ViewPublication() {
                                                 ancillaryPublication={ancillaryPublicationData}/>
 
                                             {/*Provenance*/}
-                                            <Provenance data={data}/>
+                                            <Provenance data={data} hasAncestry={hasAncestry}/>
 
                                             {/*Files*/}
                                             <FileTreeView data={data}/>

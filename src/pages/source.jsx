@@ -25,6 +25,7 @@ const SidebarBtn = dynamic(() => import("@/components/SidebarBtn"))
 function ViewSource() {
     const router = useRouter()
     const [data, setData] = useState(null)
+    const [hasAncestry, setHasAncestry] = useState(false)
     const [metadata, setMetadata] = useState(null)
     const [mappedMetadata, setMappedMetadata] = useState(null)
     const [groups, setGroups] = useState(null)
@@ -64,6 +65,7 @@ function ViewSource() {
             getAncestryData(_data.uuid).then(ancestry => {
                 Object.assign(_data, ancestry)
                 setData(_data)
+                setHasAncestry(true)
             }).catch(log.error)
 
             // fetch write privilege
@@ -163,7 +165,7 @@ function ViewSource() {
                                             )}
 
                                             {/*Provenance*/}
-                                            <Provenance data={data}/>
+                                            <Provenance data={data} hasAncestry={hasAncestry} />
 
                                             {/*Metadata*/}
                                             {metadata &&
