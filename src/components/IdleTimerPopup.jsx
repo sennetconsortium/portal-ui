@@ -6,6 +6,7 @@ import {deleteCookies} from "../lib/auth";
 import {getIngestEndPoint, IDLE_TIMEOUT} from "../config/config";
 import {useRouter} from "next/router";
 import {getCookie} from "cookies-next";
+import { eq } from './custom/js/functions';
 
 const timeout = IDLE_TIMEOUT
 const promptBeforeIdle = 60000 // 1 minute
@@ -15,7 +16,7 @@ export default function IdleTimerPopup() {
     const [remaining, setRemaining] = useState(timeout)
     const [open, setOpen] = useState(false)
 
-    const isAuthorized = () => getCookie('isAuthenticated')
+    const isAuthorized = () => eq(getCookie('isAuthenticated'), 'true')
 
     const onIdle = () => {
         setOpen(false)
