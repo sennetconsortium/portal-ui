@@ -23,6 +23,12 @@ function useAutoHideColumns({data}) {
             // This will run after the table is initially rendered with data
             afterTableBuild()
         }
+
+        // In the event the table data changed, like for edit pages' AncestorsTable that use the hook
+        // we need to check data length, assert already ready (avoid multiple calls), and set to !ready to trigger a rebuild
+        if (data && data.length !== tableData.length && tableReady) {
+            setTableReady(false)
+        }
     }, [data, tableReady])
 
     const afterTableBuild = () => {
