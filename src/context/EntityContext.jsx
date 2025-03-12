@@ -275,10 +275,10 @@ export const EntityProvider = ({ children }) => {
 
     const errIcon = () => <WarningAmberIcon sx={{color: '#842029'}} />
 
-    const setCheckDoiModal = (body) => {
+    const setCheckAncestorModal = (body, titleTopic = 'RUI information') => {
         setHasSubmissionError(false)
         setShowModal(true)
-        setModalTitle(<span><span className={'title-text'}>Validating DOI URLs of ancestor entities ...</span></span>)
+        setModalTitle(<span><span className={'title-text'}>Validating {titleTopic} ...</span></span>)
         setModalBody(body)
     }
     
@@ -378,7 +378,7 @@ export const EntityProvider = ({ children }) => {
                 isUnauthorized, isAuthorizing, isPreview,
                 getModal, setModalDetails,
                 setSubmissionModal,
-                setCheckDoiModal,
+                setCheckAncestorModal,
                 isEditMode,
                 data, setData,
                 error, setError,
