@@ -41,7 +41,7 @@ const Spinner = dynamic(() => import("@/components/custom/Spinner"))
 
 export default function EditDataset() {
     const {
-        isPreview, getModal, setModalDetails, setSubmissionModal, setCheckDoiModal,
+        isPreview, getModal, setModalDetails, setSubmissionModal, setCheckAncestorModal,
         data, setData,
         error, setError,
         values, setValues,
@@ -244,10 +244,59 @@ export default function EditDataset() {
         }).catch((e) => log.error(e))
     }
 
+    const failCheckText = (section = '"Register location"') => {
+        if (eq(section, 'protocol')) {
+            section = <>update either "Case Selection Protocol" for <code>Sources</code> or "Preparation Protocol" for <code>Samples</code></>
+        }
+        return (<>Please click on the failed SenNet IDs from the list and then {section}. Resubmit this Dataset for processing once complete.</>
+        )
+    }
+
+    const checkRui = async () => {
+        try {
+            const validList = ['true', 'n/a', 'exempt']
+            const passes = validList.contains(data.has_rui_information)
+            if (passes) return true
+            setDisableSubmit(true)
+            setCheckAncestorModal(<span className={'text-center p-3 spinner-wrapper'}><Spinner text={''}/></span>)
+            let i = 0
+            let results = []
+            let allValid = true
+            let apiResult
+            let currentValid
+            for (const ancestor of data.ancestors) {
+                if (eq(ancestor.entity_type, cache.entities.sample) && eq(ancestor.sample_category, cache.sampleCategories.Block)) {
+                    apiResult = await getEntityData(ancestor.uuid)
+                    currentValid = true
+                    if (!apiResult || (apiResult && !validList.contains(apiResult.has_rui_information))) {
+                        allValid = false
+                        currentValid = false
+                    }
+                    let icon = currentValid ? successIcon() : errIcon()
+                    results.push(<span key={`rui-check-${i}`}>{icon} <a
+                        href={getEntityViewUrl(ancestor.entity_type, ancestor.uuid, {isEdit: true})}
+                        target='_blank'>{ancestor.sennet_id}</a>  <br/></span>)
+                    i++
+                }
+            }
+            if (!allValid) {
+                results.push(<p key={`rui-check-msg`}><br/>One or more <code>Sample Blocks</code> are missing RUI spatial registration. {failCheckText()}</p>)
+            } else {
+                setShowModal(false)
+            }
+            setDisableSubmit(false)
+            setCheckAncestorModal(results)
+            return allValid
+        } catch (e) {
+            log.error(e)
+        }
+    }
+
     const checkDoi = async () => {
         try {
             setDisableSubmit(true)
-            setCheckDoiModal(<span className={'text-center p-3 spinner-wrapper'}><Spinner text={''}/></span>)
+            const title = 'DOI URLs'
+            setCheckAncestorModal(<span className={'text-center p-3 spinner-wrapper'}><Spinner text={''}/></span>, title)
             let i = 0
             let results = []
             let allValid = true
@@ -269,13 +318,12 @@ export default function EditDataset() {
                 }
             }
             if (!allValid) {
-                results.push(<p key={`doi-check-msg`}><br/>Not all DOI URLs are valid. Please click on the failed SenNet
-                    IDs from the list above to correct. Then return to this form and submit again for processing. </p>)
+                results.push(<p key={`doi-check-msg`}><br/>Not all DOI URLs are valid. {failCheckText('protocol')} </p>)
             } else {
                 setShowModal(false)
             }
             setDisableSubmit(false)
-            setCheckDoiModal(results)
+            setCheckAncestorModal(results, title)
             return allValid
         } catch (e) {
             log.error(e)
@@ -292,8 +340,12 @@ export default function EditDataset() {
     }
 
     const handleProcessing = async () => {
-        let result = await checkDoi()
-        if (result) {
+        let doiValid = await checkDoi()
+        let ruiValid= false
+        if (doiValid) {
+           ruiValid = await checkRui()
+        }
+        if (doiValid && ruiValid) {
             const requestOptions = {
                 method: 'PUT',
                 headers: get_headers(),
