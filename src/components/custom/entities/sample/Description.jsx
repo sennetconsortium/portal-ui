@@ -55,6 +55,22 @@ export default function Description({data, citationData, labId, primaryDateTitle
             return getOrganMeta(data.intended_organ)
         }
 
+        const getOrganLinkOrSpan = () => {
+            const organ = _getOrganMeta().organ
+            const name = getUBKGFullName(data.intended_organ)
+            if (organ) {
+                return (
+                    <a className={'icon_inline'}
+                       href={`${APP_ROUTES.organs}/${organ?.path}`}>{name}</a>
+                )
+            } else {
+                return (
+                    <span className={'icon_inline'}>{name}</span>
+                )
+            }
+
+        }
+
     return (
         <SenNetAccordion title={title || data?.title || 'Summary'} id={'Summary'}>
 
@@ -80,8 +96,7 @@ export default function Description({data, citationData, labId, primaryDateTitle
                     <Card.Body>
                         <Card.Subtitle>Intended Organ</Card.Subtitle>
                         {data?.intended_organ &&
-                            <span><a className={'icon_inline'}
-                                     href={`${APP_ROUTES.organs}/${_getOrganMeta().organ.path}`}>{getUBKGFullName(data.intended_organ)}</a>&nbsp;
+                            <span>{getOrganLinkOrSpan()}&nbsp;
                                 <img alt={getUBKGFullName(data.intended_organ)} src={_getOrganMeta().icon}
                                      width={'24px'}/>
                         </span>
