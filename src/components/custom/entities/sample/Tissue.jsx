@@ -22,10 +22,16 @@ export default function Tissue({ data }) {
                 const code = cache.organTypesCodes[name]
                 const organ = getOrganByCode(code)
                 const icon = organIcons[code] || organIcons.OT
+                let path
+                if (organ) {
+                    path = `${APP_ROUTES.organs}/${organ?.path}`
+                }
+
                 return (
                     <span title={name}>
-                        <a href={`${APP_ROUTES.organs}/${organ.path}`}>{name}</a> <img alt={name} src={icon} width={'24px'} />
-
+                        {path && <a href={path}>{name}</a>}
+                        {!path && <span>{name}</span>}
+                        <img alt={name} src={icon} width={'24px'} />
                     </span>
                 )
             },
