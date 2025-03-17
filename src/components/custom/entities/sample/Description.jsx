@@ -128,7 +128,7 @@ export default function Description({data, citationData, labId, primaryDateTitle
                         </Card.Subtitle>
 
                         <Card.Text className='mb-1'>
-                            {data.publication_venue};
+                            {data.publication_venue}
                         </Card.Text>
 
                         <Card.Text>
