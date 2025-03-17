@@ -250,7 +250,7 @@ function ProvenanceGraph({ data }) {
     }
 
     const publicationUrl = (d, property, value) => {
-        return {href: nodeData?.publication_url, value: nodeData?.publication_venue}
+        return {href: data?.publication_url, value: data?.publication_venue}
     }
 
     const protocolUrl = (d, property, value) => {

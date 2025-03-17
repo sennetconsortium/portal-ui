@@ -1,6 +1,6 @@
 {
   "name": "portal-ui",
-  "version": "1.9.3",
+  "version": "1.9.4",
   "private": true,
   "scripts": {
     "run": "npm-run-all --parallel dev sass plugins-watch",
@@ -22,7 +22,7 @@
     "next": "14.2.24",
     "primeicons": "^7.0.0",
     "primereact": "^9.6.0",
-    "provenance-ui": "github:sennetconsortium/provenance-ui#v2.6.5-rc",
+    "provenance-ui": "github:sennetconsortium/provenance-ui#v2.6.7-rc",
     "react-data-table-component": "^7.6.2",
     "react-helmet-async": "^2.0.3",
     "react-idle-timer": "^5.7.2",
