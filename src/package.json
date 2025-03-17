@@ -1,6 +1,6 @@
 {
   "name": "portal-ui",
-  "version": "1.9.3",
+  "version": "1.9.4",
   "private": true,
   "scripts": {
     "run": "npm-run-all --parallel dev sass plugins-watch",
