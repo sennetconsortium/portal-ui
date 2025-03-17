@@ -26,6 +26,7 @@ const SidebarBtn = dynamic(() => import("@/components/SidebarBtn"))
 function ViewSample() {
     const router = useRouter()
     const [data, setData] = useState(null)
+    const [hasAncestry, setHasAncestry] = useState(false)
     const [ancestorHasMetadata, setAncestorHasMetadata] = useState(false)
     const [error, setError] = useState(false)
     const [errorMessage, setErrorMessage] = useState(null)
@@ -54,6 +55,7 @@ function ViewSample() {
             getAncestryData(_data.uuid).then(ancestry => {
                 Object.assign(_data, ancestry)
                 setData(_data)
+                setHasAncestry(true)
 
                 for (const ancestor of ancestry.ancestors) {
                     if (ancestor.metadata && Object.keys(ancestor.metadata).length) {
@@ -170,7 +172,7 @@ function ViewSample() {
                                             )}
 
                                             {/*Provenance*/}
-                                            <Provenance nodeData={data}/>
+                                            <Provenance data={data} hasAncestry={hasAncestry}/>
 
                                             {/*Metadata*/}
                                             {/*Samples have their metadata inside "metadata"*/}

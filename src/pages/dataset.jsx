@@ -43,6 +43,7 @@ const SidebarBtn = dynamic(() => import("@/components/SidebarBtn"))
 
 function ViewDataset() {
     const [data, setData] = useState(null)
+    const [hasAncestry, setHasAncestry] = useState(false)
     const [citationData, setCitationData] = useState(null)
     const [ancestorHasMetadata, setAncestorHasMetadata] = useState(false)
     const [error, setError] = useState(false)
@@ -110,6 +111,7 @@ function ViewDataset() {
             getAncestryData(_data.uuid).then(ancestry => {
                 Object.assign(_data, ancestry)
                 setData(_data)
+                setHasAncestry(true)
 
                 for (const ancestor of ancestry.ancestors) {
                     if ((ancestor.metadata && Object.keys(ancestor.metadata).length)) {
@@ -292,7 +294,7 @@ function ViewDataset() {
                                         {showVitessce && <SennetVitessce data={data}/>}
 
                                         {/*Provenance*/}
-                                        <Provenance nodeData={data}/>
+                                        <Provenance data={data} hasAncestry={hasAncestry}/>
 
                                             {/*Metadata*/}
                                             {/*Datasets have their metadata inside "metadata.metadata"*/}
