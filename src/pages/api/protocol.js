@@ -5,7 +5,7 @@ import log from "loglevel";
 export default async function handler(req, res) {
     let baseProtocolUrl = 'https://www.protocols.io/api/v4/protocols/'
     let protocolId = getProtocolId(decodeURIComponent(req.query.uri))
-    log.info(protocolId)
+    log.info('ProtocolId', protocolId)
 
     await fetch(baseProtocolUrl + protocolId, {
         headers: {
