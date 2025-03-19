@@ -78,14 +78,10 @@ export default function AncestorIds({values, onChange, fetchAncestors, deleteAnc
             onShowModal()
         }
         setShowHideModal(true)
-        // Enable addons for facets
-        addons('dataset')
     }
 
     const hideModal = () => {
         setShowHideModal(false)
-        // Reset addons for facets
-        delete window.addons['dataset']
     }
 
     // Handles when updates are made to `Ancestor ID` when the search feature is used

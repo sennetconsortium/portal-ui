@@ -5,7 +5,7 @@
  * @returns
  */
 function addons(source, args= null) {
-    Addon.log('Addons started ...', {color: 'white'})
+    Addon.log(`Addons started ... ${source}`, {color: 'white'})
     window.addons = window.addons || {}
     if (window.addons[source] !== undefined) {
         return
@@ -13,29 +13,17 @@ function addons(source, args= null) {
     window.addons[source] = args
 
     let apps = {
+        searchErrorBoundary: SearchErrorBoundary,
         gtm: GoogleTagManager,
         ada: Ada,
         tooltip: Tooltip
     }
 
-    let observedApps = {
-        searchErrorBoundary: SearchErrorBoundary,
-    }
-
     args = args || window.addons.init
-    Addon.observeMutations(observedApps, args)
+    Addon.observeMutations(apps, args)
 
     setTimeout(() => {
-
         try {
-            for (let app in apps) {
-                document
-                    .querySelectorAll(`[class*='js-${app}--'], [data-js-${app}]`)
-                    .forEach((el) => {
-                        new apps[app](el, {app, ...args })
-                    })
-            }
-
             // Default: Capture all link clicks.
             new GoogleTagManager(null, {app: 'links', ...args })
         } catch (e) {
