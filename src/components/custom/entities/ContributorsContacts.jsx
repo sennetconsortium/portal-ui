@@ -1,8 +1,8 @@
-import React, {useContext, useEffect, useState} from 'react'
 import PropTypes from 'prop-types'
-import DataTable, { createTheme } from 'react-data-table-component'
-import SenNetAccordion from "../layout/SenNetAccordion";
+import DataTable from 'react-data-table-component'
+import SenNetAccordion from "@/components/custom/layout/SenNetAccordion";
 import {eq} from "@/components/custom/js/functions";
+
 
 function ContributorsContacts({data, title}) {
     const getColumns = () => {

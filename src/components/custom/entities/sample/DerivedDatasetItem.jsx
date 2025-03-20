@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {fetchEntity, getStatusColor} from "../../js/functions";
+import {fetchEntity, getStatusColor} from "@/components/custom/js/functions";
 
 const DerivedDatasetItem = ({index, data, dataType, descendantUuid}) => {
 

@@ -1,8 +1,8 @@
 import {createContext, useContext, useEffect, useState} from "react";
-import {APP_ROUTES} from "../config/constants";
+import {APP_ROUTES} from "@/config/constants";
 import AppContext from "./AppContext";
-import {get_auth_header} from "../lib/services";
-import {getIngestEndPoint} from "../config/config";
+import {get_auth_header} from "@/lib/services";
+import {getIngestEndPoint} from "@/config/config";
 
 const AdminContext = createContext()
 

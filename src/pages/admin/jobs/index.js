@@ -1,9 +1,9 @@
 import dynamic from "next/dynamic";
 import React, {useContext} from "react";
 import ViewJobs from "../../user/jobs";
-import AppContext from "../../../context/AppContext";
-import {JobQueueProvider} from "../../../context/JobQueueContext";
-import AdminContext, {AdminProvider} from "../../../context/AdminContext";
+import AppContext from "@/context/AppContext";
+import {JobQueueProvider} from "@/context/JobQueueContext";
+import AdminContext, {AdminProvider} from "@/context/AdminContext";
 
 const Spinner = dynamic(() => import("../../../components/custom/Spinner"))
 const Unauthorized = dynamic(() => import("../../../components/custom/layout/Unauthorized"))

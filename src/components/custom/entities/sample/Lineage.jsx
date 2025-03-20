@@ -1,7 +1,7 @@
 import React, {useContext} from 'react';
 import DataTable from 'react-data-table-component';
 import {getDatasetTypeDisplay, getOrganMeta, getSubtypeProvenanceShape, getUBKGFullName} from "../../js/functions";
-import ClipboardCopy from "../../../ClipboardCopy";
+import ClipboardCopy from "@/components/ClipboardCopy";
 import AppContext from "@/context/AppContext";
 import {RESULTS_PER_PAGE} from "@/config/config";
 import useAutoHideColumns from "@/hooks/useAutoHideColumns";
