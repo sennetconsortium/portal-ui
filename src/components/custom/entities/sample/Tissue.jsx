@@ -1,12 +1,12 @@
 import { APP_ROUTES } from '@/config/constants';
 import { getOrganByCode, organIcons } from "@/config/organs";
 import AppContext from "@/context/AppContext";
-import { Avatar, Chip, Stack } from "@mui/material";
+import { Chip, Stack } from "@mui/material";
 import { useContext } from 'react';
 import { Card } from 'react-bootstrap';
 import DataTable from "react-data-table-component";
-import { displayBodyHeader, getUBKGFullName } from "../../js/functions";
-import SenNetAccordion from "../../layout/SenNetAccordion";
+import {displayBodyHeader, getUBKGFullName} from "@/components/custom/js/functions";
+import SenNetAccordion from "@/components/custom/layout/SenNetAccordion";
 
 export default function Tissue({ data }) {
     const {cache} = useContext(AppContext)

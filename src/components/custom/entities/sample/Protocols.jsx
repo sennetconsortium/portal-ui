@@ -1,6 +1,6 @@
 import React, {Fragment, useEffect, useState} from 'react';
-import {fetchProtocols, getClickableLink} from "../../js/functions";
-import SenNetAccordion from "../../layout/SenNetAccordion";
+import {fetchProtocols, getClickableLink} from "@/components/custom/js/functions";
+import SenNetAccordion from "@/components/custom/layout/SenNetAccordion";
 import Card from 'react-bootstrap/Card';
 
 const Protocols = ({protocolUrl}) => {
