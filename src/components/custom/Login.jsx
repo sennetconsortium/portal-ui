@@ -1,12 +1,12 @@
 import React, { useEffect, useContext } from 'react'
-import {APP_TITLE, getIngestLogin} from '../../config/config'
+import {APP_TITLE, getIngestLogin} from '@/config/config'
 import { Row, Col, Container } from 'react-bootstrap'
 import AppNavbar from './layout/AppNavbar'
 import AppFooter from './layout/AppFooter'
 import Header from './layout/Header'
-import AppContext from '../../context/AppContext'
+import AppContext from "@/context/AppContext";
 import { goToSearch } from './js/functions'
-import SenNetBanner from "../SenNetBanner";
+import SenNetBanner from "@/components/SenNetBanner";
 
 function Login() {
     const loginUrl = getIngestLogin()

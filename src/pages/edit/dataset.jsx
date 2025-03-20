@@ -659,7 +659,7 @@ export default function EditDataset() {
                                                 text={<>Process this <code>Dataset</code> via the Ingest Pipeline.</>}
                                                 className={'initiate-dataset-processing'}>
                                                 <DatasetSubmissionButton
-                                                    actionBtnClassName={'js-btn--process'}
+                                                    primaryBtnClassName={'js-btn--process'}
                                                     btnLabel={"Process"}
                                                     modalBody={<div><p>By clicking "Process"
                                                         this <code>Dataset</code> will

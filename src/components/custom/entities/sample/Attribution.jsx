@@ -1,8 +1,9 @@
 import React, {useContext} from 'react';
-import SenNetAccordion from "../../layout/SenNetAccordion";
+import SenNetAccordion from "@/components/custom/layout/SenNetAccordion";
 import Card from 'react-bootstrap/Card';
 import CardGroup from 'react-bootstrap/CardGroup';
-import AppContext from "../../../../context/AppContext";
+import AppContext from "@/context/AppContext";
+
 export default function Attribution({ data }) {
    const {getGroupName } = useContext(AppContext)
     return (

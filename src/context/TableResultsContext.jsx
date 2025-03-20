@@ -1,7 +1,7 @@
 import React, {createContext, useContext, useEffect, useRef, useState} from "react";
 import $ from "jquery";
 import AppContext from "./AppContext";
-import {RESULTS_PER_PAGE} from "../config/config";
+import {RESULTS_PER_PAGE} from "@/config/config";
 import {createTheme} from "react-data-table-component";
 import {handleTableControls} from "@/components/custom/search/ResultsPerPage";
 import {eq} from "@/components/custom/js/functions";

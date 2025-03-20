@@ -589,9 +589,9 @@ export default function BulkCreate({
                             modalBody={getModalBody()}
                             modalSize='lg'
                             showModal={showModal}
-                            handleHome={handleHome}
-                            handleClose={() => setShowModal(false)}
-                            showCloseButton={true}
+                            handlePrimaryBtn={handleHome}
+                            handleSecondaryBtn={
+() => setShowModal(false)}
                         />
                     }
                     {
