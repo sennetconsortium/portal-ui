@@ -55,7 +55,7 @@ export default function EditDataset() {
         entityForm, disabled,
         getEntityConstraints,
         buildConstraint, successIcon, errIcon, getCancelBtn,
-        isAdminOrHasValue, getAssignedToGroupNames,
+        isAdminOrHasValue, getAssignedToGroupNames,setModalProps,
         contactsTSV, contacts, setContacts, contributors, setContactsAttributes, setContactsAttributesOnFail
     } = useContext(EntityContext)
     const {_t, cache, adminGroup, isLoggedIn, getBusyOverlay, toggleBusyOverlay, getPreviewView} = useContext(AppContext)
@@ -252,12 +252,21 @@ export default function EditDataset() {
         )
     }
 
+    const skipRui = () => {
+        setShowModal(false)
+        handleProcessing(true)
+    }
+
     const checkRui = async () => {
         try {
             const validList = ['true', 'n/a', 'exempt']
             const passes = validList.contains(data.has_rui_information)
             if (passes) return true
             setDisableSubmit(true)
+            setModalProps({
+                actionBtnLabel: 'Skip & Process',
+                actionBtnHandler: skipRui
+            })
             setCheckAncestorModal(<span className={'text-center p-3 spinner-wrapper'}><Spinner text={''}/></span>)
             let i = 0
             let results = []
@@ -339,13 +348,22 @@ export default function EditDataset() {
         }).catch((e) => log.error(e))
     }
 
-    const handleProcessing = async () => {
+    const preProcessingCheck = async () => {
         let doiValid = await checkDoi()
         let ruiValid= false
         if (doiValid) {
-           ruiValid = await checkRui()
+            ruiValid = await checkRui()
         }
-        if (doiValid && ruiValid) {
+        return doiValid && ruiValid
+    }
+
+    const handleProcessing = async (skipRuiCheck = false) => {
+        let passedChecks = skipRuiCheck
+        if (!skipRuiCheck) {
+            passedChecks = await preProcessingCheck()
+        }
+        if (passedChecks) {
+            setModalProps({})
             const requestOptions = {
                 method: 'PUT',
                 headers: get_headers(),

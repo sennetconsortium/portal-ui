@@ -38,6 +38,8 @@ export const EntityProvider = ({ children }) => {
     const [selectedUserWriteGroupUuid, setSelectedUserWriteGroupUuid] =
         useState(null)
 
+    const [modalProps, setModalProps] = useState({})
+
     const entityForm = useRef(null)
     const [disabled, setDisabled] = useState(true)
 
@@ -328,7 +330,8 @@ export const EntityProvider = ({ children }) => {
             modalTitle={modalTitle}
             modalBody={<div>{modalBody}</div>}
             handleClose={isEditMode() ? handleClose : goToEntity}
-            handleHome={handleHome}
+            handleHome={modalProps.actionBtnHandler ? modalProps.actionBtnHandler : handleHome}
+            actionButtonLabel={modalProps.actionBtnLabel ? modalProps.actionBtnLabel : 'Home page'}
             showCloseButton={showCloseButton}
             closeButtonLabel={'Edit form'}
         />
@@ -394,7 +397,7 @@ export const EntityProvider = ({ children }) => {
                 disableSubmit, setDisableSubmit,
                 getEntityConstraints, getSampleEntityConstraints, buildConstraint,
                 getMetadataNote, successIcon, errIcon, checkProtocolUrl,
-                warningClasses, setWarningClasses, getCancelBtn,
+                warningClasses, setWarningClasses, getCancelBtn, setModalProps,
                 isAdminOrHasValue, getAssignedToGroupNames, entityForm, disabled, disableElements,
                 contactsTSV, contacts, setContacts, contributors, setContributors, setContactsAttributes, setContactsAttributesOnFail
             }}
