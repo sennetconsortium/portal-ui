@@ -18,14 +18,14 @@ import PropTypes from "prop-types"
  * @param {string} primaryBtnLabel The text of the primary (right), blue colored button; Default is 'Home page'
  * @param {function} handleSecondaryBtn A callback on click of the secondary (left), grey colored button
  * @param {boolean} showSecondaryBtn Whether to show the secondary (left), grey colored button
- * @param {string} secondaryBtnLabel The text of the secondary (left), grey colored button; Default is 'Close'
  * @param {string} secondaryBtnClassName An additional css class name to apply to the secondary (left), grey colored button; Default is ''
+ * @param {string} secondaryBtnLabel The text of the secondary (left), grey colored button; Default is 'Close'
  * @returns {JSX.Element}
  * @constructor
  */
 const AppModal = ({ children, showModal = false, modalTitle, modalBody, modalSize, id = 'js-modal', className,
                       handlePrimaryBtn, showPrimaryBtn = true, primaryBtnClassName = '', primaryBtnLabel = 'Home page',
-                      handleSecondaryBtn,  showSecondaryBtn = true, secondaryBtnLabel = 'Close', secondaryBtnClassName = ''}) => {
+                      handleSecondaryBtn,  showSecondaryBtn = true, secondaryBtnClassName = '', secondaryBtnLabel = 'Close'}) => {
     const [size, setSize] = useState(modalSize)
     const {_t} = useContext(AppContext)
     return (
