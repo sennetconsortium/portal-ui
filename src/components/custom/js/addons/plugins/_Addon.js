@@ -61,28 +61,20 @@ class Addon {
     }
 
     static observeMutations(apps, args) {
-
-        const targetNode = document.getElementById("__next")
-        const config = { attributes: true, childList: true, subtree: true }
-
-        const callback = (mutationList, observer) => {
-            for (const mutation of mutationList) {
-
-                if (mutation.type === "childList") {
-                    for (let app in apps) {
-                        for (let el of mutation.addedNodes) {
-                            if ($(el).hasClass(`js-app--${app}`)) {
-                                new apps[app](el, {app, ...args })
-                            }
+        const initAddon = ()=> {
+            for (let app in apps) {
+                document
+                    .querySelectorAll(`[class*='js-${app}--'], [data-js-${app}], .js-app--${app}`)
+                    .forEach((el) => {
+                        if (!$(el).data(app)) {
+                            $(el).data(app, new apps[app](el, {app, ...args }))
                         }
-                    }
-                }
+                    })
             }
-        };
+        }
 
-
-        const observer = new MutationObserver(callback)
-        observer.observe(targetNode, config)
+        const observer = new MutationObserver(initAddon)
+        observer.observe(document.body,  { childList: true, subtree: true })
     }
 
     static isLocal() {

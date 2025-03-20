@@ -66,15 +66,10 @@ const AncestorId = ({fetchSource, onChange, source, data, isDisabled}) => {
 
     const showModal = () => {
         setShowHideModal(true)
-        // Enable addons for facets
-        addons('sample')
     }
 
     const hideModal = () => {
         setShowHideModal(false)
-
-        // Reset addons for facets
-        delete window.addons['sample']
     }
 
     // Handles when updates are made to `Source ID` when the search feature is used

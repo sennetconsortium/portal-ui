@@ -1,3 +1,6 @@
+/**
+ * Sends user events on various components to the app's GTM container.
+ */
 class GoogleTagManager extends Addon {
     constructor(el, args) {
         super(el, args)
@@ -176,6 +179,7 @@ class GoogleTagManager extends Addon {
         const path = window.location.pathname + window.location.search
         return path.length > 70 ? window.location.pathname : path;
     }
+
     handleLinks(e) {
         this.event = 'links'
         const $el = this.currentTarget(e)

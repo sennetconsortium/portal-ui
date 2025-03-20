@@ -1,3 +1,6 @@
+/**
+ * Display a tooltip on click of an element.
+ */
 class Tooltip extends Addon {
     constructor(el, args) {
         super(el, args)

@@ -1,3 +1,6 @@
+/**
+ * This displays our own components when @elastic/react-search-ui spits an error from search
+ */
 class SearchErrorBoundary extends Addon {
     constructor(el, args) {
         super(el, args)
