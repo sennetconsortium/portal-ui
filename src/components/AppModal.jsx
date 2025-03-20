@@ -9,8 +9,8 @@ import PropTypes from "prop-types"
  * @param {boolean} showModal Whether to show the modal
  * @param {node | string} modalTitle
  * @param {node | string} modalBody
- * @param {enum[string]} modalSize A modal size to apply according to React boostrap available sizes [xl, lg, sm]
- * @param {string} A css id name to apply to the modal container; Default is 'js-modal'
+ * @param {string} modalSize A modal size to apply according to React boostrap available sizes [xl, lg, sm]
+ * @param {string} id A css id name to apply to the modal container; Default is 'js-modal'
  * @param {string} className A css class name to apply to the modal container
  * @param {function} handlePrimaryBtn A callback on click of the primary (right), blue colored button
  * @param {boolean} showPrimaryBtn Whether to show the primary (right), blue colored button
