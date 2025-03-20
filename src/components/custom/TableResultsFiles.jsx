@@ -357,9 +357,6 @@ hideModal}
                     handlePrimaryBtn={downloadManifest}
                     showPrimaryBtn={showModalDownloadBtn}
                     primaryBtnLabel={'Download Manifest'}
-                    showSecondaryBtn={true}
-                    secondaryBtnLabel={
-'Close'}
                 />
             </TableResultsProvider>
         </>

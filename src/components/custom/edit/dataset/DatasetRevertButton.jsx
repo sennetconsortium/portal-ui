@@ -69,9 +69,6 @@ hideModal}
                 }}
                 primaryBtnLabel={'Revert'}
                 primaryBtnClassName={'js-btn--revert'}
-                showSecondaryBtn={true}
-                secondaryBtnLabel={
-'Close'}
             />
         </>
     )

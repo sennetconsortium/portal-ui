@@ -37,9 +37,6 @@ hideModal}
                     }}
                     primaryBtnLabel={btnLabel}
                     primaryBtnClassName={actionBtnClassName || 'js-btn--submit'}
-                    showSecondaryBtn={true}
-                    secondaryBtnLabel={
-'Close'}
                 />
             </>
         )

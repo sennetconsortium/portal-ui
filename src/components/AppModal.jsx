@@ -3,8 +3,28 @@ import {Button, Modal} from 'react-bootstrap'
 import AppContext from '../context/AppContext'
 import PropTypes from "prop-types"
 
-const AppModal = ({showModal = false, modalTitle, modalBody, handleSecondaryBtn, handlePrimaryBtn, showSecondaryBtn, secondaryBtnLabel = 'Close',
-                      showPrimaryBtn = true, children, modalSize, className, primaryBtnClassName = '', primaryBtnLabel = 'Home page', secondaryBtnClassName = ''}) => {
+/**
+ *
+ * @param children
+ * @param showModal
+ * @param modalTitle
+ * @param modalBody
+ * @param modalSize
+ * @param className
+ * @param handlePrimaryBtn
+ * @param showPrimaryBtn
+ * @param primaryBtnClassName
+ * @param primaryBtnLabel
+ * @param handleSecondaryBtn
+ * @param showSecondaryBtn
+ * @param secondaryBtnLabel
+ * @param secondaryBtnClassName
+ * @returns {JSX.Element}
+ * @constructor
+ */
+const AppModal = ({ children, showModal = false, modalTitle, modalBody, modalSize, className,
+                      handlePrimaryBtn, showPrimaryBtn = true, primaryBtnClassName = '', primaryBtnLabel = 'Home page',
+                      handleSecondaryBtn,  showSecondaryBtn = true, secondaryBtnLabel = 'Close', secondaryBtnClassName = ''}) => {
     const [size, setSize] = useState(modalSize)
     const {_t} = useContext(AppContext)
     return (

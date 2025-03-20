@@ -592,7 +592,6 @@ export default function BulkCreate({
                             handlePrimaryBtn={handleHome}
                             handleSecondaryBtn={
 () => setShowModal(false)}
-                            showSecondaryBtn={true}
                         />
                     }
                     {

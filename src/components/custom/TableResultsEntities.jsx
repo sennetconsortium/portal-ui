@@ -360,7 +360,6 @@ function TableResultsEntities({children, filters, onRowClicked, currentColumns =
                             setShowModal(false)
                         }}
                         showPrimaryBtn={false}
-                        showSecondaryBtn={true}
                         secondaryBtnLabel={
 'Okay'}
                     />

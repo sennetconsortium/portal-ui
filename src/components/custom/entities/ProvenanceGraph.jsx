@@ -455,7 +455,7 @@ function ProvenanceGraph({ data }) {
             {!loading && <Legend colorMap={legend} className='c-legend--flex c-legend--btns' help={help} actionMap={actionMap} selectorId={options.selectorId} otherLegend={otherLegend} />}
             {loading && <Spinner/>}
             <AppModal showModal={showModal} handleSecondaryBtn={
-handleModal} showSecondaryBtn={true} showPrimaryBtn={false} modalTitle='Provenance' modalSize='xl' className='modal-full'>
+handleModal} showPrimaryBtn={false} modalTitle='Provenance' modalSize='xl' className='modal-full'>
                 {!loading && <ProvenanceUI options={{...options, selectorId: modalId, minHeight: 500 }} data={treeData} />}
                 {!loading && <Legend colorMap={legend} className='c-legend--flex c-legend--btns' help={help} actionMap={actionMap} selectorId={modalId} />}
             </AppModal>

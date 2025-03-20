@@ -78,7 +78,6 @@ export default function IdleTimerPopup() {
         showModal={open}
         modalTitle={getModalTitle()}
         modalBody={getModalBody()}
-        showSecondaryBtn={true}
         secondaryBtnClassName={
 'btn-outline-danger'}
         handlePrimaryBtn={handleStillHere}

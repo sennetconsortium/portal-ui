@@ -802,7 +802,7 @@ function ViewJobs({isAdmin = false}) {
                             conditionalRowStyles={condStyles}
                             pagination/>
                         <AppModal modalSize={modalSize} className={`modal--ctaConfirm ${errorModal ? 'is-error' : ''}`}
-                                  showPrimaryBtn={false} showSecondaryBtn={true} handleSecondaryBtn={
+                                  showPrimaryBtn={false} handleSecondaryBtn={
 () => closeModal()}
                                   showModal={showModal} modalTitle={modalTitle} modalBody={modalBody}/>
                     </Row>
