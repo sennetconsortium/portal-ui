@@ -355,12 +355,14 @@ function TableResultsEntities({children, filters, onRowClicked, currentColumns =
                         showModal={showModal}
                         modalTitle={modalTitle}
                         modalBody={modalBody}
-                        handleClose={() => {
+                        handleSecondaryBtn={
+() => {
                             setShowModal(false)
                         }}
-                        showHomeButton={false}
-                        showCloseButton={true}
-                        closeButtonLabel={'Okay'}
+                        showPrimaryBtn={false}
+                        showSecondaryBtn={true}
+                        secondaryBtnLabel={
+'Okay'}
                     />
                 </TableResultsProvider>
             }

@@ -78,12 +78,15 @@ export default function IdleTimerPopup() {
         showModal={open}
         modalTitle={getModalTitle()}
         modalBody={getModalBody()}
-        showCloseButton={true}
-        secBtnClassName={'btn-outline-danger'}
-        handleHome={handleStillHere}
-        handleClose={onIdle}
-        closeButtonLabel={'Log out'}
-        actionButtonLabel={'Stay logged in'}
+        showSecondaryBtn={true}
+        secondaryBtnClassName={
+'btn-outline-danger'}
+        handlePrimaryBtn={handleStillHere}
+        handleSecondaryBtn={
+onIdle}
+        secondaryBtnLabel={
+'Log out'}
+        primaryBtnLabel={'Stay logged in'}
     />
 
 }

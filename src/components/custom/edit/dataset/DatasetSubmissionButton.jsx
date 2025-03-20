@@ -29,15 +29,17 @@ const DatasetSubmissionButton = ({onClick, btnLabel, actionBtnClassName, modalBo
                     showModal={showModal}
                     modalTitle={`Confirm ${modalTitle || 'Submission'}`}
                     modalBody={modalBody}
-                    handleClose={hideModal}
-                    handleHome={() => {
+                    handleSecondaryBtn={
+hideModal}
+                    handlePrimaryBtn={() => {
                         onClick()
                         hideModal()
                     }}
-                    actionButtonLabel={btnLabel}
-                    actionBtnClassName={actionBtnClassName || 'js-btn--submit'}
-                    showCloseButton={true}
-                    closeButtonLabel={'Close'}
+                    primaryBtnLabel={btnLabel}
+                    primaryBtnClassName={actionBtnClassName || 'js-btn--submit'}
+                    showSecondaryBtn={true}
+                    secondaryBtnLabel={
+'Close'}
                 />
             </>
         )

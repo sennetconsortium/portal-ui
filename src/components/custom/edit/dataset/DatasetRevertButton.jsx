@@ -61,15 +61,17 @@ function DatasetRevertButton({disableSubmit, onClick, onStatusChange, data}) {
                         </Form.Select>
                     </Form.Group>
                   </div>}
-                handleClose={hideModal}
-                handleHome={() => {
+                handleSecondaryBtn={
+hideModal}
+                handlePrimaryBtn={() => {
                     onClick()
                     hideModal()
                 }}
-                actionButtonLabel={'Revert'}
-                actionBtnClassName={'js-btn--revert'}
-                showCloseButton={true}
-                closeButtonLabel={'Close'}
+                primaryBtnLabel={'Revert'}
+                primaryBtnClassName={'js-btn--revert'}
+                showSecondaryBtn={true}
+                secondaryBtnLabel={
+'Close'}
             />
         </>
     )

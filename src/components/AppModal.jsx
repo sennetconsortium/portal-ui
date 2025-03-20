@@ -3,8 +3,8 @@ import {Button, Modal} from 'react-bootstrap'
 import AppContext from '../context/AppContext'
 import PropTypes from "prop-types"
 
-const AppModal = ({showModal = false, modalTitle, modalBody, handleClose, handleHome, showCloseButton, closeButtonLabel = 'Close',
-                      showHomeButton = true, children, modalSize, className, actionBtnClassName = '', actionButtonLabel = 'Home page', secBtnClassName = ''}) => {
+const AppModal = ({showModal = false, modalTitle, modalBody, handleSecondaryBtn, handlePrimaryBtn, showSecondaryBtn, secondaryBtnLabel = 'Close',
+                      showPrimaryBtn = true, children, modalSize, className, primaryBtnClassName = '', primaryBtnLabel = 'Home page', secondaryBtnClassName = ''}) => {
     const [size, setSize] = useState(modalSize)
     const {_t} = useContext(AppContext)
     return (
@@ -22,15 +22,15 @@ const AppModal = ({showModal = false, modalTitle, modalBody, handleClose, handle
                     {modalBody && <div key="modal-body">{modalBody}</div> }
                     {children}
                 </Modal.Body>
-                {(showCloseButton || showHomeButton) && <Modal.Footer>
-                    {showCloseButton &&
-                        <Button variant="outline-secondary rounded-0" className={secBtnClassName}  onClick={handleClose}>
-                            {_t(closeButtonLabel)}
+                {(showSecondaryBtn || showPrimaryBtn) && <Modal.Footer>
+                    {showSecondaryBtn &&
+                        <Button variant="outline-secondary rounded-0" className={secondaryBtnClassName}  onClick={handleSecondaryBtn}>
+                            {_t(secondaryBtnLabel)}
                         </Button>
                     }
-                    {showHomeButton &&
-                        <Button variant="outline-primary rounded-0" className={actionBtnClassName} onClick={handleHome}>
-                            {_t(actionButtonLabel)}
+                    {showPrimaryBtn &&
+                        <Button variant="outline-primary rounded-0" className={primaryBtnClassName} onClick={handlePrimaryBtn}>
+                            {_t(primaryBtnLabel)}
                         </Button>
                     }
                 </Modal.Footer>}
@@ -41,8 +41,8 @@ const AppModal = ({showModal = false, modalTitle, modalBody, handleClose, handle
 
 AppModal.propTypes = {
     showModal: PropTypes.bool,
-    showHomeButton: PropTypes.bool,
-    closeButtonLabel: PropTypes.string,
+    showPrimaryBtn: PropTypes.bool,
+    secondaryBtnLabel: PropTypes.string,
     children: PropTypes.node,
     className: PropTypes.string
 }

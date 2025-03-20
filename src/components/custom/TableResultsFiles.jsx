@@ -352,12 +352,14 @@ function TableResultsFiles({children, filters, forData = false, rowFn, inModal =
                         treeViewOnly={true}
                         className={'c-treeView__main--inTable'} />
                 }
-                    handleClose={hideModal}
-                    handleHome={downloadManifest}
-                    showHomeButton={showModalDownloadBtn}
-                    actionButtonLabel={'Download Manifest'}
-                    showCloseButton={true}
-                    closeButtonLabel={'Close'}
+                    handleSecondaryBtn={
+hideModal}
+                    handlePrimaryBtn={downloadManifest}
+                    showPrimaryBtn={showModalDownloadBtn}
+                    primaryBtnLabel={'Download Manifest'}
+                    showSecondaryBtn={true}
+                    secondaryBtnLabel={
+'Close'}
                 />
             </TableResultsProvider>
         </>

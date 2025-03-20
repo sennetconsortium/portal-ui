@@ -363,7 +363,7 @@ function EditUpload() {
                                                     </>}
                                                     className={'initiate-upload-validation'}>
                                                     <DatasetSubmissionButton
-                                                        actionBtnClassName={'js-btn--validate'}
+                                                        primaryBtnClassName={'js-btn--validate'}
                                                         btnLabel={"Validate"}
                                                         modalTitle={'Validation'}
                                                         modalBody={<div><p>By clicking "Validate"
@@ -382,7 +382,7 @@ function EditUpload() {
                                                     </>}
                                                     className={'initiate-upload-reorganization'}>
                                                     <DatasetSubmissionButton
-                                                        actionBtnClassName={'js-btn--reorganize'}
+                                                        primaryBtnClassName={'js-btn--reorganize'}
                                                         btnLabel={"Reorganize"}
                                                         modalTitle={'Reorganization'}
                                                         modalBody={<div><p>By clicking "Reorganize"

@@ -257,8 +257,8 @@ export const AppProvider = ({ cache, banners, children }) => {
                 showModal={showModal}
                 modalTitle={modalTitle}
                 modalBody={modalBody}
-                showHomeButton={false}
-                showCloseButton={false}
+                showPrimaryBtn={false}
+                showSecondaryBtn={false}
             />
         )
     }

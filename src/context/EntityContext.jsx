@@ -329,11 +329,13 @@ export const EntityProvider = ({ children }) => {
             showModal={showModal}
             modalTitle={modalTitle}
             modalBody={<div>{modalBody}</div>}
-            handleClose={isEditMode() ? handleClose : goToEntity}
-            handleHome={modalProps.actionBtnHandler ? modalProps.actionBtnHandler : handleHome}
-            actionButtonLabel={modalProps.actionBtnLabel ? modalProps.actionBtnLabel : 'Home page'}
-            showCloseButton={showCloseButton}
-            closeButtonLabel={'Edit form'}
+            handleSecondaryBtn={
+isEditMode() ? handleClose : goToEntity}
+            handlePrimaryBtn={modalProps.actionBtnHandler ? modalProps.actionBtnHandler : handleHome}
+            primaryBtnLabel={modalProps.actionBtnLabel ? modalProps.actionBtnLabel : 'Home page'}
+            showSecondaryBtn={showCloseButton}
+            secondaryBtnLabel={
+'Edit form'}
         />
     }
 
