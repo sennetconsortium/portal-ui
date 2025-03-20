@@ -246,7 +246,7 @@ function ProvenanceGraph({ data }) {
     }
 
     const jsonView = (d, property, value) => {
-        return {href: `/api/json?view=${btoa(value.replaceAll("'", '"'))}`, value: `${value.substr(0, 20)}...}`}
+        return {href: `/api/json?view=${btoa(d[property])}`, value: `${d[property].substr(0, 20)}...}`}
     }
 
     const publicationUrl = (d, property, value) => {
