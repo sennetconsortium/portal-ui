@@ -52,12 +52,12 @@ export function get_headers() {
     return get_json_header(headers);
 }
 
-export async function callService(raw, url, method, headers) {
+export async function callService(reqBody, url, method, headers) {
     headers = headers ? headers : get_headers()
     return await fetch(url, {
         method: method,
         headers: headers,
-        body: raw && typeof raw === 'object' ? JSON.stringify(raw) : raw,
+        body: reqBody && typeof reqBody === 'object' ? JSON.stringify(reqBody) : reqBody,
     }).then(response => response.json())
         .then(result => {
             log.info(result)
@@ -261,8 +261,8 @@ export async function fetch_entity_type(uuid, bearer_token) {
     }
 }
 
-export async function getAncestryData(uuid, ops = {endpoints: ['ancestors', 'descendants'], otherEndpoints: []}) {
-    const ancestryPromises = getAncestry(uuid, ops)
+export async function getAncestryData(uuid, ops = {endpoints: ['ancestors', 'descendants'], otherEndpoints: []}, entityType = null) {
+    const ancestryPromises = getAncestry(uuid, ops, entityType)
     const promiseSettled = await Promise.allSettled([...Object.values(ancestryPromises)])
     let _data = {};
     let i = 0;
@@ -273,7 +273,7 @@ export async function getAncestryData(uuid, ops = {endpoints: ['ancestors', 'des
     return _data;
 }
 
-export function getAncestry(uuid, {endpoints = ['ancestors', 'descendants'], otherEndpoints = []}) {
+export function getAncestry(uuid, {endpoints = ['ancestors', 'descendants'], otherEndpoints = []}, entityType = null) {
     const propertyNameMap = {
         'immediate_ancestors': 'parents',
         'immediate_descendants': 'children'
@@ -283,7 +283,20 @@ export function getAncestry(uuid, {endpoints = ['ancestors', 'descendants'], oth
     const isEdit = window.location.href.contains('edit/')
     for (let key of allEndpoints) {
         let endpoint = propertyNameMap[key] || key
-        result[key] = callService(isEdit ? filterProperties.ancestryEdit : filterProperties.ancestry, `${getEntityEndPoint()}${endpoint}/${uuid}`, 'POST')
+        let reqBody = []
+        if (isEdit) {
+            reqBody =  filterProperties.ancestryEdit
+        } else if (endpoint.includes('ancestors')) {
+            reqBody = filterProperties.ancestors
+        } else if (endpoint.includes("descendants")) {
+            if (entityType && entityType === 'Dataset') {
+                reqBody = filterProperties.datasetDescendants
+            } else {
+                reqBody = filterProperties.descendants
+            }
+        }
+
+        result[key] = callService(reqBody, `${getEntityEndPoint()}${endpoint}/${uuid}`, 'POST')
     }
     return result
 }
@@ -508,18 +521,37 @@ export const getSamplesByOrgan = async (organCodes) => {
 }
 
 export const filterProperties = {
-    ancestry: {
+    ancestors: {
         filter_properties: [
             "lab_source_id",
             "lab_tissue_sample_id",
             "lab_dataset_id",
             "origin_samples",
             "creation_action",
-            "files",
             "metadata",
-            "ingest_metadata",
             "cedar_mapped_metadata",
             "source_mapped_metadata"
+        ],
+        is_include: true
+    },
+    descendants: {
+        filter_properties: [
+            "lab_source_id",
+            "lab_tissue_sample_id",
+            "lab_dataset_id",
+            "origin_samples",
+            "creation_action"
+        ],
+        is_include: true
+    },
+    datasetDescendants: {
+         filter_properties: [
+            "lab_source_id",
+            "lab_tissue_sample_id",
+            "lab_dataset_id",
+            "origin_samples",
+            "creation_action",
+             "files"
         ],
         is_include: true
     },
