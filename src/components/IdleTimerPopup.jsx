@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react'
 import { useIdleTimer } from 'react-idle-timer'
 import AppModal from "./AppModal";
 import WarningAmberIcon from '@mui/icons-material/WarningAmber';
-import {deleteCookies} from "../lib/auth";
-import {getIngestEndPoint, IDLE_TIMEOUT} from "../config/config";
+import {deleteCookies} from "@/lib/auth";
+import {getIngestEndPoint, IDLE_TIMEOUT} from "@/config/config";
 import {useRouter} from "next/router";
 import {getCookie} from "cookies-next";
 import { eq } from './custom/js/functions';
@@ -75,16 +75,14 @@ export default function IdleTimerPopup() {
 
     return <AppModal
         className={`modal--ctaConfirm is-warning-outline`}
+        id={'js-modal--idle'}
         showModal={open}
         modalTitle={getModalTitle()}
         modalBody={getModalBody()}
-        secondaryBtnClassName={
-'btn-outline-danger'}
+        secondaryBtnClassName={'btn-outline-danger'}
         handlePrimaryBtn={handleStillHere}
-        handleSecondaryBtn={
-onIdle}
-        secondaryBtnLabel={
-'Log out'}
+        handleSecondaryBtn={onIdle}
+        secondaryBtnLabel={'Log out'}
         primaryBtnLabel={'Stay logged in'}
     />
 
