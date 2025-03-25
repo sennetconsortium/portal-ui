@@ -171,6 +171,13 @@ function EditUpload() {
         handlePut('reorganize')
     }
 
+    const getDateMin = (plus = 0) => {
+        const d = new Date()
+        let m = d.getMonth()
+        m = m < 10 ? '0'+ m : m
+        return `${d.getFullYear()+plus}-${m}`
+    }
+
     if (isPreview(error))  {
         return getPreviewView(data)
     } else {
@@ -318,6 +325,31 @@ function EditUpload() {
                                                         this <code>Upload</code> will be registered/associated with.</>}
 
                                         />
+
+                                        <div className='row'>
+                                            <div className='col-md-3'>
+                                                {/*/!*Anticipated Completion Month/Year*!/*/}
+                                                <EntityFormGroup label='Anticipated Completion Month/Year' controlId='anticipated_complete_upload_month'
+                                                                 type={'month'}
+                                                                 placeholder={'YYYY-mm'}
+                                                                 value={data.anticipated_complete_upload_month}
+                                                                 onChange={onChange}
+                                                                 otherInputProps={{min:getDateMin(), max:getDateMin(1)}}
+                                                                 text={<>The month and year of that this <code>Upload</code> will have all required data uploaded and be ready for reorganization into <code>Datasets</code>.</>}/>
+                                            </div>
+
+                                            {/*/!*Anticipated number of datasets*!/*/}
+                                            <div className='col-md-3'>
+                                                <EntityFormGroup label='Anticipated Number of Datasets'
+                                                                 controlId='anticipated_dataset_count' value={data.anticipated_dataset_count}
+                                                                 onChange={onChange}
+                                                                 type={'number'}
+                                                                 otherInputProps={{min: 0}}
+                                                                 text={<>The total number of <code>Datasets</code> that this <code>Upload</code> will eventually contain.</>}/>
+                                            </div>
+                                        </div>
+
+
 
 
                                         <div className={'d-flex flex-row-reverse'}>
