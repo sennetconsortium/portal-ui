@@ -130,6 +130,10 @@ function EditUpload() {
             // Remove empty strings
             let json = cleanJson(values);
 
+            if (json['anticipated_dataset_count']) {
+                json['anticipated_dataset_count'] = Number(json['anticipated_dataset_count'])
+            }
+
             // Prevent the 400 bad request error on same status
             if (eq(json.status, values.status)) {
                 delete json['status']
@@ -334,7 +338,7 @@ function EditUpload() {
                                                                  placeholder={'YYYY-mm'}
                                                                  value={data.anticipated_complete_upload_month}
                                                                  onChange={onChange}
-                                                                 otherInputProps={{min:getDateMin(), max:getDateMin(1)}}
+                                                                 otherInputProps={{min:getDateMin(), max:getDateMin(5)}}
                                                                  text={<>The month and year of that this <code>Upload</code> will have all required data uploaded and be ready for reorganization into <code>Datasets</code>.</>}/>
                                             </div>
 
