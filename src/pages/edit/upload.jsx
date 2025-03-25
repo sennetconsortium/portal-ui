@@ -177,7 +177,7 @@ function EditUpload() {
 
     const getDateMin = (plus = 0) => {
         const d = new Date()
-        let m = d.getMonth()
+        let m = d.getMonth() + 1  // add 1 because 0 represents January and 11 represents December.
         m = m < 10 ? '0'+ m : m
         return `${d.getFullYear()+plus}-${m}`
     }
