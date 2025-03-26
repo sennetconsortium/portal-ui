@@ -179,13 +179,6 @@ function EditUpload() {
         handlePut('reorganize')
     }
 
-    const getDateMin = (plus = 0) => {
-        const d = new Date()
-        let m = d.getMonth() + 1  // add 1 because 0 represents January and 11 represents December.
-        m = m < 10 ? '0'+ m : m
-        return `${d.getFullYear()+plus}-${m}`
-    }
-
     const formatAnticipatedDate = (_data) => {
         const d = _data.anticipated_complete_upload_month ? new Date(_data.anticipated_complete_upload_month + '-01') : new Date()
         setAnticipatedDate(d)
@@ -350,12 +343,7 @@ function EditUpload() {
                                             <div className='col-md-3'>
                                                 {/*/!*Anticipated Completion Month/Year*!/*/}
                                                 <EntityFormGroup label='Anticipated Completion Month/Year' controlId='anticipated_complete_upload_month'
-                                                                 type={'month'}
-                                                                 pattern={'[0-9]{4}-[0-9]{2}'}
-                                                                 placeholder={'YYYY-mm'}
-                                                                 value={data.anticipated_complete_upload_month}
-                                                                 onChange={onChange}
-                                                                 otherInputProps={{min:getDateMin(), max:getDateMin(5)}}
+
                                                                  text={<>The month and year of that this <code>Upload</code> will have all required data uploaded and be ready for reorganization into <code>Datasets</code>.</>}>
                                                     <DatePicker
                                                         selected={anticipatedDate}
