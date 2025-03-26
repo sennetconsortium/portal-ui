@@ -335,6 +335,7 @@ function EditUpload() {
                                                 {/*/!*Anticipated Completion Month/Year*!/*/}
                                                 <EntityFormGroup label='Anticipated Completion Month/Year' controlId='anticipated_complete_upload_month'
                                                                  type={'month'}
+                                                                 pattern={'[0-9]{4}-[0-9]{2}'}
                                                                  placeholder={'YYYY-mm'}
                                                                  value={data.anticipated_complete_upload_month}
                                                                  onChange={onChange}
