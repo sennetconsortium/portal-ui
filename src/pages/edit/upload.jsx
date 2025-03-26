@@ -190,6 +190,11 @@ function EditUpload() {
         return <span title={tooltipText}>{shortMonth}</span>;
     }
 
+    const getMaxDate = () => {
+        const d = new Date()
+        return new Date(`${d.getFullYear() + 5}-${d.getMonth() + 1}-1`)
+    }
+
 
     if (isPreview(error))  {
         return getPreviewView(data)
@@ -349,6 +354,7 @@ function EditUpload() {
                                                         selected={anticipatedDate}
                                                         onChange={(date) => setAnticipatedDate(date)}
                                                         minDate={new Date()}
+                                                        maxDate={getMaxDate()}
                                                         className={'form-control'}
                                                         renderMonthContent={renderMonthContent}
                                                         showMonthYearPicker
