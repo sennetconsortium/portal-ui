@@ -1,4 +1,5 @@
 import dynamic from "next/dynamic";
+import "react-datepicker/dist/react-datepicker.css";
 import React, {useContext, useEffect, useState} from "react";
 import {useRouter} from 'next/router';
 import Alert from 'react-bootstrap/Alert';
@@ -12,6 +13,7 @@ import AppContext from '@/context/AppContext'
 import EntityContext, {EntityProvider} from '@/context/EntityContext'
 import $ from "jquery";
 import DatasetRevertButton, {statusRevertTooltip} from "@/components/custom/edit/dataset/DatasetRevertButton";
+import DatePicker from "react-datepicker";
 
 const AppFooter = dynamic(() => import("@/components/custom/layout/AppFooter"))
 const AppNavbar = dynamic(() => import("@/components/custom/layout/AppNavbar"))
@@ -44,6 +46,7 @@ function EditUpload() {
     const {_t, cache, adminGroup, getBusyOverlay, toggleBusyOverlay, getPreviewView} = useContext(AppContext)
     const router = useRouter()
     const [source, setSource] = useState(null)
+    const [anticipatedDate, setAnticipatedDate] = useState(new Date())
 
     // only executed on init rendering, see the []
     useEffect(() => {
@@ -61,6 +64,7 @@ function EditUpload() {
                 setErrorMessage(_data["error"])
             } else {
                 setData(_data);
+                formatAnticipatedDate(_data)
 
                 // Set state with default values that will be PUT to Entity API to update
                 let _values = {
@@ -181,6 +185,18 @@ function EditUpload() {
         m = m < 10 ? '0'+ m : m
         return `${d.getFullYear()+plus}-${m}`
     }
+
+    const formatAnticipatedDate = (_data) => {
+        const d = _data.anticipated_complete_upload_month ? new Date(_data.anticipated_complete_upload_month + '-01') : new Date()
+        setAnticipatedDate(d)
+    }
+
+    const renderMonthContent = (month, shortMonth, longMonth, day) => {
+        const fullYear = new Date(day).getFullYear();
+        const tooltipText = `${longMonth} ${fullYear}`;
+        return <span title={tooltipText}>{shortMonth}</span>;
+    }
+
 
     if (isPreview(error))  {
         return getPreviewView(data)
@@ -340,7 +356,17 @@ function EditUpload() {
                                                                  value={data.anticipated_complete_upload_month}
                                                                  onChange={onChange}
                                                                  otherInputProps={{min:getDateMin(), max:getDateMin(5)}}
-                                                                 text={<>The month and year of that this <code>Upload</code> will have all required data uploaded and be ready for reorganization into <code>Datasets</code>.</>}/>
+                                                                 text={<>The month and year of that this <code>Upload</code> will have all required data uploaded and be ready for reorganization into <code>Datasets</code>.</>}>
+                                                    <DatePicker
+                                                        selected={anticipatedDate}
+                                                        onChange={(date) => setAnticipatedDate(date)}
+                                                        minDate={new Date()}
+                                                        className={'form-control'}
+                                                        renderMonthContent={renderMonthContent}
+                                                        showMonthYearPicker
+                                                        dateFormat="yyyy-MM"
+                                                    />
+                                                </EntityFormGroup>
                                             </div>
 
                                             {/*/!*Anticipated number of datasets*!/*/}
