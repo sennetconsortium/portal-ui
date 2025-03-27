@@ -1,4 +1,5 @@
 import React, {useEffect, useRef, useState, useContext} from 'react';
+import { useRouter } from 'next/router'
 import {styled} from '@mui/material/styles';
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
@@ -24,10 +25,10 @@ import {get_headers, get_auth_header} from "../../../lib/services";
 import JobQueueContext from "../../../context/JobQueueContext";
 import OptionsSelect from "../layout/entity/OptionsSelect";
 import log from 'loglevel'
+import {APP_ROUTES} from "@/config/constants";
 
 export default function BulkCreate({
                                        userWriteGroups,
-                                       handleHome,
                                        entityDetails = {},
                                        isMetadata=false,
                                    }) {
@@ -47,6 +48,7 @@ export default function BulkCreate({
     const [subType, setSubType] = useState(entityDetails.subType)
     const [entityType, setEntityType] = useState(entityDetails.entityType)
     const response = useRef(null)
+    const router = useRouter()
     const { intervalTimer,
         isLoading, setIsLoading, bulkData, setBulkData,
         file, setFile,
@@ -81,6 +83,8 @@ export default function BulkCreate({
             borderRadius: 1,
         },
     }))
+
+    const handleHome = () => router.push(APP_ROUTES.search)
 
     const ColorlibStepIconRoot = styled('div')(({theme, ownerState}) => ({
         backgroundColor: theme.palette.mode === 'dark' ? theme.palette.grey[700] : '#ccc',

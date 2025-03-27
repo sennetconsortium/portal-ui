@@ -15,13 +15,12 @@ const Spinner = dynamic(() => import("../../../components/custom/Spinner"))
 const Unauthorized = dynamic(() => import("../../../components/custom/layout/Unauthorized"))
 
 export default function EditBulk() {
-    const {cache, supportedMetadata} = useContext(AppContext)
+    const {cache} = useContext(AppContext)
 
     const {
         isUnauthorized,
         isAuthorizing,
         userWriteGroups,
-        handleHome
     } = useContext(EntityContext)
 
     const router = useRouter()
@@ -64,7 +63,6 @@ export default function EditBulk() {
                 <BulkCreate
                     entityDetails={{entityType, subType}}
                     userWriteGroups={userWriteGroups}
-                    handleHome={handleHome}
                     isMetadata={isMetadata}
                 />
                 <AppFooter/>
