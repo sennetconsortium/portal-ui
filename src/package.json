@@ -24,6 +24,7 @@
     "primereact": "^9.6.0",
     "provenance-ui": "github:sennetconsortium/provenance-ui#v2.6.7-rc",
     "react-data-table-component": "^7.6.2",
+    "react-datepicker": "^8.2.1",
     "react-helmet-async": "^2.0.3",
     "react-idle-timer": "^5.7.2",
     "react-joyride": "^2.7.0",
