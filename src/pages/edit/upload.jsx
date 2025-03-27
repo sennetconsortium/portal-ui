@@ -347,9 +347,9 @@ function EditUpload() {
                                         <div className='row'>
                                             <div className='col-md-3'>
                                                 {/*/!*Anticipated Completion Month/Year*!/*/}
-                                                <EntityFormGroup label='Anticipated Completion Month/Year' controlId='anticipated_complete_upload_month'
+                                                <EntityFormGroup label='Anticipated Completion Year/Month' controlId='anticipated_complete_upload_month'
 
-                                                                 text={<>The month and year of that this <code>Upload</code> will have all required data uploaded and be ready for reorganization into <code>Datasets</code>.</>}>
+                                                                 text={<>The year and month that this <code>Upload</code> will have all required data uploaded and be ready for reorganization into <code>Datasets</code>.</>}>
                                                     <DatePicker
                                                         selected={anticipatedDate}
                                                         onChange={(date) => setAnticipatedDate(date)}
