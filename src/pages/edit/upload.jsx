@@ -195,6 +195,10 @@ function EditUpload() {
         return new Date(`${d.getFullYear() + 5}-${d.getMonth() + 1}-1`)
     }
 
+    const handleAnticipatedDateChange = (date) => {
+        onChange(null, 'anticipated_complete_upload_month', `${date.getFullYear()}-${date.getMonth() + 1}`)
+        setAnticipatedDate(date)
+    }
 
     if (isPreview(error))  {
         return getPreviewView(data)
@@ -352,7 +356,7 @@ function EditUpload() {
                                                                  text={<>The year and month that this <code>Upload</code> will have all required data uploaded and be ready for reorganization into <code>Datasets</code>.</>}>
                                                     <DatePicker
                                                         selected={anticipatedDate}
-                                                        onChange={(date) => setAnticipatedDate(date)}
+                                                        onChange={(date) => handleAnticipatedDateChange(date)}
                                                         minDate={new Date()}
                                                         maxDate={getMaxDate()}
                                                         className={'form-control'}
