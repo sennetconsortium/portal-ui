@@ -86,7 +86,8 @@ export const EntityProvider = ({ children }) => {
     }
     const handleHome = (e) => {
         e.preventDefault()
-        router.push(APP_ROUTES.search)
+        log.debug('handleHome', e)
+        window.location = APP_ROUTES.search
     }
 
     // only executed on init rendering, see the []
