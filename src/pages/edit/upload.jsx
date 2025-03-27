@@ -180,7 +180,7 @@ function EditUpload() {
     }
 
     const formatAnticipatedDate = (_data) => {
-        const d = _data.anticipated_complete_upload_month ? new Date(_data.anticipated_complete_upload_month + '-01') : new Date()
+        const d = _data.anticipated_complete_upload_month ? new Date(_data.anticipated_complete_upload_month + '-1') : new Date()
         setAnticipatedDate(d)
     }
 
