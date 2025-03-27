@@ -180,7 +180,7 @@ function EditUpload() {
     }
 
     const formatAnticipatedDate = (_data) => {
-        const d = _data.anticipated_complete_upload_month ? new Date(_data.anticipated_complete_upload_month + '-1') : new Date()
+        const d = _data.anticipated_complete_upload_month ? new Date(_data.anticipated_complete_upload_month + '-3') : new Date()
         setAnticipatedDate(d)
     }
 
@@ -192,7 +192,7 @@ function EditUpload() {
 
     const getMaxDate = () => {
         const d = new Date()
-        return new Date(`${d.getFullYear() + 5}-${d.getMonth() + 1}-1`)
+        return new Date(`${d.getFullYear() + 5}-${d.getMonth() + 1}-3`)
     }
 
     const handleAnticipatedDateChange = (date) => {
