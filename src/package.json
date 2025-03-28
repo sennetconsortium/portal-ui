@@ -29,7 +29,7 @@
     "react-idle-timer": "^5.7.2",
     "react-joyride": "^2.7.0",
     "react-toastify": "^9.1.1",
-    "sass": "^1.57.1",
+    "sass": "^1.86.0",
     "search-ui": "file:search-ui",
     "vitessce": "^3.5.7"
   },
