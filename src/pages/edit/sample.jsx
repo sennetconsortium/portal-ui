@@ -458,7 +458,7 @@ function EditSample() {
                                                      popoverTrigger={SenPopoverOptions.triggers.hoverOnClickOff}
                                                      onChange={_onChange}
                                                      onBlur={_onBlur}
-                                                     text={<span>The protocol used when procuring or preparing the tissue. This must be provided as a protocols.io DOI URL see: <a
+                                                     popoverHelpText={<span>The protocol used when procuring or preparing the tissue. This must be provided as a protocols.io DOI URL see: <a
                                                          href="https://www.protocols.io/." target='_blank'
                                                          className='lnk--ic'>https://www.protocols.io/ <i
                                                          className="bi bi-box-arrow-up-right"></i></a>.</span>}/>
@@ -470,14 +470,14 @@ function EditSample() {
                                                      isRequired={true}
                                                      value={data.lab_tissue_sample_id}
                                                      onChange={_onChange}
-                                                     text='An identifier used internally by the lab to identify the specimen. This can be useful for lab members to identify and look-up Samples.'/>
+                                                     popoverHelpText='An identifier used internally by the lab to identify the specimen. This can be useful for lab members to identify and look-up Samples.'/>
 
 
                                     {/*/!*Description*!/*/}
                                     <EntityFormGroup label='Lab Notes' type='textarea' controlId='description'
                                                      value={data.description}
                                                      onChange={_onChange}
-                                                     text='Free text field to enter a description of the specimen'/>
+                                                     popoverHelpText='Free text field to enter a description of the specimen'/>
 
                                     {metadataNote() &&
                                         <Alert variant={alertStyle.current}><span>{metadataNote()}</span></Alert>}

@@ -483,14 +483,14 @@ export default function EditCollection({collectionType='Collection', entitiesTab
                                                      controlId='title' value={data.title}
                                                      isRequired={true}
                                                      onChange={onChange}
-                                                     text={<>The title of the <code>Collection</code>.</>}/>
+                                                     popoverHelpText={<>The title of the <code>Collection</code>.</>}/>
 
                                     {/*/!*Description*!/*/}
                                     <EntityFormGroup label='Description' type='textarea' controlId='description'
                                                      isRequired={true}
                                                      value={data.description}
                                                      onChange={onChange}
-                                                     text={<>An abstract publicly available when
+                                                     popoverHelpText={<>An abstract publicly available when
                                                          the <code>Collection</code> is published.</>}/>
 
                                     <AttributesUpload ingestEndpoint={contactsTSV.uploadEndpoint} showAllInTable={true}

@@ -242,7 +242,7 @@ function EditSource() {
                                                      controlId='lab_source_id' value={data.lab_source_id}
                                                      isRequired={true}
                                                      onChange={onChange}
-                                                     text={<>An identifier used internally by the lab to identify
+                                                     popoverHelpText={<>An identifier used internally by the lab to identify
                                                          the <code>Source</code>. This can be useful for lab members to
                                                          identify and look-up Sources.
                                                      </>}/>
@@ -261,7 +261,7 @@ function EditSource() {
                                                          for any <code>Dataset</code> submission that uses this entity
                                                          as an ancestor.</>}
                                                      onChange={onChange} onBlur={_onBlur}
-                                                     text={<span>The protocol used for <code>Source</code> selection including any inclusion or exclusion criteria. This must  be provided  as a protocols.io DOI see: <a
+                                                     popoverHelpText={<span>The protocol used for <code>Source</code> selection including any inclusion or exclusion criteria. This must  be provided  as a protocols.io DOI see: <a
                                                          href="https://www.protocols.io/." target='_blank'
                                                          className='lnk--ic'>https://www.protocols.io/ <i
                                                          className="bi bi-box-arrow-up-right"></i></a>.</span>}/>
@@ -270,7 +270,7 @@ function EditSource() {
                                     <EntityFormGroup label='Lab Notes' type='textarea' controlId='description'
                                                      value={data.description}
                                                      onChange={onChange}
-                                                     text={<>Free text field to enter a description of
+                                                     popoverHelpText={<>Free text field to enter a description of
                                                          the <code>Source</code>.</>}/>
 
                                     {metadataNote() &&

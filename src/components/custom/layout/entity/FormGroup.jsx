@@ -5,7 +5,7 @@ import AppContext from '../../../../context/AppContext'
 import SenNetPopover from "../../../SenNetPopover";
 import WarningAmberIcon from "@mui/icons-material/WarningAmber";
 
-function EntityFormGroup({ controlId, label, text, onChange, value, type = 'text', placeholder = '',
+function EntityFormGroup({ controlId, label, popoverHelpText, onChange, value, type = 'text', placeholder = '',
                              isRequired = false, pattern, popoverTrigger, className = ' ', warningText, onBlur, isDisabled }) {
   const {_t } = useContext(AppContext)
   const isTextarea = (type === 'textarea')
@@ -15,7 +15,7 @@ function EntityFormGroup({ controlId, label, text, onChange, value, type = 'text
     
         <Form.Group className={`mb-3 form-group ${className}`} controlId={controlId}>
             <Form.Label>{_t(label)} {isRequired && <span className="required">* </span>}
-                <SenNetPopover text={text} trigger={popoverTrigger} className={`popover-${controlId}`}>
+                <SenNetPopover text={popoverHelpText} trigger={popoverTrigger} className={`popover-${controlId}`}>
                     <i className="bi bi-question-circle-fill"></i>
                 </SenNetPopover>
 
