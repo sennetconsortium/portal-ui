@@ -26,7 +26,7 @@
   &--error {
     color: $col-err-txt;
     background: $col-err-bg;
-
+    border-color: $col-err-bdr;
     .Toastify {
       &__progress-bar {
         background: $col-err-txt;
@@ -37,7 +37,6 @@
         }
       }
     }
-    border-color: $col-err-bdr;
   }
 }
 

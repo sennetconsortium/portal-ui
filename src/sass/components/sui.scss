@@ -233,6 +233,9 @@
 }
 
 #sui-tbl-checkbox-actions {
+  position: absolute;
+  right: 0;
+
   code {
     color: var(--bs-code-color);
     word-wrap: break-word;
@@ -241,8 +244,7 @@
       cursor: pointer;
     }
   }
-  position: absolute;
-  right: 0;
+
   .dropdown {
     * {
       font-size: 0.8rem;
