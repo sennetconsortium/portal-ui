@@ -164,7 +164,7 @@ p {
 
 .react-datepicker-wrapper {
   width: 100%;
-  @include lg {
+  @include mixins.lg {
     width: 90%;
   }
 }
