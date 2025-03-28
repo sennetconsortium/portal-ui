@@ -5,8 +5,9 @@ import AppContext from '../../../../context/AppContext'
 import SenNetPopover from "../../../SenNetPopover";
 import WarningAmberIcon from "@mui/icons-material/WarningAmber";
 
-function EntityFormGroup({ controlId, label, popoverHelpText, onChange, value, type = 'text', placeholder = '',
-                             isRequired = false, pattern, popoverTrigger, className = ' ', warningText, onBlur, isDisabled }) {
+function EntityFormGroup({ controlId, label,  onChange, value, type = 'text', placeholder = '',
+                             isRequired = false, pattern, popoverHelpText, popoverTrigger, className = ' ', popoverWarningText, onBlur, isDisabled, otherInputProps = {}  }) {
+
   const {_t } = useContext(AppContext)
   const isTextarea = (type === 'textarea')
 
@@ -20,18 +21,20 @@ function EntityFormGroup({ controlId, label, popoverHelpText, onChange, value, t
                 </SenNetPopover>
 
             </Form.Label>
-            {!isTextarea && <Form.Control disabled={isDisabled} type={type}  defaultValue={value} placeholder={_t(placeholder)} required={isRequired}
+            {!children && !isTextarea && <Form.Control disabled={isDisabled} type={type}  defaultValue={value} placeholder={_t(placeholder)} required={isRequired}
                         pattern={pattern}
+                        {...otherInputProps}
                         onBlur={onBlur ? (e => onBlur(e, e.target.id, e.target.value)) : undefined}
                         onChange={e => onChange(e, e.target.id, e.target.value)} /> }
 
-            {isTextarea && <Form.Control disabled={isDisabled} as={type} rows={4} defaultValue={value}
+            {!children && isTextarea && <Form.Control disabled={isDisabled} as={type} rows={4} defaultValue={value}
                                          required={isRequired}
+                                         {...otherInputProps}
                         onBlur={onBlur ? (e => onBlur(e, e.target.id, e.target.value)) : undefined}
                         onChange={e => onChange(e, e.target.id, e.target.value)} /> }
-
+            {children}
             {(className && className.indexOf('warning') !== -1) && <div className={'warning-icon-trigger'}>
-                <SenNetPopover text={warningText} trigger={popoverTrigger} className={`popover-warning-${controlId}`}>
+                <SenNetPopover text={popoverWarningText} trigger={popoverTrigger} className={`popover-warning-${controlId}`}>
                     <span ><WarningAmberIcon sx={{color: '#ffc107'}} /></span></SenNetPopover>
             </div>}
 
@@ -46,7 +49,8 @@ EntityFormGroup.propTypes = {
     placeholder: PropTypes.string,
     className: PropTypes.string,
     isRequired: PropTypes.bool,
-    popoverTrigger: PropTypes.string
+    popoverTrigger: PropTypes.string,
+    otherInputProps: PropTypes.object
 }
 
 export default EntityFormGroup

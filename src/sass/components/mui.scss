@@ -1,5 +1,7 @@
+@use "../general/mixins";
+
 .MuiContainer-root {
-  @include md-mx {
+  @include mixins.md-mx {
     .MuiBox-root {
       text-align: center;
       > .btn {

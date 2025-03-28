@@ -1,3 +1,6 @@
+@use "../config/swatch";
+@use "../general/mixins";
+
 .p-component, .p-component * {
   box-sizing: border-box;
 }
@@ -6813,14 +6816,14 @@ input.p-dropdown-label {
 }
 
 .p-autocomplete .p-autocomplete-multiple-container:not(.p-disabled):hover {
-  border-color: $col-bs-blue;
+  border-color: swatch.$col-bs-blue;
 }
 
 .p-autocomplete .p-autocomplete-multiple-container:not(.p-disabled).p-focus {
   outline: 0 none;
   outline-offset: 0;
   box-shadow: 0 0 0 0.2rem aliceblue;
-  border-color: $col-bs-blue;
+  border-color: swatch.$col-bs-blue;
 }
 
 .p-autocomplete .p-autocomplete-multiple-container .p-autocomplete-input-token {
@@ -6839,7 +6842,7 @@ input.p-dropdown-label {
   padding: 0.375rem 0.75rem;
   margin-right: 0.5rem;
   background: aliceblue;
-  color: $col-bs-blue;
+  color: swatch.$col-bs-blue;
   border-radius: 6px;
 }
 
@@ -6879,7 +6882,7 @@ input.p-dropdown-label {
 }
 
 .p-autocomplete-panel .p-autocomplete-items .p-autocomplete-item.p-highlight {
-  color: $col-bs-blue;
+  color: swatch.$col-bs-blue;
   background: aliceblue;
 }
 
@@ -6963,7 +6966,7 @@ input.p-dropdown-label {
 
 .p-datepicker .p-datepicker-header .p-datepicker-title .p-datepicker-year:enabled:hover,
 .p-datepicker .p-datepicker-header .p-datepicker-title .p-datepicker-month:enabled:hover {
-  color: $col-bs-blue;
+  color: swatch.$col-bs-blue;
 }
 
 .p-datepicker .p-datepicker-header .p-datepicker-title .p-datepicker-month {
@@ -6997,7 +7000,7 @@ input.p-dropdown-label {
 }
 
 .p-datepicker table td > span.p-highlight {
-  color: $col-bs-blue;
+  color: swatch.$col-bs-blue;
   background: aliceblue;
 }
 
@@ -7014,7 +7017,7 @@ input.p-dropdown-label {
 }
 
 .p-datepicker table td.p-datepicker-today > span.p-highlight {
-  color: $col-bs-blue;
+  color: swatch.$col-bs-blue;
   background: aliceblue;
 }
 
@@ -7081,7 +7084,7 @@ input.p-dropdown-label {
 }
 
 .p-datepicker .p-monthpicker .p-monthpicker-month.p-highlight {
-  color: $col-bs-blue;
+  color: swatch.$col-bs-blue;
   background: aliceblue;
 }
 
@@ -7096,7 +7099,7 @@ input.p-dropdown-label {
 }
 
 .p-datepicker .p-yearpicker .p-yearpicker-year.p-highlight {
-  color: $col-bs-blue;
+  color: swatch.$col-bs-blue;
   background: aliceblue;
 }
 
@@ -7147,7 +7150,7 @@ input.p-dropdown-label {
   box-shadow: 0 0 0 0.2rem aliceblue;
 }
 
-@include sm-mx {
+@include mixins.sm-mx {
   .p-datepicker table th, .p-datepicker table td {
     padding: 0;
   }
@@ -7161,14 +7164,14 @@ input.p-dropdown-label {
 }
 
 .p-cascadeselect:not(.p-disabled):hover {
-  border-color: $col-bs-blue;
+  border-color: swatch.$col-bs-blue;
 }
 
 .p-cascadeselect:not(.p-disabled).p-focus {
   outline: 0 none;
   outline-offset: 0;
   box-shadow: 0 0 0 0.2rem aliceblue;
-  border-color: $col-bs-blue;
+  border-color: swatch.$col-bs-blue;
 }
 
 .p-cascadeselect .p-cascadeselect-label {
@@ -7230,7 +7233,7 @@ input.p-dropdown-label {
 }
 
 .p-cascadeselect-panel .p-cascadeselect-items .p-cascadeselect-item.p-highlight {
-  color: $col-bs-blue;
+  color: swatch.$col-bs-blue;
   background: aliceblue;
 }
 
@@ -7287,30 +7290,30 @@ input.p-dropdown-label {
 }
 
 .p-checkbox .p-checkbox-box.p-highlight {
-  border-color: $col-bs-blue;
-  background: $col-bs-blue;
+  border-color: swatch.$col-bs-blue;
+  background: swatch.$col-bs-blue;
 }
 
 .p-checkbox .p-checkbox-box.p-highlight:not(.p-disabled):hover {
-  border-color: $col-bs-blue;
-  background: $col-bs-blue;
+  border-color: swatch.$col-bs-blue;
+  background: swatch.$col-bs-blue;
   color: #ffffff;
 }
 
 .p-checkbox:not(.p-checkbox-disabled) .p-checkbox-box:hover {
-  border-color: $col-bs-blue;
+  border-color: swatch.$col-bs-blue;
 }
 
 .p-checkbox:not(.p-checkbox-disabled) .p-checkbox-box.p-focus {
   outline: 0 none;
   outline-offset: 0;
   box-shadow: 0 0 0 0.2rem aliceblue;
-  border-color: $col-bs-blue;
+  border-color: swatch.$col-bs-blue;
 }
 
 .p-checkbox:not(.p-checkbox-disabled) .p-checkbox-box.p-highlight:hover {
-  border-color: $col-bs-blue;
-  background: $col-bs-blue;
+  border-color: swatch.$col-bs-blue;
+  background: swatch.$col-bs-blue;
   color: #ffffff;
 }
 
@@ -7323,7 +7326,7 @@ input.p-dropdown-label {
 }
 
 .p-input-filled .p-checkbox .p-checkbox-box.p-highlight {
-  background: $col-bs-blue;
+  background: swatch.$col-bs-blue;
 }
 
 .p-input-filled .p-checkbox:not(.p-checkbox-disabled) .p-checkbox-box:hover {
@@ -7331,7 +7334,7 @@ input.p-dropdown-label {
 }
 
 .p-input-filled .p-checkbox:not(.p-checkbox-disabled) .p-checkbox-box.p-highlight:hover {
-  background: $col-bs-blue;
+  background: swatch.$col-bs-blue;
 }
 
 .p-chips .p-chips-multiple-container {
@@ -7339,14 +7342,14 @@ input.p-dropdown-label {
 }
 
 .p-chips .p-chips-multiple-container:not(.p-disabled):hover {
-  border-color: $col-bs-blue;
+  border-color: swatch.$col-bs-blue;
 }
 
 .p-chips .p-chips-multiple-container:not(.p-disabled).p-focus {
   outline: 0 none;
   outline-offset: 0;
   box-shadow: 0 0 0 0.2rem aliceblue;
-  border-color: $col-bs-blue;
+  border-color: swatch.$col-bs-blue;
 }
 
 .p-chips .p-chips-multiple-container .p-chips-token {
@@ -7404,14 +7407,14 @@ input.p-dropdown-label {
 }
 
 .p-dropdown:not(.p-disabled):hover {
-  border-color: $col-bs-blue;
+  border-color: swatch.$col-bs-blue;
 }
 
 .p-dropdown:not(.p-disabled).p-focus {
   outline: 0 none;
   outline-offset: 0;
   box-shadow: 0 0 0 0.2rem aliceblue;
-  border-color: $col-bs-blue;
+  border-color: swatch.$col-bs-blue;
 }
 
 .p-dropdown.p-dropdown-clearable .p-dropdown-label {
@@ -7501,7 +7504,7 @@ input.p-dropdown-label {
 }
 
 .p-dropdown-panel .p-dropdown-items .p-dropdown-item.p-highlight {
-  color: $col-bs-blue;
+  color: swatch.$col-bs-blue;
   background: aliceblue;
 }
 
@@ -7642,25 +7645,25 @@ input.p-dropdown-label {
 .p-editor-container .ql-snow.ql-toolbar button.ql-active,
 .p-editor-container .ql-snow.ql-toolbar .ql-picker-label.ql-active,
 .p-editor-container .ql-snow.ql-toolbar .ql-picker-item.ql-selected {
-  color: $col-bs-blue;
+  color: swatch.$col-bs-blue;
 }
 
 .p-editor-container .ql-snow.ql-toolbar button.ql-active .ql-stroke,
 .p-editor-container .ql-snow.ql-toolbar .ql-picker-label.ql-active .ql-stroke,
 .p-editor-container .ql-snow.ql-toolbar .ql-picker-item.ql-selected .ql-stroke {
-  stroke: $col-bs-blue;
+  stroke: swatch.$col-bs-blue;
 }
 
 .p-editor-container .ql-snow.ql-toolbar button.ql-active .ql-fill,
 .p-editor-container .ql-snow.ql-toolbar .ql-picker-label.ql-active .ql-fill,
 .p-editor-container .ql-snow.ql-toolbar .ql-picker-item.ql-selected .ql-fill {
-  fill: $col-bs-blue;
+  fill: swatch.$col-bs-blue;
 }
 
 .p-editor-container .ql-snow.ql-toolbar button.ql-active .ql-picker-label,
 .p-editor-container .ql-snow.ql-toolbar .ql-picker-label.ql-active .ql-picker-label,
 .p-editor-container .ql-snow.ql-toolbar .ql-picker-item.ql-selected .ql-picker-label {
-  color: $col-bs-blue;
+  color: swatch.$col-bs-blue;
 }
 
 .p-inputgroup-addon {
@@ -7778,7 +7781,7 @@ input.p-dropdown-label {
 }
 
 .p-inputswitch.p-inputswitch-checked .p-inputswitch-slider {
-  background: $col-bs-blue;
+  background: swatch.$col-bs-blue;
 }
 
 .p-inputswitch.p-inputswitch-checked .p-inputswitch-slider:before {
@@ -7786,7 +7789,7 @@ input.p-dropdown-label {
 }
 
 .p-inputswitch.p-inputswitch-checked:not(.p-disabled):hover .p-inputswitch-slider {
-  background: $col-royal-blue;
+  background: swatch.$col-royal-blue;
 }
 
 .p-inputswitch.p-invalid .p-inputswitch-slider {
@@ -7806,14 +7809,14 @@ input.p-dropdown-label {
 }
 
 .p-inputtext:enabled:hover {
-  border-color: $col-bs-blue;
+  border-color: swatch.$col-bs-blue;
 }
 
 .p-inputtext:enabled:focus {
   outline: 0 none;
   outline-offset: 0;
   box-shadow: 0 0 0 0.2rem aliceblue;
-  border-color: $col-bs-blue;
+  border-color: swatch.$col-bs-blue;
 }
 
 .p-inputtext.p-invalid.p-component {
@@ -7944,7 +7947,7 @@ input.p-dropdown-label {
 }
 
 .p-listbox .p-listbox-list .p-listbox-item.p-highlight {
-  color: $col-bs-blue;
+  color: swatch.$col-bs-blue;
   background: aliceblue;
 }
 
@@ -8005,7 +8008,7 @@ input.p-dropdown-label {
 }
 
 .p-mention-panel .p-mention-items .p-mention-item.p-highlight {
-  color: $col-bs-blue;
+  color: swatch.$col-bs-blue;
   background: aliceblue;
 }
 
@@ -8017,14 +8020,14 @@ input.p-dropdown-label {
 }
 
 .p-multiselect:not(.p-disabled):hover {
-  border-color: $col-bs-blue;
+  border-color: swatch.$col-bs-blue;
 }
 
 .p-multiselect:not(.p-disabled).p-focus {
   outline: 0 none;
   outline-offset: 0;
   box-shadow: 0 0 0 0.2rem aliceblue;
-  border-color: $col-bs-blue;
+  border-color: swatch.$col-bs-blue;
 }
 
 .p-multiselect.p-multiselect-clearable .p-multiselect-label {
@@ -8149,7 +8152,7 @@ input.p-dropdown-label {
 }
 
 .p-multiselect-panel .p-multiselect-items .p-multiselect-item.p-highlight {
-  color: $col-bs-blue;
+  color: swatch.$col-bs-blue;
   background: aliceblue;
 }
 
@@ -8240,14 +8243,14 @@ input.p-dropdown-label {
 }
 
 .p-radiobutton .p-radiobutton-box:not(.p-disabled):not(.p-highlight):hover {
-  border-color: $col-bs-blue;
+  border-color: swatch.$col-bs-blue;
 }
 
 .p-radiobutton .p-radiobutton-box:not(.p-disabled).p-focus {
   outline: 0 none;
   outline-offset: 0;
   box-shadow: 0 0 0 0.2rem aliceblue;
-  border-color: $col-bs-blue;
+  border-color: swatch.$col-bs-blue;
 }
 
 .p-radiobutton .p-radiobutton-box .p-radiobutton-icon {
@@ -8258,13 +8261,13 @@ input.p-dropdown-label {
 }
 
 .p-radiobutton .p-radiobutton-box.p-highlight {
-  border-color: $col-bs-blue;
-  background: $col-bs-blue;
+  border-color: swatch.$col-bs-blue;
+  background: swatch.$col-bs-blue;
 }
 
 .p-radiobutton .p-radiobutton-box.p-highlight:not(.p-disabled):hover {
-  border-color: $col-bs-blue;
-  background: $col-bs-blue;
+  border-color: swatch.$col-bs-blue;
+  background: swatch.$col-bs-blue;
   color: #ffffff;
 }
 
@@ -8285,11 +8288,11 @@ input.p-dropdown-label {
 }
 
 .p-input-filled .p-radiobutton .p-radiobutton-box.p-highlight {
-  background: $col-bs-blue;
+  background: swatch.$col-bs-blue;
 }
 
 .p-input-filled .p-radiobutton .p-radiobutton-box.p-highlight:not(.p-disabled):hover {
-  background: $col-bs-blue;
+  background: swatch.$col-bs-blue;
 }
 
 .p-rating {
@@ -8318,11 +8321,11 @@ input.p-dropdown-label {
 }
 
 .p-rating .p-rating-item.p-rating-item-active .p-rating-icon {
-  color: $col-bs-blue;
+  color: swatch.$col-bs-blue;
 }
 
 .p-rating:not(.p-disabled):not(.p-readonly) .p-rating-item:hover .p-rating-icon {
-  color: $col-bs-blue;
+  color: swatch.$col-bs-blue;
 }
 
 .p-rating:not(.p-disabled):not(.p-readonly) .p-rating-item:hover .p-rating-icon.p-rating-cancel {
@@ -8353,8 +8356,8 @@ input.p-dropdown-label {
 }
 
 .p-selectbutton .p-button.p-highlight {
-  background: $col-bs-blue;
-  border-color: $col-bs-blue;
+  background: swatch.$col-bs-blue;
+  border-color: swatch.$col-bs-blue;
   color: #ffffff;
 }
 
@@ -8406,7 +8409,7 @@ input.p-dropdown-label {
   height: 1.143rem;
   width: 1.143rem;
   background: #ffffff;
-  border: 2px solid $col-bs-blue;
+  border: 2px solid swatch.$col-bs-blue;
   border-radius: 50%;
   transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s;
 }
@@ -8418,12 +8421,12 @@ input.p-dropdown-label {
 }
 
 .p-slider .p-slider-range {
-  background: $col-bs-blue;
+  background: swatch.$col-bs-blue;
 }
 
 .p-slider:not(.p-disabled) .p-slider-handle:hover {
-  background: $col-bs-blue;
-  border-color: $col-bs-blue;
+  background: swatch.$col-bs-blue;
+  border-color: swatch.$col-bs-blue;
 }
 
 .p-treeselect {
@@ -8434,14 +8437,14 @@ input.p-dropdown-label {
 }
 
 .p-treeselect:not(.p-disabled):hover {
-  border-color: $col-bs-blue;
+  border-color: swatch.$col-bs-blue;
 }
 
 .p-treeselect:not(.p-disabled).p-focus {
   outline: 0 none;
   outline-offset: 0;
   box-shadow: 0 0 0 0.2rem aliceblue;
-  border-color: $col-bs-blue;
+  border-color: swatch.$col-bs-blue;
 }
 
 .p-treeselect .p-treeselect-label {
@@ -8584,8 +8587,8 @@ input.p-dropdown-label {
 }
 
 .p-togglebutton.p-button.p-highlight {
-  background: $col-bs-blue;
-  border-color: $col-bs-blue;
+  background: swatch.$col-bs-blue;
+  border-color: swatch.$col-bs-blue;
   color: #ffffff;
 }
 
@@ -8611,8 +8614,8 @@ input.p-dropdown-label {
 
 .p-button {
   color: #ffffff;
-  background: $col-bs-blue;
-  border: 1px solid $col-bs-blue;
+  background: swatch.$col-bs-blue;
+  border: 1px solid swatch.$col-bs-blue;
   padding: 0.75rem 1.25rem;
   font-size: 1rem;
   transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s;
@@ -8626,26 +8629,26 @@ input.p-dropdown-label {
 }
 
 .p-button:enabled:active, .p-button:not(button):not(a):not(.p-disabled):active {
-  background: $col-bs-blue;
+  background: swatch.$col-bs-blue;
   color: #ffffff;
-  border-color: $col-bs-blue;
+  border-color: swatch.$col-bs-blue;
 }
 
 .p-button.p-button-outlined {
   background-color: transparent;
-  color: $col-bs-blue;
+  color: swatch.$col-bs-blue;
   border: 1px solid;
 }
 
 .p-button.p-button-outlined:enabled:hover, .p-button.p-button-outlined:not(button):not(a):not(.p-disabled):hover {
   background: rgba(99, 102, 241, 0.04);
-  color: $col-bs-blue;
+  color: swatch.$col-bs-blue;
   border: 1px solid;
 }
 
 .p-button.p-button-outlined:enabled:active, .p-button.p-button-outlined:not(button):not(a):not(.p-disabled):active {
   background: rgba(99, 102, 241, 0.16);
-  color: $col-bs-blue;
+  color: swatch.$col-bs-blue;
   border: 1px solid;
 }
 
@@ -8666,19 +8669,19 @@ input.p-dropdown-label {
 
 .p-button.p-button-text {
   background-color: transparent;
-  color: $col-bs-blue;
+  color: swatch.$col-bs-blue;
   border-color: transparent;
 }
 
 .p-button.p-button-text:enabled:hover, .p-button.p-button-text:not(button):not(a):not(.p-disabled):hover {
   background: rgba(99, 102, 241, 0.04);
-  color: $col-bs-blue;
+  color: swatch.$col-bs-blue;
   border-color: transparent;
 }
 
 .p-button.p-button-text:enabled:active, .p-button.p-button-text:not(button):not(a):not(.p-disabled):active {
   background: rgba(99, 102, 241, 0.16);
-  color: $col-bs-blue;
+  color: swatch.$col-bs-blue;
   border-color: transparent;
 }
 
@@ -8727,7 +8730,7 @@ input.p-dropdown-label {
   min-width: 1rem;
   height: 1rem;
   line-height: 1rem;
-  color: $col-bs-blue;
+  color: swatch.$col-bs-blue;
   background-color: #ffffff;
 }
 
@@ -9157,14 +9160,14 @@ input.p-dropdown-label {
 }
 
 .p-button.p-button-link {
-  color: $col-bs-blue;
+  color: swatch.$col-bs-blue;
   background: transparent;
   border: transparent;
 }
 
 .p-button.p-button-link:enabled:hover, .p-button.p-button-link:not(button):not(a):not(.p-disabled):hover {
   background: transparent;
-  color: $col-bs-blue;
+  color: swatch.$col-bs-blue;
   border-color: transparent;
 }
 
@@ -9180,7 +9183,7 @@ input.p-dropdown-label {
 
 .p-button.p-button-link:enabled:active, .p-button.p-button-link:not(button):not(a):not(.p-disabled):active {
   background: transparent;
-  color: $col-bs-blue;
+  color: swatch.$col-bs-blue;
   border-color: transparent;
 }
 
@@ -9190,18 +9193,18 @@ input.p-dropdown-label {
 
 .p-splitbutton.p-button-outlined > .p-button {
   background-color: transparent;
-  color: $col-bs-blue;
+  color: swatch.$col-bs-blue;
   border: 1px solid;
 }
 
 .p-splitbutton.p-button-outlined > .p-button:enabled:hover, .p-splitbutton.p-button-outlined > .p-button:not(button):not(a):not(.p-disabled):hover {
   background: rgba(99, 102, 241, 0.04);
-  color: $col-bs-blue;
+  color: swatch.$col-bs-blue;
 }
 
 .p-splitbutton.p-button-outlined > .p-button:enabled:active, .p-splitbutton.p-button-outlined > .p-button:not(button):not(a):not(.p-disabled):active {
   background: rgba(99, 102, 241, 0.16);
-  color: $col-bs-blue;
+  color: swatch.$col-bs-blue;
 }
 
 .p-splitbutton.p-button-outlined.p-button-plain > .p-button {
@@ -9221,19 +9224,19 @@ input.p-dropdown-label {
 
 .p-splitbutton.p-button-text > .p-button {
   background-color: transparent;
-  color: $col-bs-blue;
+  color: swatch.$col-bs-blue;
   border-color: transparent;
 }
 
 .p-splitbutton.p-button-text > .p-button:enabled:hover, .p-splitbutton.p-button-text > .p-button:not(button):not(a):not(.p-disabled):hover {
   background: rgba(99, 102, 241, 0.04);
-  color: $col-bs-blue;
+  color: swatch.$col-bs-blue;
   border-color: transparent;
 }
 
 .p-splitbutton.p-button-text > .p-button:enabled:active, .p-splitbutton.p-button-text > .p-button:not(button):not(a):not(.p-disabled):active {
   background: rgba(99, 102, 241, 0.16);
-  color: $col-bs-blue;
+  color: swatch.$col-bs-blue;
   border-color: transparent;
 }
 
@@ -9614,7 +9617,7 @@ input.p-dropdown-label {
 
 .p-carousel .p-carousel-indicators .p-carousel-indicator.p-highlight button {
   background: aliceblue;
-  color: $col-bs-blue;
+  color: swatch.$col-bs-blue;
 }
 
 .p-datatable .p-paginator-top {
@@ -9676,7 +9679,7 @@ input.p-dropdown-label {
   height: 1.143rem;
   min-width: 1.143rem;
   line-height: 1.143rem;
-  color: $col-bs-blue;
+  color: swatch.$col-bs-blue;
   background: aliceblue;
   margin-left: 0.5rem;
 }
@@ -9692,20 +9695,20 @@ input.p-dropdown-label {
 
 .p-datatable .p-sortable-column.p-highlight {
   background: aliceblue;
-  color: $col-bs-blue;
+  color: swatch.$col-bs-blue;
 }
 
 .p-datatable .p-sortable-column.p-highlight .p-sortable-column-icon {
-  color: $col-bs-blue;
+  color: swatch.$col-bs-blue;
 }
 
 .p-datatable .p-sortable-column.p-highlight:not(.p-sortable-disabled):hover {
   background: aliceblue;
-  color: $col-bs-blue;
+  color: swatch.$col-bs-blue;
 }
 
 .p-datatable .p-sortable-column.p-highlight:not(.p-sortable-disabled):hover .p-sortable-column-icon {
-  color: $col-bs-blue;
+  color: swatch.$col-bs-blue;
 }
 
 .p-datatable .p-sortable-column:focus {
@@ -9767,12 +9770,12 @@ input.p-dropdown-label {
 
 .p-datatable .p-datatable-tbody > tr > td.p-highlight {
   background: aliceblue;
-  color: $col-bs-blue;
+  color: swatch.$col-bs-blue;
 }
 
 .p-datatable .p-datatable-tbody > tr.p-highlight {
   background: aliceblue;
-  color: $col-bs-blue;
+  color: swatch.$col-bs-blue;
 }
 
 .p-datatable .p-datatable-tbody > tr.p-datatable-dragpoint-top > td {
@@ -9809,7 +9812,7 @@ input.p-dropdown-label {
 }
 
 .p-datatable .p-column-resizer-helper {
-  background: $col-bs-blue;
+  background: swatch.$col-bs-blue;
 }
 
 .p-datatable .p-datatable-scrollable-header,
@@ -9910,15 +9913,15 @@ input.p-dropdown-label {
 
 .p-datatable.p-datatable-striped .p-datatable-tbody > tr.p-row-odd.p-highlight {
   background: aliceblue;
-  color: $col-bs-blue;
+  color: swatch.$col-bs-blue;
 }
 
 .p-datatable.p-datatable-striped .p-datatable-tbody > tr.p-row-odd.p-highlight .p-row-toggler {
-  color: $col-bs-blue;
+  color: swatch.$col-bs-blue;
 }
 
 .p-datatable.p-datatable-striped .p-datatable-tbody > tr.p-row-odd.p-highlight .p-row-toggler:hover {
-  color: $col-bs-blue;
+  color: swatch.$col-bs-blue;
 }
 
 .p-datatable.p-datatable-striped .p-datatable-tbody > tr.p-row-odd + .p-row-expanded {
@@ -10090,7 +10093,7 @@ input.p-dropdown-label {
 
 .p-column-filter-menu-button.p-column-filter-menu-button-active, .p-column-filter-menu-button.p-column-filter-menu-button-active:hover {
   background: aliceblue;
-  color: $col-bs-blue;
+  color: swatch.$col-bs-blue;
 }
 
 .p-column-filter-menu-button:focus {
@@ -10145,7 +10148,7 @@ input.p-dropdown-label {
 }
 
 .p-column-filter-overlay .p-column-filter-row-items .p-column-filter-row-item.p-highlight {
-  color: $col-bs-blue;
+  color: swatch.$col-bs-blue;
   background: aliceblue;
 }
 
@@ -10241,8 +10244,8 @@ input.p-dropdown-label {
 
 .fc.fc-unthemed .fc-toolbar .fc-button {
   color: #ffffff;
-  background: $col-bs-blue;
-  border: 1px solid $col-bs-blue;
+  background: swatch.$col-bs-blue;
+  border: 1px solid swatch.$col-bs-blue;
   font-size: 1rem;
   transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s;
   border-radius: 6px;
@@ -10257,9 +10260,9 @@ input.p-dropdown-label {
 }
 
 .fc.fc-unthemed .fc-toolbar .fc-button:enabled:active {
-  background: $col-bs-blue;
+  background: swatch.$col-bs-blue;
   color: #ffffff;
-  border-color: $col-bs-blue;
+  border-color: swatch.$col-bs-blue;
 }
 
 .fc.fc-unthemed .fc-toolbar .fc-button:enabled:active:focus {
@@ -10308,8 +10311,8 @@ input.p-dropdown-label {
 }
 
 .fc.fc-unthemed .fc-toolbar .fc-button.fc-dayGridMonth-button.fc-button-active, .fc.fc-unthemed .fc-toolbar .fc-button.fc-timeGridWeek-button.fc-button-active, .fc.fc-unthemed .fc-toolbar .fc-button.fc-timeGridDay-button.fc-button-active {
-  background: $col-bs-blue;
-  border-color: $col-bs-blue;
+  background: swatch.$col-bs-blue;
+  border-color: swatch.$col-bs-blue;
   color: #ffffff;
 }
 
@@ -10438,8 +10441,8 @@ input.p-dropdown-label {
 
 .fc.fc-theme-standard .fc-toolbar .fc-button {
   color: #ffffff;
-  background: $col-bs-blue;
-  border: 1px solid $col-bs-blue;
+  background: swatch.$col-bs-blue;
+  border: 1px solid swatch.$col-bs-blue;
   font-size: 1rem;
   transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s;
   border-radius: 6px;
@@ -10452,9 +10455,9 @@ input.p-dropdown-label {
 }
 
 .fc.fc-theme-standard .fc-toolbar .fc-button:enabled:active {
-  background: $col-bs-blue;
+  background: swatch.$col-bs-blue;
   color: #ffffff;
-  border-color: $col-bs-blue;
+  border-color: swatch.$col-bs-blue;
 }
 
 .fc.fc-theme-standard .fc-toolbar .fc-button:enabled:active:focus {
@@ -10466,8 +10469,8 @@ input.p-dropdown-label {
 .fc.fc-theme-standard .fc-toolbar .fc-button:disabled {
   opacity: 0.6;
   color: #ffffff;
-  background: $col-bs-blue;
-  border: 1px solid $col-bs-blue;
+  background: swatch.$col-bs-blue;
+  border: 1px solid swatch.$col-bs-blue;
 }
 
 .fc.fc-theme-standard .fc-toolbar .fc-button .fc-icon-chevron-left {
@@ -10510,8 +10513,8 @@ input.p-dropdown-label {
 }
 
 .fc.fc-theme-standard .fc-toolbar .fc-button.fc-dayGridMonth-button.fc-button-active, .fc.fc-theme-standard .fc-toolbar .fc-button.fc-timeGridWeek-button.fc-button-active, .fc.fc-theme-standard .fc-toolbar .fc-button.fc-timeGridDay-button.fc-button-active {
-  background: $col-bs-blue;
-  border-color: $col-bs-blue;
+  background: swatch.$col-bs-blue;
+  border-color: swatch.$col-bs-blue;
   color: #ffffff;
 }
 
@@ -10543,7 +10546,7 @@ input.p-dropdown-label {
 }
 
 .fc.fc-theme-standard .fc-highlight {
-  color: $col-bs-blue;
+  color: swatch.$col-bs-blue;
   background: aliceblue;
 }
 
@@ -10612,7 +10615,7 @@ input.p-dropdown-label {
 }
 
 .p-orderlist .p-orderlist-list .p-orderlist-item.p-highlight {
-  color: $col-bs-blue;
+  color: swatch.$col-bs-blue;
   background: aliceblue;
 }
 
@@ -10631,7 +10634,7 @@ input.p-dropdown-label {
 
 .p-organizationchart .p-organizationchart-node-content.p-highlight {
   background: aliceblue;
-  color: $col-bs-blue;
+  color: swatch.$col-bs-blue;
 }
 
 .p-organizationchart .p-organizationchart-node-content.p-highlight .p-node-toggler i {
@@ -10755,7 +10758,7 @@ input.p-dropdown-label {
 .p-paginator .p-paginator-pages .p-paginator-page.p-highlight {
   background: aliceblue;
   border-color: aliceblue;
-  color: $col-bs-blue;
+  color: swatch.$col-bs-blue;
 }
 
 .p-paginator .p-paginator-pages .p-paginator-page:not(.p-highlight):hover {
@@ -10829,7 +10832,7 @@ input.p-dropdown-label {
 }
 
 .p-picklist .p-picklist-list .p-picklist-item.p-highlight {
-  color: $col-bs-blue;
+  color: swatch.$col-bs-blue;
   background: aliceblue;
 }
 
@@ -10851,7 +10854,7 @@ input.p-dropdown-label {
   border-radius: 6px;
   transition: box-shadow 0.2s;
   padding: 0.5rem;
-  @include sm-mx {
+  @include mixins.sm-mx {
     font-size: 12px;
   }
 }
@@ -10900,17 +10903,17 @@ input.p-dropdown-label {
 
 .p-tree .p-tree-container .p-treenode .p-treenode-content.p-highlight {
   background: aliceblue;
-  color: $col-bs-blue;
+  color: swatch.$col-bs-blue;
 }
 
 .p-tree .p-tree-container .p-treenode .p-treenode-content.p-highlight .p-tree-toggler,
 .p-tree .p-tree-container .p-treenode .p-treenode-content.p-highlight .p-treenode-icon {
-  color: $col-bs-blue;
+  color: swatch.$col-bs-blue;
 }
 
 .p-tree .p-tree-container .p-treenode .p-treenode-content.p-highlight .p-tree-toggler:hover,
 .p-tree .p-tree-container .p-treenode .p-treenode-content.p-highlight .p-treenode-icon:hover {
-  color: $col-bs-blue;
+  color: swatch.$col-bs-blue;
 }
 
 .p-tree .p-tree-container .p-treenode .p-treenode-content.p-treenode-selectable:not(.p-highlight):hover {
@@ -10960,10 +10963,10 @@ input.p-dropdown-label {
 
 .p-tree .p-tree-header {
   .btn-outline-primary {
-    @include lg {
+    @include mixins.lg {
       width: 90%;
     }
-    @include sm-mx {
+    @include mixins.sm-mx {
       margin-top: 10px;
     }
   }
@@ -11032,7 +11035,7 @@ input.p-dropdown-label {
   height: 1.143rem;
   min-width: 1.143rem;
   line-height: 1.143rem;
-  color: $col-bs-blue;
+  color: swatch.$col-bs-blue;
   background: aliceblue;
   margin-left: 0.5rem;
 }
@@ -11048,11 +11051,11 @@ input.p-dropdown-label {
 
 .p-treetable .p-sortable-column.p-highlight {
   background: aliceblue;
-  color: $col-bs-blue;
+  color: swatch.$col-bs-blue;
 }
 
 .p-treetable .p-sortable-column.p-highlight .p-sortable-column-icon {
-  color: $col-bs-blue;
+  color: swatch.$col-bs-blue;
 }
 
 .p-treetable .p-treetable-tbody > tr {
@@ -11106,15 +11109,15 @@ input.p-dropdown-label {
 
 .p-treetable .p-treetable-tbody > tr.p-highlight {
   background: aliceblue;
-  color: $col-bs-blue;
+  color: swatch.$col-bs-blue;
 }
 
 .p-treetable .p-treetable-tbody > tr.p-highlight .p-treetable-toggler {
-  color: $col-bs-blue;
+  color: swatch.$col-bs-blue;
 }
 
 .p-treetable .p-treetable-tbody > tr.p-highlight .p-treetable-toggler:hover {
-  color: $col-bs-blue;
+  color: swatch.$col-bs-blue;
 }
 
 .p-treetable.p-treetable-selectable .p-treetable-tbody > tr:not(.p-highlight):hover, .p-treetable.p-treetable-hoverable-rows .p-treetable-tbody > tr:not(.p-highlight):hover {
@@ -11127,7 +11130,7 @@ input.p-dropdown-label {
 }
 
 .p-treetable .p-column-resizer-helper {
-  background: $col-bs-blue;
+  background: swatch.$col-bs-blue;
 }
 
 .p-treetable .p-treetable-scrollable-header,
@@ -11178,15 +11181,15 @@ input.p-dropdown-label {
 
 .p-treetable.p-treetable-striped .p-treetable-tbody > tr.p-row-odd.p-highlight {
   background: aliceblue;
-  color: $col-bs-blue;
+  color: swatch.$col-bs-blue;
 }
 
 .p-treetable.p-treetable-striped .p-treetable-tbody > tr.p-row-odd.p-highlight .p-row-toggler {
-  color: $col-bs-blue;
+  color: swatch.$col-bs-blue;
 }
 
 .p-treetable.p-treetable-striped .p-treetable-tbody > tr.p-row-odd.p-highlight .p-row-toggler:hover {
-  color: $col-bs-blue;
+  color: swatch.$col-bs-blue;
 }
 
 .p-treetable.p-treetable-striped .p-treetable-tbody > tr.p-row-odd + .p-row-expanded {
@@ -11234,7 +11237,7 @@ input.p-dropdown-label {
 }
 
 .p-timeline .p-timeline-event-marker {
-  border: 2px solid $col-bs-blue;
+  border: 2px solid swatch.$col-bs-blue;
   border-radius: 50%;
   width: 1rem;
   height: 1rem;
@@ -11548,8 +11551,8 @@ input.p-dropdown-label {
 
 .p-tabview .p-tabview-nav li.p-highlight .p-tabview-nav-link {
   background: #ffffff;
-  border-color: $col-bs-blue;
-  color: $col-bs-blue;
+  border-color: swatch.$col-bs-blue;
+  color: swatch.$col-bs-blue;
 }
 
 .p-tabview .p-tabview-close {
@@ -11558,7 +11561,7 @@ input.p-dropdown-label {
 
 .p-tabview .p-tabview-nav-btn.p-link {
   background: #ffffff;
-  color: $col-bs-blue;
+  color: swatch.$col-bs-blue;
   width: 3rem;
   box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
   border-radius: 0;
@@ -11753,7 +11756,7 @@ input.p-dropdown-label {
 }
 
 .p-overlaypanel .p-overlaypanel-close {
-  background: $col-bs-blue;
+  background: swatch.$col-bs-blue;
   color: #ffffff;
   width: 2rem;
   height: 2rem;
@@ -11998,11 +12001,11 @@ input.p-dropdown-label {
 }
 
 .p-contextmenu .p-menuitem.p-menuitem-active > .p-menuitem-link .p-menuitem-text {
-  color: $col-bs-blue;
+  color: swatch.$col-bs-blue;
 }
 
 .p-contextmenu .p-menuitem.p-menuitem-active > .p-menuitem-link .p-menuitem-icon, .p-contextmenu .p-menuitem.p-menuitem-active > .p-menuitem-link .p-submenu-icon {
-  color: $col-bs-blue;
+  color: swatch.$col-bs-blue;
 }
 
 .p-contextmenu .p-menu-separator {
@@ -12068,7 +12071,7 @@ input.p-dropdown-label {
   margin: 1.5rem 0;
 }
 
-@include md-mx {
+@include mixins.md-mx {
   .p-dock.p-dock-top .p-dock-container, .p-dock.p-dock-bottom .p-dock-container {
     overflow-x: auto;
     width: 100%;
@@ -12164,17 +12167,17 @@ input.p-dropdown-label {
 
 .p-megamenu .p-megamenu-root-list > .p-menuitem.p-menuitem-active > .p-menuitem-link .p-menuitem-text,
 .p-megamenu .p-megamenu-root-list > .p-menuitem.p-menuitem-active > .p-menuitem-link:not(.p-disabled):hover .p-menuitem-text {
-  color: $col-bs-blue;
+  color: swatch.$col-bs-blue;
 }
 
 .p-megamenu .p-megamenu-root-list > .p-menuitem.p-menuitem-active > .p-menuitem-link .p-menuitem-icon,
 .p-megamenu .p-megamenu-root-list > .p-menuitem.p-menuitem-active > .p-menuitem-link:not(.p-disabled):hover .p-menuitem-icon {
-  color: $col-bs-blue;
+  color: swatch.$col-bs-blue;
 }
 
 .p-megamenu .p-megamenu-root-list > .p-menuitem.p-menuitem-active > .p-menuitem-link .p-submenu-icon,
 .p-megamenu .p-megamenu-root-list > .p-menuitem.p-menuitem-active > .p-menuitem-link:not(.p-disabled):hover .p-submenu-icon {
-  color: $col-bs-blue;
+  color: swatch.$col-bs-blue;
 }
 
 .p-megamenu .p-menuitem-link {
@@ -12252,11 +12255,11 @@ input.p-dropdown-label {
 }
 
 .p-megamenu .p-menuitem.p-menuitem-active > .p-menuitem-link .p-menuitem-text {
-  color: $col-bs-blue;
+  color: swatch.$col-bs-blue;
 }
 
 .p-megamenu .p-menuitem.p-menuitem-active > .p-menuitem-link .p-menuitem-icon, .p-megamenu .p-menuitem.p-menuitem-active > .p-menuitem-link .p-submenu-icon {
-  color: $col-bs-blue;
+  color: swatch.$col-bs-blue;
 }
 
 .p-megamenu.p-megamenu-vertical {
@@ -12560,17 +12563,17 @@ input.p-dropdown-label {
 
 .p-menubar .p-menubar-root-list > .p-menuitem.p-menuitem-active > .p-menuitem-link .p-menuitem-text,
 .p-menubar .p-menubar-root-list > .p-menuitem.p-menuitem-active > .p-menuitem-link:not(.p-disabled):hover .p-menuitem-text {
-  color: $col-bs-blue;
+  color: swatch.$col-bs-blue;
 }
 
 .p-menubar .p-menubar-root-list > .p-menuitem.p-menuitem-active > .p-menuitem-link .p-menuitem-icon,
 .p-menubar .p-menubar-root-list > .p-menuitem.p-menuitem-active > .p-menuitem-link:not(.p-disabled):hover .p-menuitem-icon {
-  color: $col-bs-blue;
+  color: swatch.$col-bs-blue;
 }
 
 .p-menubar .p-menubar-root-list > .p-menuitem.p-menuitem-active > .p-menuitem-link .p-submenu-icon,
 .p-menubar .p-menubar-root-list > .p-menuitem.p-menuitem-active > .p-menuitem-link:not(.p-disabled):hover .p-submenu-icon {
-  color: $col-bs-blue;
+  color: swatch.$col-bs-blue;
 }
 
 .p-menubar .p-submenu-list {
@@ -12600,14 +12603,14 @@ input.p-dropdown-label {
 }
 
 .p-menubar .p-menuitem.p-menuitem-active > .p-menuitem-link .p-menuitem-text {
-  color: $col-bs-blue;
+  color: swatch.$col-bs-blue;
 }
 
 .p-menubar .p-menuitem.p-menuitem-active > .p-menuitem-link .p-menuitem-icon, .p-menubar .p-menuitem.p-menuitem-active > .p-menuitem-link .p-submenu-icon {
-  color: $col-bs-blue;
+  color: swatch.$col-bs-blue;
 }
 
-@include md-mx {
+@include mixins.md-mx {
   .p-menubar {
     position: relative;
   }
@@ -12919,11 +12922,11 @@ input.p-dropdown-label {
 }
 
 .p-slidemenu .p-slidemenu.p-slidemenu-active > .p-slidemenu-link .p-slidemenu-text {
-  color: $col-bs-blue;
+  color: swatch.$col-bs-blue;
 }
 
 .p-slidemenu .p-slidemenu.p-slidemenu-active > .p-slidemenu-link .p-slidemenu-icon, .p-slidemenu .p-slidemenu.p-slidemenu-active > .p-slidemenu-link .p-slidemenu-icon {
-  color: $col-bs-blue;
+  color: swatch.$col-bs-blue;
 }
 
 .p-slidemenu .p-slidemenu-separator {
@@ -12977,7 +12980,7 @@ input.p-dropdown-label {
 
 .p-steps .p-steps-item.p-highlight .p-steps-number {
   background: aliceblue;
-  color: $col-bs-blue;
+  color: swatch.$col-bs-blue;
 }
 
 .p-steps .p-steps-item.p-highlight .p-steps-title {
@@ -13039,8 +13042,8 @@ input.p-dropdown-label {
 
 .p-tabmenu .p-tabmenu-nav .p-tabmenuitem.p-highlight .p-menuitem-link {
   background: #ffffff;
-  border-color: $col-bs-blue;
-  color: $col-bs-blue;
+  border-color: swatch.$col-bs-blue;
+  color: swatch.$col-bs-blue;
 }
 
 .p-tieredmenu {
@@ -13113,11 +13116,11 @@ input.p-dropdown-label {
 }
 
 .p-tieredmenu .p-menuitem.p-menuitem-active > .p-menuitem-link .p-menuitem-text {
-  color: $col-bs-blue;
+  color: swatch.$col-bs-blue;
 }
 
 .p-tieredmenu .p-menuitem.p-menuitem-active > .p-menuitem-link .p-menuitem-icon, .p-tieredmenu .p-menuitem.p-menuitem-active > .p-menuitem-link .p-submenu-icon {
-  color: $col-bs-blue;
+  color: swatch.$col-bs-blue;
 }
 
 .p-tieredmenu .p-menu-separator {
@@ -13489,7 +13492,7 @@ input.p-dropdown-label {
 
 .p-galleria .p-galleria-indicators .p-galleria-indicator.p-highlight button {
   background: aliceblue;
-  color: $col-bs-blue;
+  color: swatch.$col-bs-blue;
 }
 
 .p-galleria.p-galleria-indicators-bottom .p-galleria-indicator, .p-galleria.p-galleria-indicators-top .p-galleria-indicator {
@@ -13514,7 +13517,7 @@ input.p-dropdown-label {
 
 .p-galleria.p-galleria-indicator-onitem .p-galleria-indicators .p-galleria-indicator.p-highlight button {
   background: aliceblue;
-  color: $col-bs-blue;
+  color: swatch.$col-bs-blue;
 }
 
 .p-galleria .p-galleria-thumbnail-container {
@@ -13705,7 +13708,7 @@ input.p-dropdown-label {
 }
 
 .p-tag {
-  background: $col-bs-blue;
+  background: swatch.$col-bs-blue;
   color: #ffffff;
   font-size: 0.75rem;
   font-weight: 700;
@@ -13770,7 +13773,7 @@ input.p-dropdown-label {
 .p-progressbar .p-progressbar-value {
   border: 0 none;
   margin: 0;
-  background: $col-bs-blue;
+  background: swatch.$col-bs-blue;
 }
 
 .p-progressbar .p-progressbar-label {
@@ -13791,7 +13794,7 @@ input.p-dropdown-label {
 }
 
 .p-badge {
-  background: $col-bs-blue;
+  background: swatch.$col-bs-blue;
   color: #ffffff;
   font-size: 0.75rem;
   font-weight: 700;
@@ -13840,7 +13843,7 @@ input.p-dropdown-label {
 }
 
 .p-tag {
-  background: $col-bs-blue;
+  background: swatch.$col-bs-blue;
   color: #ffffff;
   font-size: 0.75rem;
   font-weight: 700;
@@ -13886,16 +13889,16 @@ input.p-dropdown-label {
   position: absolute;
   bottom: 0;
   height: 2px;
-  background-color: $col-bs-blue;
+  background-color: swatch.$col-bs-blue;
   transition: 500ms cubic-bezier(0.35, 0, 0.25, 1);
 }
 
 .p-carousel .p-carousel-indicators .p-carousel-indicator.p-highlight button {
-  background-color: $col-bs-blue;
+  background-color: swatch.$col-bs-blue;
 }
 
 .p-galleria .p-galleria-indicators .p-galleria-indicator.p-highlight button {
-  background-color: $col-bs-blue;
+  background-color: swatch.$col-bs-blue;
 }
 
 .p-button:focus {
@@ -13927,9 +13930,9 @@ input.p-dropdown-label {
 }
 
 .p-datatable .p-datatable-tbody > tr.p-datatable-dragpoint-top > td {
-  box-shadow: inset 0 2px 0 0 $col-bs-blue;
+  box-shadow: inset 0 2px 0 0 swatch.$col-bs-blue;
 }
 
 .p-datatable .p-datatable-tbody > tr.p-datatable-dragpoint-bottom > td {
-  box-shadow: inset 0 -2px 0 0 $col-bs-blue;
+  box-shadow: inset 0 -2px 0 0 swatch.$col-bs-blue;
 }

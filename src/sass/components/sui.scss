@@ -1,3 +1,6 @@
+@use "../config/swatch";
+@use "../general/mixins";
+
 // Search UI
 .sui-result {
   list-style: none;
@@ -21,7 +24,7 @@
   border-bottom: 0;
 }
 
-@include md-mx {
+@include mixins.md-mx {
   .sui-layout-sidebar-toggle {
     display: block !important;
     width: 100%;
@@ -31,9 +34,9 @@
     line-height: 1.5;
     font-size: 14px;
     font-weight: 700;
-    color: $col-royal-blue;
+    color: swatch.$col-royal-blue;
     background-color: white;
-    border: 1px solid $col-royal-blue;
+    border: 1px solid swatch.$col-royal-blue;
     border-radius: 4px;
   }
 }
@@ -100,7 +103,7 @@
 }
 
 .sui-layout-main-header__inner {
-  @include sm-mx {
+  @include mixins.sm-mx {
     display: initial;
 
     .sui-columns-toggle {
@@ -137,7 +140,7 @@
 }
 
 // Handle sidebar on smaller screens
-@include md-mx {
+@include mixins.md-mx {
   .sui-layout-main {
     padding-left: 0;
   }
@@ -233,6 +236,9 @@
 }
 
 #sui-tbl-checkbox-actions {
+  position: absolute;
+  right: 0;
+
   code {
     color: var(--bs-code-color);
     word-wrap: break-word;
@@ -241,8 +247,7 @@
       cursor: pointer;
     }
   }
-  position: absolute;
-  right: 0;
+
   .dropdown {
     * {
       font-size: 0.8rem;
@@ -269,15 +274,15 @@
 }
 
 .sui-filters-summary {
-  background: $col-entity-grey;
+  background: swatch.$col-entity-grey;
   padding: 0 24px;
   .MuiChip-root {
-    color: $col-secondary-txt;
+    color: swatch.$col-secondary-txt;
   }
   .chip-title {
     text-transform: uppercase;
     font-size: 12px;
-    color: $col-facet-title;
+    color: swatch.$col-facet-title;
     letter-spacing: .05em;
   }
 }
@@ -290,7 +295,7 @@
     flex: inherit;
   }
   &__option-count {
-    color: $col-secondary-txt;
+    color: swatch.$col-secondary-txt;
   }
   &__checkbox,
   &__input-text {
@@ -312,7 +317,7 @@
 
 .sui-columns-toggle {
   z-index: 900; //must be lower than navbar but above fixed header in DataTable
-  @include lg {
+  @include mixins.lg {
     position: absolute !important;
     right: 120px;
   }

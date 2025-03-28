@@ -1,5 +1,6 @@
-@import 'help';
-@import 'legend';
+@use 'help';
+@use 'legend';
+@use "../general/mixins";
 
 .c-provenance {
     position: relative;
@@ -16,7 +17,7 @@
             border: 1px solid rgba(0, 0, 0, 0.05);
         }
 
-        @include sm-mx {
+        @include mixins.sm-mx {
             position: relative;
         }
     }

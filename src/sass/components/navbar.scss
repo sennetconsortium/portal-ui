@@ -1,10 +1,12 @@
-@include sm-mx {
+@use "../general/mixins";
+
+@include mixins.sm-mx {
   .navbar .fs-3 {
     font-size: 1.25rem !important;
   }
 }
 
-@include xsm {
+@include mixins.xsm {
   .navbar .fs-3 {
     font-size: 1.1rem !important;
   }

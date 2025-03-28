@@ -256,7 +256,7 @@ function EditSource() {
                                                      controlId='protocol_url' value={data.protocol_url}
                                                      isRequired={true} pattern={getDOIPattern()}
                                                      className={warningClasses.protocol_url}
-                                                     warningText={<>The supplied protocols.io DOI URL, formatting is
+                                                     popoverWarningText={<>The supplied protocols.io DOI URL, formatting is
                                                          correct but does not resolve. This will need to be corrected
                                                          for any <code>Dataset</code> submission that uses this entity
                                                          as an ancestor.</>}
