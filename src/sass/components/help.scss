@@ -1,3 +1,6 @@
+@use "../config/swatch";
+@use "../general/mixins";
+
 .c-help {
 
   &__title {
@@ -11,7 +14,7 @@
     height: 2em;
     margin-right: 0.8em;
     &:focus {
-      @include mx-focus;
+      @include mixins.mx-focus;
       box-shadow: none;
     }
   }
@@ -19,23 +22,23 @@
   .shape  {
 
     &.yellow:after {
-      background-color: $col-source-type;
-      border: solid 1px $col-source-type-bdr;
+      background-color: swatch.$col-source-type;
+      border: solid 1px swatch.$col-source-type-bdr;
     }
 
     &.pink:after {
-      background-color: $col-sample-type;
-      border: solid 1px $col-sample-type-bdr;
+      background-color: swatch.$col-sample-type;
+      border: solid 1px swatch.$col-sample-type-bdr;
     }
 
     &.green:after {
-      background-color: $col-dataset-type;
-      border: solid 1px $col-dataset-type-bdr;
+      background-color: swatch.$col-dataset-type;
+      border: solid 1px swatch.$col-dataset-type-bdr;
     }
 
     &.purple:after {
-      background-color: $col-pub-type;
-      border: solid 1px $col-pub-type-bdr;
+      background-color: swatch.$col-pub-type;
+      border: solid 1px swatch.$col-pub-type-bdr;
     }
 
     &.shape {
@@ -122,12 +125,12 @@
 
     background-color: transparent;
     width: 100px;
-    border: solid 1px $col-bs-btn-gray;
-    color: $col-bs-btn-gray;
+    border: solid 1px swatch.$col-bs-btn-gray;
+    color: swatch.$col-bs-btn-gray;
     border-radius: 0;
 
     &:hover {
-      background: $col-bs-btn-gray;
+      background: swatch.$col-bs-btn-gray;
       color: white;
     }
   }

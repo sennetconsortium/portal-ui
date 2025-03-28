@@ -1,4 +1,5 @@
 import dynamic from "next/dynamic";
+import "react-datepicker/dist/react-datepicker.css";
 import React, {useContext, useEffect, useState} from "react";
 import {useRouter} from 'next/router';
 import Alert from 'react-bootstrap/Alert';
@@ -12,6 +13,7 @@ import AppContext from '@/context/AppContext'
 import EntityContext, {EntityProvider} from '@/context/EntityContext'
 import $ from "jquery";
 import DatasetRevertButton, {statusRevertTooltip} from "@/components/custom/edit/dataset/DatasetRevertButton";
+import DatePicker from "react-datepicker";
 
 const AppFooter = dynamic(() => import("@/components/custom/layout/AppFooter"))
 const AppNavbar = dynamic(() => import("@/components/custom/layout/AppNavbar"))
@@ -44,6 +46,7 @@ function EditUpload() {
     const {_t, cache, adminGroup, getBusyOverlay, toggleBusyOverlay, getPreviewView} = useContext(AppContext)
     const router = useRouter()
     const [source, setSource] = useState(null)
+    const [anticipatedDate, setAnticipatedDate] = useState(new Date())
 
     // only executed on init rendering, see the []
     useEffect(() => {
@@ -61,6 +64,7 @@ function EditUpload() {
                 setErrorMessage(_data["error"])
             } else {
                 setData(_data);
+                formatAnticipatedDate(_data)
 
                 // Set state with default values that will be PUT to Entity API to update
                 let _values = {
@@ -130,6 +134,10 @@ function EditUpload() {
             // Remove empty strings
             let json = cleanJson(values);
 
+            if (json['anticipated_dataset_count']) {
+                json['anticipated_dataset_count'] = Number(json['anticipated_dataset_count'])
+            }
+
             // Prevent the 400 bad request error on same status
             if (eq(json.status, values.status)) {
                 delete json['status']
@@ -169,6 +177,29 @@ function EditUpload() {
     const handleReorganize = () => {
         toggleBusyOverlay(true, <><code>Reorganize</code> the <code>Upload</code></>)
         handlePut('reorganize')
+    }
+
+    const formatAnticipatedDate = (_data) => {
+        const d = _data.anticipated_complete_upload_month ? new Date(_data.anticipated_complete_upload_month + '-3') : new Date()
+        setAnticipatedDate(d)
+    }
+
+    const renderMonthContent = (month, shortMonth, longMonth, day) => {
+        const fullYear = new Date(day).getFullYear();
+        const tooltipText = `${longMonth} ${fullYear}`;
+        return <span title={tooltipText}>{shortMonth}</span>;
+    }
+
+    const getMaxDate = () => {
+        const d = new Date()
+        return new Date(`${d.getFullYear() + 5}-${d.getMonth() + 1}-3`)
+    }
+
+    const handleAnticipatedDateChange = (date) => {
+        let m = date.getMonth() + 1
+        m = m < 10 ? '0'+m : m
+        onChange(null, 'anticipated_complete_upload_month', `${date.getFullYear()}-${m}`)
+        setAnticipatedDate(date)
     }
 
     if (isPreview(error))  {
@@ -318,6 +349,39 @@ function EditUpload() {
                                                         this <code>Upload</code> will be registered/associated with.</>}
 
                                         />
+
+                                        <div className='row'>
+                                            <div className='col-md-3'>
+                                                {/*/!*Anticipated Completion Month/Year*!/*/}
+                                                <EntityFormGroup label='Anticipated Completion Year/Month' controlId='anticipated_complete_upload_month'
+
+                                                                 text={<>The year and month that this <code>Upload</code> will have all required data uploaded and be ready for reorganization into <code>Datasets</code>.</>}>
+                                                    <DatePicker
+                                                        selected={anticipatedDate}
+                                                        onChange={(date) => handleAnticipatedDateChange(date)}
+                                                        minDate={new Date()}
+                                                        maxDate={getMaxDate()}
+                                                        id={'anticipated_complete_upload_month'}
+                                                        className={'form-control'}
+                                                        renderMonthContent={renderMonthContent}
+                                                        showMonthYearPicker
+                                                        dateFormat="yyyy-MM"
+                                                    />
+                                                </EntityFormGroup>
+                                            </div>
+
+                                            {/*/!*Anticipated number of datasets*!/*/}
+                                            <div className='col-md-3'>
+                                                <EntityFormGroup label='Anticipated Number of Datasets'
+                                                                 controlId='anticipated_dataset_count' value={data.anticipated_dataset_count}
+                                                                 onChange={onChange}
+                                                                 type={'number'}
+                                                                 otherInputProps={{min: 0}}
+                                                                 text={<>The total number of <code>Datasets</code> that this <code>Upload</code> will eventually contain.</>}/>
+                                            </div>
+                                        </div>
+
+
 
 
                                         <div className={'d-flex flex-row-reverse'}>

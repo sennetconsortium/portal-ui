@@ -1,7 +1,9 @@
+@use "../general/mixins";
+
 .title_badge {
   margin-top: 0;
   margin-bottom: 0;
-  @include md-mx {
+  @include mixins.md-mx {
     font-size: 18px;
     > span {
       padding-top: 6px;
@@ -22,7 +24,7 @@
   flex-wrap: wrap;
   align-items: center;
   text-decoration: none;
-  @include md-mx {
+  @include mixins.md-mx {
     margin-bottom: 1em;
   }
 }

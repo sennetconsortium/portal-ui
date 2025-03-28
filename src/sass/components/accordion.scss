@@ -1,3 +1,5 @@
+@use "../general/mixins";
+
 // Collapsible sections
 .accordion-button:not(.collapsed) {
   color: black;
@@ -91,7 +93,7 @@
 
 .accordion-metadata {
   .accordion-button {
-    @include sm-mx {
+    @include mixins.sm-mx {
       display: inherit;
     }
   }
@@ -99,7 +101,7 @@
 
 .accordion-button {
   .title_badge {
-    @include md-mx {
+    @include mixins.md-mx {
       margin-top: 5px;
     }
   }

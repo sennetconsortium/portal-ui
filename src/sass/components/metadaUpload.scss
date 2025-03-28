@@ -1,3 +1,5 @@
+@use "../config/swatch";
+
 .c-metadataUpload {
 
   &__table {
@@ -47,7 +49,7 @@
       }
     }
     &.has-error small {
-      color: $col-err-txt;
+      color: swatch.$col-err-txt;
     }
 
     &--fwd {

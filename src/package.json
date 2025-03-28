@@ -24,11 +24,12 @@
     "primereact": "^9.6.0",
     "provenance-ui": "github:sennetconsortium/provenance-ui#v2.6.7-rc",
     "react-data-table-component": "^7.6.2",
+    "react-datepicker": "^8.2.1",
     "react-helmet-async": "^2.0.3",
     "react-idle-timer": "^5.7.2",
     "react-joyride": "^2.7.0",
     "react-toastify": "^9.1.1",
-    "sass": "^1.57.1",
+    "sass": "^1.86.0",
     "search-ui": "file:search-ui",
     "vitessce": "^3.5.7"
   },
