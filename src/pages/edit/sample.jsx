@@ -449,7 +449,7 @@ function EditSample() {
                                     {/*/!*Preparation Protocol*!/*/}
                                     <EntityFormGroup label="Preparation Protocol" placeholder='protocols.io DOI'
                                                      controlId='protocol_url' value={data.protocol_url}
-                                                     isRequired={true} pattern={getDOIPattern()}
+                                                     isRequired={true}
                                                      className={warningClasses.protocol_url}
                                                      popverWarningText={<>The supplied protocols.io DOI URL, formatting is
                                                          correct but does not resolve. This will need to be corrected
@@ -457,11 +457,15 @@ function EditSample() {
                                                          as an ancestor.</>}
                                                      popoverTrigger={SenPopoverOptions.triggers.hoverOnClickOff}
                                                      onChange={_onChange}
-                                                     onBlur={_onBlur}
                                                      popoverHelpText={<span>The protocol used when procuring or preparing the tissue. This must be provided as a protocols.io DOI URL see: <a
                                                          href="https://www.protocols.io/." target='_blank'
                                                          className='lnk--ic'>https://www.protocols.io/ <i
-                                                         className="bi bi-box-arrow-up-right"></i></a>.</span>}/>
+                                                         className="bi bi-box-arrow-up-right"></i></a>.</span>}
+                                                     otherInputProps={{
+                                                         pattern:getDOIPattern(),
+                                                         onBlur: (e) => _onBlur(e, e.target.id, e.target.value)
+                                                     }}
+                                    />
 
                                     {/*/!*Lab Sample ID*!/*/}
                                     <EntityFormGroup label='Lab Sample ID'

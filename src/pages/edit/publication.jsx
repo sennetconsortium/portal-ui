@@ -273,7 +273,7 @@ export default function EditPublication() {
                                             <EntityFormGroup label='Publication Date' controlId='publication_date'
                                                              isRequired={true}
                                                              type={'date'}
-                                                             placeholder={'mm/dd/YYYY'}
+                                                             otherInputProps={{placeholder:'mm/dd/YYYY'}}
                                                              value={data.publication_date}
                                                              onChange={onChange}
                                                              popoverHelpText={<>The date of the publication.</>}/>

@@ -254,17 +254,22 @@ function EditSource() {
                                     <EntityFormGroup label="Case Selection Protocol" placeholder='protocols.io DOI'
                                                      popoverTrigger={SenPopoverOptions.triggers.hoverOnClickOff}
                                                      controlId='protocol_url' value={data.protocol_url}
-                                                     isRequired={true} pattern={getDOIPattern()}
+                                                     isRequired={true}
                                                      className={warningClasses.protocol_url}
                                                      popoverWarningText={<>The supplied protocols.io DOI URL, formatting is
                                                          correct but does not resolve. This will need to be corrected
                                                          for any <code>Dataset</code> submission that uses this entity
                                                          as an ancestor.</>}
-                                                     onChange={onChange} onBlur={_onBlur}
+                                                     onChange={onChange}
                                                      popoverHelpText={<span>The protocol used for <code>Source</code> selection including any inclusion or exclusion criteria. This must  be provided  as a protocols.io DOI see: <a
                                                          href="https://www.protocols.io/." target='_blank'
                                                          className='lnk--ic'>https://www.protocols.io/ <i
-                                                         className="bi bi-box-arrow-up-right"></i></a>.</span>}/>
+                                                         className="bi bi-box-arrow-up-right"></i></a>.</span>}
+                                                     otherInputProps={{
+                                                         pattern:getDOIPattern(),
+                                                         onBlur: (e) => _onBlur(e, e.target.id, e.target.value)
+                                                    }}
+                                    />
 
                                     {/*/!*Description*!/*/}
                                     <EntityFormGroup label='Lab Notes' type='textarea' controlId='description'
