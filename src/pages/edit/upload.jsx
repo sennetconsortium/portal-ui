@@ -361,6 +361,7 @@ function EditUpload() {
                                                         onChange={(date) => handleAnticipatedDateChange(date)}
                                                         minDate={new Date()}
                                                         maxDate={getMaxDate()}
+                                                        id={'anticipated_complete_upload_month'}
                                                         className={'form-control'}
                                                         renderMonthContent={renderMonthContent}
                                                         showMonthYearPicker
