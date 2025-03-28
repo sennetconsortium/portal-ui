@@ -1,3 +1,5 @@
+@use "../config/swatch";
+
 .popover {
   z-index: 10000 !important;
 
@@ -9,21 +11,19 @@
         }
       }
     }
-
-    z-index: 10;
   }
 
   &.is-error {
-    color: $col-err-txt;
-    background: $col-err-bg;
-    border-color: $col-err-bdr;
+    color: swatch.$col-err-txt;
+    background: swatch.$col-err-bg;
+    border-color: swatch.$col-err-bdr;
 
     .popover-body {
-      color: $col-err-txt;
+      color: swatch.$col-err-txt;
     }
 
     .popover-arrow:after {
-      border-right-color: $col-err-bdr;
+      border-right-color: swatch.$col-err-bdr;
     }
   }
 }

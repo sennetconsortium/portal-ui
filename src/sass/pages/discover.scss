@@ -1,3 +1,5 @@
+@use "../config/swatch";
+
 .circle {
     width: 3em;
     height: 3em;
@@ -5,13 +7,13 @@
 }
 
 .source-background {
-    background-color: $col-source-type;
+    background-color: swatch.$col-source-type;
 }
 
 .sample-background {
-    background-color: $col-sample-type;
+    background-color: swatch.$col-sample-type;
 }
 
 .dataset-background {
-    background-color: $col-dataset-type;
+    background-color: swatch.$col-dataset-type;
 }

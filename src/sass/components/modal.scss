@@ -1,3 +1,6 @@
+@use "../config/swatch";
+@use "../general/mixins";
+
 .modal {
   &-body {
     .sui-layout-body__inner {
@@ -10,7 +13,7 @@
     margin-left: auto;
     margin-right: auto;
 
-    @include sm-mx {
+    @include mixins.sm-mx {
       width: 98%;
     }
   }
@@ -24,16 +27,16 @@
     }
     &.is-error {
       .modal-content {
-        color: $col-err-txt;
-        background: $col-err-bg;
-        border-color: $col-err-bdr;
+        color: swatch.$col-err-txt;
+        background: swatch.$col-err-bg;
+        border-color: swatch.$col-err-bdr;
       }
     }
 
     &.is-warning-outline {
       .modal-content {
-        color: $col-warn-txt;
-        border-color: $col-warn-bdr;
+        color: swatch.$col-warn-txt;
+        border-color: swatch.$col-warn-bdr;
       }
     }
   }

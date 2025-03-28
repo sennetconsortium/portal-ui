@@ -1,3 +1,5 @@
+@use "../general/mixins";
+
 .c-legend {
   &__item {
     &--Root {
@@ -14,7 +16,7 @@
   }
 }
 
-@include md-mx {
+@include mixins.md-mx {
   .c-legend--flex {
 
     .c-legend__item--Help {
