@@ -1,12 +1,14 @@
+@use "../config/swatch";
+
 .Toastify .Toastify__toast {
   &--info {
     .Toastify {
       &__progress-bar {
-        background: $col-bs-btn-gray;
+        background: swatch.$col-bs-btn-gray;
       }
       &__toast-icon {
         svg {
-          fill: $col-bs-btn-gray;
+          fill: swatch.$col-bs-btn-gray;
         }
       }
     }
@@ -14,26 +16,26 @@
   &--success {
     .Toastify {
       &__progress-bar {
-        background: $col-bs-blue;
+        background: swatch.$col-bs-blue;
       }
       &__toast-icon {
         svg {
-          fill: $col-bs-blue;
+          fill: swatch.$col-bs-blue;
         }
       }
     }
   }
   &--error {
-    color: $col-err-txt;
-    background: $col-err-bg;
-    border-color: $col-err-bdr;
+    color: swatch.$col-err-txt;
+    background: swatch.$col-err-bg;
+    border-color: swatch.$col-err-bdr;
     .Toastify {
       &__progress-bar {
-        background: $col-err-txt;
+        background: swatch.$col-err-txt;
       }
       &__toast-icon {
         svg {
-          fill: $col-err-txt
+          fill: swatch.$col-err-txt
         }
       }
     }

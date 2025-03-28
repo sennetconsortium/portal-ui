@@ -1,8 +1,10 @@
+@use "mixins";
+
 // CSS for search page results or full site
 
 a:focus, button:focus, input:focus, select:focus, textarea:focus,
 [tabindex='0']:focus, [tabindex='1']:focus, a:active, button:active, input:active, select:active, textarea:active, [tabindex='0']:active, [tabindex='1']:active {
-  @include mx-focus;
+  @include mixins.mx-focus;
 }
 
 .no-focus:focus {
@@ -98,7 +100,7 @@ p {
 }
 
 .mt-resp {
-  @include lg {
+  @include mixins.lg {
     margin-top: 5rem;
   }
 }
@@ -125,7 +127,7 @@ p {
     padding-top: 20px;
   }
   .__floater {
-   @include lg {
+   @include mixins.lg {
      width: 40% !important;
    }
   }

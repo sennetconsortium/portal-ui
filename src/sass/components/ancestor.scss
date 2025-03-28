@@ -1,3 +1,6 @@
+@use "../config/swatch";
+@use "../general/mixins";
+
 .ancestor-ctas {
   display: flex;
   .btn {
@@ -6,12 +9,12 @@
 
   .MuiTooltip-tooltip {
     font-weight: normal !important;
-    background-color: $col-err-bg;
-    color: $col-err-txt;
-    border: solid 1px $col-err-bdr;
+    background-color: swatch.$col-err-bg;
+    color: swatch.$col-err-txt;
+    border: solid 1px swatch.$col-err-bdr;
     code {
       font-weight: bold !important;
-      color: $col-err-txt;
+      color: swatch.$col-err-txt;
     }
     .tooltip {
       &-close {
@@ -47,7 +50,7 @@
       margin-left: -15px;
       position: absolute;
       top: 30px;
-      @include md-mx {
+      @include mixins.md-mx {
         top: 70px;
       }
       path {
@@ -68,13 +71,13 @@
     font-size: 12px;
     padding: 3px 7px;
     font-family: monospace;
-    @include md-mx {
+    @include mixins.md-mx {
       margin-left: 0 !important;
     }
     &.is-visible {
       width: 50%;
       opacity: 1;
-      @include md-mx {
+      @include mixins.md-mx {
         width: 90%;
       }
     }

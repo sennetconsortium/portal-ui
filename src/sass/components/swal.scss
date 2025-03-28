@@ -1,12 +1,14 @@
+@use "../config/swatch";
+
 .swal2-actions {
   .btn.btn-danger {
-    background-color: $col-danger-bg !important;
+    background-color: swatch.$col-danger-bg !important;
     &:focus {
       box-shadow: 0 0 0 3px rgba(216, 81, 81, 0.5);
     }
   }
   .btn.btn-warning {
-    background-color: $col-warn-bg-2 !important;
+    background-color: swatch.$col-warn-bg-2 !important;
     &:focus {
       box-shadow: 0 0 0 3px rgba(217, 164, 6, 0.5);
     }
