@@ -145,7 +145,7 @@ export default function EditDataset() {
             // set state with the result
             setData(_data)
 
-            getAncestryData(_data.uuid, {endpoints: ['ancestors'], otherEndpoints: ['immediate_ancestors']}).then(ancestry => {
+            getAncestryData(_data.uuid, {endpoints: ['ancestors'], otherEndpoints: ['immediate_ancestors']}, _data.entityType).then(ancestry => {
                 Object.assign(_data, ancestry)
                 setData(_data)
                 if (ancestry.immediate_ancestors) {
