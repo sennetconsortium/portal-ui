@@ -2,8 +2,7 @@ import React, {useEffect, useState} from 'react'
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
 import Lineage from "./sample/Lineage";
-import SenNetAccordion from "../layout/SenNetAccordion";
-
+import SenNetAccordion from "@/components/custom/layout/SenNetAccordion";
 import ProvenanceGraph from "@/components/custom/entities/ProvenanceGraph";
 
 

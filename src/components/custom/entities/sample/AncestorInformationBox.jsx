@@ -1,9 +1,9 @@
 import React from 'react';
 import Card from 'react-bootstrap/Card';
 import CardGroup from 'react-bootstrap/CardGroup';
-import SenNetAccordion from "../../layout/SenNetAccordion";
-import ClipboardCopy from "../../../ClipboardCopy";
-import {getDatasetTypeDisplay, getUBKGFullName} from "@/components/custom/js/functions";
+import SenNetAccordion from "@/components/custom/layout/SenNetAccordion";
+import ClipboardCopy from "@/components/ClipboardCopy";
+import {getUBKGFullName} from "@/components/custom/js/functions";
 
 const AncestorInformationBox = ({ ancestor }) => {
 
