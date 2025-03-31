@@ -27,7 +27,7 @@ import log from 'loglevel'
 
 export default function BulkCreate({
                                        userWriteGroups,
-                                       handleHome,
+                                       handlePrimaryBtn,
                                        entityDetails = {},
                                        isMetadata=false,
                                    }) {
@@ -589,9 +589,9 @@ export default function BulkCreate({
                             modalBody={getModalBody()}
                             modalSize='lg'
                             showModal={showModal}
-                            handleHome={handleHome}
-                            handleClose={() => setShowModal(false)}
-                            showCloseButton={true}
+                            handlePrimaryBtn={handlePrimaryBtn}
+                            handleSecondaryBtn={
+() => setShowModal(false)}
                         />
                     }
                     {

@@ -1,7 +1,7 @@
 import React, {createContext, useContext, useEffect, useRef, useState} from 'react'
-import {get_auth_header, get_json_header} from "../lib/services";
-import {getEntityEndPoint} from "../config/config";
-import {createDownloadUrl, eq} from "../components/custom/js/functions";
+import {get_auth_header, get_json_header} from "@/lib/services";
+import {getEntityEndPoint} from "@/config/config";
+import {createDownloadUrl, eq} from "@/components/custom/js/functions";
 import AppContext from "./AppContext";
 import DataTable from "react-data-table-component";
 import {Row, Stack} from "react-bootstrap";

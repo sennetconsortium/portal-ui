@@ -64,7 +64,7 @@ export default function EditBulk() {
                 <BulkCreate
                     entityDetails={{entityType, subType}}
                     userWriteGroups={userWriteGroups}
-                    handleHome={handleHome}
+                    handlePrimaryBtn={handleHome}
                     isMetadata={isMetadata}
                 />
                 <AppFooter/>

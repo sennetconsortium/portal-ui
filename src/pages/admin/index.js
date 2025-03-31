@@ -6,7 +6,7 @@ import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
 import AppContext from "../../context/AppContext";
-import {APP_TITLE} from "../../config/config";
+import {APP_TITLE} from "@/config/config";
 import {toast} from "react-toastify";
 import Grid from "@mui/material/Grid"
 import AdminContext, {AdminProvider} from "../../context/AdminContext";

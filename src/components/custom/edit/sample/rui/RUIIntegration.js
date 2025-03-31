@@ -167,14 +167,13 @@ class RUIIntegration extends Component {
                             }
                             modalSize="md"
                             showModal={this.state.showCancelModal}
-                            showCloseButton={true}
-                            closeButtonLabel={"Close"}
-                            handleClose={() =>
+                            handleSecondaryBtn={
+() =>
                                 this.setState({showCancelModal: false})
                             }
-                            showHomeButton={true}
-                            actionButtonLabel={"Cancel Registration"}
-                            handleHome={() => this.props.setShowRui(false)}
+                            showPrimaryBtn={true}
+                            primaryBtnLabel={"Cancel Registration"}
+                            handlePrimaryBtn={() => this.props.setShowRui(false)}
                         />
 
                         <Script
