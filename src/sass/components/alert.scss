@@ -1,6 +1,8 @@
+@use "../general/mixins";
+
 .alert {
   &-hlf {
-    @include lg {
+    @include mixins.lg {
       width: 60%;
       margin: auto;
     }
@@ -14,7 +16,7 @@
     }
   }
 
-  @include lg {
+  @include mixins.lg {
     .alert-btn {
       a {
         width: 50%;
@@ -22,7 +24,7 @@
     }
   }
 
-  @include sm-mx {
+  @include mixins.sm-mx {
     .alert-btn {
       a {
         width: 100%;
