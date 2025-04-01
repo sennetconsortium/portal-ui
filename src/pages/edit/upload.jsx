@@ -355,7 +355,7 @@ function EditUpload() {
                                                 {/*/!*Anticipated Completion Month/Year*!/*/}
                                                 <EntityFormGroup label='Anticipated Completion Year/Month' controlId='anticipated_complete_upload_month'
 
-                                                                 text={<>The year and month that this <code>Upload</code> will have all required data uploaded and be ready for reorganization into <code>Datasets</code>.</>}>
+                                                                 popoverHelpText={<>The year and month that this <code>Upload</code> will have all required data uploaded and be ready for reorganization into <code>Datasets</code>.</>}>
                                                     <DatePicker
                                                         selected={anticipatedDate}
                                                         onChange={(date) => handleAnticipatedDateChange(date)}
@@ -377,7 +377,7 @@ function EditUpload() {
                                                                  onChange={onChange}
                                                                  type={'number'}
                                                                  otherInputProps={{min: 0}}
-                                                                 text={<>The total number of <code>Datasets</code> that this <code>Upload</code> will eventually contain.</>}/>
+                                                                 popoverHelpText={<>The total number of <code>Datasets</code> that this <code>Upload</code> will eventually contain.</>}/>
                                             </div>
                                         </div>
 
