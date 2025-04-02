@@ -286,21 +286,21 @@ function EditUpload() {
                                                              type={'textarea'}
                                                              controlId='ingest_task' value={data.ingest_task}
                                                              onChange={onChange}
-                                                             text={<>The next task in the data ingest process.</>}/>}
+                                                             popoverHelpText={<>The next task in the data ingest process.</>}/>}
 
                                         {/*Title*/}
                                         <EntityFormGroup label="Upload Title" placeholder='Upload Title'
                                                          controlId='title' value={data.title}
                                                          isRequired={true}
                                                          onChange={onChange}
-                                                         text={<>A meaningful title for the <code>Upload</code>.
+                                                         popoverHelpText={<>A meaningful title for the <code>Upload</code>.
                                                          </>}/>
 
                                         {/*/!*Description*!/*/}
                                         <EntityFormGroup isRequired={true} label='Description' type='textarea'
                                                          controlId='description' value={data.description}
                                                          onChange={onChange}
-                                                         text={<>Free text field to enter a description of
+                                                         popoverHelpText={<>Free text field to enter a description of
                                                              the <code>Upload</code>.</>}/>
 
                                         {/*/!*Intended Dataset Type*!/*/}
@@ -355,7 +355,7 @@ function EditUpload() {
                                                 {/*/!*Anticipated Completion Month/Year*!/*/}
                                                 <EntityFormGroup label='Anticipated Completion Year/Month' controlId='anticipated_complete_upload_month'
 
-                                                                 text={<>The year and month that this <code>Upload</code> will have all required data uploaded and be ready for reorganization into <code>Datasets</code>.</>}>
+                                                                 popoverHelpText={<>The year and month that this <code>Upload</code> will have all required data uploaded and be ready for reorganization into <code>Datasets</code>.</>}>
                                                     <DatePicker
                                                         selected={anticipatedDate}
                                                         onChange={(date) => handleAnticipatedDateChange(date)}
@@ -377,7 +377,7 @@ function EditUpload() {
                                                                  onChange={onChange}
                                                                  type={'number'}
                                                                  otherInputProps={{min: 0}}
-                                                                 text={<>The total number of <code>Datasets</code> that this <code>Upload</code> will eventually contain.</>}/>
+                                                                 popoverHelpText={<>The total number of <code>Datasets</code> that this <code>Upload</code> will eventually contain.</>}/>
                                             </div>
                                         </div>
 

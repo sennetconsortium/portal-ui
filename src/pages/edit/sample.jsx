@@ -449,19 +449,23 @@ function EditSample() {
                                     {/*/!*Preparation Protocol*!/*/}
                                     <EntityFormGroup label="Preparation Protocol" placeholder='protocols.io DOI'
                                                      controlId='protocol_url' value={data.protocol_url}
-                                                     isRequired={true} pattern={getDOIPattern()}
+                                                     isRequired={true}
                                                      className={warningClasses.protocol_url}
-                                                     warningText={<>The supplied protocols.io DOI URL, formatting is
+                                                     popverWarningText={<>The supplied protocols.io DOI URL, formatting is
                                                          correct but does not resolve. This will need to be corrected
                                                          for any <code>Dataset</code> submission that uses this entity
                                                          as an ancestor.</>}
                                                      popoverTrigger={SenPopoverOptions.triggers.hoverOnClickOff}
                                                      onChange={_onChange}
-                                                     onBlur={_onBlur}
-                                                     text={<span>The protocol used when procuring or preparing the tissue. This must be provided as a protocols.io DOI URL see: <a
+                                                     popoverHelpText={<span>The protocol used when procuring or preparing the tissue. This must be provided as a protocols.io DOI URL see: <a
                                                          href="https://www.protocols.io/." target='_blank'
                                                          className='lnk--ic'>https://www.protocols.io/ <i
-                                                         className="bi bi-box-arrow-up-right"></i></a>.</span>}/>
+                                                         className="bi bi-box-arrow-up-right"></i></a>.</span>}
+                                                     otherInputProps={{
+                                                         pattern:getDOIPattern(),
+                                                         onBlur: (e) => _onBlur(e, e.target.id, e.target.value)
+                                                     }}
+                                    />
 
                                     {/*/!*Lab Sample ID*!/*/}
                                     <EntityFormGroup label='Lab Sample ID'
@@ -470,14 +474,14 @@ function EditSample() {
                                                      isRequired={true}
                                                      value={data.lab_tissue_sample_id}
                                                      onChange={_onChange}
-                                                     text='An identifier used internally by the lab to identify the specimen. This can be useful for lab members to identify and look-up Samples.'/>
+                                                     popoverHelpText='An identifier used internally by the lab to identify the specimen. This can be useful for lab members to identify and look-up Samples.'/>
 
 
                                     {/*/!*Description*!/*/}
                                     <EntityFormGroup label='Lab Notes' type='textarea' controlId='description'
                                                      value={data.description}
                                                      onChange={_onChange}
-                                                     text='Free text field to enter a description of the specimen'/>
+                                                     popoverHelpText='Free text field to enter a description of the specimen'/>
 
                                     {metadataNote() &&
                                         <Alert variant={alertStyle.current}><span>{metadataNote()}</span></Alert>}
