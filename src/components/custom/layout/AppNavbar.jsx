@@ -101,7 +101,59 @@ const AppNavbar = ({hidden, signoutHidden, innerRef}) => {
                 <Navbar.Toggle aria-controls="basic-navbar-nav"/>
                 <Navbar.Collapse>
                     <Nav className={'me-auto'}>
-                        <NavDropdown
+                        <Nav.Link key={`dd-sennet-home`}
+                                  href='https://sennetconsortium.org'>
+                            <span>SenNet Home</span>
+                        </Nav.Link>
+                        <Nav.Link key={`dd-portal-search`}
+                                  href={APP_ROUTES.search}>
+                            <span>Data</span>
+                        </Nav.Link>
+                        <NavDropdown active={false}
+                                     variant={'primary'}
+                                     align={{ lg: 'end' }}
+                                     title="Resources"
+                                     id="nav-dropdown--atlas">
+                            <NavDropdown.Item key={`dd-ccf-eui`}
+                                              href='/ccf-eui'>
+                                <span>Exploration User Interface (EUI)</span>
+                            </NavDropdown.Item>
+                            {isLoggedIn() &&
+                                <NavDropdown.Item key={`dd-data-board`}
+                                                  href={getDataIngestBoardEndpoint()}
+                                                  target='_blank'>
+                                    <span>Data Ingest Board</span>
+                                </NavDropdown.Item>
+                            }
+                            <NavDropdown.Item key={`dd-organs`}
+                                              href={APP_ROUTES.organs}>
+                                <span>Organs</span>
+                            </NavDropdown.Item>
+                        </NavDropdown>
+
+                        <NavDropdown active={false}
+                                     variant={'primary'}
+                                     title="Documentation"
+                                     id="nav-dropdown--docs">
+                            <NavDropdown.Item key={`dd-getting-started`}
+                                              href='https://docs.sennetconsortium.org/libraries/ingest-validation-tools/upload-guidelines/getting-started/'>
+                                <span>Getting started</span>
+                            </NavDropdown.Item>
+                            <NavDropdown.Item key={`dd-search-md-schema`}
+                                              href='https://docs.sennetconsortium.org/libraries/ingest-validation-tools/'>
+                                <span>Metadata schemas & upload guidelines</span>
+                            </NavDropdown.Item>
+                            <NavDropdown.Item key={`dd-prov-ui`}
+                                              href='https://docs.sennetconsortium.org/libraries/provenance-ui/'>
+                                <span>Provenance UI</span>
+                            </NavDropdown.Item>
+                            <NavDropdown.Item key={`dd-apis`} href='https://docs.sennetconsortium.org/apis/'>
+                                <span>APIs</span>
+                            </NavDropdown.Item>
+                        </NavDropdown>
+                    </Nav>
+                    <Nav>
+                         <NavDropdown
                             active={false}
                             variant={'primary'}
                             hidden={hidden || !isLoggedIn()}
@@ -138,57 +190,14 @@ const AppNavbar = ({hidden, signoutHidden, innerRef}) => {
                                 </div>
                             ))}
                         </NavDropdown>
-
-                        <Nav.Link hidden={hidden || !isLoggedIn()} key={`submenuItem-md-all`}
+                          <Nav.Link hidden={hidden || !isLoggedIn()} key={`submenuItem-md-all`}
                                   href={`/edit/bulk/metadata`}
                                   id={'nav-dropdown--upload-metadata'}
                                   className={'is-subItem'}>
                             <span>Upload metadata</span>
                         </Nav.Link>
 
-                        <NavDropdown active={false}
-                                     variant={'primary'}
-                                     title="Documentation"
-                                     id="nav-dropdown--docs">
-                            <NavDropdown.Item key={`dd-getting-started`}
-                                              href='https://docs.sennetconsortium.org/libraries/ingest-validation-tools/upload-guidelines/getting-started/'>
-                                <span>Getting started</span>
-                            </NavDropdown.Item>
-                            <NavDropdown.Item key={`dd-search-md-schema`}
-                                              href='https://docs.sennetconsortium.org/libraries/ingest-validation-tools/'>
-                                <span>Metadata schemas & upload guidelines</span>
-                            </NavDropdown.Item>
-                            <NavDropdown.Item key={`dd-prov-ui`}
-                                              href='https://docs.sennetconsortium.org/libraries/provenance-ui/'>
-                                <span>Provenance UI</span>
-                            </NavDropdown.Item>
-                            <NavDropdown.Item key={`dd-apis`} href='https://docs.sennetconsortium.org/apis/'>
-                                <span>APIs</span>
-                            </NavDropdown.Item>
-                        </NavDropdown>
-                    </Nav>
-                    <Nav>
-                        <NavDropdown active={false}
-                                     variant={'primary'}
-                                     align={{ lg: 'end' }}
-                                     title="Atlas & Tools"
-                                     id="nav-dropdown--atlas">
-                            <NavDropdown.Item key={`dd-ccf-eui`}
-                                              href='/ccf-eui'>
-                                <span>Exploration User Interface (EUI)</span>
-                            </NavDropdown.Item>
-                            {isLoggedIn() &&
-                                <NavDropdown.Item key={`dd-data-board`}
-                                                  href={getDataIngestBoardEndpoint()}
-                                                  target='_blank'>
-                                    <span>Data Ingest Board</span>
-                                </NavDropdown.Item>
-                            }
-                            <NavDropdown.Item key={`dd-organs`}
-                                              href={APP_ROUTES.organs}>
-                                <span>Organs</span>
-                            </NavDropdown.Item>
-                        </NavDropdown>
+
                         {isLoggedIn() ?
                             (
                                 <NavDropdown active={false}
@@ -219,6 +228,7 @@ const AppNavbar = ({hidden, signoutHidden, innerRef}) => {
                                         {_t('Log out')}
                                     </NavDropdown.Item>
                                 </NavDropdown>
+
                             ) : (
                                 <Nav.Link
                                     className={'justify-content-end'}
