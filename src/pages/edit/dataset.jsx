@@ -508,7 +508,7 @@ export default function EditDataset() {
                                                          type={'textarea'}
                                                          controlId='ingest_task' value={data.ingest_task}
                                                          onChange={onChange}
-                                                         text={<>The next task in the data ingest process.</>}/>}
+                                                         popoverHelpText={<>The next task in the data ingest process.</>}/>}
 
                                     {/*Ancestor IDs*/}
                                     {/*editMode is only set when page is ready to load */}
@@ -524,7 +524,7 @@ export default function EditDataset() {
                                                      placeholder='A non-PHI ID or deidentified name used by the lab when referring to the dataset'
                                                      controlId='lab_dataset_id' value={data.lab_dataset_id}
                                                      onChange={onChange}
-                                                     text={<>An identifier used internally by the lab to identify
+                                                     popoverHelpText={<>An identifier used internally by the lab to identify
                                                          the <code>Dataset</code>. This can be useful for lab members to
                                                          identify and look-up Datasets.</>}/>
 
@@ -532,7 +532,7 @@ export default function EditDataset() {
                                     <EntityFormGroup label='DOI Abstract' type='textarea' controlId='description'
                                                      value={data.description}
                                                      onChange={onChange}
-                                                     text={<>An abstract publicly available when
+                                                     popoverHelpText={<>An abstract publicly available when
                                                          the <code>Dataset</code> is published. This will be included
                                                          with the DOI information of the
                                                          published <code>Dataset</code>.</>}/>
@@ -541,7 +541,7 @@ export default function EditDataset() {
                                     <EntityFormGroup label='Lab Notes' type='textarea'
                                                      controlId='dataset_info' value={data.dataset_info}
                                                      onChange={onChange}
-                                                     text={<>Free text field to enter a description of
+                                                     popoverHelpText={<>Free text field to enter a description of
                                                          the <code>Dataset</code>.</>}/>
 
 
