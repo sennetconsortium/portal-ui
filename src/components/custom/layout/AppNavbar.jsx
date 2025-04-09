@@ -8,7 +8,16 @@ import {deleteCookie, getCookie} from "cookies-next";
 import Swal from 'sweetalert2'
 
 const AppNavbar = ({hidden, signoutHidden, innerRef}) => {
-    const {_t, isLoggedIn, logout, cache, supportedMetadata, adminGroup, tutorialTrigger, setTutorialTrigger} = useContext(AppContext)
+    const {
+        _t,
+        isLoggedIn,
+        logout,
+        cache,
+        supportedMetadata,
+        adminGroup,
+        tutorialTrigger,
+        setTutorialTrigger
+    } = useContext(AppContext)
     const userEmail = (isLoggedIn() ? JSON.parse(atob(getCookie('info')))['email'] : "")
     const tutorialCookieKey = 'tutorialCompleted_'
 
@@ -34,7 +43,8 @@ const AppNavbar = ({hidden, signoutHidden, innerRef}) => {
                 localStorage.clear()
                 window.location.reload()
             }
-        }).catch(error => {})
+        }).catch(error => {
+        })
 
     }
 
@@ -72,7 +82,7 @@ const AppNavbar = ({hidden, signoutHidden, innerRef}) => {
     const deleteTutorialCookies = () => {
         deleteCookie(`${tutorialCookieKey}true`)
         deleteCookie(`${tutorialCookieKey}false`)
-        setTutorialTrigger(tutorialTrigger+1)
+        setTutorialTrigger(tutorialTrigger + 1)
     }
 
     const getShowTutorialLink = () => {
@@ -103,7 +113,7 @@ const AppNavbar = ({hidden, signoutHidden, innerRef}) => {
                     <Nav className={'me-auto'}>
                         <Nav.Link key={`dd-sennet-home`}
                                   href='https://sennetconsortium.org'>
-                            <span>SenNet Home</span>
+                            <span>Web Portal</span>
                         </Nav.Link>
                         <Nav.Link key={`dd-portal-search`}
                                   href={APP_ROUTES.search}>
@@ -111,8 +121,8 @@ const AppNavbar = ({hidden, signoutHidden, innerRef}) => {
                         </Nav.Link>
                         <NavDropdown active={false}
                                      variant={'primary'}
-                                     align={{ lg: 'end' }}
-                                     title="Resources"
+                                     align={{lg: 'end'}}
+                                     title="Tools"
                                      id="nav-dropdown--atlas">
                             <NavDropdown.Item key={`dd-ccf-eui`}
                                               href='/ccf-eui'>
@@ -153,7 +163,7 @@ const AppNavbar = ({hidden, signoutHidden, innerRef}) => {
                         </NavDropdown>
                     </Nav>
                     <Nav>
-                         <NavDropdown
+                        <NavDropdown
                             active={false}
                             variant={'primary'}
                             hidden={hidden || !isLoggedIn()}
@@ -190,7 +200,7 @@ const AppNavbar = ({hidden, signoutHidden, innerRef}) => {
                                 </div>
                             ))}
                         </NavDropdown>
-                          <Nav.Link hidden={hidden || !isLoggedIn()} key={`submenuItem-md-all`}
+                        <Nav.Link hidden={hidden || !isLoggedIn()} key={`submenuItem-md-all`}
                                   href={`/edit/bulk/metadata`}
                                   id={'nav-dropdown--upload-metadata'}
                                   className={'is-subItem'}>

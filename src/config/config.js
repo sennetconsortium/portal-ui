@@ -4,7 +4,7 @@ import { APP_ROUTES } from './constants';
 import { SEARCH_ENTITIES } from "./search/entities";
 
 export const APP_TITLE = 'Data Sharing Portal'
-export const NAVBAR_TITLE = 'SenNet'
+export const NAVBAR_TITLE = 'SenNet Data'
 
 export const FILE_KEY_SEPARATOR = '_:_'
 
