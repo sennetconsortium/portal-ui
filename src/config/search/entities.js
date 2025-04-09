@@ -66,7 +66,7 @@ export const SEARCH_ENTITIES = {
                 isAggregationActive: doesTermFilterContainValues('entity_type', ['Sample']),
                 isFacetVisible: doesAggregationHaveBuckets('sample_category')
             },
-            dataset_class: {
+            data_class: {
                 label: 'Data Class',
                 type: 'value',
                 field: 'creation_action.keyword',
@@ -136,7 +136,6 @@ export const SEARCH_ENTITIES = {
                 isHierarchyOption: (option) => {
                     return lateralOrgans.includes(option)
                 },
-                dependencies: [['entity_type', 'Sample']],
                 isAggregationActive: doesTermFilterContainValues('entity_type', ['Sample']),
                 isFacetVisible: doesAggregationHaveBuckets('organ')
             },
@@ -253,7 +252,6 @@ export const SEARCH_ENTITIES = {
                 isFilterable: false,
                 facetType: 'term',
                 isAggregationActive: true,
-                dependencies: [['entity_type', 'Dataset']],
                 isFacetVisible: doesAggregationHaveBuckets('status')
             },
             group_name: {

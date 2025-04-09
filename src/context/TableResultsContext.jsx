@@ -7,7 +7,6 @@ import {createTheme} from "react-data-table-component";
 import {handleTableControls} from "@/components/custom/search/ResultsPerPage";
 import {eq} from "@/components/custom/js/functions";
 import { useSearchUIContext } from "search-ui/components/core/SearchUIContext";
-import {SEARCH_ENTITIES} from "@/config/search/entities";
 
 const TableResultsContext = createContext({})
 
@@ -28,30 +27,17 @@ export const TableResultsProvider = ({ index, columnsRef, children, getHotLink, 
     useEffect(() => {
         if (!router.isReady) return
 
-        // ?addFilters=organ=LL,RL
+        // ?addFilters=organ=LL,RL;entity_type=Sample,Dataset
         let reqFilters = router.query.addFilters
         if (reqFilters) {
             clearSearchTerm()
             reqFilters = reqFilters.trim().split(';')
-
             for (let f of reqFilters) {
-
                 // handle the actual facets sent in request
                 let kv = f.split('=')
                 let values = kv[1].split(',')
                 for (let v of values) {
                     addFilter(kv[0], v)
-                }
-
-                // check for conditional facets
-                const deps = SEARCH_ENTITIES.searchQuery.facets[kv[0]]?.dependencies
-                if (deps) {
-                    for (let d of deps) {
-                        let values = d[1]?.split(',')
-                        for (let v of values) {
-                            addFilter(d[0], v)
-                        }
-                    }
                 }
             }
         }
