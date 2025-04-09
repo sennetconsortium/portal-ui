@@ -66,7 +66,7 @@ export const SEARCH_ENTITIES = {
                 isAggregationActive: doesTermFilterContainValues('entity_type', ['Sample']),
                 isFacetVisible: doesAggregationHaveBuckets('sample_category')
             },
-            dataset_class: {
+            data_class: {
                 label: 'Data Class',
                 type: 'value',
                 field: 'creation_action.keyword',
