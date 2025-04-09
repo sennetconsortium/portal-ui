@@ -81,7 +81,7 @@ export const SEARCH_ENTITIES = {
                     }
                     return false
                 },
-                isFacetVisible: doesAggregationHaveBuckets('dataset_class'),
+                isFacetVisible: doesAggregationHaveBuckets('data_class'),
                 transformFunction: getCreationActionRelationName
             },
             has_qa_derived_dataset: {

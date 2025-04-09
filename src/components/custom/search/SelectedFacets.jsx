@@ -36,7 +36,7 @@ function SelectedFacets() {
                 if (!facet.transformFunction) {
                     return getUBKGFullName(value)
                 }
-                return facet.transformFunction(facet.label)
+                return facet.transformFunction(value)
         }
     }
 
