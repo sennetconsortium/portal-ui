@@ -7,7 +7,7 @@ import {
     getSearchEndPoint,
     isDateFacetVisible
 } from '../config';
-import { getUBKGFullName } from '@/components/custom/js/functions';
+import {getCreationActionRelationName, getUBKGFullName} from '@/components/custom/js/functions';
 
 const connector = new SearchAPIConnector({
     indexName: getEntitiesIndex(),
@@ -65,6 +65,24 @@ export const SEARCH_ENTITIES = {
                 facetType: 'term',
                 isAggregationActive: doesTermFilterContainValues('entity_type', ['Sample']),
                 isFacetVisible: doesAggregationHaveBuckets('sample_category')
+            },
+            dataset_class: {
+                label: 'Data Class',
+                type: 'value',
+                field: 'creation_action.keyword',
+                isExpanded: false,
+                filterType: 'any',
+                isFilterable: false,
+                facetType: 'term',
+                isAggregationActive: (filters, authState) => {
+                    if (authState.isAdmin) {
+                        const isActiveFunc = doesTermFilterContainValues('entity_type', ['Dataset'])
+                        return isActiveFunc(filters)
+                    }
+                    return false
+                },
+                isFacetVisible: doesAggregationHaveBuckets('dataset_class'),
+                transformFunction: getCreationActionRelationName
             },
             has_qa_derived_dataset: {
                 label: 'Has QA Derived Datasets',
@@ -285,6 +303,7 @@ export const SEARCH_ENTITIES = {
         conditionalFacets: {},
         search_fields: {
             'sennet_id^4': {type: 'value'},
+            'uuid^4': {type: 'value'},
             'group_name^3': {type: 'value'},
             'dataset_type^2': {type: 'value'},
             'sample_category^2': {type: 'value'},
