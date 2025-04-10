@@ -7,7 +7,7 @@ import {
     getSearchEndPoint,
     isDateFacetVisible
 } from '../config';
-import { getUBKGFullName } from '@/components/custom/js/functions';
+import {getCreationActionRelationName, getUBKGFullName} from '@/components/custom/js/functions';
 
 const connector = new SearchAPIConnector({
     indexName: getEntitiesIndex(),
@@ -66,6 +66,21 @@ export const SEARCH_ENTITIES = {
                 isAggregationActive: doesTermFilterContainValues('entity_type', ['Sample']),
                 isFacetVisible: doesAggregationHaveBuckets('sample_category')
             },
+            data_class: {
+                label: 'Data Class',
+                type: 'value',
+                field: 'creation_action.keyword',
+                isExpanded: false,
+                filterType: 'any',
+                isFilterable: false,
+                facetType: 'term',
+                isAggregationActive: (filters) => {
+                    const isActiveFunc = doesTermFilterContainValues('entity_type', ['Dataset'])
+                    return isActiveFunc(filters)
+                },
+                isFacetVisible: doesAggregationHaveBuckets('data_class'),
+                transformFunction: getCreationActionRelationName
+            },
             has_qa_derived_dataset: {
                 label: 'Has QA Derived Datasets',
                 type: 'value',
@@ -118,7 +133,6 @@ export const SEARCH_ENTITIES = {
                 isHierarchyOption: (option) => {
                     return lateralOrgans.includes(option)
                 },
-                dependencies: [['entity_type', 'Sample']],
                 isAggregationActive: doesTermFilterContainValues('entity_type', ['Sample']),
                 isFacetVisible: doesAggregationHaveBuckets('organ')
             },
@@ -235,7 +249,6 @@ export const SEARCH_ENTITIES = {
                 isFilterable: false,
                 facetType: 'term',
                 isAggregationActive: true,
-                dependencies: [['entity_type', 'Dataset']],
                 isFacetVisible: doesAggregationHaveBuckets('status')
             },
             group_name: {
@@ -285,6 +298,7 @@ export const SEARCH_ENTITIES = {
         conditionalFacets: {},
         search_fields: {
             'sennet_id^4': {type: 'value'},
+            'uuid^4': {type: 'value'},
             'group_name^3': {type: 'value'},
             'dataset_type^2': {type: 'value'},
             'sample_category^2': {type: 'value'},
