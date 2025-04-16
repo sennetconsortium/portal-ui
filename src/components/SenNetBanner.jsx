@@ -36,8 +36,10 @@ function SenNetBanner({name = 'login'}) {
                 {banner.beforeBanner && <div className={banner.beforeBannerClassName || ''} dangerouslySetInnerHTML={{__html: banner.beforeBanner}}></div>}
                 <div className={banner.outerWrapperClassName || ''}>
                     <Alert variant={banner.theme || 'warning'} show={showBanner} onClose={handleCloseBanner} dismissible={banner.dismissible} className={banner.className}>
-                        <div className={banner.innerClassName}>
-                            {banner.title && <Alert.Heading><span dangerouslySetInnerHTML={{__html: banner.title}}></span></Alert.Heading>}
+                        <div className={`${banner.innerClassName} d-flex align-items-center`}>
+                            {banner.title && <Alert.Heading><span
+                                dangerouslySetInnerHTML={{__html: banner.title}}></span></Alert.Heading>}
+                            <i className={`bi ${banner.icon || 'bi-exclamation-triangle-fill'} me-3`}></i>
                             <div dangerouslySetInnerHTML={{__html: banner.content}}></div>
                         </div>
                     </Alert>

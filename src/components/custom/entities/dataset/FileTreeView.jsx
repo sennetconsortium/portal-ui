@@ -1,10 +1,10 @@
 import React, {Fragment, useContext, useEffect, useRef, useState} from 'react';
 import Card from 'react-bootstrap/Card';
-import SenNetAccordion from "../../layout/SenNetAccordion";
+import SenNetAccordion from "@/components/custom/layout/SenNetAccordion";
 import Link from "next/link";
-import DerivedContext from "../../../../context/DerivedContext";
-import {fetch_globus_filepath} from "../../../../lib/services";
-import {FILE_KEY_SEPARATOR, getAssetsEndpoint, getAuth} from "../../../../config/config";
+import DerivedContext from "@/context/DerivedContext";
+import {fetch_globus_filepath} from "@/lib/services";
+import {FILE_KEY_SEPARATOR, getAssetsEndpoint, getAuth} from "@/config/config";
 import SenNetPopover, {SenPopoverOptions} from "../../../SenNetPopover";
 import {formatByteSize} from "../../js/functions";
 import {Button, Row} from 'react-bootstrap';
@@ -14,6 +14,9 @@ import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
 import {Tree} from 'primereact/tree';
 import 'primeicons/primeicons.css';
+import dynamic from "next/dynamic";
+import DataUsageModal from "@/components/custom/entities/dataset/DataUsageModal"
+
 
 export const FileTreeView = ({data, selection = {}, keys = {files: 'files', uuid: 'uuid'},
                                  loadDerived = true, treeViewOnly = false, className = '', filesClassName = '',
@@ -142,7 +145,7 @@ export const FileTreeView = ({data, selection = {}, keys = {files: 'files', uuid
             "Data Product": node.data.is_data_product === "true",
         }
         return <>
-            {Object.entries(badges).map(([label, hasBadge]) => { 
+            {Object.entries(badges).map(([label, hasBadge]) => {
                 return hasBadge
                     ? <span className="badge bg-secondary mx-2" key={label}> {label}</span>
                     : null
@@ -199,7 +202,7 @@ export const FileTreeView = ({data, selection = {}, keys = {files: 'files', uuid
                                 className="right-border-none rounded-0"
                                 placeholder="Search"
                             />
-                            <InputGroup.Text 
+                            <InputGroup.Text
                                 className={"transparent"}>
                                 <i className="bi bi-search"></i>
                             </InputGroup.Text>
@@ -363,13 +366,8 @@ export const FileTreeView = ({data, selection = {}, keys = {files: 'files', uuid
         <SenNetAccordion title={'Files'}>
             <Card border={'0'} className={"mb-2 pb-2"}>
                 {status === 200 && filepath &&
-                    <p className={'fw-light fs-6 mb-2'}>Files for this <code>{data.entity_type}</code> are available through the Globus Research Data Management System.
-                        Access <a
-                            target="_blank"
-                            href={filepath}
-                            className="icon_inline"><span
-                            className="me-1">{data.sennet_id} Globus</span> <i className="bi bi-box-arrow-up-right"></i></a>
-                    </p>}
+                    <DataUsageModal data={data} filepath={filepath}/>
+                }
 
                 {status > 200 &&
                     <p className={'fw-light fs-6 mb-2'}>Access to the files on the Globus Research Management system is restricted. You may
