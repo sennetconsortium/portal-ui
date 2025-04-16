@@ -64,7 +64,7 @@ const DataUsageModal = ({data, filepath}) => {
             <p className={'fw-light fs-6 mb-2'}>Files for this <code>{data.entity_type}</code> are available through the
                 Globus Research Data Management System.
                 Access <a
-                    onClick={() => hasAgreedDUA ? window.open(filepath, '_blank') : displayModal}
+                    onClick={() => hasAgreedDUA ? window.open(filepath, '_blank') : displayModal()}
                     className="icon_inline link"><span
                     className="me-1">{data.sennet_id} Globus</span> <i className="bi bi-box-arrow-up-right"></i></a>
             </p>
