@@ -9,6 +9,10 @@
     width: calc(100%/6);
   }
 
+  @include mixins.md-xlg-mx {
+    width: calc(100%/3);
+  }
+
   &__num {
     display: block;
   }
@@ -18,7 +22,9 @@
       padding: 0;
     }
     .col-lg-8 {
-      text-align: left;
+      @include mixins.lg {
+        text-align: left;
+      }
     }
   }
   .shape {
@@ -28,6 +34,7 @@
     &.shape--diamond:after {
       width: 60px;
       height: 60px;
+      margin-top:15px;
     }
     &.shape--circle:after {
       width: 70px;
@@ -43,8 +50,22 @@
 
 .snStatRow {
   width: 97vw;
+  @include mixins.md-mx {
+    text-align: center;
+  }
+  @include mixins.lg {
+    padding: 1em;
+  }
 }
 
 .snLanding {
   width: 100vw;
+  &.sui-layout {
+    .sui-layout-body__inner {
+      width: 100%;
+      > .card {
+        width: 100%;
+      }
+    }
+  }
 }

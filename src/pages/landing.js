@@ -36,7 +36,7 @@ function ViewLanding({children}) {
        <>
            <Header title={`Homepage | SenNet`}></Header>
            <AppNavbar hidden={isRegisterHidden} signoutHidden={false}/>
-           <div role='main' className='sui-layout'>
+           <div role='main' className='sui-layout snLanding'>
                <section aria-label='About SenNet' className='sui-layout-body__inner'>
                    <Card className='mt-4 p-3'>
                        <Card.Title><h1>The Cellular Senescence Network (SenNet) Data Portal</h1></Card.Title>
@@ -49,19 +49,19 @@ function ViewLanding({children}) {
                <section aria-label='Site Map' className='sui-layout-body__inner'>
                    <Container fluid>
                        <Row className={'smcFlex'}>
-                           <Col lg={3} className='smcHolder smcHolder--left smcHolder--hasSib'>
+                           <Col lg={3} className='smcHolder smcHolder--left smcHolder--hasSib smcHolder--w-md-50'>
                                <SiteMapCard title={<h4>Discover</h4>}
                                             body={<p>Investigate SenNet data by entity type or through its metadata library.</p>}>
                                    <Row className="justify-content-md-center text-center">
                                        <Col lg={6}><Button variant="outline-primary" className={'w-100'} href={'/search'}>Search Data</Button>
                                           </Col>
-                                       <Col lg={6} className={'mt-sm-2'}>
+                                       <Col lg={6} className={'mt-2-sm'}>
                                            <Button variant="outline-primary" className={'w-100'} href={'/discover/metadata'}>Discover Metadata</Button></Col>
                                    </Row>
                                </SiteMapCard>
                            </Col>
 
-                           <Col lg={3} className='smcHolder smcHolder--innerLeft'>
+                           <Col lg={3} className='smcHolder smcHolder--innerLeft smcHolder--w-md-50'>
                                <SiteMapCard title={<h4>Quick Start</h4>}
                                             body={<p>Learn how to navigate the SenNet Consortium data portal with this step-by-step guide.</p>}>
                                    <div className='text-sm-center'>
@@ -73,7 +73,7 @@ function ViewLanding({children}) {
                                </SiteMapCard>
                            </Col>
 
-                           <Col lg={3} className='smcHolder smcHolder--innerRight'>
+                           <Col lg={3} className='smcHolder smcHolder--innerRight smcHolder--w-md-50'>
                                <SiteMapCard title={<h4>SenNet Consortium</h4>}
                                             body={<p>Stay up to date on the latest news regarding the SenNet project.</p>}>
                                    <div className={'text-center'}>
@@ -82,7 +82,7 @@ function ViewLanding({children}) {
                                </SiteMapCard>
                            </Col>
 
-                           <Col lg={3} className='smcHolder smcHolder--right smcHolder--hasSib'>
+                           <Col lg={3} className='smcHolder smcHolder--right smcHolder--hasSib smcHolder--w-md-50'>
                                <SiteMapCard title={<h4>Members</h4>}
                                             body={<p>Explore resources available to SenNet members. <br/> <br/></p>}>
                                    <div className={'text-center'}>
@@ -100,7 +100,7 @@ function ViewLanding({children}) {
                    <Card className='mt-4 p-3'>
                        <Card.Title><h2>Data Use Guidelines</h2></Card.Title>
                        <Card.Body>
-                           <p> The SenNet Consortium has established comprehensive data use guidelines to ensure ethical, effective, and <a href='#'>FAIR</a> utilization of its data by both internal members and external researchers. For more information, read our <a href='#'>Data Use Policy</a>.
+                           <p> The SenNet Consortium has established comprehensive data use guidelines to ensure ethical, effective, and <a href='#'>FAIR</a> utilization of its data by both internal members and external researchers. For more information, read our <LnkIc title={'Data Use Policy'} href={'https://sennetconsortium.org/external-data-use/'} />.
                            </p>
                        </Card.Body>
                    </Card>

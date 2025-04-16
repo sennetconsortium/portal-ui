@@ -200,7 +200,7 @@ export const AppProvider = ({ cache, banners, children }) => {
                     // Redirect to home page without query string
                     // Only redirect the user after a login action
                     const page = getLocalItemWithExpiry(pageKey)
-                    if (page.contains('edit') && loggedInRecently()) {
+                    if (page?.contains('edit') && loggedInRecently()) {
                         window.location = page;
                     }
 

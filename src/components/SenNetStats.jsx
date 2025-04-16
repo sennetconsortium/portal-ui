@@ -27,6 +27,19 @@ function SenNetStats({children}) {
         },
     ]
 
+    const animateValue = (obj, start, end, duration) => {
+        let startTimestamp = null
+        const step = (timestamp) => {
+            if (!startTimestamp) startTimestamp = timestamp;
+            const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+            obj.innerHTML = Math.floor(progress * (end - start) + start);
+            if (progress < 1) {
+                window.requestAnimationFrame(step);
+            }
+        };
+        window.requestAnimationFrame(step);
+    }
+
     const getStats = () => {
         let res = []
         for (let e of entities) {
@@ -39,7 +52,7 @@ function SenNetStats({children}) {
                             </div>
                         </Col>
                         <Col lg={8}>
-                            <span className={'fs-1 snStat__num'}>{Math.floor(Math.random() * 1000)}</span>
+                            <span data-num={Math.floor(Math.random() * 1000)} data-js-appevent={'animVal'} className={'fs-1 snStat__num'}></span>
                             <h5>{e.name}s</h5>
                         </Col>
                     </Row>
@@ -49,13 +62,21 @@ function SenNetStats({children}) {
         return res
     }
     useEffect(() => {
+        document.addEventListener(
+            "animVal",
+            (e) => {
+                const el = e.detail.el
+                animateValue(el, 0, Number(el.getAttribute('data-num')), 5000)
+            },
+            false,
+        )
     }, [])
 
     return (
 
         <section aria-label='Statistics' className='sui-layout-body__inner'>
             <Container className='card mt-4 bg--entityWhite' fluid>
-                <Row className={'snStatRow p-2'}>
+                <Row className={'snStatRow'}>
                     {getStats()}
                 </Row>
             </Container>
