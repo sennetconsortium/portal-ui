@@ -12,7 +12,7 @@ const Header = dynamic(() => import("@/components/custom/layout/Header"))
 
 function ViewLanding({children}) {
 
-    const {isRegisterHidden, _t, cache} = useContext(AppContext)
+    const {isRegisterHidden, deleteTutorialCookies, cache} = useContext(AppContext)
 
     useEffect(() => {
     }, [])
@@ -64,7 +64,10 @@ function ViewLanding({children}) {
                                <SiteMapCard title={<h4>Quick Start</h4>}
                                             body={<p>Learn how to navigate the SenNet Consortium data portal with this step-by-step guide.</p>}>
                                    <div>
-                                       <Button variant="primary" className={'w-50'} href={'/search?start-tutorial=1'}>Guide Me</Button>
+                                       <Button variant="primary" className={'w-50'} onClick={() => {
+                                           deleteTutorialCookies()
+                                           goIntent('/search?tutorial=1')
+                                       }}>Guide Me</Button>
                                    </div>
                                </SiteMapCard>
                            </Col>

@@ -1,7 +1,7 @@
 import React, { createContext, useEffect, useState} from 'react'
 import { useRouter } from 'next/router'
 import {eq, goToSearch} from '@/components/custom/js/functions'
-import { getCookie, setCookie } from 'cookies-next'
+import {deleteCookie, getCookie, setCookie} from 'cookies-next'
 import log from 'loglevel'
 import {
     check_valid_token,
@@ -35,6 +35,8 @@ export const AppProvider = ({ cache, banners, children }) => {
     const [userWriteGroups, setUserWriteGroups] = useState([])
     const router = useRouter()
     const authKey = 'isAuthenticated'
+    const tutorialCookieKey = 'tutorialCompleted_'
+    const loginDateKey = 'loginDate'
     const pageKey = STORAGE_KEY('userPage')
 
     const [tutorialTrigger, setTutorialTrigger] = useState(0)
@@ -47,8 +49,13 @@ export const AppProvider = ({ cache, banners, children }) => {
         let groups_token = ""
         if (info) {
             info = atob(info)
-            setCookie('groups_token', JSON.parse(info).groups_token, {sameSite: "Lax"})
-            groups_token = JSON.parse(info).groups_token
+            const userInfo = JSON.parse(info)
+            groups_token = userInfo.groups_token
+            setCookie('groups_token', groups_token, {sameSite: "Lax"})
+            const loginDate = localStorage.getItem(loginDateKey)
+            if (loginDate === null) {
+                setLocalItemWithExpiry(loginDateKey, new Date(), 600000)
+            }
         } else {
             // Delete in the event info doesn't exist as might have been logged out the system elsewhere.
             deleteCookies()
@@ -59,7 +66,7 @@ export const AppProvider = ({ cache, banners, children }) => {
             setLocalItemWithExpiry(pageKey, router.asPath, 600000)
         }
 
-        if(groups_token  != "") {
+        if(groups_token !== "") {
             check_valid_token().then((response) => {
                 if (typeof response == "boolean") {
                     setValidToken(response)
@@ -103,6 +110,17 @@ export const AppProvider = ({ cache, banners, children }) => {
         }
 
         localStorage.setItem(key, JSON.stringify(item))
+    }
+
+    const loggedInRecently = () => {
+        const loginDate = getLocalItemWithExpiry(loginDateKey)
+        if (loginDate) {
+            const startDate = new Date(loginDate)
+            const endDate   = new Date()
+            const s = (endDate.getTime() - startDate.getTime()) / 1000
+            return s < 7
+        }
+        return false
     }
 
     const getLocalItemWithExpiry = (key) => {
@@ -162,6 +180,12 @@ export const AppProvider = ({ cache, banners, children }) => {
         return authorized === null  
     }
 
+    const deleteTutorialCookies = () => {
+        deleteCookie(`${tutorialCookieKey}true`)
+        deleteCookie(`${tutorialCookieKey}false`)
+        setTutorialTrigger(tutorialTrigger + 1)
+    }
+
     const login = () => {
         get_read_write_privileges()
             .then((read_write_privileges) => {
@@ -174,8 +198,9 @@ export const AppProvider = ({ cache, banners, children }) => {
                         setCookie('user', {email, globus_id}, {sameSite: "Lax"})
                     }
                     // Redirect to home page without query string
+                    // Only redirect the user after a login action
                     const page = getLocalItemWithExpiry(pageKey)
-                    if (page.contains('edit')) {
+                    if (page.contains('edit') && loggedInRecently()) {
                         window.location = page;
                     }
 
@@ -313,7 +338,8 @@ export const AppProvider = ({ cache, banners, children }) => {
                 toggleBusyOverlay,
                 tutorialTrigger,
                 setTutorialTrigger,
-                getStringifiedComponents
+                getStringifiedComponents,
+                deleteTutorialCookies
             }}
         >
             {children}

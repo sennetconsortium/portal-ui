@@ -16,7 +16,7 @@ const AppNavbar = ({hidden, signoutHidden, innerRef}) => {
         supportedMetadata,
         adminGroup,
         tutorialTrigger,
-        setTutorialTrigger
+        deleteTutorialCookies
     } = useContext(AppContext)
     const userEmail = (isLoggedIn() ? JSON.parse(atob(getCookie('info')))['email'] : "")
     const tutorialCookieKey = 'tutorialCompleted_'
@@ -77,12 +77,6 @@ const AppNavbar = ({hidden, signoutHidden, innerRef}) => {
         } else {
             return `/edit/bulk/register?entityType=${entity}`
         }
-    }
-
-    const deleteTutorialCookies = () => {
-        deleteCookie(`${tutorialCookieKey}true`)
-        deleteCookie(`${tutorialCookieKey}false`)
-        setTutorialTrigger(tutorialTrigger + 1)
     }
 
     const getShowTutorialLink = () => {
@@ -214,12 +208,12 @@ const AppNavbar = ({hidden, signoutHidden, innerRef}) => {
                                              variant={'primary'}
                                              title={userEmail}
                                              id="nav-dropdown--user">
-                                    <NavDropdown.Item id={`dd-user-tutorial`} key={`dd-user-tutorial`}
+                                    {location.pathname.contains('/search') && <NavDropdown.Item id={`dd-user-tutorial`} key={`dd-user-tutorial`}
                                                       hidden={!getShowTutorialLink()}
                                                       href='#'
                                                       onClick={(e) => deleteTutorialCookies(e)}>
                                         {_t('Show Tutorial')}
-                                    </NavDropdown.Item>
+                                    </NavDropdown.Item>}
                                     <NavDropdown.Item key={`dd-user-jobs`}
                                                       hidden={signoutHidden}
                                                       href='/user/jobs'>
