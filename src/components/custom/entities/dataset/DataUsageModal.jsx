@@ -71,7 +71,7 @@ const DataUsageModal = ({data, filepath}) => {
             </p>
             <Modal size="lg" show={showModal} keyboard={false}>
                 <Modal.Header>
-                    <h2>SenNet Public Data Usage</h2>
+                    <h2 style={{textTransform: "capitalize"}}>SenNet {data.data_access_level} Data Usage</h2>
                 </Modal.Header>
                 <Modal.Body>
                     <h3>
