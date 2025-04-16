@@ -1,0 +1,23 @@
+.smcHolder--left {
+  padding-left: 0;
+}
+
+.smcHolder--left.smcHolder--hasSib {
+  padding-right: calc(var(--bs-gutter-x) * 0.2);
+}
+
+.smcHolder--innerLeft {
+  padding-left: calc(var(--bs-gutter-x) * 0.2);
+}
+
+.smcHolder--right {
+  padding-right: 0;
+}
+
+.smcHolder--right.smcHolder--hasSib {
+  padding-left: calc(var(--bs-gutter-x) * 0.2);
+}
+
+.smcHolder--innerRight {
+  padding-right: calc(var(--bs-gutter-x) * 0.2);
+}
