@@ -178,9 +178,6 @@ export const AppProvider = ({ cache, banners, children }) => {
                     if (page) {
                         window.location = page;
                     }
-                    else {
-                        goToSearch();
-                    }
 
                 } else {
                     router.replace('/', undefined, { shallow: true })

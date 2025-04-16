@@ -3,10 +3,9 @@ import {useRouter} from 'next/router'
 import {useContext, useEffect} from 'react'
 import log from 'loglevel'
 import {getCookie, setCookie} from 'cookies-next'
-import {goToSearch} from '@/components/custom/js/functions'
 import AppContext from '@/context/AppContext'
+import ViewLanding from "@/pages/landing";
 
-const Spinner = dynamic(() => import("@/components/custom/Spinner"))
 const Unauthorized = dynamic(() => import("@/components/custom/layout/Unauthorized"))
 
 
@@ -28,8 +27,6 @@ export default function Home() {
 
                 log.debug(router.query)
                 login()
-            } else {
-                goToSearch()
             }
         }
     }, [router.isReady])
@@ -37,6 +34,6 @@ export default function Home() {
     if (!isLoginPermitted) {
         return <Unauthorized/>
     } else {
-        return <Spinner/>
+        return <ViewLanding />
     }
 }

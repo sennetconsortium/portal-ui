@@ -97,7 +97,7 @@ const AppNavbar = ({hidden, signoutHidden, innerRef}) => {
             className={`sticky-top bg--navBarGrey`}
         >
             <Container fluid={true}>
-                <Navbar.Brand href={APP_ROUTES.search}>
+                <Navbar.Brand href={APP_ROUTES.home}>
                     <img
                         alt={_t("SenNet logo")}
                         src={'/static/sennet-logo.png'}
@@ -113,7 +113,7 @@ const AppNavbar = ({hidden, signoutHidden, innerRef}) => {
                     <Nav className={'me-auto'}>
                         <Nav.Link key={`dd-sennet-home`}
                                   href='https://sennetconsortium.org'>
-                            <span>Web Portal</span>
+                            <span>{_t('SenNet Home')}</span>
                         </Nav.Link>
                         <Nav.Link key={`dd-portal-search`}
                                   href={APP_ROUTES.search}>
@@ -122,7 +122,7 @@ const AppNavbar = ({hidden, signoutHidden, innerRef}) => {
                         <NavDropdown active={false}
                                      variant={'primary'}
                                      align={{lg: 'end'}}
-                                     title="Tools"
+                                     title={_t('Resources')}
                                      id="nav-dropdown--atlas">
                             <NavDropdown.Item key={`dd-ccf-eui`}
                                               href='/ccf-eui'>
