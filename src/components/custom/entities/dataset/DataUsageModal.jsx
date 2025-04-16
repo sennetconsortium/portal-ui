@@ -28,6 +28,7 @@ const DataUsageModal = ({data, filepath}) => {
     const handleClick = () => setChecked(!checked)
 
     const userAgreed = () => {
+        setHasAgreedDUA(true)
         setCookie(DUACookie, true, {sameSite: "Lax"})
         hideModal()
         window.open(filepath, "_blank")
