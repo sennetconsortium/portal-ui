@@ -81,6 +81,34 @@ export const SEARCH_ENTITIES = {
                 isFacetVisible: doesAggregationHaveBuckets('data_class'),
                 transformFunction: getCreationActionRelationName
             },
+            status: {
+                label: 'Status',
+                type: 'value',
+                field: 'status.keyword',
+                isExpanded: false,
+                filterType: 'any',
+                isFilterable: false,
+                facetType: 'term',
+                isAggregationActive: (filters, authState) => {
+                    if (authState.isAdmin) {
+                        const isActiveFunc = doesTermFilterContainValues('entity_type', ['Dataset'])
+                        return isActiveFunc(filters)
+                    }
+                    return false
+                }, isFacetVisible: doesAggregationHaveBuckets('status')
+            },
+            dataset_type: {
+                label: 'Dataset Type',
+                type: 'value',
+                field: 'dataset_type_hierarchy.second_level.keyword',
+                isExpanded: false,
+                filterType: 'any',
+                isFilterable: false,
+                facetType: 'hierarchy',
+                groupByField: 'dataset_type_hierarchy.first_level.keyword',
+                isAggregationActive: true,
+                isFacetVisible: doesAggregationHaveBuckets('dataset_type')
+            },
             has_qa_derived_dataset: {
                 label: 'Has QA Derived Datasets',
                 type: 'value',
@@ -97,18 +125,6 @@ export const SEARCH_ENTITIES = {
                     return false
                 },
                 isFacetVisible: doesAggregationHaveBuckets('has_qa_derived_dataset')
-            },
-            dataset_type: {
-                label: 'Dataset Type',
-                type: 'value',
-                field: 'dataset_type_hierarchy.second_level.keyword',
-                isExpanded: false,
-                filterType: 'any',
-                isFilterable: false,
-                facetType: 'hierarchy',
-                groupByField: 'dataset_type_hierarchy.first_level.keyword',
-                isAggregationActive: true,
-                isFacetVisible: doesAggregationHaveBuckets('dataset_type')
             },
             'sources.source_type': {
                 label: 'Source Type',
@@ -129,7 +145,7 @@ export const SEARCH_ENTITIES = {
                 filterType: 'any',
                 isFilterable: false,
                 facetType: 'hierarchy',
-                groupByField: 'organ_hierarchy.keyword', 
+                groupByField: 'organ_hierarchy.keyword',
                 isHierarchyOption: (option) => {
                     return lateralOrgans.includes(option)
                 },
@@ -239,17 +255,6 @@ export const SEARCH_ENTITIES = {
                     return false
                 },
                 isFacetVisible: doesAggregationHaveBuckets('has_all_published_datasets')
-            },
-            status: {
-                label: 'Status',
-                type: 'value',
-                field: 'status.keyword',
-                isExpanded: false,
-                filterType: 'any',
-                isFilterable: false,
-                facetType: 'term',
-                isAggregationActive: true,
-                isFacetVisible: doesAggregationHaveBuckets('status')
             },
             group_name: {
                 label: 'Data Provider Group',
