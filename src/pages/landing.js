@@ -5,6 +5,8 @@ import AppContext from "@/context/AppContext";
 import dynamic from "next/dynamic";
 import {Card, Container, Row, Col, Button} from 'react-bootstrap';
 import AppFooter from "@/components/custom/layout/AppFooter";
+import LnkIc from "@/components/custom/layout/LnkIc";
+import {goIntent, goToSearch} from "@/components/custom/js/functions";
 
 const Header = dynamic(() => import("@/components/custom/layout/Header"))
 
@@ -15,10 +17,10 @@ function ViewLanding({children}) {
     useEffect(() => {
     }, [])
 
-    const SiteMapCard = ({title, body, children}) => {
+    const SiteMapCard = ({title, body, children, onClick}) => {
         return (
             <>
-                <Card className='mt-4 p-3'>
+                <Card className='mt-4 p-3' onClick={onClick}>
                     <Card.Title>{title}</Card.Title>
                     <Card.Body>
                         {body}
@@ -45,15 +47,15 @@ function ViewLanding({children}) {
 
                <section aria-label='Site Map' className='sui-layout-body__inner'>
                    <Container fluid>
-                       <Row>
+                       <Row className={'smcFlex'}>
                            <Col lg={3} className='smcHolder smcHolder--left smcHolder--hasSib'>
                                <SiteMapCard title={<h4>Discover</h4>}
                                             body={<p>Investigate SenNet data by entity type or through its metadata library.</p>}>
                                    <Row className="justify-content-md-center text-center">
-                                       <Col lg={6}><Button variant="outline-primary" className={'w-100'}>Search Data</Button>
+                                       <Col lg={6}><Button variant="outline-primary" className={'w-100'} href={'/search'}>Search Data</Button>
                                           </Col>
                                        <Col lg={6}>
-                                           <Button variant="outline-primary" className={'w-100'}>Discover Metadata</Button></Col>
+                                           <Button variant="outline-primary" className={'w-100'} href={'/discover/metadata'}>Discover Metadata</Button></Col>
                                    </Row>
                                </SiteMapCard>
                            </Col>
@@ -62,7 +64,7 @@ function ViewLanding({children}) {
                                <SiteMapCard title={<h4>Quick Start</h4>}
                                             body={<p>Learn how to navigate the SenNet Consortium data portal with this step-by-step guide.</p>}>
                                    <div>
-                                       <Button variant="primary" className={'w-50'}>Guide Me</Button>
+                                       <Button variant="primary" className={'w-50'} href={'/search?start-tutorial=1'}>Guide Me</Button>
                                    </div>
                                </SiteMapCard>
                            </Col>
@@ -80,7 +82,7 @@ function ViewLanding({children}) {
                                <SiteMapCard title={<h4>Members</h4>}
                                             body={<p>Explore resources available to SenNet members. <br/> <br/></p>}>
                                    <div className={'text-center'}>
-                                       <Button variant="primary" className={'w-75 mx-auto'}>Members Portal</Button>
+                                       <Button variant="primary" className={'w-75 mx-auto'} href={'https://sennetconsortium.org/members/'}>Members Portal</Button>
                                    </div>
                                </SiteMapCard>
                            </Col>
@@ -102,25 +104,30 @@ function ViewLanding({children}) {
 
                <section aria-label='Additional Site Areas' className='sui-layout-body__inner'>
                    <Container fluid>
-                       <Row>
-                           <Col lg={3} className='smcHolder smcHolder--left'>
+                       <Row className='smcFlex'>
+                           <Col lg={3} className='smcHolder smcHolder--hasHover smcHolder--left'>
                                <SiteMapCard title={<h4>Search Data</h4>}
-                                            body={<p>Refine your results with faceted search that support flexible query refinement.</p>}>
-                               </SiteMapCard>
+                                            body={<p>Refine your results with faceted search that support flexible query refinement.</p>}
+                                            onClick={() => goToSearch()} />
                            </Col>
-                           <Col lg={3} className='smcHolder'>
+                           <Col lg={3} className='smcHolder smcHolder--hasHover'>
                                <SiteMapCard title={<h4>Explore Organs</h4>}
-                                            body={<p>Tour senescent cell biomarkers organized by organ type.</p>}>
-                               </SiteMapCard>
+                                            body={<p>Tour senescent cell biomarkers organized by organ type.</p>}
+                                            onClick={() => goIntent('organs')} />
                            </Col>
-                           <Col lg={3} className='smcHolder'>
+                           <Col lg={3} className='smcHolder smcHolder--hasHover'>
                                <SiteMapCard title={<h4>Exploration User Interface (EUI)</h4>}
-                                            body={<p>Run visual searches of SenNet data by organ, donor, biomarker, or cell type.</p>}>
-                               </SiteMapCard>
+                                            body={<p>Run visual searches of SenNet data by organ, donor, biomarker, or cell type.</p>}
+                                            onClick={() => goIntent('/ccf-eui') } />
                            </Col>
                            <Col lg={3} className='smcHolder smcHolder--right'>
                                <SiteMapCard title={<h4>Take a deeper dive to</h4>}
-                                            body={<p>Read on to learn more about entity registration, APIs, libraries, tools, and a data submission guide.</p>}>
+                                            body={<p>Read on to learn more about&nbsp;
+                                                <LnkIc title='entity registration' href={'https://docs.sennetconsortium.org/registration'} />,
+                                                <LnkIc title='APIs' href={'https://docs.sennetconsortium.org/apis'} />,&nbsp;
+                                                <LnkIc title='libraries' href={'https://docs.sennetconsortium.org/libraries'} />,&nbsp;
+                                                <LnkIc title='tools' href={'https://docs.sennetconsortium.org/libraries/ingest-validation-tools/'} />, and a&nbsp;
+                                                <LnkIc title='data submission guide' href={'https://docs.sennetconsortium.org/data-submission'} />.</p>}>
                                </SiteMapCard>
                            </Col>
                        </Row>

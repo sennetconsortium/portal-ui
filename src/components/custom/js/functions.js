@@ -432,7 +432,8 @@ export function getClickableLink(link) {
 }
 
 export function goIntent(route, fn = 'assign') {
-    window.location[fn](getRootURL() + APP_ROUTES[route])
+    const path = APP_ROUTES[route] || route
+    window.location[fn](path.contains('//') ? path : getRootURL() + path)
 }
 
 export function goToSearch() {

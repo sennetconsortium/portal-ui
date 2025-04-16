@@ -1,5 +1,21 @@
+.smcFlex {
+  align-items: stretch;
+  .card {
+    min-height: 87%;
+  }
+}
+
 .smcHolder--left {
   padding-left: 0;
+}
+
+.smcHolder--hasHover {
+  cursor: pointer;
+  .card {
+    &:hover {
+      box-shadow: aliceblue 7px 5px;
+    }
+  }
 }
 
 .smcHolder--left.smcHolder--hasSib {

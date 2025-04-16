@@ -175,7 +175,7 @@ export const AppProvider = ({ cache, banners, children }) => {
                     }
                     // Redirect to home page without query string
                     const page = getLocalItemWithExpiry(pageKey)
-                    if (page) {
+                    if (page.contains('edit')) {
                         window.location = page;
                     }
 
