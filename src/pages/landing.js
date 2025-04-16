@@ -7,6 +7,7 @@ import {Card, Container, Row, Col, Button} from 'react-bootstrap';
 import AppFooter from "@/components/custom/layout/AppFooter";
 import LnkIc from "@/components/custom/layout/LnkIc";
 import {goIntent, goToSearch} from "@/components/custom/js/functions";
+import SenNetStats from "@/components/SenNetStats";
 
 const Header = dynamic(() => import("@/components/custom/layout/Header"))
 
@@ -54,17 +55,17 @@ function ViewLanding({children}) {
                                    <Row className="justify-content-md-center text-center">
                                        <Col lg={6}><Button variant="outline-primary" className={'w-100'} href={'/search'}>Search Data</Button>
                                           </Col>
-                                       <Col lg={6}>
+                                       <Col lg={6} className={'mt-sm-2'}>
                                            <Button variant="outline-primary" className={'w-100'} href={'/discover/metadata'}>Discover Metadata</Button></Col>
                                    </Row>
                                </SiteMapCard>
                            </Col>
 
-                           <Col lg={3} className='smcHolder--innerLeft'>
+                           <Col lg={3} className='smcHolder smcHolder--innerLeft'>
                                <SiteMapCard title={<h4>Quick Start</h4>}
                                             body={<p>Learn how to navigate the SenNet Consortium data portal with this step-by-step guide.</p>}>
-                                   <div>
-                                       <Button variant="primary" className={'w-50'} onClick={() => {
+                                   <div className='text-sm-center'>
+                                       <Button variant="primary" className={'w-50 w-75-sm'} onClick={() => {
                                            deleteTutorialCookies()
                                            goIntent('/search?tutorial=1')
                                        }}>Guide Me</Button>
@@ -72,7 +73,7 @@ function ViewLanding({children}) {
                                </SiteMapCard>
                            </Col>
 
-                           <Col lg={3} className='smcHolder--innerRight'>
+                           <Col lg={3} className='smcHolder smcHolder--innerRight'>
                                <SiteMapCard title={<h4>SenNet Consortium</h4>}
                                             body={<p>Stay up to date on the latest news regarding the SenNet project.</p>}>
                                    <div className={'text-center'}>
@@ -93,14 +94,14 @@ function ViewLanding({children}) {
                    </Container>
                </section>
 
+               <SenNetStats />
+
                <section aria-label={'Data Use Guidelines'} className='sui-layout-body__inner'>
                    <Card className='mt-4 p-3'>
                        <Card.Title><h2>Data Use Guidelines</h2></Card.Title>
                        <Card.Body>
-                           <p> The SenNet Consortium has established comprehensive data use guidelines to ensure ethical, effective, and&nbsp;
-                               <a href='#'>FAIR</a> utilization of its data by both internal members and external researchers. For more information,
-                               read our <a href='#'>Data Use Policy</a>.
-                            </p>
+                           <p> The SenNet Consortium has established comprehensive data use guidelines to ensure ethical, effective, and <a href='#'>FAIR</a> utilization of its data by both internal members and external researchers. For more information, read our <a href='#'>Data Use Policy</a>.
+                           </p>
                        </Card.Body>
                    </Card>
                </section>

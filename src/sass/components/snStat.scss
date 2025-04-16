@@ -1,0 +1,50 @@
+@use "../general/mixins";
+
+.snStat {
+  width: calc(100%/2);
+  cursor: pointer;
+  flex: none;
+
+  @include mixins.lg {
+    width: calc(100%/6);
+  }
+
+  &__num {
+    display: block;
+  }
+  .row {
+    flex: 1;
+    > div {
+      padding: 0;
+    }
+    .col-lg-8 {
+      text-align: left;
+    }
+  }
+  .shape {
+    &:after {
+      margin-top:10px;
+    }
+    &.shape--diamond:after {
+      width: 60px;
+      height: 60px;
+    }
+    &.shape--circle:after {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+    }
+  }
+
+  .shape-name {
+    display: none;
+  }
+}
+
+.snStatRow {
+  width: 97vw;
+}
+
+.snLanding {
+  width: 100vw;
+}

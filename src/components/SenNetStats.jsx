@@ -1,12 +1,65 @@
 import {useContext, useEffect, useState} from 'react'
 import PropTypes from 'prop-types'
+import {Card, Container, Row, Col, Button} from 'react-bootstrap';
+import {getSubtypeProvenanceShape, goIntent} from "@/components/custom/js/functions";
 
 function SenNetStats({children}) {
+    const entities = [
+        {
+            color: 'yellow',
+            name: 'Source'
+        },
+        {
+            name: 'Sample'
+        },
+        {
+            color: 'green',
+            name: 'Dataset'
+        },
+        {
+            name: 'Organ'
+        },
+        {
+            name: 'Publication'
+        },
+        {
+            name: 'Collection'
+        },
+    ]
+
+    const getStats = () => {
+        let res = []
+        for (let e of entities) {
+           res.push(
+               <Col className='snStat' key={e.name} onClick={() => goIntent(`/search?addFilters=entity_type=${e.name}`)}>
+                    <Row>
+                        <Col lg={4}>
+                            <div>
+                                {getSubtypeProvenanceShape(e.name, null, 'lg')}
+                            </div>
+                        </Col>
+                        <Col lg={8}>
+                            <span className={'fs-1 snStat__num'}>{Math.floor(Math.random() * 1000)}</span>
+                            <h5>{e.name}s</h5>
+                        </Col>
+                    </Row>
+                </Col>
+           )
+        }
+        return res
+    }
     useEffect(() => {
     }, [])
 
     return (
-        <div className={`c-SenNetStats`}>{children}</div>
+
+        <section aria-label='Statistics' className='sui-layout-body__inner'>
+            <Container className='card mt-4 bg--entityWhite' fluid>
+                <Row className={'snStatRow p-2'}>
+                    {getStats()}
+                </Row>
+            </Container>
+        </section>
     )
 }
 
