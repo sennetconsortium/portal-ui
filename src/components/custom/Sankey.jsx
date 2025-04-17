@@ -71,7 +71,7 @@ function SankeyPage() {
         <div className={'c-sankey'}>
             {filters && <react-consortia-sankey ref={xacSankey} options={btoa(JSON.stringify({
                 useShadow: true,
-                styleSheetPath: 'https://rawcdn.githack.com/x-atlas-consortia/data-sankey/1.0.5a/src/lib/xac-sankey.css',
+                styleSheetPath: 'https://rawcdn.githack.com/x-atlas-consortia/data-sankey/1.0.5/src/lib/xac-sankey.css',
                 validFilterMap: {
                     dataset_type: 'dataset_type_hierarchy',
                     source_type: 'dataset_source_type'
