@@ -3,6 +3,8 @@ import Spinner from "@/components/custom/Spinner"
 import {eq} from "@/components/custom/js/functions";
 import { useRouter } from 'next/router'
 import {getCookie} from "cookies-next";
+import { ShimmerThumbnail } from "react-shimmer-effects";
+import SenNetAlert from "@/components/SenNetAlert";
 
 function SankeyPage() {
 
@@ -84,7 +86,9 @@ function SankeyPage() {
                 }
             }))
             } /> }
-            {loading && <Spinner text={<>{loadingMsg}</>} />}
+
+            {loading && <ShimmerThumbnail className={'mt-5'} rounded />}
+            {loadingMsg && <SenNetAlert variant={'warning'} text={loadingMsg}></SenNetAlert>}
 
         </div>
     )
