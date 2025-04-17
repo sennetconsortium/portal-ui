@@ -477,6 +477,65 @@ export const getOrganDataTypeQuantities = async (organCodes) => {
     );
 }
 
+export const getOrganQuantities = async () => {
+    const body = {
+        size: 0,
+        query: {
+            bool: {
+                filter: {
+                    term: {
+                        'entity_type.keyword': 'Sample',
+                    },
+                }
+            },
+        },
+        aggs: {
+            'organ': {
+                terms: {
+                    field: 'organ.keyword',
+                    size: 40,
+                },
+            },
+        },
+    };
+    const content = await fetchSearchAPIEntities(body);
+    if (!content) {
+        return null;
+    }
+    return content.aggregations['organ'].buckets.reduce(
+        (acc, bucket) => {
+            acc[bucket.key] = bucket.doc_count;
+            return acc;
+        },
+        {}
+    );
+};
+
+export const getEntityTypeQuantities = async () => {
+    const body = {
+        size: 0,
+        aggs: {
+            'entity_type': {
+                terms: {
+                    field: 'entity_type.keyword',
+                    size: 1000,
+                },
+            },
+        },
+    };
+    const content = await fetchSearchAPIEntities(body);
+    if (!content) {
+        return null;
+    }
+    return content.aggregations['entity_type'].buckets.reduce(
+        (acc, bucket) => {
+            acc[bucket.key] = bucket.doc_count;
+            return acc;
+        },
+        {}
+    );
+};
+
 export const getSamplesByOrgan = async (organCodes) => {
     const body = {
         query: {

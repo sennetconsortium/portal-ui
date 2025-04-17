@@ -1,9 +1,11 @@
-import {useContext, useEffect, useState} from 'react'
+import {useEffect, useState} from 'react'
 import PropTypes from 'prop-types'
-import {Card, Container, Row, Col, Button} from 'react-bootstrap';
+import {Container, Row, Col} from 'react-bootstrap';
 import {getSubtypeProvenanceShape, goIntent} from "@/components/custom/js/functions";
+import {getEntityTypeQuantities, getOrganQuantities} from "@/lib/services";
 
 function SenNetStats({children}) {
+    const [stats, setStats] = useState(null)
     const entities = [
         {
             color: 'yellow',
@@ -42,7 +44,7 @@ function SenNetStats({children}) {
 
     const getStats = () => {
         let res = []
-        for (let e of entities) {
+        for (let e of stats) {
            res.push(
                <Col className='snStat' key={e.name} onClick={() => goIntent(`/search?addFilters=entity_type=${e.name}`)}>
                     <Row>
@@ -52,8 +54,8 @@ function SenNetStats({children}) {
                             </div>
                         </Col>
                         <Col lg={8}>
-                            <span data-num={Math.floor(Math.random() * 1000)} data-js-appevent={'animVal'} className={'fs-1 snStat__num'}></span>
-                            <h5>{e.name}s</h5>
+                            <span data-num={e.count} data-js-appevent={'animVal'} className={'fs-1 snStat__num'}></span>
+                            <h5>{e.name}{e.count > 1 ? 's': ''}</h5>
                         </Col>
                     </Row>
                 </Col>
@@ -61,24 +63,43 @@ function SenNetStats({children}) {
         }
         return res
     }
-    useEffect(() => {
+
+    const loadStats = async () => {
+        const entityTypesCounts = await getEntityTypeQuantities()
+        const organsCounts = await getOrganQuantities()
+
+        let organs = 0
+        for (let o in organsCounts) {
+            organs += organsCounts[o]
+        }
+
+        for (let e of entities) {
+            e.count = entityTypesCounts[e.name] || organs
+        }
+        console.log(entities, organs)
+        setStats(entities)
         document.addEventListener(
             "animVal",
             (e) => {
                 const el = e.detail.el
-                animateValue(el, 0, Number(el.getAttribute('data-num')), 5000)
+                animateValue(el, 0, Number(el.getAttribute('data-num')), 2000)
             },
             false,
         )
+    }
+
+    useEffect(() => {
+        loadStats()
+
     }, [])
 
     return (
 
         <section aria-label='Statistics' className='sui-layout-body__inner'>
             <Container className='card mt-4 bg--entityWhite' fluid>
-                <Row className={'snStatRow'}>
+                {stats && <Row className={'snStatRow'}>
                     {getStats()}
-                </Row>
+                </Row>}
             </Container>
         </section>
     )

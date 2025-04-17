@@ -1,7 +1,7 @@
 @use "../general/mixins";
 
 .snStat {
-  width: calc(100%/2);
+  width: 45%;
   cursor: pointer;
   flex: none;
 
@@ -11,6 +11,10 @@
 
   @include mixins.md-xlg-mx {
     width: calc(100%/3);
+  }
+
+  @include mixins.md-mx {
+    padding: 30px 0;
   }
 
   &__num {
