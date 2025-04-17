@@ -12,11 +12,21 @@ export default function MetadataTable({data, metadata, mappedMetadata, metadataK
             name: 'Key',
             selector: row => row.key,
             sortable: true,
+            wrap: true,
+            style: {
+                'padding-top': '16px',
+                'padding-bottom': '16px',
+            }
         },
         {
             name: 'Value',
             selector: row => row.value,
             sortable: true,
+            wrap: true,
+            style: {
+                'padding-top': '16px',
+                'padding-bottom': '16px',
+            }
         }
     ];
 
