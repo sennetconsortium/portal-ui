@@ -32,7 +32,7 @@
     "sass": "^1.86.0",
     "search-ui": "file:search-ui",
     "vitessce": "^3.5.7",
-    "xac-sankey": "github:x-atlas-consortia/data-sankey#1.0.5"
+    "xac-sankey": "github:x-atlas-consortia/data-sankey#1.0.5a"
   },
   "devDependencies": {
     "@babel/cli": "^7.24.6",
