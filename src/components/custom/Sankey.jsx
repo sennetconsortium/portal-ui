@@ -2,10 +2,12 @@ import {useEffect, useRef, useState} from 'react'
 import Spinner from "@/components/custom/Spinner"
 import {eq} from "@/components/custom/js/functions";
 import { useRouter } from 'next/router'
+import {getCookie} from "cookies-next";
 
 function SankeyPage() {
 
     const router = useRouter()
+    const [token, setToken] = useState(null)
     const xacSankey = useRef(null)
     const [loading, setLoading] = useState(true)
     const [loadingMsg, setLoadingMsg] = useState('')
@@ -45,6 +47,7 @@ function SankeyPage() {
     }, [router.isReady, router.query])
 
     useEffect(()=>{
+        setToken(getCookie('groups_token'))
         // web components needs global window
         import('xac-sankey')
 
@@ -72,6 +75,9 @@ function SankeyPage() {
             {filters && <react-consortia-sankey ref={xacSankey} options={btoa(JSON.stringify({
                 useShadow: true,
                 styleSheetPath: 'https://rawcdn.githack.com/x-atlas-consortia/data-sankey/1.0.5/src/lib/xac-sankey.css',
+                api: {
+                    token
+                },
                 validFilterMap: {
                     dataset_type: 'dataset_type_hierarchy',
                     source_type: 'dataset_source_type'
