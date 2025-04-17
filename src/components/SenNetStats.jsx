@@ -76,7 +76,6 @@ function SenNetStats({children}) {
         for (let e of entities) {
             e.count = entityTypesCounts[e.name] || organs
         }
-        console.log(entities, organs)
         setStats(entities)
         document.addEventListener(
             "animVal",
@@ -100,6 +99,7 @@ function SenNetStats({children}) {
                 {stats && <Row className={'snStatRow'}>
                     {getStats()}
                 </Row>}
+                {children}
             </Container>
         </section>
     )

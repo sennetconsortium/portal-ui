@@ -8,6 +8,7 @@ import AppFooter from "@/components/custom/layout/AppFooter";
 import LnkIc from "@/components/custom/layout/LnkIc";
 import {goIntent, goToSearch} from "@/components/custom/js/functions";
 import SenNetStats from "@/components/SenNetStats";
+import Sankey from "@/components/custom/Sankey";
 
 const Header = dynamic(() => import("@/components/custom/layout/Header"))
 
@@ -92,6 +93,10 @@ function ViewLanding({children}) {
                            </Col>
                        </Row>
                    </Container>
+               </section>
+
+               <section aria-label='Data Sankey' className='sui-layout-body__inner'>
+                   <Sankey />
                </section>
 
                <SenNetStats />

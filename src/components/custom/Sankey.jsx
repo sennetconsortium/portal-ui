@@ -1,12 +1,15 @@
 import {useEffect, useRef, useState} from 'react'
 import Spinner from "@/components/custom/Spinner"
 import {eq} from "@/components/custom/js/functions";
+import { useRouter } from 'next/router'
 
 function SankeyPage() {
 
+    const router = useRouter()
     const xacSankey = useRef(null)
     const [loading, setLoading] = useState(true)
     const [loadingMsg, setLoadingMsg] = useState('')
+    const [filters, setFilters] = useState(null)
 
     const handleLoading = (ctx, msg) => {
         setLoading(msg ? true : ctx.isLoading)
@@ -35,6 +38,11 @@ function SankeyPage() {
         }
     }
 
+    useEffect(() => {
+        if (!router.isReady) return
+        setFilters(router.query)
+    }, [router.isReady, router.query])
+
     useEffect(()=>{
         // web components needs global window
         import('xac-sankey')
@@ -60,16 +68,16 @@ function SankeyPage() {
 
     return (
         <div className={'c-sankey'}>
-            <react-consortia-sankey ref={xacSankey} options={btoa(JSON.stringify({
+            {filters && <react-consortia-sankey ref={xacSankey} options={btoa(JSON.stringify({
                 useShadow: true,
-                styleSheetPath: '/css/xac-sankey.css?v='+(new Date()).getMilliseconds(),
+                styleSheetPath: 'https://rawcdn.githack.com/x-atlas-consortia/data-sankey/1.0.5a/src/lib/xac-sankey.css',
                 validFilterMap: {
                     dataset_type: 'dataset_type_hierarchy',
                     source_type: 'dataset_source_type'
                 }
             }))
-            } />
-            {loading && <Spinner tip={loadingMsg} />}
+            } /> }
+            {loading && <Spinner text={<>{loadingMsg}</>} />}
 
         </div>
     )

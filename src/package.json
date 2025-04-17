@@ -31,7 +31,8 @@
     "react-toastify": "^9.1.1",
     "sass": "^1.86.0",
     "search-ui": "file:search-ui",
-    "vitessce": "^3.5.7"
+    "vitessce": "^3.5.7",
+    "xac-sankey": "github:x-atlas-consortia/data-sankey#1.0.5"
   },
   "devDependencies": {
     "@babel/cli": "^7.24.6",
