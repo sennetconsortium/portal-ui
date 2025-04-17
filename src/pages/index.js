@@ -4,7 +4,7 @@ import {useContext, useEffect} from 'react'
 import log from 'loglevel'
 import {getCookie, setCookie} from 'cookies-next'
 import AppContext from '@/context/AppContext'
-import ViewLanding from "@/pages/landing";
+import ViewHome from "@/pages/home";
 
 const Unauthorized = dynamic(() => import("@/components/custom/layout/Unauthorized"))
 
@@ -34,6 +34,6 @@ export default function Home() {
     if (!isLoginPermitted) {
         return <Unauthorized/>
     } else {
-        return <ViewLanding />
+        return <ViewHome />
     }
 }

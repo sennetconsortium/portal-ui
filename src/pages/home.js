@@ -12,7 +12,7 @@ import Sankey from "@/components/custom/Sankey";
 
 const Header = dynamic(() => import("@/components/custom/layout/Header"))
 
-function ViewLanding({children}) {
+function ViewHome({children}) {
 
     const {isRegisterHidden, deleteTutorialCookies, cache} = useContext(AppContext)
 
@@ -105,7 +105,7 @@ function ViewLanding({children}) {
                    <Card className='mt-4 p-3'>
                        <Card.Title><h2>Data Use Guidelines</h2></Card.Title>
                        <Card.Body>
-                           <p> The SenNet Consortium has established comprehensive data use guidelines to ensure ethical, effective, and <a href='#'>FAIR</a> utilization of its data by both internal members and external researchers. For more information, read our <LnkIc title={'Data Use Policy'} href={'https://sennetconsortium.org/external-data-use/'} />.
+                           <p> The SenNet Consortium has established comprehensive data use guidelines to ensure ethical, effective, and <LnkIc href={'https://www.go-fair.org/fair-principles/'} title='FAIR' /> utilization of its data by both internal members and external researchers. For more information, read our <LnkIc title={'Data Use Policy'} href={'https://sennetconsortium.org/external-data-use/'} />.
                            </p>
                        </Card.Body>
                    </Card>
@@ -150,8 +150,8 @@ function ViewLanding({children}) {
     )
 }
 
-ViewLanding.propTypes = {
+ViewHome.propTypes = {
     children: PropTypes.node
 }
 
-export default ViewLanding
+export default ViewHome
