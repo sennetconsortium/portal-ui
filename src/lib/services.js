@@ -514,6 +514,22 @@ export const getOrganQuantities = async () => {
 export const getEntityTypeQuantities = async () => {
     const body = {
         size: 0,
+        query: {
+            bool: {
+                must_not: [
+                    {
+                        term: {
+                            'dataset_category.keyword': 'codcc-processed'
+                        }
+                    },
+                    {
+                        term: {
+                            'dataset_category.keyword': 'lab-processed'
+                        }
+                    }
+                ]
+            },
+        },
         aggs: {
             'entity_type': {
                 terms: {
