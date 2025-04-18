@@ -30,11 +30,10 @@ function SankeyPage() {
                 },
                 onDataBuildCallback: () => adapter.onDataBuildCallback(),
                 onNodeBuildCssCallback: (d) => {
-                    if (eq(d.columnName, el.validFilterMap.dataset_type)) {
-                        const assay = adapter.captureByKeysValue({matchKey: d.columnName, matchValue: d.name, keepKey: 'dataset_type_description'}, el.rawData)
-                        return assay.length <= 0 ? 'c-sankey__node--default' : ''
-                    }
-                    return ''
+                    return adapter.onNodeBuildCssCallback(d)
+                },
+                onLinkBuildCssCallback: (d) => {
+                    return adapter.onLinkBuildCssCallback(d)
                 },
                 onLinkClickCallback: (e, d) => {
                     e.preventDefault()
