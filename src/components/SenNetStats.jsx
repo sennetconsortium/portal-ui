@@ -2,7 +2,7 @@ import {useEffect, useState} from 'react'
 import PropTypes from 'prop-types'
 import {Container, Row, Col} from 'react-bootstrap';
 import {eq, getSubtypeProvenanceShape, goIntent} from "@/components/custom/js/functions";
-import {getEntityTypeQuantities, getOrganQuantities} from "@/lib/services";
+import {getEntityTypeQuantities, getOrganQuantities, getPrimariesQuantities} from "@/lib/services";
 
 function SenNetStats({children}) {
     const [stats, setStats] = useState(null)
@@ -78,6 +78,8 @@ function SenNetStats({children}) {
     const loadStats = async () => {
         const entityTypesCounts = await getEntityTypeQuantities()
         const organsCounts = await getOrganQuantities()
+        const primaryCounts = await getPrimariesQuantities()
+        entityTypesCounts['Dataset'] = primaryCounts['Dataset']
 
         let organs = 0
         for (let o in organsCounts) {
