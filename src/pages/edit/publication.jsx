@@ -258,14 +258,14 @@ export default function EditPublication() {
                                                      controlId='title' value={data.title}
                                                      isRequired={true}
                                                      onChange={onChange}
-                                                     text={<>The title of the publication.</>}/>
+                                                     popoverHelpText={<>The title of the publication.</>}/>
 
                                     {/*/!*Venue*!/*/}
                                     <EntityFormGroup label='Venue' controlId='publication_venue'
                                                      value={data.publication_venue}
                                                      isRequired={true}
                                                      onChange={onChange}
-                                                     text={<>The venue of the publication, journal, conference, preprint server, etc.</>}/>
+                                                     popoverHelpText={<>The venue of the publication, journal, conference, preprint server, etc.</>}/>
 
                                     <div className='row'>
                                         <div className='col-md-3'>
@@ -273,10 +273,10 @@ export default function EditPublication() {
                                             <EntityFormGroup label='Publication Date' controlId='publication_date'
                                                              isRequired={true}
                                                              type={'date'}
-                                                             placeholder={'mm/dd/YYYY'}
+                                                             otherInputProps={{placeholder:'mm/dd/YYYY'}}
                                                              value={data.publication_date}
                                                              onChange={onChange}
-                                                             text={<>The date of the publication.</>}/>
+                                                             popoverHelpText={<>The date of the publication.</>}/>
                                         </div>
                                     </div>
 
@@ -320,19 +320,19 @@ export default function EditPublication() {
                                                      value={data.publication_url}
                                                      isRequired={true}
                                                      onChange={onChange}
-                                                     text={<>The URL at the publishers server for print/pre-print (http(s)://[alpha-numeric-string].[alpha-numeric-string].[...]</>}/>
+                                                     popoverHelpText={<>The URL at the publishers server for print/pre-print (http(s)://[alpha-numeric-string].[alpha-numeric-string].[...]</>}/>
 
                                     {/*/!*Publication DOI*!/*/}
                                     <EntityFormGroup label='Publication DOI' controlId='publication_doi'
                                                      value={data.publication_doi}
                                                      onChange={onChange}
-                                                     text={<>The doi of the publication. (##.####/[alpha-numeric-string])</>}/>
+                                                     popoverHelpText={<>The doi of the publication. (##.####/[alpha-numeric-string])</>}/>
 
                                     {/*/!*OMAP DOI*!/*/}
                                     <EntityFormGroup label='OMAP DOI' controlId='omap_doi'
                                                      value={data.omap_doi}
                                                      onChange={onChange}
-                                                     text={<>A DOI pointing to an Organ Mapping Antibody Panel relevant to this publication</>}/>
+                                                     popoverHelpText={<>A DOI pointing to an Organ Mapping Antibody Panel relevant to this publication</>}/>
 
 
                                     {/*/!*Issue*!/*/}
@@ -340,27 +340,27 @@ export default function EditPublication() {
                                                      type={'number'}
                                                      value={data.issue}
                                                      onChange={onChange}
-                                                     text={<>The issue number of the journal that it was published in.</>}/>
+                                                     popoverHelpText={<>The issue number of the journal that it was published in.</>}/>
 
                                     {/*/!*Volume*!/*/}
                                     <EntityFormGroup label='Volume Number' controlId='volume'
                                                      type={'number'}
                                                      value={data.volume}
                                                      onChange={onChange}
-                                                     text={<>The volume number of a journal that it was published in.</>}/>
+                                                     popoverHelpText={<>The volume number of a journal that it was published in.</>}/>
 
                                     {/*/!*Pages or Article Number*!/*/}
                                     <EntityFormGroup label='Pages or Article Number' controlId='pages_or_article_num'
                                                      value={data.pages_or_article_num}
                                                      onChange={onChange}
-                                                     text={<>The pages or the article number in the publication journal e.g., "23", "23-49", "e1003424.</>}/>
+                                                     popoverHelpText={<>The pages or the article number in the publication journal e.g., "23", "23-49", "e1003424.</>}/>
 
 
                                     {/*/!*Description*!/*/}
                                     <EntityFormGroup label='Abstract' type='textarea' controlId='description'
                                                      value={data.description}
                                                      onChange={onChange}
-                                                     text={<>An abstract publicly available when the <code>Publication</code> is published.  This will be included with the DOI information of the published <code>Publication</code>.</>}/>
+                                                     popoverHelpText={<>An abstract publicly available when the <code>Publication</code> is published.  This will be included with the DOI information of the published <code>Publication</code>.</>}/>
 
 
 

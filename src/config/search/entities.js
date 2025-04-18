@@ -7,7 +7,7 @@ import {
     getSearchEndPoint,
     isDateFacetVisible
 } from '../config';
-import { getUBKGFullName } from '@/components/custom/js/functions';
+import {getCreationActionRelationName, getUBKGFullName} from '@/components/custom/js/functions';
 
 const connector = new SearchAPIConnector({
     indexName: getEntitiesIndex(),
@@ -66,6 +66,49 @@ export const SEARCH_ENTITIES = {
                 isAggregationActive: doesTermFilterContainValues('entity_type', ['Sample']),
                 isFacetVisible: doesAggregationHaveBuckets('sample_category')
             },
+            data_class: {
+                label: 'Data Class',
+                type: 'value',
+                field: 'creation_action.keyword',
+                isExpanded: false,
+                filterType: 'any',
+                isFilterable: false,
+                facetType: 'term',
+                isAggregationActive: (filters) => {
+                    const isActiveFunc = doesTermFilterContainValues('entity_type', ['Dataset'])
+                    return isActiveFunc(filters)
+                },
+                isFacetVisible: doesAggregationHaveBuckets('data_class'),
+                transformFunction: getCreationActionRelationName
+            },
+            status: {
+                label: 'Status',
+                type: 'value',
+                field: 'status.keyword',
+                isExpanded: false,
+                filterType: 'any',
+                isFilterable: false,
+                facetType: 'term',
+                isAggregationActive: (filters, authState) => {
+                    if (authState.isAdmin) {
+                        const isActiveFunc = doesTermFilterContainValues('entity_type', ['Dataset'])
+                        return isActiveFunc(filters)
+                    }
+                    return false
+                }, isFacetVisible: doesAggregationHaveBuckets('status')
+            },
+            dataset_type: {
+                label: 'Dataset Type',
+                type: 'value',
+                field: 'dataset_type_hierarchy.second_level.keyword',
+                isExpanded: false,
+                filterType: 'any',
+                isFilterable: false,
+                facetType: 'hierarchy',
+                groupByField: 'dataset_type_hierarchy.first_level.keyword',
+                isAggregationActive: true,
+                isFacetVisible: doesAggregationHaveBuckets('dataset_type')
+            },
             has_qa_derived_dataset: {
                 label: 'Has QA Derived Datasets',
                 type: 'value',
@@ -82,18 +125,6 @@ export const SEARCH_ENTITIES = {
                     return false
                 },
                 isFacetVisible: doesAggregationHaveBuckets('has_qa_derived_dataset')
-            },
-            dataset_type: {
-                label: 'Dataset Type',
-                type: 'value',
-                field: 'dataset_type_hierarchy.second_level.keyword',
-                isExpanded: false,
-                filterType: 'any',
-                isFilterable: false,
-                facetType: 'hierarchy',
-                groupByField: 'dataset_type_hierarchy.first_level.keyword',
-                isAggregationActive: true,
-                isFacetVisible: doesAggregationHaveBuckets('dataset_type')
             },
             'sources.source_type': {
                 label: 'Source Type',
@@ -114,7 +145,7 @@ export const SEARCH_ENTITIES = {
                 filterType: 'any',
                 isFilterable: false,
                 facetType: 'hierarchy',
-                groupByField: 'organ_hierarchy.keyword', 
+                groupByField: 'organ_hierarchy.keyword',
                 isHierarchyOption: (option) => {
                     return lateralOrgans.includes(option)
                 },
@@ -225,17 +256,6 @@ export const SEARCH_ENTITIES = {
                 },
                 isFacetVisible: doesAggregationHaveBuckets('has_all_published_datasets')
             },
-            status: {
-                label: 'Status',
-                type: 'value',
-                field: 'status.keyword',
-                isExpanded: false,
-                filterType: 'any',
-                isFilterable: false,
-                facetType: 'term',
-                isAggregationActive: true,
-                isFacetVisible: doesAggregationHaveBuckets('status')
-            },
             group_name: {
                 label: 'Data Provider Group',
                 type: 'value',
@@ -283,6 +303,7 @@ export const SEARCH_ENTITIES = {
         conditionalFacets: {},
         search_fields: {
             'sennet_id^4': {type: 'value'},
+            'uuid^4': {type: 'value'},
             'group_name^3': {type: 'value'},
             'dataset_type^2': {type: 'value'},
             'sample_category^2': {type: 'value'},

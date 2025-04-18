@@ -1,5 +1,6 @@
 import React, {createContext, useContext, useEffect, useRef, useState} from "react";
 import $ from "jquery";
+import { useRouter } from 'next/router'
 import AppContext from "./AppContext";
 import {RESULTS_PER_PAGE} from "@/config/config";
 import {createTheme} from "react-data-table-component";
@@ -12,13 +13,36 @@ const TableResultsContext = createContext({})
 export const TableResultsProvider = ({ index, columnsRef, children, getHotLink, rows, filters, onRowClicked, forData = false, raw, getId, inModal = false }) => {
 
     const {isLoggedIn} = useContext(AppContext)
-    const {isLoading, rawResponse, pageNumber, setPageNumber, pageSize, setPageSize, setSort} = useSearchUIContext()
+    const {isLoading, rawResponse, pageNumber, setPageNumber, pageSize, setPageSize, setSort, addFilter, clearSearchTerm} = useSearchUIContext()
     const sortedFields = useRef({})
+    const router = useRouter()
 
     const hasLoaded = useRef(false)
     let pageData = []
     const [resultsPerPage, setResultsPerPage] = useState(RESULTS_PER_PAGE[1])
+
     const currentColumns = useRef(columnsRef)
+
+
+    useEffect(() => {
+        if (!router.isReady) return
+
+        // ?addFilters=organ=LL,RL;entity_type=Sample,Dataset
+        let reqFilters = router.query.addFilters
+        if (reqFilters) {
+            clearSearchTerm()
+            reqFilters = reqFilters.trim().split(';')
+            for (let f of reqFilters) {
+                // handle the actual facets sent in request
+                let kv = f.split('=')
+                let values = kv[1].split(',')
+                for (let v of values) {
+                    addFilter(kv[0], v)
+                }
+            }
+        }
+
+    }, [router.isReady, router.query])
 
     const hasSearch = () => {
         return filters.length > 0 || $('#search').val()?.length > 0

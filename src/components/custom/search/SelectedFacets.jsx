@@ -33,7 +33,10 @@ function SelectedFacets() {
             case 'histogram':
                 return value
             default:
-                return getUBKGFullName(value)
+                if (!facet.transformFunction) {
+                    return getUBKGFullName(value)
+                }
+                return facet.transformFunction(value)
         }
     }
 
