@@ -516,15 +516,10 @@ export const getEntityTypeQuantities = async () => {
         size: 0,
         query: {
             bool: {
-                must_not: [
+                must: [
                     {
                         term: {
-                            'dataset_category.keyword': 'codcc-processed'
-                        }
-                    },
-                    {
-                        term: {
-                            'dataset_category.keyword': 'lab-processed'
+                            'dataset_category.keyword': 'primary'
                         }
                     }
                 ]
