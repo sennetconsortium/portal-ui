@@ -1,5 +1,4 @@
 import {useEffect, useRef, useState} from 'react'
-import {eq} from "@/components/custom/js/functions";
 import { useRouter } from 'next/router'
 import {getCookie} from "cookies-next";
 import { ShimmerThumbnail } from "react-shimmer-effects";

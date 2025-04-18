@@ -1,12 +1,16 @@
 .c-sankey {
   min-height: calc(100vh/2);
   width: 100%;
+  position: relative;
   react-consortia-sankey  {
     width:100%;
     display:block;
     height:100%
   }
   .shimmer {
-    height: calc(100vh/2) !important;
+    height: calc(100vh/2.3) !important;
+    position: absolute;
+    top: 0;
+    left: 0;
   }
 }
