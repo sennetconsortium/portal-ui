@@ -514,14 +514,70 @@ export const getOrganQuantities = async () => {
 export const getEntityTypeQuantities = async () => {
     const body = {
         size: 0,
-        aggs: {
-            'entity_type': {
-                terms: {
-                    field: 'entity_type.keyword',
-                    size: 1000,
-                },
-            },
+        query: {
+            bool: {
+                should: [
+                    {
+                        bool: {
+                            must: [
+                                {
+                                    exists: {
+                                        field: "entity_type"
+                                    }
+                                }
+                            ],
+                            must_not: [
+                                {
+                                    exists: {
+                                        field: "creation_action"
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        bool: {
+                            must: [
+                                {
+                                    terms: {
+                                        "entity_type.keyword": [
+                                            "Dataset"
+                                        ]
+                                    }
+                                },
+                                {
+                                    bool: {
+                                        should: [
+                                            {
+                                                bool: {
+                                                    must: [
+                                                        {
+                                                            terms: {
+                                                                "creation_action.keyword": [
+                                                                    "Create Dataset Activity"
+                                                                ]
+                                                            }
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
         },
+        aggs: {
+            entity_type: {
+                terms: {
+                    field: "entity_type.keyword",
+                    size: 1000
+                }
+            }
+        }
     };
     const content = await fetchSearchAPIEntities(body);
     if (!content) {
@@ -535,6 +591,7 @@ export const getEntityTypeQuantities = async () => {
         {}
     );
 };
+
 
 export const getSamplesByOrgan = async (organCodes) => {
     const body = {
