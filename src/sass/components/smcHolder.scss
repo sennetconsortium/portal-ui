@@ -1,0 +1,96 @@
+@use "../general/mixins";
+
+.smcFlex {
+  align-items: stretch;
+  .card {
+    min-height: 90%;
+  }
+  .smcHolder:nth-child(odd) {
+    @include mixins.md {
+      padding-right: 10px;
+    }
+  }
+}
+.smcHolder {
+
+  &__footer {
+    .col {
+      @media (max-width: 1310px) {
+        width: 100%;
+        flex: none;
+        margin-top: .4em;
+      }
+    }
+  }
+
+  .fs-7 {
+    font-size: .7rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    @include mixins.sm-mx {
+      font-size: .9rem;
+    }
+    @include mixins.xlg {
+      font-size: .9rem;
+    }
+  }
+
+  @include mixins.lg {
+    flex: 0 0 auto;
+  }
+
+  @include mixins.md {
+    width: 50%;
+    padding: 0;
+  }
+
+  @include mixins.sm {
+    padding: 0;
+  }
+
+  &--left {
+    padding-left: 0;
+    &.smcHolder--hasSib {
+      padding-right: calc(var(--bs-gutter-x) * 0.2);
+    }
+  }
+
+  &--hasHover {
+    cursor: pointer;
+    .card {
+      &:hover {
+        box-shadow: aliceblue 7px 5px;
+      }
+    }
+  }
+
+  &--w-sm-50 {
+    @include mixins.sm {
+      width: 50%;
+      padding: 0;
+    }
+  }
+
+  &--right {
+    padding-right: 0;
+    &.smcHolder--hasSib {
+      padding-left: calc(var(--bs-gutter-x) * 0.2);
+    }
+  }
+
+  &--innerLeft {
+    @include mixins.lg {
+      padding-left: calc(var(--bs-gutter-x) * 0.2);
+    }
+  }
+
+  &--innerRight {
+    @include mixins.lg {
+      padding-right: calc(var(--bs-gutter-x) * 0.2);
+    }
+  }
+
+}
+
+

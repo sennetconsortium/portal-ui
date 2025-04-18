@@ -16,7 +16,8 @@ function addons(source, args= null) {
         searchErrorBoundary: SearchErrorBoundary,
         gtm: GoogleTagManager,
         ada: Ada,
-        tooltip: Tooltip
+        tooltip: Tooltip,
+        appevent: AppEvent
     }
 
     args = args || window.addons.init

@@ -1,0 +1,84 @@
+@use "../general/mixins";
+
+.snStat {
+  width: 45%;
+  cursor: pointer;
+  flex: none;
+
+  @include mixins.lg {
+    width: calc(100%/6);
+  }
+
+  @include mixins.md-xlg-mx {
+    width: calc(100%/3);
+  }
+
+  @include mixins.md-mx {
+    padding: 30px 0;
+  }
+
+  &__num {
+    display: block;
+  }
+  .row {
+    flex: 1;
+    .snStat {
+      &__shape {
+        padding: 0;
+        @include mixins.lg {
+          text-align: right;
+          padding-right: 5px;
+        }
+      }
+
+      &__meta {
+        @include mixins.lg {
+          text-align: left;
+        }
+      }
+    }
+
+  }
+  .shape {
+    &:after {
+      margin-top:10px;
+      margin-left: 0;
+    }
+    &.shape--diamond:after {
+      width: 3.2rem;
+      height: 3.2rem;
+      margin-top:15px;
+    }
+    &.shape--circle:after {
+      width: 4rem;
+      height: 4rem;
+      border-radius: 50%;
+    }
+  }
+
+  .shape-name {
+    display: none;
+  }
+}
+
+.snStatRow {
+  width: 97vw;
+  @include mixins.md-mx {
+    text-align: center;
+  }
+  @include mixins.lg {
+    padding: 1em;
+  }
+}
+
+.snLanding {
+  width: 100vw;
+  &.sui-layout {
+    .sui-layout-body__inner {
+      width: 100%;
+      > .card {
+        width: 100%;
+      }
+    }
+  }
+}

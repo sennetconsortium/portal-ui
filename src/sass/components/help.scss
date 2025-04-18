@@ -41,6 +41,11 @@
       border: solid 1px swatch.$col-pub-type-bdr;
     }
 
+    &.blue:after {
+      background-color: swatch.$col-collection-type;
+      border: solid 1px swatch.$col-collection-type-bdr;
+    }
+
     &.shape {
       &--diamond:after {
         transform: rotate(45deg);

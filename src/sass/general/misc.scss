@@ -105,6 +105,12 @@ p {
   }
 }
 
+.mt-2-sm {
+  @include mixins.sm-mx {
+    margin-top: 1rem;
+  }
+}
+
 .pl-0 {
   padding-left: 0 !important;
 }

@@ -36,7 +36,7 @@ const AppFooter = () => {
                             <Col sm={2}>
                                 <ul className="pb-3 mb-3 nav--menu" aria-label='About Menu'>
                                     <li className="nav-item"><span className='nav-item-h'>About</span></li>
-                                    <li className="nav-item"><a href="https://sennetconsortium.org/about-2/">Project Website</a></li>
+                                    <li className="nav-item"><a href="https://sennetconsortium.org/about-2/">Web Portal</a></li>
                                     <li className="nav-item"><a href="https://sennetconsortium.org/involvement/">Funded Research</a></li>
                                     <li className="nav-item"><a href="https://docs.sennetconsortium.org/">Documentation</a></li>
                                     <li className="nav-item"><a href="mailto:help@sennetconsortium.org">Contact</a></li>

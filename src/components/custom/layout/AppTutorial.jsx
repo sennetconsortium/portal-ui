@@ -5,14 +5,23 @@ import AppContext from "../../../context/AppContext";
 import Joyride from "react-joyride";
 import {eq} from "../js/functions";
 import {Alert} from 'react-bootstrap'
-import {TUTORIAL_THEME} from "../../../config/constants";
+import {TUTORIAL_THEME} from "@/config/constants";
+import { useRouter } from 'next/router'
 
 function AppTutorial() {
+    const router = useRouter()
     const {isLoggedIn, tutorialTrigger, setTutorialTrigger} = useContext(AppContext)
     const [steps, setSteps] = useState([])
     const [runTutorial, setRunTutorial] = useState(false)
     const [showAlert, setShowAlert] = useState(false)
     const cookieKey = `tutorialCompleted_${isLoggedIn()}`
+
+    useEffect(() => {
+        if (!router.isReady) return
+        if (router.query.tutorial && eq(router.query.tutorial, '1')) {
+            handleTutorial()
+        }
+    }, [router.isReady, router.query])
 
     useEffect(() => {
         const tutorialCompleted = eq(getCookie(cookieKey), 'true')
