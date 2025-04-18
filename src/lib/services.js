@@ -566,6 +566,38 @@ export const getEntityTypeQuantities = async () => {
                                 }
                             ]
                         }
+                    },
+                    {
+                        bool: {
+                            must: [
+                                {
+                                    terms: {
+                                        "entity_type.keyword": [
+                                            "Publication"
+                                        ]
+                                    }
+                                },
+                                {
+                                    bool: {
+                                        should: [
+                                            {
+                                                bool: {
+                                                    must: [
+                                                        {
+                                                            terms: {
+                                                                "creation_action.keyword": [
+                                                                    "Create Publication Activity"
+                                                                ]
+                                                            }
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
                     }
                 ]
             }
