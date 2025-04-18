@@ -11,7 +11,6 @@
 
   @include mixins.md-xlg-mx {
     width: calc(100%/3);
-    padding-left: 5% !important;
   }
 
   @include mixins.md-mx {
@@ -23,27 +22,36 @@
   }
   .row {
     flex: 1;
-    > div {
-      padding: 0;
-    }
-    .col-lg-8 {
-      @include mixins.lg {
-        text-align: left;
+    .snStat {
+      &__shape {
+        padding: 0;
+        @include mixins.lg {
+          text-align: right;
+          padding-right: 5px;
+        }
+      }
+
+      &__meta {
+        @include mixins.lg {
+          text-align: left;
+        }
       }
     }
+
   }
   .shape {
     &:after {
       margin-top:10px;
+      margin-left: 0;
     }
     &.shape--diamond:after {
-      width: 60px;
-      height: 60px;
+      width: 3.2rem;
+      height: 3.2rem;
       margin-top:15px;
     }
     &.shape--circle:after {
-      width: 70px;
-      height: 70px;
+      width: 4rem;
+      height: 4rem;
       border-radius: 50%;
     }
   }
