@@ -65,7 +65,7 @@ function SenNetStats({children}) {
                             </div>
                         </Col>
                         <Col className={'snStat__meta'} lg={8}>
-                            <span data-num={e.count} data-js-appevent={'animVal'} className={'fs-1 snStat__num'}></span>
+                            <span data-num={e.count || 0} data-js-appevent={'animVal'} className={'fs-1 snStat__num'}></span>
                             <h5>{e.name}{e.count > 1 ? 's': ''}</h5>
                         </Col>
                     </Row>
