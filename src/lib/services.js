@@ -514,50 +514,70 @@ export const getOrganQuantities = async () => {
 export const getEntityTypeQuantities = async () => {
     const body = {
         size: 0,
-        aggs: {
-            'entity_type': {
-                terms: {
-                    field: 'entity_type.keyword',
-                    size: 1000,
-                },
-            },
-        },
-    };
-    const content = await fetchSearchAPIEntities(body);
-    if (!content) {
-        return null;
-    }
-    return content.aggregations['entity_type'].buckets.reduce(
-        (acc, bucket) => {
-            acc[bucket.key] = bucket.doc_count;
-            return acc;
-        },
-        {}
-    );
-};
-
-export const getPrimariesQuantities = async () => {
-    const body = {
-        size: 0,
         query: {
             bool: {
-                must: [
+                should: [
                     {
-                        term: {
-                            'dataset_category.keyword': 'primary'
+                        bool: {
+                            must: [
+                                {
+                                    exists: {
+                                        field: "entity_type"
+                                    }
+                                }
+                            ],
+                            must_not: [
+                                {
+                                    exists: {
+                                        field: "creation_action"
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        bool: {
+                            must: [
+                                {
+                                    terms: {
+                                        "entity_type.keyword": [
+                                            "Dataset"
+                                        ]
+                                    }
+                                },
+                                {
+                                    bool: {
+                                        should: [
+                                            {
+                                                bool: {
+                                                    must: [
+                                                        {
+                                                            terms: {
+                                                                "creation_action.keyword": [
+                                                                    "Create Dataset Activity"
+                                                                ]
+                                                            }
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
                         }
                     }
                 ]
-            },
+            }
         },
         aggs: {
-            'entity_type': {
+            entity_type: {
                 terms: {
-                    field: 'entity_type.keyword',
-                    size: 1000,
-                },
-            },
-        },
+                    field: "entity_type.keyword",
+                    size: 1000
+                }
+            }
+        }
     };
     const content = await fetchSearchAPIEntities(body);
     if (!content) {
@@ -571,7 +591,6 @@ export const getPrimariesQuantities = async () => {
         {}
     );
 };
-
 
 
 export const getSamplesByOrgan = async (organCodes) => {
