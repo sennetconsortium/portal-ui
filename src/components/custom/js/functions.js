@@ -259,7 +259,7 @@ export const getOrganMeta = (code) => {
     return {icon, organ}
 }
 
-export const getSubtypeProvenanceShape = (t, cat) => {
+export const getSubtypeProvenanceShape = (t, cat, sz='sm') => {
     let s = 'circle'
     let c = 'pink'
     let title = t
@@ -273,8 +273,13 @@ export const getSubtypeProvenanceShape = (t, cat) => {
         case 'Section':
             s = 'rect'
             break
+        case 'Sample':
         case 'Suspension':
             break
+        case 'Collection':
+            c = 'blue'
+            break
+        case 'Source':
         case 'Human':
         case 'Human Organoid':
             c = 'yellow'
@@ -300,7 +305,7 @@ export const getSubtypeProvenanceShape = (t, cat) => {
             }
 
     }
-    return <span className={'c-help'}><span className={`shape shape--sm ${c} shape--${s}`} title={title}>{t}</span></span>
+    return <span className={'c-help'}><span className={`shape shape--${sz} ${c} shape--${s}`} title={title}><span className={'shape-name'}>{t}</span></span></span>
 }
 
 export function getJobTypeColor(type) {
@@ -432,7 +437,8 @@ export function getClickableLink(link) {
 }
 
 export function goIntent(route, fn = 'assign') {
-    window.location[fn](getRootURL() + APP_ROUTES[route])
+    const path = APP_ROUTES[route] || route
+    window.location[fn](path.contains('//') ? path : getRootURL() + path)
 }
 
 export function goToSearch() {
