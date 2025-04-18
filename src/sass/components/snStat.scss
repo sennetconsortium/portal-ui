@@ -11,6 +11,7 @@
 
   @include mixins.md-xlg-mx {
     width: calc(100%/3);
+    padding-left: 5% !important;
   }
 
   @include mixins.md-mx {

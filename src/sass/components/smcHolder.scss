@@ -25,6 +25,9 @@
 
   .fs-7 {
     font-size: .7rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
     @include mixins.sm-mx {
       font-size: .9rem;
     }

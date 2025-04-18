@@ -48,12 +48,12 @@ function SenNetStats({children}) {
            res.push(
                <Col className='snStat' key={e.name} onClick={() => goIntent(`/search?addFilters=entity_type=${e.name}`)}>
                     <Row>
-                        <Col lg={4}>
+                        <Col className={'snStat__shape'} lg={4}>
                             <div>
                                 {getSubtypeProvenanceShape(e.name, null, 'lg')}
                             </div>
                         </Col>
-                        <Col lg={8}>
+                        <Col className={'snStat__meta'} lg={8}>
                             <span data-num={e.count} data-js-appevent={'animVal'} className={'fs-1 snStat__num'}></span>
                             <h5>{e.name}{e.count > 1 ? 's': ''}</h5>
                         </Col>
