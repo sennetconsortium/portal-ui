@@ -26,8 +26,8 @@ function ViewHome({children}) {
                     <Card.Title>{title}</Card.Title>
                     <Card.Body>
                         {body}
-                        {children}
                     </Card.Body>
+                    {children}
                 </Card>
             </>
         )
@@ -50,23 +50,23 @@ function ViewHome({children}) {
                <section aria-label='Site Map' className='sui-layout-body__inner'>
                    <Container fluid>
                        <Row className={'smcFlex'}>
-                           <Col lg={3} className='smcHolder smcHolder--left smcHolder--hasSib smcHolder--w-md-50'>
+                           <Col lg={3} className='smcHolder smcHolder--left smcHolder--hasSib smcHolder--w-sm-50'>
                                <SiteMapCard title={<h4>Discover</h4>}
                                             body={<p>Investigate SenNet data by entity type or through its metadata library.</p>}>
-                                   <Row className="justify-content-md-center text-center">
-                                       <Col lg={6}><Button variant="outline-primary" className={'w-100'} href={'/search'}>Search Data</Button>
+                                   <Row className="smcHolder__footer text-center">
+                                       <Col><Button variant="outline-primary fs-7" className={'w-100'} href={'/search'}>Search Data</Button>
                                           </Col>
-                                       <Col lg={6} className={'mt-2-sm'}>
-                                           <Button variant="outline-primary" className={'w-100'} href={'/discover/metadata'}>Discover Metadata</Button></Col>
+                                       <Col>
+                                           <Button variant="outline-primary fs-7" className={'w-100'} href={'/discover/metadata'}>Discover Metadata</Button></Col>
                                    </Row>
                                </SiteMapCard>
                            </Col>
 
-                           <Col lg={3} className='smcHolder smcHolder--innerLeft smcHolder--w-md-50'>
+                           <Col lg={3} className='smcHolder smcHolder--innerLeft smcHolder--w-sm-50'>
                                <SiteMapCard title={<h4>Quick Start</h4>}
                                             body={<p>Learn how to navigate the SenNet Consortium data portal with this step-by-step guide.</p>}>
                                    <div className='text-sm-center'>
-                                       <Button variant="primary" className={'w-50 w-75-sm'} onClick={() => {
+                                       <Button variant="primary" className={'w-50 w-75-sm fs-7'} onClick={() => {
                                            deleteTutorialCookies()
                                            goIntent('/search?tutorial=1')
                                        }}>Guide Me</Button>
@@ -74,20 +74,20 @@ function ViewHome({children}) {
                                </SiteMapCard>
                            </Col>
 
-                           <Col lg={3} className='smcHolder smcHolder--innerRight smcHolder--w-md-50'>
+                           <Col lg={3} className='smcHolder smcHolder--innerRight smcHolder--w-sm-50'>
                                <SiteMapCard title={<h4>SenNet Consortium</h4>}
                                             body={<p>Stay up to date on the latest news regarding the SenNet project.</p>}>
                                    <div className={'text-center'}>
-                                       <Button variant="outline-primary" className={'w-75 mx-auto'} href={'https://sennetconsortium.org/'}>Visit</Button>
+                                       <Button variant="outline-primary" className={'w-75 fs-7 mx-auto'} href={'https://sennetconsortium.org/'}>Visit</Button>
                                    </div>
                                </SiteMapCard>
                            </Col>
 
-                           <Col lg={3} className='smcHolder smcHolder--right smcHolder--hasSib smcHolder--w-md-50'>
+                           <Col lg={3} className='smcHolder smcHolder--right smcHolder--hasSib smcHolder--w-sm-50'>
                                <SiteMapCard title={<h4>Members</h4>}
-                                            body={<p>Explore resources available to SenNet members. <br/> <br/></p>}>
+                                            body={<p>Explore resources available to SenNet members.</p>}>
                                    <div className={'text-center'}>
-                                       <Button variant="primary" className={'w-75 mx-auto'} href={'https://sennetconsortium.org/members/'}>Members Portal</Button>
+                                       <Button variant="primary" className={'w-75 fs-7 mx-auto'} href={'https://sennetconsortium.org/members/'}>Members Portal</Button>
                                    </div>
                                </SiteMapCard>
                            </Col>

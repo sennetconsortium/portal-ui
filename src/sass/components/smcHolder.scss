@@ -3,7 +3,7 @@
 .smcFlex {
   align-items: stretch;
   .card {
-    min-height: 87%;
+    min-height: 90%;
   }
   .smcHolder:nth-child(odd) {
     @include mixins.md {
@@ -12,6 +12,26 @@
   }
 }
 .smcHolder {
+
+  &__footer {
+    .col {
+      @media (max-width: 1310px) {
+        width: 100%;
+        flex: none;
+        margin-top: .4em;
+      }
+    }
+  }
+
+  .fs-7 {
+    font-size: .7rem;
+    @include mixins.sm-mx {
+      font-size: .9rem;
+    }
+    @include mixins.xlg {
+      font-size: .9rem;
+    }
+  }
 
   @include mixins.lg {
     flex: 0 0 auto;
@@ -42,8 +62,8 @@
     }
   }
 
-  &--w-md-50 {
-    @include mixins.md-xlg-mx {
+  &--w-sm-50 {
+    @include mixins.sm {
       width: 50%;
       padding: 0;
     }
