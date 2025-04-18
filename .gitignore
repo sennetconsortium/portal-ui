@@ -47,6 +47,7 @@ yarn-error.log*
 sennet.code-workspace
 src/package.local.json
 src/.prettierrc
+.ignore
 
 #css
 src/public/css/main.css
