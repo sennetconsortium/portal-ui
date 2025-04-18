@@ -1,7 +1,7 @@
 import {useEffect, useState} from 'react'
 import PropTypes from 'prop-types'
 import {Container, Row, Col} from 'react-bootstrap';
-import {getSubtypeProvenanceShape, goIntent} from "@/components/custom/js/functions";
+import {eq, getSubtypeProvenanceShape, goIntent} from "@/components/custom/js/functions";
 import {getEntityTypeQuantities, getOrganQuantities} from "@/lib/services";
 
 function SenNetStats({children}) {
@@ -42,11 +42,22 @@ function SenNetStats({children}) {
         window.requestAnimationFrame(step);
     }
 
+    const getFilter = (e) => {
+        let entity = e.name
+        if (eq(e.name, 'organ')) {
+            entity = `Sample;sample_category=${e.name}`
+        }
+        if (eq(e.name, 'dataset')) {
+            entity += `;data_class=Create Dataset Activity`
+        }
+        return `entity_type=${entity}`
+    }
+
     const getStats = () => {
         let res = []
         for (let e of stats) {
            res.push(
-               <Col className='snStat' key={e.name} onClick={() => goIntent(`/search?addFilters=entity_type=${e.name}`)}>
+               <Col className='snStat' key={e.name} onClick={() => goIntent(`/search?addFilters=${getFilter(e)}`)}>
                     <Row>
                         <Col className={'snStat__shape'} lg={4}>
                             <div>
