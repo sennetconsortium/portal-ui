@@ -1,5 +1,4 @@
 import {useEffect, useRef, useState} from 'react'
-import Spinner from "@/components/custom/Spinner"
 import {eq} from "@/components/custom/js/functions";
 import { useRouter } from 'next/router'
 import {getCookie} from "cookies-next";
@@ -9,11 +8,11 @@ import SenNetAlert from "@/components/SenNetAlert";
 function SankeyPage() {
 
     const router = useRouter()
-    const [token, setToken] = useState(null)
     const xacSankey = useRef(null)
     const [loading, setLoading] = useState(true)
     const [loadingMsg, setLoadingMsg] = useState('')
     const [filters, setFilters] = useState(null)
+    const [options, setOptions] = useState(null)
 
     const handleLoading = (ctx, msg) => {
         setLoading(msg ? true : ctx.isLoading)
@@ -25,6 +24,7 @@ function SankeyPage() {
             const el = xacSankey.current
             const adapter = new SenNetAdapter(el)
             el.setOptions({
+                ...options,
                 loading: {
                     callback: handleLoading
                 },
@@ -55,10 +55,20 @@ function SankeyPage() {
     useEffect(() => {
         if (!router.isReady) return
         setFilters(router.query)
+        setOptions({
+            useShadow: true,
+            styleSheetPath: 'https://rawcdn.githack.com/x-atlas-consortia/data-sankey/1.0.5/src/lib/xac-sankey.css',
+            api: {
+                token: getCookie('groups_token')
+            },
+            validFilterMap: {
+                dataset_type: 'dataset_type_hierarchy',
+                source_type: 'dataset_source_type'
+            }
+        })
     }, [router.isReady, router.query])
 
     useEffect(()=>{
-        setToken(getCookie('groups_token'))
         // web components needs global window
         import('xac-sankey')
 
@@ -83,17 +93,7 @@ function SankeyPage() {
 
     return (
         <div className={'c-sankey'}>
-            {filters && <react-consortia-sankey ref={xacSankey} options={btoa(JSON.stringify({
-                useShadow: true,
-                styleSheetPath: 'https://rawcdn.githack.com/x-atlas-consortia/data-sankey/1.0.5/src/lib/xac-sankey.css',
-                api: {
-                    token
-                },
-                validFilterMap: {
-                    dataset_type: 'dataset_type_hierarchy',
-                    source_type: 'dataset_source_type'
-                }
-            }))
+            {filters && options && <react-consortia-sankey ref={xacSankey} options={btoa(JSON.stringify(options))
             } /> }
 
             {loading && <ShimmerThumbnail className={'mt-5'} rounded />}
