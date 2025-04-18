@@ -84,8 +84,10 @@ function SenNetStats({children}) {
             organs += organsCounts[o]
         }
 
+        entityTypesCounts['Organ'] = organs
+
         for (let e of entities) {
-            e.count = entityTypesCounts[e.name] || organs
+            e.count = entityTypesCounts[e.name]
         }
         setStats(entities)
         document.addEventListener(
