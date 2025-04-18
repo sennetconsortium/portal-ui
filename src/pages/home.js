@@ -66,7 +66,7 @@ function ViewHome({children}) {
                                <SiteMapCard title={<h4>Quick Start</h4>}
                                             body={<p>Learn how to navigate the SenNet Consortium data portal with this step-by-step guide.</p>}>
                                    <div className='text-sm-center'>
-                                       <Button variant="primary" className={'w-50 w-75-sm fs-7'} onClick={() => {
+                                       <Button variant="outline-primary" className={'w-50 w-75-sm fs-7'} onClick={() => {
                                            deleteTutorialCookies()
                                            goIntent('/search?tutorial=1')
                                        }}>Guide Me</Button>
@@ -78,7 +78,7 @@ function ViewHome({children}) {
                                <SiteMapCard title={<h4>SenNet Consortium</h4>}
                                             body={<p>Stay up to date on the latest news regarding the SenNet project.</p>}>
                                    <div className={'text-center'}>
-                                       <Button variant="outline-primary" className={'w-75 fs-7 mx-auto'} href={'https://sennetconsortium.org/'}>Visit</Button>
+                                       <Button variant="primary" className={'w-75 fs-7 mx-auto'} href={'https://sennetconsortium.org/'}>Visit</Button>
                                    </div>
                                </SiteMapCard>
                            </Col>
