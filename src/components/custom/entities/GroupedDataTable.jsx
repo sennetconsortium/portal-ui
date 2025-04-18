@@ -22,12 +22,22 @@ function GroupedDataTable({ metadata, groups }) {
         {
             name: 'Key',
             selector: (row) => row.name,
-            sortable: true
+            sortable: true,
+            wrap: true,
+            style: {
+                'padding-top': '16px',
+                'padding-bottom': '16px',
+            }
         },
         {
             name: 'Value',
             selector: () => null,
-            sortable: true
+            sortable: true,
+            wrap: true,
+            style: {
+                'padding-top': '16px',
+                'padding-bottom': '16px',
+            }
         }
     ]
 
