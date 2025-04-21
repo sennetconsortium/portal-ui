@@ -22,7 +22,7 @@
     "next": "14.2.28",
     "primeicons": "^7.0.0",
     "primereact": "^9.6.0",
-    "provenance-ui": "github:sennetconsortium/provenance-ui#v2.6.7-rc",
+    "provenance-ui": "github:sennetconsortium/provenance-ui#v2.6.8-beta",
     "react-data-table-component": "^7.6.2",
     "react-datepicker": "^8.2.1",
     "react-helmet-async": "^2.0.3",

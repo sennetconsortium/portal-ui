@@ -10,7 +10,7 @@ import {
     eq,
     fetchProtocols,
     getClickableLink,
-    getCreationActionRelationName,
+    getCreationActionRelationName, getSubtypeProvenanceShape,
     getUBKGFullName
 } from "../js/functions";
 import * as d3 from "d3";
@@ -217,6 +217,14 @@ function ProvenanceGraph({ data }) {
         }
     }
 
+    const onNodeCssClass = (ops) => {
+        const d = ops.args.node.data
+        if (d.properties && d.properties['sennet:creation_action']) {
+            return 'node--'+d.properties['sennet:creation_action'].replaceAll(' ', '')
+        }
+        return ''
+    }
+
     const onInfoCloseClick = (ops) => {
         const treeId = ops.options.selectorId
         const uuid = $('#Metadata-collapse .nav-item .active').attr('data-uuid')
@@ -275,6 +283,8 @@ function ProvenanceGraph({ data }) {
             Source: '#ffc255',
             Sample:  '#ebb5c8',
             Dataset: '#8ecb93',
+            DatasetComponent: '#8ecb93',
+            DatasetDerived: '#8ecb93',
             Publication: '#a556d9',
             Activity: '#f16766'
         },
@@ -365,6 +375,7 @@ function ProvenanceGraph({ data }) {
             onAfterBuild,
             onSvgSizing,
             onNodeClick,
+            onNodeCssClass,
             onInfoCloseClick,
             onAfterInfoUpdateBuild
         }
@@ -446,6 +457,25 @@ function ProvenanceGraph({ data }) {
             icon: 'fa-expand',
             callback: handleModal,
             title: 'Show graph in full view'
+        },
+        Dataset: {
+            color: '#8ecb93',
+            name: 'Dataset (Primary)',
+            filterValue: 'PrimaryDataset',
+        },
+        DatasetComponent: {
+            iconContainerClass: 'c-help',
+            icon: 'shape shape--triangle',
+            filterValue: 'ComponentDataset',
+            name: 'Dataset (Component)',
+            title: 'Dataset (Component)'
+        },
+        DatasetDerived: {
+            iconContainerClass: 'c-help',
+            icon: 'shape shape--blob',
+            filterValue: 'ProcessedDataset',
+            title: 'Dataset (Derived)',
+            name: 'Dataset (Derived)',
         }
     }
 
@@ -455,7 +485,7 @@ function ProvenanceGraph({ data }) {
             {!loading && <Legend colorMap={legend} className='c-legend--flex c-legend--btns' help={help} actionMap={actionMap} selectorId={options.selectorId} otherLegend={otherLegend} />}
             {loading && <Spinner/>}
             <AppModal showModal={showModal} handleSecondaryBtn={
-handleModal} showPrimaryBtn={false} modalTitle='Provenance' modalSize='xl' className='modal-full'>
+                handleModal} showPrimaryBtn={false} modalTitle='Provenance' modalSize='xl' className='modal-full'>
                 {!loading && <ProvenanceUI options={{...options, selectorId: modalId, minHeight: 500 }} data={treeData} />}
                 {!loading && <Legend colorMap={legend} className='c-legend--flex c-legend--btns' help={help} actionMap={actionMap} selectorId={modalId} />}
             </AppModal>
