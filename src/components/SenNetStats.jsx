@@ -55,6 +55,7 @@ function SenNetStats({children}) {
 
     const getStats = () => {
         let res = []
+        let i = 0;
         for (let e of stats) {
             if (e.count) {
                 res.push(
@@ -72,8 +73,12 @@ function SenNetStats({children}) {
                         </Row>
                     </Col>
                 )
+                i++
             }
         }
+        const id = 'snStatsConfig'
+        const style = `<style id=${id}>:root {--sn-stats: ${i};}</style>`
+        res.push(<span key={id} dangerouslySetInnerHTML={{__html: style}}></span>)
         return res
     }
 
