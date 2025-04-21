@@ -428,7 +428,7 @@ function ProvenanceGraph({ data }) {
     }
 
     const help = {
-        title: 'Help, Provenance Graph',
+        title: 'Help: Provenance Graph',
         legend: `<li><code>Source</code> shapes <span class="shape yellow shape--circle">circle</span> and <span class="shape shape--stadium">stadium</span> correspond to <code>source_type</code> of Human and Mouse respectively. </li>
                 <li><code>Sample</code> shapes <span class="shape pink shape--diamond">diamond</span>, <span class="shape pink shape--sq">square</span>, 
                     <span class="shape pink shape--rect">rectangle</span> and <span class="shape pink shape--circle">circle</span> correspond to <code>sample_category</code>  of
