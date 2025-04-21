@@ -56,21 +56,23 @@ function SenNetStats({children}) {
     const getStats = () => {
         let res = []
         for (let e of stats) {
-           res.push(
-               <Col className='snStat' key={e.name} onClick={() => goIntent(`/search?addFilters=${getFilter(e)}`)}>
-                    <Row>
-                        <Col className={'snStat__shape'} lg={4}>
-                            <div>
-                                {getSubtypeProvenanceShape(e.name, null, 'lg')}
-                            </div>
-                        </Col>
-                        <Col className={'snStat__meta'} lg={8}>
-                            <span data-num={e.count || 0} data-js-appevent={'animVal'} className={'fs-1 snStat__num'}></span>
-                            <h5>{e.name}{e.count > 1 ? 's': ''}</h5>
-                        </Col>
-                    </Row>
-                </Col>
-           )
+            if (e.count) {
+                res.push(
+                    <Col className='snStat' key={e.name} onClick={() => goIntent(`/search?addFilters=${getFilter(e)}`)}>
+                        <Row>
+                            <Col className={'snStat__shape'} lg={4}>
+                                <div>
+                                    {getSubtypeProvenanceShape(e.name, null, 'lg')}
+                                </div>
+                            </Col>
+                            <Col className={'snStat__meta'} lg={8}>
+                                <span data-num={e.count || 0} data-js-appevent={'animVal'} className={'fs-1 snStat__num'}></span>
+                                <h5>{e.name}{e.count > 1 ? 's': ''}</h5>
+                            </Col>
+                        </Row>
+                    </Col>
+                )
+            }
         }
         return res
     }
