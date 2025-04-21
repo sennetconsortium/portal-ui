@@ -77,7 +77,7 @@ function SenNetStats({children}) {
             }
         }
         const id = 'snStatsConfig'
-        const style = `<style id={id}>:root {--sn-stats: ${i};}</style>`
+        const style = `<style id=${id}>:root {--sn-stats: ${i};}</style>`
         res.push(<span key={id} dangerouslySetInnerHTML={{__html: style}}></span>)
         return res
     }
