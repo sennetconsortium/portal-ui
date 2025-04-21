@@ -75,10 +75,10 @@ function ViewHome({children}) {
                            </Col>
 
                            <Col lg={3} className='smcHolder smcHolder--innerRight smcHolder--w-sm-50'>
-                               <SiteMapCard title={<h4>SenNet Consortium</h4>}
-                                            body={<p>Stay up to date on the latest news regarding the SenNet project.</p>}>
+                               <SiteMapCard title={<h4>SenNet Consortium News</h4>}
+                                            body={<p>Stay up to date on the latest news regarding SenNet.</p>}>
                                    <div className={'text-center'}>
-                                       <Button variant="primary" className={'w-75 fs-7 mx-auto'} href={'https://sennetconsortium.org/'}>Visit</Button>
+                                       <Button variant="primary" className={'w-75 fs-7 mx-auto'} href={'https://sennetconsortium.org/sennet-sentinel/'}>Visit</Button>
                                    </div>
                                </SiteMapCard>
                            </Col>
