@@ -6,7 +6,7 @@
   flex: none;
 
   @include mixins.lg {
-    width: calc(100%/6);
+    width: calc(100%/var(--sn-stats));
   }
 
   @include mixins.md-xlg-mx {
