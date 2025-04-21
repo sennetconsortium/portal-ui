@@ -74,6 +74,8 @@ export const SEARCH_ENTITIES = {
                 filterType: 'any',
                 isFilterable: false,
                 facetType: 'term',
+                tooltipText: `Primaries are data registered and uploaded by SenNet data providers, this data must have a direct parent entity in the provenance graph of type Sample.
+                Components are separate datasets that represent the components that make up a Multi-Assay Primary Data dataset.`,
                 isAggregationActive: (filters) => {
                     const isActiveFunc = doesTermFilterContainValues('entity_type', ['Dataset'])
                     return isActiveFunc(filters)
