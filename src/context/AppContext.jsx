@@ -10,7 +10,7 @@ import {
     has_data_admin_privs
 } from '@/lib/services'
 import {deleteCookies} from "@/lib/auth";
-import {APP_ROUTES} from "@/config/constants";
+import {APP_ROUTES, APP_ROUTES_NO_REDIRECT} from "@/config/constants";
 import {STORAGE_KEY} from "@/config/config";
 import AppModal from "../components/AppModal";
 import Spinner from "../components/custom/Spinner";
@@ -37,13 +37,13 @@ export const AppProvider = ({ cache, banners, children }) => {
     const authKey = 'isAuthenticated'
     const tutorialCookieKey = 'tutorialCompleted_'
     const loginDateKey = 'loginDate'
-    const pageKey = STORAGE_KEY('userPage')
+    const pageKey = 'userPage'
 
     const [tutorialTrigger, setTutorialTrigger] = useState(0)
 
     useEffect(() => {
-        // Should only include: '/', '/search', '/logout', '/login', '/404'
-        const noRedirectTo = Object.values(APP_ROUTES)
+        // Should only include: '/', '/logout', '/login', '/404'
+        const noRedirectTo = Object.values(APP_ROUTES_NO_REDIRECT)
 
         let info = getCookie('info')
         let groups_token = ""
@@ -200,6 +200,7 @@ export const AppProvider = ({ cache, banners, children }) => {
                     // Redirect to home page without query string
                     // Only redirect the user after a login action
                     const page = getLocalItemWithExpiry(pageKey)
+                    localStorage.removeItem(pageKey)
                     if (page && loggedInRecently()) {
                         window.location = page
                     }
