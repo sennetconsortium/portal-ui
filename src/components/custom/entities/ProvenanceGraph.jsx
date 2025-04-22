@@ -10,10 +10,12 @@ import {
     eq,
     fetchProtocols,
     getClickableLink,
-    getCreationActionRelationName, getSubtypeProvenanceShape,
+    getCreationActionRelationName,
     getUBKGFullName
 } from "../js/functions";
 import * as d3 from "d3";
+import LnkIc from "@/components/custom/layout/LnkIc";
+import ReactDOMServer from "react-dom/server";
 
 
 function ProvenanceGraph({ data }) {
@@ -444,7 +446,8 @@ function ProvenanceGraph({ data }) {
                 <li><code>Sample</code> shapes <span class="shape pink shape--diamond">diamond</span>, <span class="shape pink shape--sq">square</span>, 
                     <span class="shape pink shape--rect">rectangle</span> and <span class="shape pink shape--circle">circle</span> correspond to <code>sample_category</code>  of
                 <code>organ</code>, <code>block</code>, <code>section</code> and <code>suspension</code> respectively.</li>
-                <li><code>Dataset</code> shapes <span class="shape green shape--circle">circle</span>, <span class="shape shape--blob">"blob"</span>, and <span class="shape shape--triangle">triangle</span> correspond to <code>category</code> of <code>primary</code>, <code>processed</code> and <code>component</code> respectively.</li>`
+                <li><code>Dataset</code> shapes <span class="shape green shape--circle">circle</span>, <span class="shape shape--blob">"blob"</span>, and <span class="shape shape--triangle">triangle</span> correspond to <code>category</code> of <code>primary</code>, <code>processed</code> and <code>component</code> respectively.</li>`,
+        otherInfo: `<p>For a more detailed explanation of the provenance graph visit ${ReactDOMServer.renderToStaticMarkup(<LnkIc href={'https://docs.sennetconsortium.org/provenance/'} />).toString()}</p>`
     }
 
     const legend = {

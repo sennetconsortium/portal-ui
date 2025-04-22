@@ -1,6 +1,6 @@
 import React, { createContext, useEffect, useState} from 'react'
 import { useRouter } from 'next/router'
-import {eq, goToSearch} from '@/components/custom/js/functions'
+import {eq} from '@/components/custom/js/functions'
 import {deleteCookie, getCookie, setCookie} from 'cookies-next'
 import log from 'loglevel'
 import {
