@@ -1,6 +1,6 @@
 import React, { createContext, useEffect, useState} from 'react'
 import { useRouter } from 'next/router'
-import {eq, goToSearch} from '@/components/custom/js/functions'
+import {eq} from '@/components/custom/js/functions'
 import {deleteCookie, getCookie, setCookie} from 'cookies-next'
 import log from 'loglevel'
 import {
@@ -118,7 +118,7 @@ export const AppProvider = ({ cache, banners, children }) => {
             const startDate = new Date(loginDate)
             const endDate   = new Date()
             const s = (endDate.getTime() - startDate.getTime()) / 1000
-            return s < 7
+            return s < 5
         }
         return false
     }
@@ -200,8 +200,8 @@ export const AppProvider = ({ cache, banners, children }) => {
                     // Redirect to home page without query string
                     // Only redirect the user after a login action
                     const page = getLocalItemWithExpiry(pageKey)
-                    if (page?.contains('edit') && loggedInRecently()) {
-                        window.location = page;
+                    if (page && loggedInRecently()) {
+                        window.location = page
                     }
 
                 } else {
