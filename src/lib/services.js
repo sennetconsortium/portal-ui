@@ -289,7 +289,7 @@ export function getAncestry(uuid, {endpoints = ['ancestors', 'descendants'], oth
         } else if (endpoint.includes('ancestors')) {
             reqBody = filterProperties.ancestors
         } else if (endpoint.includes("descendants")) {
-            if (entityType && entityType === 'Dataset') {
+            if (entityType && (entityType === 'Dataset') || (entityType === 'Publication' )) {
                 reqBody = filterProperties.datasetDescendants
             } else {
                 reqBody = filterProperties.descendants

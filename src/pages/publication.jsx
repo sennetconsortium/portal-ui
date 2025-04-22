@@ -50,7 +50,7 @@ function ViewPublication() {
             setData(_data)
 
             // fetch ancestry data
-            getAncestryData(_data.uuid).then(ancestry => {
+            getAncestryData(_data.uuid,  {endpoints: ['ancestors', 'descendants'], otherEndpoints: []},'Publication').then(ancestry => {
                 Object.assign(_data, ancestry)
                 setData(_data)
                 setHasAncestry(true)
@@ -194,9 +194,11 @@ function ViewPublication() {
                                             />
 
                                             {/* Visualizations */}
+                                            {data.ancestors &&
                                             <VignetteList 
                                                 publication={{uuid: data.uuid}}
                                                 ancillaryPublication={ancillaryPublicationData}/>
+                                            }
 
                                             {/*Provenance*/}
                                             <Provenance data={data} hasAncestry={hasAncestry}/>
