@@ -7,15 +7,12 @@ import Header from './layout/Header'
 import AppContext from "@/context/AppContext";
 import { goToSearch } from './js/functions'
 import SenNetBanner from "@/components/SenNetBanner";
-import {getCookie} from "cookies-next";
 
 function Login() {
     const loginUrl = getIngestLogin()
-    const [redirectUri, setRedirectUri] = useState(null)
     const { _t, isLoggedIn, banners } = useContext(AppContext)
 
     useEffect(() => {
-        setRedirectUri(getCookie('redirectUri'))
         if (isLoggedIn()) {
             goToSearch()
         }
@@ -48,7 +45,7 @@ function Login() {
                                 >
                                     <a
                                         className="btn btn-outline-success rounded-0 btn-lg js-btn--login"
-                                        href={`${loginUrl}?redirect_uri=${redirectUri}`}
+                                        href={loginUrl}
                                     >
                                         {_t('Log in with your institution credentials')}
                                     </a>

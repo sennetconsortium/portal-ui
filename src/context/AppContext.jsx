@@ -63,8 +63,7 @@ export const AppProvider = ({ cache, banners, children }) => {
         }
 
         if (noRedirectTo.indexOf(router.pathname) === -1) {
-            // Set expiry for 10 minutes
-            setCookie(pageKey, router.asPath)
+            fetch(`/api/middleware?${pageKey}=${router.asPath}`)
         }
 
         if(groupsToken !== "") {

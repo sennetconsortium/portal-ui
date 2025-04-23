@@ -2,6 +2,7 @@
 import type {NextRequest} from 'next/server'
 import {NextResponse} from 'next/server'
 import {fetch_entity_type} from './lib/services.js'
+import {APP_ROUTES_NO_REDIRECT} from './config/constants.js'
 
 // Direct the user to the correct entity type view/edit page
 async function entityRewrites(request: NextRequest) {
@@ -34,30 +35,47 @@ async function entityRewrites(request: NextRequest) {
     return NextResponse.rewrite(request.url)
 }
 
-function afterLoginRewrites(request: NextRequest) {
-    // Redirect to home page without query string
-    // Only redirect the user after a login action
-    let redirectUri = request.nextUrl.searchParams.get("ingest_redirect_uri")
-    if (redirectUri) {
-        console.log('Middle', redirectUri)
-        return NextResponse.redirect(new URL(atob(redirectUri), request.url))
+async function afterLoginRewrites(request: NextRequest) {
+    const response = NextResponse.rewrite(request.url)
+
+    const getCookie = (key: string) => {
+        return request.cookies.get(key)?.value
     }
 
-    return null
+    const setCookie = (key: string, value: string) => {
+        return response.cookies.set(key, value)
+    }
+
+    const pageKey = 'redirectUri'
+    if (request.nextUrl.pathname === '/api/middleware') {
+        let page = request.nextUrl.searchParams.get(pageKey)
+        // Set expiry for 10 minutes
+        setCookie(pageKey, page)
+    }
+
+    // Redirect to home page without query string
+    // Only redirect the user after a login action
+    let fromGlobus = request.nextUrl.searchParams.get("globus")
+    const page = getCookie(pageKey)
+    if (fromGlobus) {
+        return NextResponse.redirect(new URL(page, request.url))
+    }
+
+    return response
 }
 
 export async function middleware(request: NextRequest) {
-
-    const loginRedirect = afterLoginRewrites(request)
-
-    if (loginRedirect) {
-        return loginRedirect
-    }
 
     // Match view and edit entity pages and grab the correct entity type
     if (request.nextUrl.pathname.match(/((?:source|sample|dataset|upload|collection|epicollection|publication).*)/)
         || request.nextUrl.pathname.match(/edit\/((?:source|sample|dataset|upload|collection|epicollection|publication).*)/)) {
         return entityRewrites(request)
+    }
+
+    const loginRedirect = afterLoginRewrites(request)
+
+    if (loginRedirect) {
+        return loginRedirect
     }
 
     return NextResponse.rewrite(request.url)

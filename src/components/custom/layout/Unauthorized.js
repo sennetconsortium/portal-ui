@@ -7,7 +7,6 @@ import AppContext from "../../../context/AppContext";
 
 const Unauthorized = () => {
     const cookie = getCookie('info')
-    const redirectUri = getCookie('redirectUri')
     const email = cookie ? JSON.parse(atob(cookie))['email'] : null
     const { _t } = useContext(AppContext)
     const pageData = () => {
@@ -25,7 +24,7 @@ const Unauthorized = () => {
                                                                                              href={"mailto:help@sennetconsortium.org"}>SenNet Help Desk <i className="bi bi-envelope-fill"></i></a>.
                 </p>
             </>
-            btnLink = `${getIngestLogin()}?redirect_uri=${redirectUri}`
+            btnLink = getIngestLogin()
             btnLabel = _t('Log in with your institution credentials')
         } else {
             body = <>
