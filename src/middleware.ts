@@ -2,8 +2,6 @@
 import type {NextRequest} from 'next/server'
 import {NextResponse} from 'next/server'
 import {fetch_entity_type} from './lib/services.js'
-import {loggedInRecently} from './lib/auth.js'
-import {getCookie, setCookie} from "cookies-next";
 
 // Direct the user to the correct entity type view/edit page
 async function entityRewrites(request: NextRequest) {
@@ -39,24 +37,12 @@ async function entityRewrites(request: NextRequest) {
 function afterLoginRewrites(request: NextRequest) {
     // Redirect to home page without query string
     // Only redirect the user after a login action
-    const loginDateKey = 'loginDate'
-    const pageKey = 'userPage'
-
-    const info = getCookie('info')
-    let loginDate = getCookie(loginDateKey)
-    console.log('Middle loginDate', loginDate, info)
-    if ((!loginDate || loginDate == '') && info) {
-        console.log('Middle', 'Set date')
-        setCookie(loginDateKey, (new Date()).toString())
+    let redirectUri = request.nextUrl.searchParams.get("ingest_redirect_uri")
+    if (redirectUri) {
+        console.log('Middle', redirectUri)
+        return NextResponse.redirect(new URL(atob(redirectUri), request.url))
     }
 
-    const page = getCookie(pageKey)
-    loginDate = getCookie(loginDateKey)
-    console.log('Middle loginDate 2', loginDate)
-    if (page && loggedInRecently(loginDate)) {
-        console.log('Middle Redirect', loginDate)
-        return NextResponse.redirect(new URL(page, request.url))
-    }
     return null
 }
 

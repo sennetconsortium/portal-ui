@@ -10,8 +10,7 @@ import {
     has_data_admin_privs
 } from '@/lib/services'
 import {deleteCookies} from "@/lib/auth";
-import {APP_ROUTES, APP_ROUTES_NO_REDIRECT} from "@/config/constants";
-import {STORAGE_KEY} from "@/config/config";
+import {APP_ROUTES_NO_REDIRECT} from "@/config/constants";
 import AppModal from "../components/AppModal";
 import Spinner from "../components/custom/Spinner";
 import Unauthorized from "@/components/custom/layout/Unauthorized";
@@ -36,8 +35,8 @@ export const AppProvider = ({ cache, banners, children }) => {
     const router = useRouter()
     const authKey = 'isAuthenticated'
     const tutorialCookieKey = 'tutorialCompleted_'
-    const loginDateKey = 'loginDate'
-    const pageKey = 'userPage'
+    const pageKey = 'redirectUri'
+
 
     const [tutorialTrigger, setTutorialTrigger] = useState(0)
 
@@ -46,13 +45,18 @@ export const AppProvider = ({ cache, banners, children }) => {
         const noRedirectTo = Object.values(APP_ROUTES_NO_REDIRECT)
 
         let info = getCookie('info')
-        let groups_token = ""
+        let groupsToken = ""
         if (info) {
             info = atob(info)
             const userInfo = JSON.parse(info)
-            groups_token = userInfo.groups_token
-            setCookie('groups_token', groups_token, {sameSite: "Lax"})
-
+            groupsToken = userInfo.groups_token
+            setCookie('groups_token', groupsToken, {sameSite: "Lax"})
+            get_read_write_privileges()
+                .then((read_write_privileges) => {
+                    if (read_write_privileges.read_privs === true) {
+                        setCookie(authKey, true, {sameSite: "Lax"})
+                    }
+                })
         } else {
             // Delete in the event info doesn't exist as might have been logged out the system elsewhere.
             deleteCookies()
@@ -63,7 +67,7 @@ export const AppProvider = ({ cache, banners, children }) => {
             setCookie(pageKey, router.asPath)
         }
 
-        if(groups_token !== "") {
+        if(groupsToken !== "") {
             check_valid_token().then((response) => {
                 if (typeof response == "boolean") {
                     setValidToken(response)
@@ -98,47 +102,6 @@ export const AppProvider = ({ cache, banners, children }) => {
             })
             .catch((e) => log.error(e))
     }, [])
-
-    const setLocalItemWithExpiry = (key, value, ttl) => {
-        const now = new Date()
-        const item = {
-            value: value,
-            expiry: now.getTime() + ttl
-        }
-
-        localStorage.setItem(key, JSON.stringify(item))
-    }
-
-    const loggedInRecently = () => {
-        const loginDate = getLocalItemWithExpiry(loginDateKey)
-        if (loginDate) {
-            const startDate = new Date(loginDate)
-            const endDate   = new Date()
-            const s = (endDate.getTime() - startDate.getTime()) / 1000
-            return s < 5
-        }
-        return false
-    }
-
-    const getLocalItemWithExpiry = (key) => {
-        const jsonItem = localStorage.getItem(key)
-
-        // If the jsonItem doesn't exist, return null
-        if (!jsonItem) {
-            return null
-        }
-
-        const item = JSON.parse(jsonItem)
-        const now = new Date()
-
-        // Compare the expiry time of the item with the current time
-        if (now.getTime() > item.expiry) {
-            // If the item is expired, delete the item from storage
-            localStorage.removeItem(key)
-            return null
-        }
-        return item.value
-    }
 
     const hasAuthenticationCookie = () => {
         return eq(getCookie(authKey), 'true')
@@ -184,18 +147,25 @@ export const AppProvider = ({ cache, banners, children }) => {
     }
 
     const login = () => {
+        let info = getCookie('info')
+        let loginJson = {}
+        if (info) {
+            info = atob(info)
+            loginJson = JSON.parse(info)
+            setCookie(
+                'groups_token',
+                loginJson.groups_token,
+                {sameSite: "Lax"},
+            )
+        }
         get_read_write_privileges()
             .then((read_write_privileges) => {
                 if (read_write_privileges.read_privs === true) {
                     setCookie(authKey, true, {sameSite: "Lax"})
-                    let info = getCookie('info')
                     if (info) {
-                        info = atob(info)
-                        const {email, globus_id} = JSON.parse(info)
+                        const {email, globus_id} = loginJson
                         setCookie('user', {email, globus_id}, {sameSite: "Lax"})
                     }
-
-
                 } else {
                     router.replace('/', undefined, { shallow: true })
                     setIsLoginPermitted(false)
