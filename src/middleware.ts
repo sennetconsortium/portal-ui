@@ -58,6 +58,7 @@ async function afterLoginRewrites(request: NextRequest) {
     let fromGlobus = request.nextUrl.searchParams.get("globus")
     const page = getCookie(pageKey)
     if (fromGlobus) {
+        // TODO: check that page is valid and not spam
         return NextResponse.redirect(new URL(page, request.url))
     }
 
