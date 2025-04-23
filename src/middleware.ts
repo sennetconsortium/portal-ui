@@ -3,34 +3,36 @@ import type {NextRequest} from 'next/server'
 import {NextResponse} from 'next/server'
 import {fetch_entity_type} from './lib/services.js'
 import {loggedInRecently} from './lib/auth.js'
+import {getCookie, setCookie} from "cookies-next";
 
-
+// Direct the user to the correct entity type view/edit page
 async function entityRewrites(request: NextRequest) {
     let uuid = request.nextUrl.searchParams.get("uuid")
 
-    // Check for redirect cookie and if it exists just continue
-    // Check if user is trying to create entity
-    if (request.cookies.get('redirect')?.value === "true" || uuid === 'register') {
-        const response = NextResponse.rewrite(request.url)
-        response.cookies.delete("redirect")
-        return response
-    }
-
-    let entity_type = await fetch_entity_type(uuid, request.cookies.get('groups_token')?.value);
-
-    if (entity_type === "404") {
-        return NextResponse.rewrite(new URL('/404', request.url))
-    } else if (entity_type != "") {
-        let updated_url = request.url.replace(/(source|sample|dataset|upload|collection|epicollection|publication)/, entity_type)
-        if (!updated_url.includes('_next')) {
-            updated_url = decodeURIComponent(updated_url)
-            updated_url = updated_url[updated_url.length - 1] === '/' ? updated_url : updated_url + '/'
+    if (uuid) {
+        // Check for redirect cookie and if it exists just continue
+        // Check if user is trying to create entity
+        if (request.cookies.get('redirect')?.value === "true" || uuid === 'register') {
+            const response = NextResponse.rewrite(request.url)
+            response.cookies.delete("redirect")
+            return response
         }
-        const response = NextResponse.redirect(updated_url)
-        response.cookies.set("redirect", "true")
-        return response
-    }
 
+        let entity_type = await fetch_entity_type(uuid, request.cookies.get('groups_token')?.value);
+
+        if (entity_type === "404") {
+            return NextResponse.rewrite(new URL('/404', request.url))
+        } else if (entity_type != "") {
+            let updated_url = request.url.replace(/(source|sample|dataset|upload|collection|epicollection|publication)/, entity_type)
+            if (!updated_url.includes('_next')) {
+                updated_url = decodeURIComponent(updated_url)
+                updated_url = updated_url[updated_url.length - 1] === '/' ? updated_url : updated_url + '/'
+            }
+            const response = NextResponse.redirect(updated_url)
+            response.cookies.set("redirect", "true")
+            return response
+        }
+    }
     return NextResponse.rewrite(request.url)
 }
 
@@ -41,10 +43,10 @@ function afterLoginRewrites(request: NextRequest) {
     const pageKey = 'userPage'
     const response = NextResponse.rewrite(request.url)
 
-    const info = response.cookies.get(loginDateKey)?.value
-    const loginDate = response.cookies.get(loginDateKey)?.value
+    const info = getCookie(loginDateKey)
+    const loginDate = getCookie(loginDateKey)
     if (!loginDate && info) {
-        response.cookies.set(loginDateKey, (new Date()).toString())
+        setCookie(loginDateKey, (new Date()).toString())
     }
 
     const page = response.cookies.get(pageKey)?.value
@@ -54,8 +56,6 @@ function afterLoginRewrites(request: NextRequest) {
     return null
 }
 
-
-// Direct the user to the correct entity type view/edit page
 export async function middleware(request: NextRequest) {
 
     const loginRedirect = afterLoginRewrites(request)
@@ -64,25 +64,17 @@ export async function middleware(request: NextRequest) {
         return loginRedirect
     }
 
-    if (request.nextUrl.pathname.match(/\/((?:source|sample|dataset|upload|collection|epicollection|publication).*)/)
-    || request.nextUrl.pathname.match(/\/edit\/((?:source|sample|dataset|upload|collection|epicollection|publication).*)/) ) {
+    // Match view and edit entity pages and grab the correct entity type
+    if (request.nextUrl.pathname.match(/((?:source|sample|dataset|upload|collection|epicollection|publication).*)/)
+        || request.nextUrl.pathname.match(/edit\/((?:source|sample|dataset|upload|collection|epicollection|publication).*)/)) {
         return entityRewrites(request)
     }
 
     return NextResponse.rewrite(request.url)
-
-    //return entityRewrites(request)
 }
 
-// Match view and edit entity pages and grab the correct entity type
 export const config = {
-    matcher: [
-        '/*'
-    ],
-    // matcher: [
-    //     '/((?:source|sample|dataset|upload|collection|epicollection|publication).*)',
-    //     '/edit/((?:source|sample|dataset|upload|collection|epicollection|publication).*)'
-    // ],
+    matcher: '/(.*)',
     // Need to make exceptions for lodash
     // https://nextjs.org/docs/messages/edge-dynamic-code-evaluation
     unstable_allowDynamic: [
