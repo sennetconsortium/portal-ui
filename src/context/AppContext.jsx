@@ -52,10 +52,7 @@ export const AppProvider = ({ cache, banners, children }) => {
             const userInfo = JSON.parse(info)
             groups_token = userInfo.groups_token
             setCookie('groups_token', groups_token, {sameSite: "Lax"})
-            const loginDate = localStorage.getItem(loginDateKey)
-            if (loginDate === null) {
-                setLocalItemWithExpiry(loginDateKey, new Date(), 600000)
-            }
+
         } else {
             // Delete in the event info doesn't exist as might have been logged out the system elsewhere.
             deleteCookies()
@@ -63,7 +60,7 @@ export const AppProvider = ({ cache, banners, children }) => {
 
         if (noRedirectTo.indexOf(router.pathname) === -1) {
             // Set expiry for 10 minutes
-            setLocalItemWithExpiry(pageKey, router.asPath, 600000)
+            setCookie(pageKey, router.asPath)
         }
 
         if(groups_token !== "") {
@@ -197,13 +194,7 @@ export const AppProvider = ({ cache, banners, children }) => {
                         const {email, globus_id} = JSON.parse(info)
                         setCookie('user', {email, globus_id}, {sameSite: "Lax"})
                     }
-                    // Redirect to home page without query string
-                    // Only redirect the user after a login action
-                    const page = getLocalItemWithExpiry(pageKey)
-                    localStorage.removeItem(pageKey)
-                    if (page && loggedInRecently()) {
-                        window.location = page
-                    }
+
 
                 } else {
                     router.replace('/', undefined, { shallow: true })

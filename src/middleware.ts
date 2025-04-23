@@ -2,9 +2,10 @@
 import type {NextRequest} from 'next/server'
 import {NextResponse} from 'next/server'
 import {fetch_entity_type} from './lib/services.js'
+import {loggedInRecently} from './lib/auth.js'
 
-// Direct the user to the correct entity type view/edit page
-export async function middleware(request: NextRequest) {
+
+async function entityRewrites(request: NextRequest) {
     let uuid = request.nextUrl.searchParams.get("uuid")
 
     // Check for redirect cookie and if it exists just continue
@@ -33,12 +34,55 @@ export async function middleware(request: NextRequest) {
     return NextResponse.rewrite(request.url)
 }
 
+function afterLoginRewrites(request: NextRequest) {
+    // Redirect to home page without query string
+    // Only redirect the user after a login action
+    const loginDateKey = 'loginDate'
+    const pageKey = 'userPage'
+    const response = NextResponse.rewrite(request.url)
+
+    const info = response.cookies.get(loginDateKey)?.value
+    const loginDate = response.cookies.get(loginDateKey)?.value
+    if (!loginDate && info) {
+        response.cookies.set(loginDateKey, (new Date()).toString())
+    }
+
+    const page = response.cookies.get(pageKey)?.value
+    if (page && loggedInRecently(response.cookies.get(loginDateKey)?.value)) {
+        return NextResponse.redirect(new URL(page, request.url))
+    }
+    return null
+}
+
+
+// Direct the user to the correct entity type view/edit page
+export async function middleware(request: NextRequest) {
+
+    const loginRedirect = afterLoginRewrites(request)
+
+    if (loginRedirect) {
+        return loginRedirect
+    }
+
+    if (request.nextUrl.pathname.match(/\/((?:source|sample|dataset|upload|collection|epicollection|publication).*)/)
+    || request.nextUrl.pathname.match(/\/edit\/((?:source|sample|dataset|upload|collection|epicollection|publication).*)/) ) {
+        return entityRewrites(request)
+    }
+
+    return NextResponse.rewrite(request.url)
+
+    //return entityRewrites(request)
+}
+
 // Match view and edit entity pages and grab the correct entity type
 export const config = {
     matcher: [
-        '/((?:source|sample|dataset|upload|collection|epicollection|publication).*)',
-        '/edit/((?:source|sample|dataset|upload|collection|epicollection|publication).*)'
+        '/*'
     ],
+    // matcher: [
+    //     '/((?:source|sample|dataset|upload|collection|epicollection|publication).*)',
+    //     '/edit/((?:source|sample|dataset|upload|collection|epicollection|publication).*)'
+    // ],
     // Need to make exceptions for lodash
     // https://nextjs.org/docs/messages/edge-dynamic-code-evaluation
     unstable_allowDynamic: [

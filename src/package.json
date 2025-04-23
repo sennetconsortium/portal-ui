@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "run": "npm-run-all --parallel dev sass plugins-watch",
-    "dev": "next dev",
+    "dev": "NODE_OPTIONS='--inspect' next dev",
     "build": "next build",
     "start": "next start",
     "sass": "sass --watch sass/main.scss public/css/main.css --style compressed",
