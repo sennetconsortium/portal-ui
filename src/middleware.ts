@@ -41,16 +41,20 @@ function afterLoginRewrites(request: NextRequest) {
     // Only redirect the user after a login action
     const loginDateKey = 'loginDate'
     const pageKey = 'userPage'
-    const response = NextResponse.rewrite(request.url)
 
-    const info = getCookie(loginDateKey)
-    const loginDate = getCookie(loginDateKey)
-    if (!loginDate && info) {
+    const info = getCookie('info')
+    let loginDate = getCookie(loginDateKey)
+    console.log('Middle loginDate', loginDate, info)
+    if ((!loginDate || loginDate == '') && info) {
+        console.log('Middle', 'Set date')
         setCookie(loginDateKey, (new Date()).toString())
     }
 
-    const page = response.cookies.get(pageKey)?.value
-    if (page && loggedInRecently(response.cookies.get(loginDateKey)?.value)) {
+    const page = getCookie(pageKey)
+    loginDate = getCookie(loginDateKey)
+    console.log('Middle loginDate 2', loginDate)
+    if (page && loggedInRecently(loginDate)) {
+        console.log('Middle Redirect', loginDate)
         return NextResponse.redirect(new URL(page, request.url))
     }
     return null
