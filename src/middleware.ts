@@ -38,25 +38,16 @@ async function entityRewrites(request: NextRequest) {
 async function afterLoginRewrites(request: NextRequest) {
     const response = NextResponse.rewrite(request.url)
 
-    const getCookie = (key: string) => {
-        return request.cookies.get(key)?.value
-    }
-
-    const setCookie = (key: string, value: string) => {
-        return response.cookies.set(key, value)
-    }
-
     const pageKey = 'redirectUri'
     if (request.nextUrl.pathname === '/api/middleware') {
         let page = request.nextUrl.searchParams.get(pageKey)
-        // Set expiry for 10 minutes
-        setCookie(pageKey, page)
+        response.cookies.set(pageKey, page)
     }
 
     // Redirect to home page without query string
     // Only redirect the user after a login action
     let fromGlobus = request.nextUrl.searchParams.get("globus")
-    const page = getCookie(pageKey)
+    const page = request.cookies.get(pageKey)?.value
     if (fromGlobus) {
         // TODO: check that page is valid and not spam
         return NextResponse.redirect(new URL(page, request.url))
