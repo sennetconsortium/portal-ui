@@ -11,7 +11,7 @@ import {useRouter} from "next/router";
 import {
     callService,
     filterProperties,
-    get_write_privilege_for_group_uuid,
+    getWritePrivilegeForGroupUuid,
     getEntityData
 } from "@/lib/services";
 import {getEntityEndPoint} from "@/config/config";
@@ -69,7 +69,7 @@ function ViewCollection({collectionType='Collection', entitiesLabel='Entities'})
             }
 
             // fetch write privilege
-            get_write_privilege_for_group_uuid(_data.group_uuid).then(response => {
+            getWritePrivilegeForGroupUuid(_data.group_uuid).then(response => {
                 setHasWritePrivilege(response.has_write_privs)
             }).catch(log.error)
         }

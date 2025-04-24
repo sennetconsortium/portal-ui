@@ -8,7 +8,7 @@ import Form from 'react-bootstrap/Form';
 import {Layout} from "@elastic/react-search-ui-views";
 import log from "loglevel";
 import {cleanJson, eq, getStatusColor} from "@/components/custom/js/functions";
-import {getEntityData, update_create_dataset} from "@/lib/services";
+import {getEntityData, updateCreateDataset} from "@/lib/services";
 import AppContext from '@/context/AppContext'
 import EntityContext, {EntityProvider} from '@/context/EntityContext'
 import $ from "jquery";
@@ -107,7 +107,7 @@ function EditUpload() {
     }
 
     const handlePut = async (action, body = {}) => {
-        await update_create_dataset(data.uuid, body, action, 'uploads').then((response) => {
+        await updateCreateDataset(data.uuid, body, action, 'uploads').then((response) => {
             toggleBusyOverlay(false)
             modalResponse(response)
         }).catch((e) => log.error(e))

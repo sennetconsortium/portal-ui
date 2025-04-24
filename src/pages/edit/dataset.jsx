@@ -8,7 +8,7 @@ import Form from 'react-bootstrap/Form';
 import {Layout} from '@elastic/react-search-ui-views'
 import '@elastic/react-search-ui-views/lib/styles/styles.css'
 import log from 'loglevel'
-import {get_headers, getAncestryData, getEntityData, update_create_dataset} from '@/lib/services'
+import {getAuthJsonHeaders, getAncestryData, getEntityData, updateCreateDataset} from '@/lib/services'
 import {
     cleanJson,
     eq,
@@ -239,7 +239,7 @@ export default function EditDataset() {
             run_id: ""
         }
         toggleBusyOverlay(true, <><code>Revert</code> the <code>Dataset</code></>)
-        await update_create_dataset(data.uuid, json, editMode).then((response) => {
+        await updateCreateDataset(data.uuid, json, editMode).then((response) => {
             modalResponse(response)
         }).catch((e) => log.error(e))
     }
@@ -343,7 +343,7 @@ export default function EditDataset() {
         const json = {
             status: 'Submitted'
         }
-        await update_create_dataset(data.uuid, json, editMode).then((response) => {
+        await updateCreateDataset(data.uuid, json, editMode).then((response) => {
             modalResponse(response)
         }).catch((e) => log.error(e))
     }
@@ -366,7 +366,7 @@ export default function EditDataset() {
             setModalProps({})
             const requestOptions = {
                 method: 'PUT',
-                headers: get_headers(),
+                headers: getAuthJsonHeaders(),
                 body: JSON.stringify(values)
             }
             const submitDatasetUrl = getIngestEndPoint() + 'datasets/' + data['uuid'] + '/submit'
@@ -432,7 +432,7 @@ export default function EditDataset() {
                 //     delete json['direct_ancestor_uuids']
                 // }
 
-                await update_create_dataset(uuid, json, editMode).then((response) => {
+                await updateCreateDataset(uuid, json, editMode).then((response) => {
                     modalResponse(response)
                 }).catch((e) => log.error(e))
             }

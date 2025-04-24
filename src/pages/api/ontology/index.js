@@ -2,12 +2,12 @@ import path from 'path'
 import {promises as fs} from 'fs'
 import log from 'loglevel'
 import {getIngestEndPoint, getUbkgCodes} from '../../../config/config'
-import {get_auth_header, get_headers_from_req, get_json_header} from "../../../lib/services";
+import {getAuthHeader, getHeadersFromRequest, getJsonHeader} from "../../../lib/services";
 
 const ONTOLOGY_CACHE_PATH = path.join(process.cwd(), 'cache')
 export default async function handler(req, res) {
-    let auth = get_auth_header({req, res})
-    let headers = get_json_header(get_headers_from_req(req.headers, auth))
+    let auth = getAuthHeader({req, res})
+    let headers = getJsonHeader(getHeadersFromRequest(req.headers, auth))
     let response  = await fetch(`${getIngestEndPoint()}privs/has-data-admin`, {method:'GET', headers})
     let json = response.ok ? await response.json() : {has_data_admin_privs: false}
 

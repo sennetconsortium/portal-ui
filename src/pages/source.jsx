@@ -3,7 +3,7 @@ import React, {useContext, useEffect, useState} from "react";
 import {useRouter} from 'next/router';
 import log from "loglevel";
 import {eq, extractSourceMappedMetadataInfo} from "@/components/custom/js/functions";
-import {get_write_privilege_for_group_uuid, getAncestryData, getEntityData} from "@/lib/services";
+import {getWritePrivilegeForGroupUuid, getAncestryData, getEntityData} from "@/lib/services";
 import AppContext from "@/context/AppContext";
 import Alert from 'react-bootstrap/Alert';
 import {EntityViewHeader} from "@/components/custom/layout/entity/ViewHeader";
@@ -69,7 +69,7 @@ function ViewSource() {
             }).catch(log.error)
 
             // fetch write privilege
-            get_write_privilege_for_group_uuid(_data.group_uuid).then(response => {
+            getWritePrivilegeForGroupUuid(_data.group_uuid).then(response => {
                 setHasWritePrivilege(response.has_write_privs)
             }).catch(log.error)
         }

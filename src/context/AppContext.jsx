@@ -4,10 +4,10 @@ import {eq} from '@/components/custom/js/functions'
 import {deleteCookie, getCookie, setCookie} from 'cookies-next'
 import log from 'loglevel'
 import {
-    check_valid_token,
-    get_read_write_privileges,
-    get_user_write_groups,
-    has_data_admin_privs
+    checkValidToken,
+    getReadWritePrivileges,
+    getUserWriteGroups,
+    hasDataAdminPrivs
 } from '@/lib/services'
 import {deleteCookies} from "@/lib/auth";
 import {APP_ROUTES_NO_REDIRECT} from "@/config/constants";
@@ -51,7 +51,7 @@ export const AppProvider = ({ cache, banners, children }) => {
             const userInfo = JSON.parse(info)
             groupsToken = userInfo.groups_token
             setCookie('groups_token', groupsToken, {sameSite: "Lax"})
-            get_read_write_privileges()
+            getReadWritePrivileges()
                 .then((read_write_privileges) => {
                     if (read_write_privileges.read_privs === true) {
                         setCookie(authKey, true, {sameSite: "Lax"})
@@ -67,7 +67,7 @@ export const AppProvider = ({ cache, banners, children }) => {
         }
 
         if(groupsToken !== "") {
-            check_valid_token().then((response) => {
+            checkValidToken().then((response) => {
                 if (typeof response == "boolean") {
                     setValidToken(response)
                 } else {
@@ -78,7 +78,7 @@ export const AppProvider = ({ cache, banners, children }) => {
             setValidToken(true)
         }
 
-        get_read_write_privileges()
+        getReadWritePrivileges()
             .then((response) => {
                 if (response) {
                     setAuthorized(response.read_privs)
@@ -88,14 +88,14 @@ export const AppProvider = ({ cache, banners, children }) => {
             .catch((error) => log.error(error))
 
 
-        has_data_admin_privs()
+        hasDataAdminPrivs()
             .then((response) => {
                 setAdminGroup(response.has_data_admin_privs)
             })
             .catch((error) => log.error(error))
 
 
-        get_user_write_groups()
+        getUserWriteGroups()
             .then((response) => {
                 setUserWriteGroups(response.user_write_groups)
             })
@@ -157,7 +157,7 @@ export const AppProvider = ({ cache, banners, children }) => {
                 {sameSite: "Lax"},
             )
         }
-        get_read_write_privileges()
+        getReadWritePrivileges()
             .then((read_write_privileges) => {
                 if (read_write_privileges.read_privs === true) {
                     setCookie(authKey, true, {sameSite: "Lax"})

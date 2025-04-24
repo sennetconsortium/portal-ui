@@ -1,23 +1,23 @@
 import {
-    get_dataset_types,
-    get_entities,
-    get_organ_types,
-    get_sample_categories,
-    get_source_types,
-    get_organs
+    getDatasetTypes,
+    getEntities,
+    getOrganTypes,
+    getSampleCategories,
+    getSourceTypes,
+    getOrgans
 } from '../lib/ontology'
 import {flipObj} from "../components/custom/js/functions";
 
 function useCache() {
 
     const fetchData = async () => {
-        const datasetTypes = await get_dataset_types()
-        const sampleCategories = await get_sample_categories()
-        const organTypes = await get_organ_types()
-        const entities = await get_entities()
-        const sourceTypes = await get_source_types()
+        const datasetTypes = await getDatasetTypes()
+        const sampleCategories = await getSampleCategories()
+        const organTypes = await getOrganTypes()
+        const entities = await getEntities()
+        const sourceTypes = await getSourceTypes()
         const organTypesCodes = flipObj(organTypes)
-        const organs = await get_organs()
+        const organs = await getOrgans()
 
         //TODO Remove in the future
         delete entities['publication entity']

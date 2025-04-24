@@ -1,7 +1,7 @@
 import {createContext, useContext, useEffect, useState} from "react";
 import {APP_ROUTES} from "@/config/constants";
 import AppContext from "./AppContext";
-import {get_auth_header} from "@/lib/services";
+import {getAuthHeader} from "@/lib/services";
 import {getIngestEndPoint} from "@/config/config";
 
 const AdminContext = createContext()
@@ -17,7 +17,7 @@ export const AdminProvider = ({ children }) => {
 
     const checkUIAdminStatus = async () => {
         try {
-            const headers = get_auth_header()
+            const headers = getAuthHeader()
             let res  = await fetch(`${getIngestEndPoint()}privs/has-data-admin`, {method:'GET', headers})
             let data = res.ok ? await res.json() : {has_data_admin_privs: false}
             return data.has_data_admin_privs

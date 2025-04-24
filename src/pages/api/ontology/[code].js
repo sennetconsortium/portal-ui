@@ -1,7 +1,7 @@
 import path from 'path'
 import {promises as fs} from 'fs'
 import log from 'loglevel'
-import {get_onotology_valueset} from '../../../lib/ontology'
+import {getOnotologyValueset} from '../../../lib/ontology'
 
 const ONTOLOGY_CACHE_PATH = path.join(process.cwd(), 'cache')
 
@@ -41,7 +41,7 @@ export default async function handler(req, res) {
             } else {
                 log.debug(`ONTOLOGY API > No cache exists ${filePath}`)
 
-                ontology = await get_onotology_valueset(key)
+                ontology = await getOnotologyValueset(key)
                 if (ontology && ontology.length) {
                     log.debug(`ONTOLOGY API > get_onotology_valueset obtained on ${key}`)
                     await createFile(filePath, ontology)

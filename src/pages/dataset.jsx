@@ -10,7 +10,7 @@ import {
     getRequestHeaders
 } from "@/components/custom/js/functions";
 import {
-    get_write_privilege_for_group_uuid,
+    getWritePrivilegeForGroupUuid,
     getAncestryData,
     getEntityData
 } from "@/lib/services";
@@ -129,7 +129,7 @@ function ViewDataset() {
             }
 
             // fetch write privilege
-            get_write_privilege_for_group_uuid(_data.group_uuid).then(response => {
+            getWritePrivilegeForGroupUuid(_data.group_uuid).then(response => {
                 setHasWritePrivilege(response.has_write_privs)
             }).catch(log.error)
         }
