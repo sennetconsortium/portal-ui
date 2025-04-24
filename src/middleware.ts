@@ -39,10 +39,6 @@ async function afterLoginRewrites(request: NextRequest) {
     const response = NextResponse.rewrite(request.url)
 
     const pageKey = 'redirectUri'
-    if (request.nextUrl.pathname === '/api/middleware') {
-        let page = request.nextUrl.searchParams.get(pageKey)
-        response.cookies.set(pageKey, page)
-    }
 
     // Redirect to home page without query string
     // Only redirect the user after a login action

@@ -17,6 +17,7 @@ import Unauthorized from "@/components/custom/layout/Unauthorized";
 import ReactDOMServer from "react-dom/server";
 import InvalidToken from "@/components/custom/layout/InvalidToken";
 import NotFound from "@/components/custom/NotFound";
+import { usePathname, useSearchParams } from 'next/navigation'
 
 const AppContext = createContext()
 
@@ -36,6 +37,9 @@ export const AppProvider = ({ cache, banners, children }) => {
     const authKey = 'isAuthenticated'
     const tutorialCookieKey = 'tutorialCompleted_'
     const pageKey = 'redirectUri'
+
+    const pathname = usePathname()
+    const searchParams = useSearchParams()
 
 
     const [tutorialTrigger, setTutorialTrigger] = useState(0)
@@ -63,7 +67,7 @@ export const AppProvider = ({ cache, banners, children }) => {
         }
 
         if (noRedirectTo.indexOf(router.pathname) === -1) {
-            fetch(`/api/middleware?${pageKey}=${router.asPath}`)
+            setCookie(pageKey, router.asPath)
         }
 
         if(groupsToken !== "") {
