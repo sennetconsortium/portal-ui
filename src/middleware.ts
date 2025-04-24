@@ -42,7 +42,7 @@ async function afterLoginRewrites(request: NextRequest) {
     // Only redirect the user after a login action
     let fromGlobus = request.nextUrl.searchParams.get("globus")
     const page = request.cookies.get(pageKey)?.value
-    if (fromGlobus) {
+    if (fromGlobus && page) {
         if ((!page.includes('//') && !page.includes('www.'))) {
             return NextResponse.redirect(new URL(page, request.url))
         } else {
