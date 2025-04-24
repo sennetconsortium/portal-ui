@@ -2,15 +2,18 @@
   "name": "portal-ui",
   "version": "1.9.9",
   "private": true,
+  "watch": {
+    "plugins": "./components/custom/js/addons/plugins*.js"
+  },
   "scripts": {
-    "run": "npm-run-all --parallel dev sass plugins-watch",
-    "dev": "next dev",
+    "run": "npm-run-all --parallel dev sass watch",
+    "dev": "NODE_OPTIONS='--inspect' next dev",
     "build": "next build",
     "start": "next start",
     "sass": "sass --watch sass/main.scss public/css/main.css --style compressed",
     "sass-build": "sass sass/main.scss public/css/main.css --style compressed",
     "plugins": "./node_modules/.bin/babel components/custom/js/addons/plugins/__polyfill.js components/custom/js/addons/plugins/_Addon.js components/custom/js/addons/plugins/*.js --presets minify --out-file public/js/main-plugins.js",
-    "plugins-watch": "watch 'npm run plugins' ./components/custom/js/addons/plugins"
+    "watch": "npm-watch"
   },
   "dependencies": {
     "@emotion/react": "^11.10.4",
@@ -42,6 +45,6 @@
     "babel-preset-minify": "^0.5.2",
     "core-js": "^3.26.0",
     "npm-run-all": "^4.1.5",
-    "watch": "^1.0.2"
+    "npm-watch": "^0.13.0"
   }
 }

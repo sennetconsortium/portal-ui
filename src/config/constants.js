@@ -1,10 +1,13 @@
-export const APP_ROUTES = {
+export const APP_ROUTES_NO_REDIRECT = {
     home: "/",
-    search: "/search",
-    discover: "/discover",
     login: "/login",
     logout: "/logout",
     notFound: "/404",
+};
+
+export const APP_ROUTES = {...APP_ROUTES_NO_REDIRECT,
+    search: "/search",
+    discover: "/discover",
     sample: "/sample",
     organs: "/organs",
 };

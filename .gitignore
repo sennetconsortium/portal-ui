@@ -55,6 +55,7 @@ src/public/css/main.css.map
 
 #cache
 src/cache/.ontology_*_bk
+src/cache/.redirect
 
 # Banner config
 src/public/content/banners/index.json

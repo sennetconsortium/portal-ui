@@ -18,13 +18,6 @@ export default function Home() {
             let info = getCookie('info')
             if (info) {
                 setIsBusy(true)
-                info = atob(info)
-                setCookie(
-                    'groups_token',
-                    JSON.parse(info).groups_token,
-                    {sameSite: "Lax"},
-                )
-
                 log.debug(router.query)
                 login()
             }
