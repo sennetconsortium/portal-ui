@@ -36,19 +36,21 @@ async function entityRewrites(request: NextRequest) {
 }
 
 async function afterLoginRewrites(request: NextRequest) {
-    const response = NextResponse.rewrite(request.url)
-
     const pageKey = 'redirectUri'
 
     // Redirect to home page without query string
     // Only redirect the user after a login action
     let fromGlobus = request.nextUrl.searchParams.get("globus")
     const page = request.cookies.get(pageKey)?.value
-    if (fromGlobus && (!page.includes('//') && !page.includes('www.'))) {
-        return NextResponse.redirect(new URL(page, request.url))
+    if (fromGlobus) {
+        if ((!page.includes('//') && !page.includes('www.'))) {
+            return NextResponse.redirect(new URL(page, request.url))
+        } else {
+            return NextResponse.redirect(new URL('/', request.url))
+        }
     }
 
-    return response
+    return NextResponse.rewrite(request.url)
 }
 
 export async function middleware(request: NextRequest) {
