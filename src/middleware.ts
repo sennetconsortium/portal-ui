@@ -43,7 +43,7 @@ async function afterLoginRewrites(request: NextRequest) {
     let fromGlobus = request.nextUrl.searchParams.get("globus")
     const page = request.cookies.get(pageKey)?.value
     if (fromGlobus) {
-        if ((!page?.includes('//') && !page?.includes('www.'))) {
+        if ( page && (!page?.includes('//') && !page?.includes('www.'))) {
             return NextResponse.redirect(new URL(page, request.url))
         } else {
             return NextResponse.redirect(new URL('/', request.url))
