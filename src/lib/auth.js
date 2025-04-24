@@ -9,7 +9,6 @@ export function deleteCookies() {
     deleteCookie('info', {path: '/', domain: getCookieDomain(), sameSite: "Lax"})
     deleteCookie('user')
     deleteCookie('adminUIAuthorized')
-    localStorage.removeItem('loginDate')
     deleteFromLocalStorage(STORAGE_KEY())
     Sui.clearFilters()
 }
