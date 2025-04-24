@@ -20,7 +20,7 @@ const OrganCard = ({ organ }) => {
                 <div>
                     <div className='mb-1 h4'>{organ.label}</div>
                     <div className='mb-1'>{organ.subLabel}</div>
-                    <div className='title_badge'>
+                    <div className='title-badge'>
                         <span
                             className='badge bg-dataset text-dark'
                             style={{

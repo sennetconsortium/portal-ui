@@ -161,7 +161,7 @@ export const FileTreeView = ({data, selection = {}, keys = {files: 'files', uuid
                     <Row className={`w-100 ${filesClassName}`}>
                         <Col md={8} sm={8}>
                             <a target="_blank"
-                               className={"icon_inline js-file"}
+                               className={"icon-inline js-file"}
                                href={`${getAssetsURL(node.data.uuid, node.data.rel_path)}`}><span
                                className="me-1">{node.label}</span>
                             </a>

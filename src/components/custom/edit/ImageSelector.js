@@ -142,7 +142,7 @@ export default function ImageSelector({ editMode, values, setValues, imageByteAr
                             {i.filename}
                         </span>
                     </Badge>
-                    <InputGroup className="m-2 w-75 icon_inline">
+                    <InputGroup className="m-2 w-75 icon-inline">
                         <Button variant="outline-secondary" onClick={() => handleChooseFileClick(index, i)}>
                             Choose file
                         </Button>
@@ -168,7 +168,7 @@ export default function ImageSelector({ editMode, values, setValues, imageByteAr
                             </span>
                         }
                     </Badge>
-                    <InputGroup className="m-2 w-75 icon_inline">
+                    <InputGroup className="m-2 w-75 icon-inline">
                         <Button variant="outline-secondary" onClick={() => handleChooseFileClick(index, image_file_to_add)}>
                             Choose file
                         </Button>

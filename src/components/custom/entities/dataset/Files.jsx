@@ -29,7 +29,7 @@ export const Files = ({data}) => {
                 format: (row, index) =>
                     <span>
                             <a target="_blank"
-                               className={"icon_inline"}
+                               className={"icon-inline"}
                                href={`${getAssetsEndpoint()}${uuid}/${row.rel_path}?token=${getAuth()}`}><span
                                 className="me-1">{row.rel_path}</span>
                             </a>
@@ -111,7 +111,7 @@ export const Files = ({data}) => {
                             dataset <a
                                 target="_blank"
                                 href={filepath}
-                                className="icon_inline"><span
+                                className="icon-inline"><span
                                 className="me-1">{data.sennet_id}</span> <i className="bi bi-box-arrow-up-right"></i></a></p>}
 
                     {status > 200 &&

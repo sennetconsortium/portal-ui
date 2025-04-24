@@ -95,7 +95,7 @@ function ViewSample() {
                 {data && !error &&
                     <>
                         <div className="container-fluid">
-                            <div className="row flex-nowrap entity_body">
+                            <div className="row flex-nowrap entity-body">
                                 <div className="col-auto p-0">
                                     <div id="sidebar"
                                          className="collapse collapse-horizontal sticky-top custom-sticky">
@@ -144,7 +144,7 @@ function ViewSample() {
                                     </div>
                                 </div>
 
-                                <main className="col m-md-3 entity_details">
+                                <main className="col m-md-3 entity-details">
                                     <SidebarBtn/>
 
                                     <EntityViewHeader data={data} entity={cache.entities.sample.toLowerCase()}
