@@ -1,3 +1,8 @@
+.lnk {
+  cursor: pointer;
+  color: var(--bs-link-color);
+  text-decoration: underline;
+}
 
 .lnk--ic {
   display: inline-flex !important;

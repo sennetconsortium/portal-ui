@@ -480,7 +480,7 @@ export default function BulkCreate({
         const docsUrl = getDocsUrl()
 
         return <>
-            See the <a className='link' href={docsUrl}>{type} Bulk {action}</a> page for further details.
+            See the <a className='lnk' href={docsUrl}>{type} Bulk {action}</a> page for further details.
         </>
     }
 
