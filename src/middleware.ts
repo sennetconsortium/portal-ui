@@ -2,7 +2,7 @@
 import type {NextRequest} from 'next/server'
 import {NextResponse} from 'next/server'
 import {fetch_entity_type} from './lib/services.js'
-import {APP_ROUTES_NO_REDIRECT} from './config/constants.js'
+import {REDIRECT_COOKIE_KEY} from './config/constants.js'
 
 // Direct the user to the correct entity type view/edit page
 async function entityRewrites(request: NextRequest) {
@@ -36,18 +36,16 @@ async function entityRewrites(request: NextRequest) {
 }
 
 async function afterLoginRewrites(request: NextRequest) {
-    const pageKey = 'redirectUri'
-
     // Redirect to home page without query string
     // Only redirect the user after a login action
     let fromGlobus = request.nextUrl.searchParams.get("globus")
-    const page = request.cookies.get(pageKey)?.value
+    const page = request.cookies.get(REDIRECT_COOKIE_KEY)?.value
     if (fromGlobus) {
+        let url = new URL('/', request.url)
         if ( page && (!page?.includes('//') && !page?.includes('www.'))) {
-            return NextResponse.redirect(new URL(page, request.url))
-        } else {
-            return NextResponse.redirect(new URL('/', request.url))
+            url = new URL(page, request.url)
         }
+        return NextResponse.redirect(url)
     }
 
     return NextResponse.rewrite(request.url)

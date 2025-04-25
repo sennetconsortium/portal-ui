@@ -37,3 +37,5 @@ export const SWAL_DEL_CONFIG = {
         confirmButton: 'btn btn-danger',
     }
 }
+
+export const REDIRECT_COOKIE_KEY = 'redirectUri'
