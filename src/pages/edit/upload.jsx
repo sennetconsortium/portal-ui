@@ -196,9 +196,9 @@ function EditUpload() {
     }
 
     const handleAnticipatedDateChange = (date) => {
-        let m = date.getMonth() + 1
+        let m = date?.getMonth() + 1
         m = m < 10 ? '0'+m : m
-        onChange(null, 'anticipated_complete_upload_month', `${date.getFullYear()}-${m}`)
+        onChange(null, 'anticipated_complete_upload_month', `${date?.getFullYear()}-${m}`)
         setAnticipatedDate(date)
     }
 
