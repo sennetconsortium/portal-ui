@@ -91,12 +91,7 @@ export const SEARCH_ENTITIES = {
                 filterType: 'any',
                 isFilterable: false,
                 facetType: 'term',
-                isAggregationActive: (filters, authState) => {
-                    if (authState.isAdmin) {
-                        const isActiveFunc = doesTermFilterContainValues('entity_type', ['Dataset'])
-                        return isActiveFunc(filters)
-                    }
-                    return false
+                isAggregationActive: doesTermFilterContainValues('entity_type', ['Dataset']),
                 }, isFacetVisible: doesAggregationHaveBuckets('status')
             },
             dataset_type: {
