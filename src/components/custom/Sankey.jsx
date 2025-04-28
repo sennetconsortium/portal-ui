@@ -55,7 +55,7 @@ function SankeyPage() {
         setFilters(router.query)
         setOptions({
             useShadow: true,
-            styleSheetPath: 'https://rawcdn.githack.com/x-atlas-consortia/data-sankey/1.0.6-b/src/lib/xac-sankey.css',
+            styleSheetPath: 'https://rawcdn.githack.com/x-atlas-consortia/data-sankey/1.0.7/src/lib/xac-sankey.css',
             api: {
                 token: getCookie('groups_token')
             },
