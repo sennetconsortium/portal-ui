@@ -92,7 +92,7 @@ export const SEARCH_ENTITIES = {
                 isFilterable: false,
                 facetType: 'term',
                 isAggregationActive: doesTermFilterContainValues('entity_type', ['Dataset']),
-                }, isFacetVisible: doesAggregationHaveBuckets('status')
+                isFacetVisible: doesAggregationHaveBuckets('status')
             },
             dataset_type: {
                 label: 'Dataset Type',
