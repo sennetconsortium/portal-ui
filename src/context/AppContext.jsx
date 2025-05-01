@@ -10,7 +10,7 @@ import {
     hasDataAdminPrivs
 } from '@/lib/services'
 import {deleteCookies} from "@/lib/auth";
-import {APP_ROUTES_NO_REDIRECT} from "@/config/constants";
+import {APP_ROUTES_NO_REDIRECT, REDIRECT_COOKIE_KEY} from "@/config/constants";
 import AppModal from "../components/AppModal";
 import Spinner from "../components/custom/Spinner";
 import Unauthorized from "@/components/custom/layout/Unauthorized";
@@ -35,8 +35,6 @@ export const AppProvider = ({ cache, banners, children }) => {
     const router = useRouter()
     const authKey = 'isAuthenticated'
     const tutorialCookieKey = 'tutorialCompleted_'
-    const pageKey = 'redirectUri'
-
 
     const [tutorialTrigger, setTutorialTrigger] = useState(0)
 
@@ -63,7 +61,7 @@ export const AppProvider = ({ cache, banners, children }) => {
         }
 
         if (noRedirectTo.indexOf(router.pathname) === -1) {
-            setCookie(pageKey, router.asPath)
+            setCookie(REDIRECT_COOKIE_KEY, router.asPath)
         }
 
         if(groupsToken !== "") {
