@@ -83,8 +83,11 @@ function SenNetStats({children}) {
     }
 
     const loadStats = async () => {
-        const entityTypesCounts = await getEntityTypeQuantities()
-        const organsCounts = await getOrganQuantities()
+        let entityTypesCounts = await getEntityTypeQuantities()
+        let organsCounts = await getOrganQuantities()
+
+        entityTypesCounts = entityTypesCounts || {}
+        organsCounts = organsCounts || {}
 
         let organs = 0
         for (let o in organsCounts) {
