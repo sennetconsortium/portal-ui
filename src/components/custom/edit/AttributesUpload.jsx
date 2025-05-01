@@ -6,7 +6,7 @@ import {getDocsRootURL, getIngestEndPoint} from "../../../config/config";
 import log from 'loglevel'
 import DataTable from 'react-data-table-component';
 import $ from 'jquery'
-import { get_auth_header } from "../../../lib/services";
+import { getAuthHeader } from "../../../lib/services";
 import SenNetPopover, {SenPopoverOptions} from "../../SenNetPopover";
 import {eq, urlify} from "../js/functions";
 
@@ -167,7 +167,7 @@ function AttributesUpload({ setAttribute, attribute = 'metadata', ingestEndpoint
             formData.append('entity_type', entity)
             formData.append('sub_type', subType)
             formData.append('ui_type', 'gui')
-            const response = await fetch(getIngestEndPoint() + ingestEndpoint, { method: 'POST', body: formData, headers: get_auth_header() })
+            const response = await fetch(getIngestEndPoint() + ingestEndpoint, { method: 'POST', body: formData, headers: getAuthHeader() })
             const details = await response.json()
             $('[type=file]').val(null)
             if (details.code !== 200) {

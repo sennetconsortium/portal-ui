@@ -55,7 +55,7 @@ export default function MetadataTable({data, metadata, mappedMetadata, metadataK
         <Container fluid={true} className={'rdt-container-wrap'}>
             <Row className="mb-2">
                 <div className="col-sm-12">
-                    <div className="entity_subtitle icon_inline float-md-end">
+                    <div className="entity-subtitle icon-inline float-md-end">
                         <SenNetPopover className='download-entity-metadata'
                                        text={<>Download the metadata for <code>{data.entity_type} {data.sennet_id}</code>.</>}>
                             <a href={downloadURL}

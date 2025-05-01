@@ -1,6 +1,6 @@
 @use "../general/mixins";
 
-.title_badge {
+.title-badge {
   margin-top: 0;
   margin-bottom: 0;
   @include mixins.md-mx {
@@ -11,15 +11,15 @@
   }
 }
 
-.entity_subtitle {
+.entity-subtitle {
   font-size: 16px;
   text-decoration: none;
-  .title_badge {
+  .title-badge {
     margin-bottom: 5px;
   }
 }
 
-.icon_inline {
+.icon-inline {
   display: inline-flex !important;
   flex-wrap: wrap;
   align-items: center;
@@ -29,18 +29,18 @@
   }
 }
 
-.entity_body {
+.entity-body {
   background: #FCFCFC;
 }
 
 @media screen and (min-width: 768px) {
-  .entity_details {
+  .entity-details {
     margin-top: -27px !important;
   }
 }
 
 @media screen and (max-width: 767px) {
-  .entity_details {
+  .entity-details {
     margin-top: 10px !important;
   }
 }

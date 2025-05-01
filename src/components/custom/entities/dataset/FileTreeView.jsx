@@ -3,7 +3,7 @@ import Card from 'react-bootstrap/Card';
 import SenNetAccordion from "@/components/custom/layout/SenNetAccordion";
 import Link from "next/link";
 import DerivedContext from "@/context/DerivedContext";
-import {fetch_globus_filepath} from "@/lib/services";
+import {fetchGlobusFilepath} from "@/lib/services";
 import {FILE_KEY_SEPARATOR, getAssetsEndpoint, getAuth} from "@/config/config";
 import SenNetPopover, {SenPopoverOptions} from "../../../SenNetPopover";
 import {formatByteSize} from "../../js/functions";
@@ -50,7 +50,7 @@ export const FileTreeView = ({data, selection = {}, keys = {files: 'files', uuid
 
     useEffect( () => {
         async function fetchData() {
-            await fetch_globus_filepath(data[keys.uuid]).then((globusData) => {
+            await fetchGlobusFilepath(data[keys.uuid]).then((globusData) => {
                 setStatus(globusData.status);
                 setFilepath(globusData.filepath);
             });
@@ -161,7 +161,7 @@ export const FileTreeView = ({data, selection = {}, keys = {files: 'files', uuid
                     <Row className={`w-100 ${filesClassName}`}>
                         <Col md={8} sm={8}>
                             <a target="_blank"
-                               className={"icon_inline js-file"}
+                               className={"icon-inline js-file"}
                                href={`${getAssetsURL(node.data.uuid, node.data.rel_path)}`}><span
                                className="me-1">{node.label}</span>
                             </a>

@@ -42,21 +42,21 @@ function ViewHeaderBadges({data, uniqueHeader, uniqueHeaderUrl, isMetadataHeader
         <Fragment>
             {isMetadataHeader ? (
                 <Fragment>
-                    <h5 className={"title_badge"}>
+                    <h5 className={"title-badge"}>
                         <a className={`badge bg-${data.entity_type.toLowerCase()} me-2`}
                            href={`/${data.entity_type.toLowerCase()}?uuid=${data.uuid}`}>{displayBodyHeader(data.sennet_id)}</a>
                     </h5>
 
                     {!eq(data.entity_type, cache.entities.dataset) ? (
                         <Fragment>
-                            <h5 className={"title_badge"}>
+                            <h5 className={"title-badge"}>
                                 <span className="badge bg-secondary me-2">
                                     {displayBodyHeader(data.entity_type)}
                                 </span>
                             </h5>
 
                             {data.sample_category &&
-                                <h5 className={"title_badge"}>
+                                <h5 className={"title-badge"}>
                                     <span className="badge bg-secondary me-2">
                                         {displayBodyHeader(data.sample_category)}
                                     </span>
@@ -64,7 +64,7 @@ function ViewHeaderBadges({data, uniqueHeader, uniqueHeaderUrl, isMetadataHeader
                             }
 
                             {data.source_type &&
-                                <h5 className={"title_badge"}>
+                                <h5 className={"title-badge"}>
                                     <span className="badge bg-secondary me-2">
                                         {displayBodyHeader(data.source_type)}
                                     </span>
@@ -72,7 +72,7 @@ function ViewHeaderBadges({data, uniqueHeader, uniqueHeaderUrl, isMetadataHeader
                             }
                         </Fragment>
                     ) : (
-                        <h5 className={"title_badge"}>
+                        <h5 className={"title-badge"}>
                             <span className="badge bg-secondary me-2">
                                     {getUBKGFullName(getDatasetTypeDisplay(data))}
                             </span>
@@ -87,14 +87,14 @@ function ViewHeaderBadges({data, uniqueHeader, uniqueHeaderUrl, isMetadataHeader
                                 {/* Some organs don't have an organ page */}
                                 {getOrganRoute(organ) ? (
                                     <a href={getOrganRoute(organ)}>
-                                        <h5 className={"title_badge"}>
+                                        <h5 className={"title-badge"}>
                                         <span className="badge bg-secondary me-2">
                                             {displayBodyHeader(getUBKGFullName(organ))}
                                         </span>
                                         </h5>
                                     </a>
                                 ) : (
-                                    <h5 className={"title_badge"}>
+                                    <h5 className={"title-badge"}>
                                     <span className="badge bg-secondary me-2">
                                         {displayBodyHeader(getUBKGFullName(organ))}
                                     </span>
@@ -105,7 +105,7 @@ function ViewHeaderBadges({data, uniqueHeader, uniqueHeaderUrl, isMetadataHeader
                     }
 
                     {data.source_type &&
-                        <h5 className={"title_badge"}>
+                        <h5 className={"title-badge"}>
                             <span className="badge bg-secondary me-2">
                                 {displayBodyHeader(data.source_type)}
                             </span>
@@ -113,7 +113,7 @@ function ViewHeaderBadges({data, uniqueHeader, uniqueHeaderUrl, isMetadataHeader
 
                     }
                     {uniqueHeader && !uniqueHeaderUrl &&
-                        <h5 className={"title_badge"}>
+                        <h5 className={"title-badge"}>
                             <span className="badge bg-secondary me-2">
                                 {getUBKGFullName(uniqueHeader)}
                             </span>
@@ -121,7 +121,7 @@ function ViewHeaderBadges({data, uniqueHeader, uniqueHeaderUrl, isMetadataHeader
                     }
                     {uniqueHeader && uniqueHeaderUrl &&
                         <Link href={uniqueHeaderUrl}>
-                            <h5 className={"title_badge"}>
+                            <h5 className={"title-badge"}>
                                 <span className="badge bg-secondary me-2">
                                     {getUBKGFullName(uniqueHeader)}
                                 </span>
@@ -129,7 +129,7 @@ function ViewHeaderBadges({data, uniqueHeader, uniqueHeaderUrl, isMetadataHeader
                         </Link>
                     }
                     {data.status &&
-                        <h5 className={"title_badge"}>
+                        <h5 className={"title-badge"}>
                         <span className={`badge ${getStatusColor(data.status)} me-2`}>
                             <SenNetPopover text={getStatusDefinition(data.status)} className={'status-info'}>
                                     {displayBodyHeader(data.status)}
@@ -143,7 +143,7 @@ function ViewHeaderBadges({data, uniqueHeader, uniqueHeaderUrl, isMetadataHeader
             }
 
             {(data?.doi_url || data?.publication_doi) &&
-                <h5 className={"title_badge"}>
+                <h5 className={"title-badge"}>
                     <span className={`${data.status ? getStatusColor(data.status) : (data.registered_doi ? 'badge-success' : 'badge-info')} badge`}>
                         DOI: <a href={data.doi_url || data?.publication_url} className={'lnk--nodecor'} style={{color: 'white'}}>{data.registered_doi || data?.publication_doi}</a>
                         &nbsp;<ClipboardCopy text={data.registered_doi || data?.publication_doi} className={'lnk--white'} />

@@ -66,7 +66,7 @@ const DataUsageModal = ({data, filepath}) => {
                 Globus Research Data Management System.
                 Access <a
                     onClick={() => hasAgreedDUA ? window.open(filepath, '_blank') : displayModal()}
-                    className="icon_inline link"><span
+                    className="icon-inline link"><span
                     className="me-1">{data.sennet_id} Globus</span> <i className="bi bi-box-arrow-up-right"></i></a>
             </p>
             <Modal size="lg" show={showModal} keyboard={false}>

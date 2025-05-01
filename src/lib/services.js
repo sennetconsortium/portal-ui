@@ -14,7 +14,7 @@ import {SEARCH_ENTITIES} from "../config/search/entities";
 //////////////////////
 // Set header functions
 //////////////////////
-export function get_headers_from_req(reqHeaders, headers) {
+export function getHeadersFromRequest(reqHeaders, headers) {
     headers = headers || new Headers();
     for (let h in reqHeaders) {
         headers.set(h.upperCaseFirst(), reqHeaders[h])
@@ -22,13 +22,13 @@ export function get_headers_from_req(reqHeaders, headers) {
     return headers;
 }
 
-export function get_json_header(headers) {
+export function getJsonHeader(headers) {
     headers = headers || new Headers();
     headers.append("Content-Type", "application/json");
     return headers;
 }
 
-export function get_auth_header(ops = {}) {
+export function getAuthHeader(ops = {}) {
     const headers = new Headers();
     try {
         let auth = getAuth()
@@ -41,19 +41,19 @@ export function get_auth_header(ops = {}) {
     return headers;
 }
 
-export function get_x_sennet_header(headers) {
+export function getXSenNetHeader(headers) {
     headers = headers || new Headers();
     headers.append('X-SenNet-Application', 'portal-ui')
     return headers
 }
 
-export function get_headers() {
-    const headers = get_auth_header();
-    return get_json_header(headers);
+export function getAuthJsonHeaders() {
+    const headers = getAuthHeader();
+    return getJsonHeader(headers);
 }
 
 export async function callService(reqBody, url, method, headers) {
-    headers = headers ? headers : get_headers()
+    headers = headers ? headers : getAuthJsonHeaders()
     return await fetch(url, {
         method: method,
         headers: headers,
@@ -83,17 +83,17 @@ export function parseJson(json) {
 // Register/Update Entities
 //////////////////////
 // After creating or updating an entity, send to Entity API. Search API will be triggered during this process automatically
-export async function update_create_entity(uuid, body, action = "Edit", entity_type = null) {
-    let headers = get_headers()
-    headers = get_x_sennet_header(headers)
+export async function update_create_entity(uuid, body, action = "Edit", entityType = null) {
+    let headers = getAuthJsonHeaders()
+    headers = getXSenNetHeader(headers)
     let raw = JSON.stringify(body)
-    let url = getEntityEndPoint() + "entities/" + (action === 'Register' ? entity_type : uuid + '?return_dict=true')
+    let url = getEntityEndPoint() + "entities/" + (action === 'Register' ? entityType : uuid + '?return_dict=true')
     let method = (action === 'Register' ? "POST" : "PUT")
 
     return callService(raw, url, method, headers)
 }
 
-export async function update_create_dataset(uuid, body, action = "Edit", entityType = 'datasets') {
+export async function updateCreateDataset(uuid, body, action = "Edit", entityType = 'datasets') {
     if (action === 'Edit') {
         return update_create_entity(uuid, body, action, null);
     } else {
@@ -109,15 +109,15 @@ export async function update_create_dataset(uuid, body, action = "Edit", entityT
 //////////////////////
 // Check privileges
 //////////////////////
-export async function get_read_write_privileges() {
+export async function getReadWritePrivileges() {
     log.info('GET READ WRITE PRIVILEGES')
     const url = getIngestEndPoint() + 'privs'
-    const request_options = {
+    const requestOptions = {
         method: 'GET',
-        headers: get_headers()
+        headers: getAuthJsonHeaders()
     }
     try {
-        const response = await fetch(url, request_options)
+        const response = await fetch(url, requestOptions)
         if (!response.ok) {
             return {
                 "read_privs": false,
@@ -131,14 +131,14 @@ export async function get_read_write_privileges() {
     }
 }
 
-export async function call_ingest_service(path, base='privs/') {
+export async function callIngestService(path, base='privs/') {
     const url = getIngestEndPoint() + base + path;
-    const request_options = {
+    const requestOptions = {
         method: 'GET',
-        headers: get_headers()
+        headers: getAuthJsonHeaders()
     }
     try {
-        const response = await fetch(url, request_options)
+        const response = await fetch(url, requestOptions)
         if (!response.ok) {
             return {status: response.status, statusText: response.statusText}
         } else {
@@ -152,79 +152,79 @@ export async function call_ingest_service(path, base='privs/') {
     }
 }
 
-export async function has_data_admin_privs() {
+export async function hasDataAdminPrivs() {
     log.debug('FETCHING DATA ADMIN PRIVS')
-    return await call_ingest_service('has-data-admin')
+    return await callIngestService('has-data-admin')
 }
 
-export async function get_write_privilege_for_group_uuid(group_uuid) {
+export async function getWritePrivilegeForGroupUuid(groupUuid) {
     log.debug('GET WRITE PRIVILEGE FOR GROUP UUID')
-    return await call_ingest_service(group_uuid + '/has-write')
+    return await callIngestService(groupUuid + '/has-write')
 }
 
-export async function get_user_write_groups() {
+export async function getUserWriteGroups() {
     log.debug('FETCHING USER WRITE GROUPS')
-    return await call_ingest_service('user-write-groups')
+    return await callIngestService('user-write-groups')
 }
 
-export async function get_provider_groups() {
+export async function getProviderGroups() {
     log.debug('FETCHING Provider GROUPS')
-    return await call_ingest_service('data-provider-groups', 'metadata/')
+    return await callIngestService('data-provider-groups', 'metadata/')
 }
 
 
 //////////////////////
 // Entity API Requests
 //////////////////////
-export async function fetch_entity_api(url) {
-    let headers = get_auth_header()
-    const request_options = {
+export async function fetchEntityApi(url) {
+    let headers = getAuthHeader()
+    const requestOptions = {
         method: 'GET',
         headers: headers
     }
 
-    return await fetch(url, request_options)
+    return await fetch(url, requestOptions)
 }
 
-export async function get_prov_info(dataset_uuid) {
-    const url = getEntityEndPoint() + "datasets/" + dataset_uuid + "/prov-info?format=json"
-    let result = callService(null, url, 'GET', get_auth_header())
+export async function getProvInfo(datasetUuid) {
+    const url = getEntityEndPoint() + "datasets/" + datasetUuid + "/prov-info?format=json"
+    let result = callService(null, url, 'GET', getAuthHeader())
     if ("error" in result) {
         return {}
     }
     return result
 }
 
-export async function get_lineage_info(entity_uuid, lineage_descriptor) {
-    const url = getEntityEndPoint() + lineage_descriptor + "/" + entity_uuid
-    const result = fetch_entity_api(url)
+export async function getLineageInfo(entityUuid, lineage_descriptor) {
+    const url = getEntityEndPoint() + lineage_descriptor + "/" + entityUuid
+    const result = fetchEntityApi(url)
     if ("error" in result) {
         return []
     }
     return result
 }
 
-export async function fetch_globus_filepath(sennet_id) {
-    const url = getEntityEndPoint() + "entities/" + sennet_id + "/globus-url"
-    const response = await fetch_entity_api(url)
+export async function fetchGlobusFilepath(sennetId) {
+    const url = getEntityEndPoint() + "entities/" + sennetId + "/globus-url"
+    const response = await fetchEntityApi(url)
     const filepath = await response.text();
     return {status: response.status, filepath: filepath};
 }
 
 
-export async function fetch_pipeline_message(dataset_uuid, entity_type) {
+export async function fetchPipelineMessage(datasetUuid, entityType) {
     let endpoint = "pipeline-message"
-    if (entity_type === 'Upload') {
+    if (entityType === 'Upload') {
         endpoint = 'validation-message'
     }
-    const url = getEntityEndPoint() + "entities/" + dataset_uuid + "/" + endpoint
-    const response = await fetch_entity_api(url)
+    const url = getEntityEndPoint() + "entities/" + datasetUuid + "/" + endpoint
+    const response = await fetchEntityApi(url)
     return await response.text();
 }
 
 //////////////////////
 
-export async function check_valid_token() {
+export async function checkValidToken() {
     const token = getAuth();
     let headers = new Headers();
     headers.append("Authorization", "Bearer " + token)
@@ -242,14 +242,14 @@ export async function check_valid_token() {
 }
 
 // This function requires the bearer token passed to it as the middleware can't access "getAuth()"
-export async function fetch_entity_type(uuid, bearer_token) {
-    const headers = get_auth_header();
+export async function fetchEntityType(uuid, bearer_token) {
+    const headers = getAuthHeader();
     const url = getUUIDEndpoint() + "uuid/" + uuid
-    const request_options = {
+    const requestOptions = {
         method: 'GET',
         headers: headers
     }
-    const response = await fetch(url, request_options)
+    const response = await fetch(url, requestOptions)
     if (response.status === 200) {
         const entity = await response.json();
         return (entity["type"]).toLowerCase();
@@ -329,7 +329,7 @@ export const uploadFile = async file => {
     const formData = new FormData()
     formData.append('file', file)
     const requestOptions = {
-        headers: get_auth_header(),
+        headers: getAuthHeader(),
         method: 'POST',
         body: formData
     }
@@ -343,7 +343,7 @@ export const uploadFile = async file => {
 
 const fetchSearchAPIEntities = async (body) => {
     const token = getAuth();
-    const headers = get_json_header()
+    const headers = getJsonHeader()
     if (token) {
         headers.append("Authorization", `Bearer ${token}`)
     }
@@ -364,13 +364,13 @@ const fetchSearchAPIEntities = async (body) => {
 }
 
 export async function fetchVitessceConfiguration(datasetId) {
-    const headers = get_headers()
+    const headers = getAuthJsonHeaders()
     const url = getIngestEndPoint() + "vitessce/" + datasetId
-    const request_options = {
+    const requestOptions = {
         method: 'GET',
         headers: headers,
     }
-    const response = await fetch(url, request_options)
+    const response = await fetch(url, requestOptions)
     if (response.status === 200) {
         return await response.json()
     } else if (response.status === 400) {

@@ -2,6 +2,10 @@
 
 @use 'general/mixins';
 @use 'general/misc';
+@use 'general/bg';
+@use 'general/lnk';
+@use 'general/spacing';
+@use 'general/text';
 
 @use 'components/accordion';
 @use 'components/alert';
@@ -33,6 +37,8 @@
 @use 'components/vitessce';
 @use 'components/table';
 @use 'components/treeView';
+
+@use 'vendor/datepicker';
 @use 'vendor/primereact';
 
 @use 'pages/edit';

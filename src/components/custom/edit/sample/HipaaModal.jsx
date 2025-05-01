@@ -20,7 +20,7 @@ const HipaaModal = ({}) => {
         return (
             <>
                 <SenNetAlert className="hipaa-alert"
-                             text=<>Do not provide any Protected Health Information. This includes the <span className="link" onClick={displayModal}>
+                             text=<>Do not provide any Protected Health Information. This includes the <span className="lnk" onClick={displayModal}>
                                       18 identifiers specified by HIPAA</span>
                                   </> />
 

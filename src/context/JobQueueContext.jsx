@@ -1,5 +1,5 @@
 import React, {createContext, useContext, useEffect, useRef, useState} from 'react'
-import {get_auth_header, get_json_header} from "@/lib/services";
+import {getAuthHeader, getJsonHeader} from "@/lib/services";
 import {getEntityEndPoint} from "@/config/config";
 import {createDownloadUrl, eq} from "@/components/custom/js/functions";
 import AppContext from "./AppContext";
@@ -82,7 +82,7 @@ export const JobQueueProvider = ({ children }) => {
 
         let requestOptions = {
             method: 'PUT',
-            headers:  get_json_header(get_auth_header()),
+            headers:  getJsonHeader(getAuthHeader()),
             body: JSON.stringify({entity_uuids: succeededUuids})
         }
 

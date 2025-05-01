@@ -1,0 +1,34 @@
+.lnk {
+  cursor: pointer;
+  color: var(--bs-link-color);
+  text-decoration: underline;
+}
+
+.lnk--ic {
+  display: inline-flex !important;
+  align-items: center;
+  text-decoration: none;
+  i {
+    margin-left: 0.25rem;
+  }
+}
+
+.lnk--nodecor {
+  text-decoration: none;
+}
+
+.lnk--white {
+  &:hover {
+    svg {
+      fill: white !important;
+    }
+
+  }
+}
+
+.lnk--txt{
+  color: var(--bs-link-color) !important;
+  &:hover {
+    text-decoration: underline;
+  }
+}

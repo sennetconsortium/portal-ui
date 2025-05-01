@@ -1,8 +1,8 @@
 import { getUbkgCodes, getUbkgCodesPath, getUbkgEndPoint, getUbkgValuesetPath } from '@/config/config'
-import { get_json_header } from './services'
+import { getJsonHeader } from './services'
 import log from 'loglevel'
 
-export async function get_onotology_valueset(code) {
+export async function getOnotologyValueset(code) {
     const valuesetPath = getUbkgValuesetPath()
     const path = getUbkgCodesPath() ? getUbkgCodesPath()[code] : null
     if (!path && !valuesetPath) {
@@ -13,7 +13,7 @@ export async function get_onotology_valueset(code) {
     const url = getUbkgEndPoint() + ep
     const request_options = {
         method: 'GET',
-        headers: get_json_header()
+        headers: getJsonHeader()
     }
     const response = await fetch(url, request_options)
     let result = []
@@ -23,7 +23,7 @@ export async function get_onotology_valueset(code) {
     return result
 }
 
-async function get_ontology_from_cache(key) {
+async function getOntologyFromCache(key) {
     let ontology = []
     const url = '/api/ontology/' + key
     try {
@@ -35,7 +35,7 @@ async function get_ontology_from_cache(key) {
     return ontology
 }
 
-function to_key_val(list, lowerProp = false, key = 'term', key2 = 'term') {
+function toKeyVal(list, lowerProp = false, key = 'term', key2 = 'term') {
     if (!Array.isArray(list)) return null
     let result = {}
     let prop
@@ -56,23 +56,23 @@ function add_other(list, key = 'Other') {
     return list
 }
 
-export async function get_sample_categories() {
-    let list = await get_ontology_from_cache(getUbkgCodes().specimen_categories)
-    return to_key_val(list)
+export async function getSampleCategories() {
+    let list = await getOntologyFromCache(getUbkgCodes().specimen_categories)
+    return toKeyVal(list)
 }
 
-export async function get_dataset_types() {
-    let list = await get_ontology_from_cache(getUbkgCodes().dataset_types) //C000001
+export async function getDatasetTypes() {
+    let list = await getOntologyFromCache(getUbkgCodes().dataset_types) //C000001
     // Filter out 'UNKNOWN' from list
     list = list.filter(dataset_type => dataset_type.dataset_type !== 'UNKNOWN');
-    return to_key_val(list, false, 'dataset_type', 'dataset_type')
+    return toKeyVal(list, false, 'dataset_type', 'dataset_type')
 }
 
 const uberon_url_base = "http://purl.obolibrary.org/obo/UBERON_"
 const fma_url_base = "http://purl.org/sig/ont/fma/fma"
 
-export async function get_organs() {
-    const organs = await get_ontology_from_cache(getUbkgCodes().organ_types)
+export async function getOrgans() {
+    const organs = await getOntologyFromCache(getUbkgCodes().organ_types)
     for (let organ of organs) {
         if (!organ['organ_uberon']) continue
 
@@ -86,20 +86,20 @@ export async function get_organs() {
     return organs
 }
 
-export async function get_organ_types() {
-    let list = await get_ontology_from_cache(getUbkgCodes().organ_types)
-    list = to_key_val(list, false,'rui_code')
+export async function getOrganTypes() {
+    let list = await getOntologyFromCache(getUbkgCodes().organ_types)
+    list = toKeyVal(list, false,'rui_code')
     return add_other(list,'OT')
 }
 
-export async function get_source_types() {
-    let list = await get_ontology_from_cache(getUbkgCodes().source_types)
-    return to_key_val(list)
+export async function getSourceTypes() {
+    let list = await getOntologyFromCache(getUbkgCodes().source_types)
+    return toKeyVal(list)
 }
 
-export async function get_entities() {
-    let list = await get_ontology_from_cache(getUbkgCodes().entities)
+export async function getEntities() {
+    let list = await getOntologyFromCache(getUbkgCodes().entities)
     // order the list
     list.sort((a, b) => b.code.localeCompare(a.code))
-    return to_key_val(list, true)
+    return toKeyVal(list, true)
 }

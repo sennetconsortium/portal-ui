@@ -57,7 +57,7 @@ function EntityViewHeader({entity, data, hasWritePrivilege, uniqueHeader, unique
             {eq(entity, cache.entities.publication) && <h3>{data.title}
             </h3>}
             <div className="row mb-2">
-                <div className="col-md-8 col-sm-12 entity_subtitle icon_inline">
+                <div className="col-md-8 col-sm-12 entity-subtitle icon-inline">
                     <ViewHeaderBadges data={data} 
                                       uniqueHeader={uniqueHeader}
                                       uniqueHeaderUrl={uniqueHeaderUrl}
@@ -65,7 +65,7 @@ function EntityViewHeader({entity, data, hasWritePrivilege, uniqueHeader, unique
                 </div>
 
                 <div className="col-md-4 col-sm-12">
-                    <div className="entity_subtitle icon_inline float-md-end">
+                    <div className="entity-subtitle icon-inline float-md-end">
                         <EntityViewHeaderButtons data={data} entity={entity} hasWritePrivilege={hasWritePrivilege}/>
                     </div>
                 </div>

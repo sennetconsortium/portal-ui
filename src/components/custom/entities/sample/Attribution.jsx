@@ -23,7 +23,7 @@ export default function Attribution({ data }) {
                             {data.created_by_user_displayname}
                             <br></br>
                             <a href={`mailto:${data.created_by_user_email}`}
-                               className="icon_inline"><span
+                               className="icon-inline"><span
                                 className="me-1">{data.created_by_user_email}</span>
                                 <i className="bi bi-envelope-fill"></i></a>
                         </Card.Text>

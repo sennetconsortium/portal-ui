@@ -18,7 +18,7 @@ const Lineage = ({ lineage }) => {
         format: col => {
             return <span className={'has-supIcon'}><a
                 href={'/' + col.entity_type.toLowerCase() + '?uuid=' + col.uuid}
-                className="icon_inline">{col.sennet_id}</a><ClipboardCopy text={col.sennet_id}
+                className="icon-inline">{col.sennet_id}</a><ClipboardCopy text={col.sennet_id}
                                                                                    size={10}
                                                                                    title={'Copy SenNet ID {text} to clipboard'}/></span>
         }

@@ -15,12 +15,12 @@ const OrganViewHeader = ({ organ }) => {
 
             {/* Badges */}
             <div className='row mb-2' style={{ minHeight: '38px' }}>
-                <div className='col-md-6 col-sm-12 entity_subtitle icon_inline'>
-                    <h5 className='title_badge'>
+                <div className='col-md-6 col-sm-12 entity-subtitle icon-inline'>
+                    <h5 className='title-badge'>
                         <span className='badge bg-secondary'>
                             <a
                                 href={organ.url}
-                                className='icon_inline text-white'
+                                className='icon-inline text-white'
                                 target="_blank"
                                 rel="noopener noreferrer"
                             >

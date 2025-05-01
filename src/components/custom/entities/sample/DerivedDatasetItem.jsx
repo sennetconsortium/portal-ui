@@ -21,7 +21,7 @@ const DerivedDatasetItem = ({index, data, dataType, descendantUuid}) => {
             {descendantData != null &&
                 <tr key={"descendant_data_" + index}>
                     <td>
-                        <a href={`/dataset?uuid=${descendantData.uuid}`} className="icon_inline">
+                        <a href={`/dataset?uuid=${descendantData.uuid}`} className="icon-inline">
                             <span className="me-1">{descendantData.sennet_id}</span> <i className="bi bi-box-arrow-up-right"></i>
                         </a>
                     </td>

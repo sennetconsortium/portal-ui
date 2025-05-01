@@ -20,7 +20,7 @@ import GroupSelect from "../edit/GroupSelect";
 import AppModal from "../../AppModal";
 import {eq, getHeaders, getStatusColor} from "../js/functions";
 import AppContext from "../../../context/AppContext";
-import {get_headers, get_auth_header} from "../../../lib/services";
+import {getAuthJsonHeaders, getAuthHeader} from "../../../lib/services";
 import JobQueueContext from "../../../context/JobQueueContext";
 import OptionsSelect from "../layout/entity/OptionsSelect";
 import log from 'loglevel'
@@ -250,7 +250,7 @@ export default function BulkCreate({
         formData.append('referrer', JSON.stringify(getValidateReferrer()))
         const requestOptions = {
             method: 'POST',
-            headers: get_auth_header(),
+            headers: getAuthHeader(),
             body: formData
         }
         response.current = await fetch(getMetadataValidationUrl(), requestOptions)
@@ -263,7 +263,7 @@ export default function BulkCreate({
         setIsLoading(true)
         const requestOptions = {
             method: 'POST',
-            headers: get_headers(),
+            headers: getAuthJsonHeaders(),
             body: JSON.stringify({
                 job_id: jobData.job_id,
                 referrer: getRegisterReferrer()
@@ -294,7 +294,7 @@ export default function BulkCreate({
         formData.append('group_uuid', selectedGroup)
         const requestOptions = {
             method: 'POST',
-            headers: get_auth_header(),
+            headers: getAuthHeader(),
             body: formData
         }
         response.current = await fetch(getEntityValidationUrl(), requestOptions)
@@ -308,7 +308,7 @@ export default function BulkCreate({
         const body = {job_id: jobData.job_id, referrer: getRegisterReferrer()}
         const requestOptions = {
             method: 'POST',
-            headers: get_headers(),
+            headers: getAuthJsonHeaders(),
             body: JSON.stringify(body)
         }
         response.current = await fetch(getEntityRegistrationUrl(), requestOptions)
@@ -480,7 +480,7 @@ export default function BulkCreate({
         const docsUrl = getDocsUrl()
 
         return <>
-            See the <a className='link' href={docsUrl}>{type} Bulk {action}</a> page for further details.
+            See the <a className='lnk' href={docsUrl}>{type} Bulk {action}</a> page for further details.
         </>
     }
 
