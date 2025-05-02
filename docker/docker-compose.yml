@@ -1,8 +1,5 @@
-version: "3.7"
-
 # Will use the hostname when talking between services on the same network
 services:
-
   portal-ui:
     hostname: portal-ui
     container_name: portal-ui
@@ -22,7 +19,7 @@ services:
     volumes:
       # Mount the logging to container
       - "../log:/usr/src/app/log"
-      - "../src/public/content/banners/index.json:/usr/src/app/src/public/content/banners/index.json"
+      - "../src/public/content/banners/index.json:/usr/src/app/public/content/banners/index.json"
     networks:
       - sennet_docker_network
     logging:

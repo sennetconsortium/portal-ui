@@ -85,8 +85,15 @@ else
 
         # Copy over the source code
         mkdir portal-ui/src
-        cp -r ../src/* portal-ui/src
-        # Also explicitly copy the .env.local file
+
+        # Copy the src directory to the docker build context but not the node_modules directory
+        rsync -a \
+            --exclude='node_modules/' \
+            --exclude='.next/' \
+            --exclude='package-lock.json' \
+            --exclude='.env*' \
+            ../src/ portal-ui/src/
+
         cp ../src/.env.local portal-ui/src
 
         docker-compose -f docker-compose.yml -f docker-compose.development.yml -p portal-ui build
