@@ -60,10 +60,10 @@ else
     echo
 
     if [ "$1" = "start" ]; then
-        docker-compose -f docker-compose.yml -f docker-compose.deployment.yml -p portal-ui up -d
+        docker compose -f docker-compose.yml -f docker-compose.deployment.yml -p portal-ui up -d
     elif [ "$1" = "stop" ]; then
-        docker-compose -f docker-compose.yml -f docker-compose.deployment.yml -p portal-ui stop
+        docker compose -f docker-compose.yml -f docker-compose.deployment.yml -p portal-ui stop
     elif [ "$1" = "down" ]; then
-        docker-compose -f docker-compose.yml -f docker-compose.deployment.yml -p portal-ui down
+        docker compose -f docker-compose.yml -f docker-compose.deployment.yml -p portal-ui down
     fi
 fi

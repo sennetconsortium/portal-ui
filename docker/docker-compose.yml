@@ -16,6 +16,7 @@ services:
       - HOST_UID=${HOST_UID:-1002}
     init: true
     restart: always
+    platform: linux/amd64
     volumes:
       # Mount the logging to container
       - "../log:/usr/src/app/log"

@@ -76,7 +76,7 @@ else
 
         echo 'Checks complete, all good :)'
     elif [ "$1" = "config" ]; then
-        docker-compose -f docker-compose.yml -f docker-compose.development.yml -p portal-ui config
+        docker compose -f docker-compose.yml -f docker-compose.development.yml -p portal-ui config
     elif [ "$1" = "build" ]; then
         # Delete the copied source code dir if exists
         if [ -d "portal-ui/src" ]; then
@@ -96,12 +96,12 @@ else
 
         cp ../src/.env.local portal-ui/src
 
-        docker-compose -f docker-compose.yml -f docker-compose.development.yml -p portal-ui build
+        docker compose -f docker-compose.yml -f docker-compose.development.yml -p portal-ui build
     elif [ "$1" = "start" ]; then
-        docker-compose -f docker-compose.yml -f docker-compose.development.yml -p portal-ui up -d
+        docker compose -f docker-compose.yml -f docker-compose.development.yml -p portal-ui up -d
     elif [ "$1" = "stop" ]; then
-        docker-compose -f docker-compose.yml -f docker-compose.development.yml -p portal-ui stop
+        docker compose -f docker-compose.yml -f docker-compose.development.yml -p portal-ui stop
     elif [ "$1" = "down" ]; then
-        docker-compose -f docker-compose.yml -f docker-compose.development.yml -p portal-ui down
+        docker compose -f docker-compose.yml -f docker-compose.development.yml -p portal-ui down
     fi
 fi
