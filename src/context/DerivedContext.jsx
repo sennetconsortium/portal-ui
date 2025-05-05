@@ -2,7 +2,7 @@ import {createContext, useCallback, useRef, useState} from "react";
 import $ from "jquery";
 import log from "loglevel";
 import {datasetIs, fetchEntity} from "@/components/custom/js/functions";
-import {fetchVitessceConfiguration, get_prov_info, getEntityData} from "@/lib/services";
+import {fetchVitessceConfiguration, getProvInfo, getEntityData} from "@/lib/services";
 import useVitessceEncoder from "@/hooks/useVitessceEncoder";
 
 const DerivedContext = createContext({})
@@ -61,7 +61,7 @@ export const DerivedProvider = ({children, showVitessceList, setShowVitessceList
                 await set_vitessce_config(data, data.uuid, dataset_type)
             } else {
                 // Call `/prov-info` and check if processed datasets are returned
-                const prov_info = await get_prov_info(data.uuid)
+                const prov_info = await getProvInfo(data.uuid)
                 if (Object.keys(prov_info).length) {
                     const processed_datasets = prov_info['processed_dataset_uuid']
                     const processed_dataset_statuses = prov_info['processed_dataset_status']

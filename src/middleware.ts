@@ -1,7 +1,7 @@
 // middleware.ts
 import type {NextRequest} from 'next/server'
 import {NextResponse} from 'next/server'
-import {fetch_entity_type} from './lib/services.js'
+import {fetchEntityType} from './lib/services.js'
 import {REDIRECT_COOKIE_KEY} from './config/constants.js'
 
 // Direct the user to the correct entity type view/edit page
@@ -17,7 +17,7 @@ async function entityRewrites(request: NextRequest) {
             return response
         }
 
-        let entity_type = await fetch_entity_type(uuid, request.cookies.get('groups_token')?.value);
+        let entity_type = await fetchEntityType(uuid, request.cookies.get('groups_token')?.value);
 
         if (entity_type === "404") {
             return NextResponse.rewrite(new URL('/404', request.url))

@@ -24,7 +24,7 @@ import AppModal from "../../components/AppModal";
 import {tableColumns} from "../../components/custom/edit/AttributesUpload";
 import Swal from 'sweetalert2'
 import useDataTableSearch from "../../hooks/useDataTableSearch";
-import {get_headers} from "../../lib/services";
+import {getAuthJsonHeaders} from "../../lib/services";
 import TaskAltIcon from "@mui/icons-material/TaskAlt";
 import WarningAmberIcon from "@mui/icons-material/WarningAmber";
 import Stack from '@mui/material/Stack';
@@ -229,7 +229,7 @@ function ViewJobs({isAdmin = false}) {
         }
 
         if (eq(action, 'register')) {
-            let registerRes = await fetch(urlPrefix() + `/${row.job_id}`, {headers: get_headers()})
+            let registerRes = await fetch(urlPrefix() + `/${row.job_id}`, {headers: getAuthJsonHeaders()})
             if (registerRes.ok) {
                 let jobInfo = await registerRes.json()
                 setData([...data, jobInfo])
@@ -250,7 +250,7 @@ function ViewJobs({isAdmin = false}) {
         setModalSize('lg')
         fetch(url, {
             method: method,
-            headers: get_headers(),
+            headers: getAuthJsonHeaders(),
             body: JSON.stringify(body)
         }).then((res) => {
 

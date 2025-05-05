@@ -1,9 +1,9 @@
 import React, {createContext, useEffect, useState, useContext, useRef} from 'react'
 import { useRouter } from 'next/router'
 import {
-    get_provider_groups,
-    get_read_write_privileges,
-    get_user_write_groups,
+    getProviderGroups,
+    getReadWritePrivileges,
+    getUserWriteGroups,
 } from '@/lib/services'
 import log from 'loglevel'
 import {APP_ROUTES} from '@/config/constants'
@@ -89,19 +89,19 @@ export const EntityProvider = ({ children }) => {
     // only executed on init rendering, see the []
     useEffect(() => {
         
-        get_read_write_privileges()
+        getReadWritePrivileges()
             .then((response) => {
                 setAuthorized(response.write_privs)
             })
             .catch((error) => log.error(error))
 
-        get_provider_groups()
+        getProviderGroups()
             .then((response) => {
                 setProviderGroups(response.groups || [])
             })
             .catch((error) => log.error(error))
 
-        get_user_write_groups()
+        getUserWriteGroups()
             .then((response) => {
                 if (response.user_write_groups?.length === 1) {
                     setSelectedUserWriteGroupUuid(

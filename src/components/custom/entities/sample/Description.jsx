@@ -58,12 +58,12 @@ export default function Description({data, citationData, labId, primaryDateTitle
         const name = getUBKGFullName(data.intended_organ)
         if (organ) {
             return (
-                <a className={'icon_inline'}
+                <a className={'icon-inline'}
                    href={`${APP_ROUTES.organs}/${organ?.path}`}>{name}</a>
             )
         } else {
             return (
-                <span className={'icon_inline'}>{name}</span>
+                <span className={'icon-inline'}>{name}</span>
             )
         }
     }

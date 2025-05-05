@@ -1,12 +1,12 @@
 import {getRootURL} from "../../../config/config";
 import {formatMessageForCloudwatch} from "../find";
-import {get_auth_header, get_headers_from_req, get_json_header} from "../../../lib/services";
+import {getAuthHeader, getHeadersFromRequest, getJsonHeader} from "../../../lib/services";
 
 export default async function handler(req, res) {
     console.log('JSON API STARTING...')
     const uuid = req.query.uuid
-    let auth = get_auth_header({req, res})
-    let headers = get_json_header(get_headers_from_req(req.headers, auth))
+    let auth = getAuthHeader({req, res})
+    let headers = getJsonHeader(getHeadersFromRequest(req.headers, auth))
 
     let requestOptions = {
         method: 'GET',

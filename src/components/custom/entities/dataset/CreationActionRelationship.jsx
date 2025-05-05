@@ -26,7 +26,7 @@ function CreationActionRelationship({ entity, data }) {
             sortable: false,
             format: (row) => {
                 return <span className={'has-supIcon'}><a href={'/' + row.entity_type.toLowerCase() + '?uuid=' + row.uuid}
-                                                          className="icon_inline">{row.sennet_id}</a><ClipboardCopy text={row.sennet_id} size={10} title={'Copy SenNet ID {text} to clipboard'} /></span>
+                                                          className="icon-inline">{row.sennet_id}</a><ClipboardCopy text={row.sennet_id} size={10} title={'Copy SenNet ID {text} to clipboard'} /></span>
             }
         },
         {

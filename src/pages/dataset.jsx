@@ -10,7 +10,7 @@ import {
     getRequestHeaders
 } from "@/components/custom/js/functions";
 import {
-    get_write_privilege_for_group_uuid,
+    getWritePrivilegeForGroupUuid,
     getAncestryData,
     getEntityData
 } from "@/lib/services";
@@ -129,7 +129,7 @@ function ViewDataset() {
             }
 
             // fetch write privilege
-            get_write_privilege_for_group_uuid(_data.group_uuid).then(response => {
+            getWritePrivilegeForGroupUuid(_data.group_uuid).then(response => {
                 setHasWritePrivilege(response.has_write_privs)
             }).catch(log.error)
         }
@@ -171,7 +171,7 @@ function ViewDataset() {
                             </Alert>
                         }
 
-                        <div className="row flex-nowrap entity_body">
+                        <div className="row flex-nowrap entity-body">
                             <div className="col-auto p-0">
                                 <div id="sidebar"
                                      className="collapse collapse-horizontal sticky-top custom-sticky">
@@ -252,7 +252,7 @@ function ViewDataset() {
                                 </div>
                             </div>
 
-                            <main className="col m-md-3 entity_details">
+                            <main className="col m-md-3 entity-details">
                                 <SidebarBtn/>
 
                                 <EntityViewHeader data={data}

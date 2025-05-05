@@ -32,7 +32,7 @@ const Protocols = ({protocolUrl}) => {
                     <Card.Subtitle className={"title"}>DOI</Card.Subtitle>
                     <Card.Text>
                         <a href={getClickableLink(protocolUrl)}
-                           className="icon_inline" target="_blank"><span
+                           className="icon-inline" target="_blank"><span
                             className="me-1">{protocolUrl}</span> <i className="bi bi-box-arrow-up-right"></i></a>
                     </Card.Text>
                 </Card.Body>
@@ -49,7 +49,7 @@ const Protocols = ({protocolUrl}) => {
                                         <span key={index}>
                                     {author.username != "" ? (
                                             <a href={`https://www.protocols.io/researchers/${author.username}`}
-                                               className="icon_inline" target="_blank">
+                                               className="icon-inline" target="_blank">
                                                 <span className="me-1">{author.name}</span> <i className="bi bi-box-arrow-up-right"></i>
                                             </a>
                                         ) :

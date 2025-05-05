@@ -11,7 +11,7 @@ import {useRouter} from "next/router";
 import {
     callService,
     filterProperties,
-    get_write_privilege_for_group_uuid,
+    getWritePrivilegeForGroupUuid,
     getEntityData
 } from "@/lib/services";
 import {getEntityEndPoint} from "@/config/config";
@@ -69,7 +69,7 @@ function ViewCollection({collectionType='Collection', entitiesLabel='Entities'})
             }
 
             // fetch write privilege
-            get_write_privilege_for_group_uuid(_data.group_uuid).then(response => {
+            getWritePrivilegeForGroupUuid(_data.group_uuid).then(response => {
                 setHasWritePrivilege(response.has_write_privs)
             }).catch(log.error)
         }
@@ -98,7 +98,7 @@ function ViewCollection({collectionType='Collection', entitiesLabel='Entities'})
                 {data && !error &&
                     <>
                         <div className="container-fluid">
-                            <div className="row flex-nowrap entity_body">
+                            <div className="row flex-nowrap entity-body">
                                 <div className="col-auto p-0">
                                     <div id="sidebar"
                                          className="collapse collapse-horizontal sticky-top custom-sticky">
@@ -128,7 +128,7 @@ function ViewCollection({collectionType='Collection', entitiesLabel='Entities'})
                                     </div>
                                 </div>
 
-                                <main className="col m-md-3 entity_details">
+                                <main className="col m-md-3 entity-details">
                                     <SidebarBtn/>
 
                                     <EntityViewHeader data={data} entity={collectionType.toLowerCase()}

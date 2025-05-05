@@ -13,7 +13,7 @@ const AncestorInformationBox = ({ ancestor }) => {
                     <Card.Body>
                         <Card.Subtitle>
                             <a href={'/' + ancestor.entity_type.toLowerCase() + '?uuid=' + ancestor.uuid}
-                               className="icon_inline mt-1">{ancestor.sennet_id}</a><ClipboardCopy text={ancestor.sennet_id} title={'Copy SenNet ID {text} to clipboard'} />
+                               className="icon-inline mt-1">{ancestor.sennet_id}</a><ClipboardCopy text={ancestor.sennet_id} title={'Copy SenNet ID {text} to clipboard'} />
                         </Card.Subtitle>
                     </Card.Body>
                 </Card>

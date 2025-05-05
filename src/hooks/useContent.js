@@ -1,5 +1,5 @@
 import {useEffect, useState} from 'react'
-import {get_json_header} from "../lib/services";
+import {getJsonHeader} from "../lib/services";
 import log from 'loglevel'
 
 function useContent() {
@@ -10,7 +10,7 @@ function useContent() {
         try {
             let res = await fetch(
                 `content/banners/index.json`,
-                get_json_header()
+                getJsonHeader()
             )
             if (res.ok) {
                 return await res.json()

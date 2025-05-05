@@ -28,7 +28,7 @@ const Organ = () => {
         <>
             <AppNavbar hidden={isRegisterHidden} signoutHidden={false} />
             <div className='container-fluid'>
-                <div className='row flex-nowrap entity_body'>
+                <div className='row flex-nowrap entity-body'>
                     {/* Sidebar */}
                     <div className='col-auto p-0'>
                         <div
@@ -73,7 +73,7 @@ const Organ = () => {
                         </div>
                     </div>
 
-                    <main className='col m-md-3 entity_details'>
+                    <main className='col m-md-3 entity-details'>
                         <SidebarBtn />
 
                         {/* Title and badges */}
