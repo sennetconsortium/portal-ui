@@ -13,9 +13,13 @@ RUN apt-get update -y && \
     apt-get dist-upgrade -y && \
     apt-get install git -y
 
+# Create the non-root codcc user
+RUN groupadd -g $HOST_GID codcc && \
+    useradd -m -u $HOST_UID -g codcc -s /bin/bash codcc
+
 # Copy package.json and update npm
-COPY ./src .
-COPY ./entrypoint.sh /usr/local/bin/entrypoint.sh
+COPY --chown=codcc:codcc ./src .
+COPY --chmod=755 ./entrypoint.sh /usr/local/bin/entrypoint.sh
 
 # Update npm, install dependencies, and build the project
 ENV NODE_ENV=production
@@ -28,12 +32,6 @@ RUN npm install -g npm@latest && \
 # Clean up
 RUN apt-get purge -y git && \
     apt-get auto-remove -y
-
-# Create the non-root codcc user
-RUN groupadd -g $HOST_GID codcc && \
-    useradd -m -u $HOST_UID -g codcc -s /bin/bash codcc && \
-    chown -R codcc:codcc /usr/src/app && \
-    chmod +x /usr/local/bin/entrypoint.sh
 
 USER codcc
 
