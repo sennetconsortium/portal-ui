@@ -41,11 +41,20 @@ async function afterLoginRewrites(request: NextRequest) {
     let fromGlobus = request.nextUrl.searchParams.get("globus")
     const page = request.cookies.get(REDIRECT_COOKIE_KEY)?.value
     if (fromGlobus) {
+        let info = request.cookies.get('info')?.value
+        let groupsToken
+        if (info) {
+            info = atob(info)
+            const userInfo = JSON.parse(info)
+            groupsToken = userInfo.groups_token
+        }
         let url = new URL('/', request.url)
         if ( page && (!page?.includes('//') && !page?.includes('www.'))) {
             url = new URL(page, request.url)
         }
-        return NextResponse.redirect(url)
+        const response = NextResponse.redirect(url)
+        response.cookies.set('groups_token', groupsToken)
+        return response
     }
 
     return NextResponse.rewrite(request.url)
