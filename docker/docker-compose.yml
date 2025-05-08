@@ -7,7 +7,7 @@ services:
     hostname: portal-ui
     container_name: portal-ui
     ports:
-      - "8888:3000"
+      - "3000:3000"
     healthcheck:
       test: ["CMD", "curl", "--fail", "http://localhost:3000"]
       interval: 1m30s
@@ -25,11 +25,11 @@ services:
       - "../src/public/content/banners/index.json:/usr/src/app/src/public/content/banners/index.json"
     networks:
       - sennet_docker_network
-    logging:
-      driver: awslogs
-      options:
-        awslogs-region: us-east-1
-        awslogs-group: ${PORTAL_UI_CLOUDWATCH_LOG_GROUP:?err}
+#    logging:
+#      driver: awslogs
+#      options:
+#        awslogs-region: us-east-1
+#        awslogs-group: ${PORTAL_UI_CLOUDWATCH_LOG_GROUP:?err}
 
 networks:
   # This is the network created by gateway to enable communication between multiple docker-compose projects
