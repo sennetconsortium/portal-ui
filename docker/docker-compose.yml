@@ -7,7 +7,7 @@ services:
     hostname: portal-ui
     container_name: portal-ui
     ports:
-      - "3000:3000"
+      - "8888:3000"
     healthcheck:
       test: ["CMD", "curl", "--fail", "http://localhost:3000"]
       interval: 1m30s
