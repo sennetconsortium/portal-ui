@@ -76,7 +76,7 @@ else
 
         echo 'Checks complete, all good :)'
     elif [ "$1" = "config" ]; then
-        docker-compose -f docker-compose.yml -f docker-compose.development.yml -p portal-ui config
+        docker compose -f docker-compose.yml -f docker-compose.development.yml -p portal-ui config
     elif [ "$1" = "build" ]; then
         # Delete the copied source code dir if exists
         if [ -d "portal-ui/src" ]; then
@@ -85,16 +85,23 @@ else
 
         # Copy over the source code
         mkdir portal-ui/src
-        cp -r ../src/* portal-ui/src
-        # Also explicitly copy the .env.local file
+
+        # Copy the src directory to the docker build context but not the node_modules directory
+        rsync -a \
+            --exclude='node_modules/' \
+            --exclude='.next/' \
+            --exclude='package-lock.json' \
+            --exclude='.env*' \
+            ../src/ portal-ui/src/
+
         cp ../src/.env.local portal-ui/src
 
-        docker-compose -f docker-compose.yml -f docker-compose.development.yml -p portal-ui build
+        docker compose -f docker-compose.yml -f docker-compose.development.yml -p portal-ui build
     elif [ "$1" = "start" ]; then
-        docker-compose -f docker-compose.yml -f docker-compose.development.yml -p portal-ui up -d
+        docker compose -f docker-compose.yml -f docker-compose.development.yml -p portal-ui up -d
     elif [ "$1" = "stop" ]; then
-        docker-compose -f docker-compose.yml -f docker-compose.development.yml -p portal-ui stop
+        docker compose -f docker-compose.yml -f docker-compose.development.yml -p portal-ui stop
     elif [ "$1" = "down" ]; then
-        docker-compose -f docker-compose.yml -f docker-compose.development.yml -p portal-ui down
+        docker compose -f docker-compose.yml -f docker-compose.development.yml -p portal-ui down
     fi
 fi

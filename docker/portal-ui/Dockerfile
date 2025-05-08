@@ -1,40 +1,38 @@
-# Parent image
-FROM sennet/api-base-image:1.0.0
+FROM node:20-bookworm-slim AS builder
 
 LABEL description="SenNet Portal UI"
+
+ARG HOST_GID
+ARG HOST_UID
 
 # Change to directory that contains the Dockerfile
 WORKDIR /usr/src/app
 
-# Copy from host to image
-COPY . .
+# Update the package list and install git
+RUN apt-get update -y && \
+    apt-get dist-upgrade -y && \
+    apt-get install git -y
 
-# Reduce the number of layers in image by minimizing the number of separate RUN commands
-# Add Node.js stable release Yum Repository
-# Install Node.js v18.x (installation: https://github.com/nodesource/distributions#installation-instructions-1)
-# Update to latest npm
-# Copy the entrypoint script and make it executible
-# Clean all yum cache
-RUN curl -fsSL https://rpm.nodesource.com/setup_20.x | bash - && \
-    yum install -y nodejs && \
-    npm install npm@latest -g && \
-    cp /usr/src/app/entrypoint.sh /usr/local/bin/entrypoint.sh && \
-    chmod +x /usr/local/bin/entrypoint.sh && \
-    yum clean all
+# Create the non-root codcc user
+RUN groupadd -g $HOST_GID codcc && \
+    useradd -m -u $HOST_UID -g codcc -s /bin/bash codcc
 
-# Change to source code directory
-WORKDIR /usr/src/app/src
+# Copy package.json and update npm
+COPY --chown=codcc:codcc ./src .
+COPY --chmod=755 ./entrypoint.sh /usr/local/bin/entrypoint.sh
 
-# Install npm dependencies and build app
+# Update npm, install dependencies, and build the project
 ENV NODE_ENV=production
-RUN npm install && \
+RUN npm install -g npm@latest && \
+    npm install && \
     npm run sass-build && \
     npm run build && \
-    npm uninstall sass
+    npm prune --production
 
-# The EXPOSE instruction informs Docker that the container listens on the specified network ports at runtime.
-EXPOSE 3000
+# Clean up
+RUN apt-get purge -y git && \
+    apt-get auto-remove -y
+
+USER codcc
 
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
-
-CMD ["npm", "run", "start"]
