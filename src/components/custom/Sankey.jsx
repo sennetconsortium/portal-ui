@@ -67,6 +67,9 @@ function Sankey({maxHeight, showExpandButton = false}) {
             api: {
                 token: getCookie('groups_token')
             },
+            displayableFilterMap: {
+                status: null
+            },
             validFilterMap: {
                 dataset_type: 'dataset_type_hierarchy',
                 source_type: 'dataset_source_type'
