@@ -2,7 +2,7 @@ import {useEffect, useState} from 'react'
 import PropTypes from 'prop-types'
 import {Container, Row, Col} from 'react-bootstrap';
 import {eq, getSubtypeProvenanceShape, goIntent} from "@/components/custom/js/functions";
-import {getEntityTypeQuantities, getOrganQuantities, getPrimariesQuantities} from "@/lib/services";
+import {getEntityTypeQuantities, getOrganQuantities} from "@/lib/services";
 
 function SenNetStats({children}) {
     const [stats, setStats] = useState(null)

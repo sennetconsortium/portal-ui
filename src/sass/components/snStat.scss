@@ -2,15 +2,20 @@
 
 .snStat {
   width: 45%;
-  cursor: pointer;
   flex: none;
 
+  &:hover {
+    cursor: pointer;
+    background: #ccc !important;
+  }
+
   @include mixins.lg {
-    width: calc(100%/var(--sn-stats));
+    width: calc(100% / var(--sn-stats));
+    padding: 1em;
   }
 
   @include mixins.md-xlg-mx {
-    width: calc(100%/3);
+    width: calc(100% / 3);
   }
 
   @include mixins.md-mx {
@@ -20,8 +25,10 @@
   &__num {
     display: block;
   }
+
   .row {
     flex: 1;
+
     .snStat {
       &__shape {
         padding: 0;
@@ -39,16 +46,19 @@
     }
 
   }
+
   .shape {
     &:after {
-      margin-top:10px;
+      margin-top: 10px;
       margin-left: 0;
     }
+
     &.shape--diamond:after {
       width: 3.2rem;
       height: 3.2rem;
-      margin-top:15px;
+      margin-top: 15px;
     }
+
     &.shape--circle:after {
       width: 4rem;
       height: 4rem;
@@ -66,16 +76,15 @@
   @include mixins.md-mx {
     text-align: center;
   }
-  @include mixins.lg {
-    padding: 1em;
-  }
 }
 
 .snLanding {
   width: 100vw;
+
   &.sui-layout {
     .sui-layout-body__inner {
       width: 100%;
+
       > .card {
         width: 100%;
       }
