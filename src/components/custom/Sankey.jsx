@@ -4,7 +4,14 @@ import {getCookie} from "cookies-next";
 import { ShimmerThumbnail } from "react-shimmer-effects";
 import SenNetAlert from "@/components/SenNetAlert";
 
-function SankeyPage({maxHeight, showExpandButton = false}) {
+/**
+ *
+ * @param {int} maxHeight - A max height to set on the diagram; leave null to use client height
+ * @param {boolean} showExpandButton - whether to show outgoing expand button
+ * @returns {JSX.Element}
+ * @constructor
+ */
+function Sankey({maxHeight, showExpandButton = false}) {
 
     const router = useRouter()
     const xacSankey = useRef(null)
@@ -108,4 +115,4 @@ function SankeyPage({maxHeight, showExpandButton = false}) {
     )
 }
 
-export default SankeyPage
+export default Sankey

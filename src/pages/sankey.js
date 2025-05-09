@@ -1,15 +1,11 @@
-import React, {useContext, useEffect, useState} from 'react'
-import PropTypes from 'prop-types'
+import React, {useContext} from 'react'
 import AppNavbar from "@/components/custom/layout/AppNavbar";
 import Header from "@/components/custom/layout/Header";
 import AppContext from "@/context/AppContext";
 import Sankey from "@/components/custom/Sankey";
 
-function SankeyView({children}) {
-    const {isRegisterHidden, _t, cache, isPreview, getPreviewView} = useContext(AppContext);
-
-    useEffect(() => {
-    }, [])
+function SankeyView({}) {
+    const {isRegisterHidden} = useContext(AppContext)
 
     return (
         <>
@@ -20,12 +16,6 @@ function SankeyView({children}) {
             <Sankey />
         </>
     )
-}
-
-
-
-SankeyView.propTypes = {
-    children: PropTypes.node
 }
 
 export default SankeyView
