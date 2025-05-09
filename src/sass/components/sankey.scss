@@ -2,6 +2,7 @@
   min-height: calc(100vh/2);
   width: 100%;
   position: relative;
+  overflow-x: auto;
   react-consortia-sankey  {
     width:100%;
     display:block;
