@@ -1,25 +1,26 @@
 import {useEffect, useState} from 'react'
 import PropTypes from 'prop-types'
-import {Container, Row, Col} from 'react-bootstrap';
+import {Col, Container, Row} from 'react-bootstrap';
 import {eq, getSubtypeProvenanceShape, goIntent} from "@/components/custom/js/functions";
-import {getEntityTypeQuantities, getOrganQuantities, getPrimariesQuantities} from "@/lib/services";
+import {getEntityTypeQuantities, getOrganQuantities} from "@/lib/services";
 
 function SenNetStats({children}) {
     const [stats, setStats] = useState(null)
     const entities = [
         {
-            color: 'yellow',
-            name: 'Source'
+            color: 'green',
+            name: 'Dataset'
         },
         {
             name: 'Sample'
         },
         {
-            color: 'green',
-            name: 'Dataset'
-        },
-        {
             name: 'Organ'
+        },
+
+        {
+            color: 'yellow',
+            name: 'Source'
         },
         {
             name: 'Publication'
@@ -67,8 +68,9 @@ function SenNetStats({children}) {
                                 </div>
                             </Col>
                             <Col className={'snStat__meta'} lg={8}>
-                                <span data-num={e.count || 0} data-js-appevent={'animVal'} className={'fs-1 snStat__num'}></span>
-                                <h5>{e.name}{e.count > 1 ? 's': ''}</h5>
+                                <span data-num={e.count || 0} data-js-appevent={'animVal'}
+                                      className={'fs-1 snStat__num'}></span>
+                                <h5>{e.name}{e.count > 1 ? 's' : ''}</h5>
                             </Col>
                         </Row>
                     </Col>
