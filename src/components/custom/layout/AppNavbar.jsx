@@ -85,6 +85,7 @@ const AppNavbar = ({hidden, signoutHidden, innerRef}) => {
 
     return (
         <Navbar
+            id='basic-navbar-nav'
             ref={innerRef}
             variant={'dark'}
             expand="lg"
