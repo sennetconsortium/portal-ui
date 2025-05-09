@@ -14,4 +14,21 @@
     top: 0;
     left: 0;
   }
+
+  &__btn {
+    position: absolute;
+    right: 0;
+    top: 40px;
+    background: white;
+    z-index: 110;
+    span {
+      margin-right: 10px;
+    }
+    &:hover {
+      i:before {
+        font-weight: bold !important;
+        font-size: 18px !important;
+      }
+    }
+  }
 }
