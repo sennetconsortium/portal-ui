@@ -58,11 +58,6 @@
 
   &--hasHover {
     cursor: pointer;
-    .card {
-      &:hover {
-        box-shadow: aliceblue 7px 5px;
-      }
-    }
   }
 
   &--w-sm-50 {
