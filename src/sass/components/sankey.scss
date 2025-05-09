@@ -2,6 +2,7 @@
   min-height: calc(100vh/2);
   width: 100%;
   position: relative;
+  overflow-x: auto;
   react-consortia-sankey  {
     width:100%;
     display:block;
@@ -12,5 +13,22 @@
     position: absolute;
     top: 0;
     left: 0;
+  }
+
+  &__btn {
+    position: absolute;
+    right: 0;
+    top: 40px;
+    background: white;
+    z-index: 110;
+    span {
+      margin-right: 10px;
+    }
+    &:hover {
+      i:before {
+        font-weight: bold !important;
+        font-size: 18px !important;
+      }
+    }
   }
 }
