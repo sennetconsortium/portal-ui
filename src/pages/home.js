@@ -63,7 +63,7 @@ function ViewHome({children}) {
                             <Col lg={3} className='smcHolder smcHolder--left smcHolder--hasSib smcHolder--w-sm-50'>
                                 <SiteMapCard title={<div className={"d-flex d-flex-row justify-content-between"}>
                                     <h4>Discover</h4>
-                                    <i className="icon-inline bi bi-search" style={{fontSize: '2.1em'}}/>
+                                    <i className="icon-inline bi bi-binoculars" style={{fontSize: '2.1em'}}/>
                                 </div>}
                                              body={<p>Investigate SenNet data by entity type or through its metadata
                                                  library.</p>}>
@@ -111,7 +111,7 @@ function ViewHome({children}) {
                             <Col lg={3} className='smcHolder smcHolder--right smcHolder--hasSib smcHolder--w-sm-50'>
                                 <SiteMapCard title={<div className={"d-flex d-flex-row justify-content-between"}>
                                     <h4>Members</h4>
-                                    <i className="icon-inline bi bi-people-fill" style={{fontSize: '2.1em'}}/>
+                                    <i className="icon-inline bi bi-people" style={{fontSize: '2.1em'}}/>
                                 </div>}
                                              body={<p>Explore resources available to SenNet members.</p>}>
                                     <div className={'text-center'}>
@@ -150,7 +150,7 @@ function ViewHome({children}) {
                             <Col lg={3} className='smcHolder smcHolder--left'>
                                 <SiteMapCard title={<div className={"d-flex d-flex-row justify-content-between"}>
                                     <h4>Search Data</h4>
-                                    <i className="icon-inline bi bi-search" style={{fontSize: '2.1em'}}/>
+                                    <i className="icon-inline bi bi-binoculars" style={{fontSize: '2.1em'}}/>
                                 </div>}
                                              hover={true}
                                              body={<p>Refine your results with faceted search that support flexible
