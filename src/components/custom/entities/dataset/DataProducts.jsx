@@ -1,7 +1,7 @@
-import React, {useContext, useEffect, useState} from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import SenNetAccordion from "../../layout/SenNetAccordion";
-import {datasetIs, eq, getRequestHeaders} from "../../js/functions";
+import {datasetIs} from "../../js/functions";
 import FileTreeView from "./FileTreeView";
 import Link from "next/link";
 

@@ -1,6 +1,5 @@
 import React, {useState} from "react";
 import {Button, Modal} from 'react-bootstrap';
-import log from 'loglevel'
 import SenNetPopover, {SenPopoverOptions} from "../../../../SenNetPopover";
 
 const RUIModal = ({hide, show, tissueBlockSpatialData}) => {

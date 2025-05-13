@@ -1,7 +1,7 @@
-import React, {useContext, useEffect, useState} from 'react'
+import React, {useEffect} from 'react'
 import PropTypes from 'prop-types'
 import SenNetPopover from "../../../SenNetPopover";
-import {Button, Form, Badge} from 'react-bootstrap'
+import {Form} from 'react-bootstrap'
 
 function OptionsSelect({popover, controlId, isRequired, isDisabled, label, onChange, data, propLabel='label', propVal='value', value}) {
     useEffect(() => {

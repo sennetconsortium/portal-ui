@@ -14,7 +14,6 @@ import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
 import {Tree} from 'primereact/tree';
 import 'primeicons/primeicons.css';
-import dynamic from "next/dynamic";
 import DataUsageModal from "@/components/custom/entities/dataset/DataUsageModal"
 
 

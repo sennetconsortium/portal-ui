@@ -1,5 +1,5 @@
 import React from 'react';
-import {Col, Form, Row} from 'react-bootstrap';
+import {Form} from 'react-bootstrap';
 import SenNetPopover from "../../../SenNetPopover";
 import {eq, getUBKGFullName} from "../../js/functions";
 

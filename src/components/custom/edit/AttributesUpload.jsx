@@ -1,6 +1,6 @@
-import React, {useContext, useEffect, useState, useRef} from 'react'
+import React, {useEffect, useState, useRef} from 'react'
 import PropTypes from 'prop-types'
-import {Button, Form} from 'react-bootstrap';
+import {Button} from 'react-bootstrap';
 import {InputGroup} from 'react-bootstrap';
 import {getDocsRootURL, getIngestEndPoint} from "../../../config/config";
 import log from 'loglevel'

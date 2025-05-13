@@ -2,11 +2,10 @@ import React, {useContext, useEffect, useState} from 'react'
 import {Col, Container, Row} from 'react-bootstrap'
 import AppContext from '../../../../context/AppContext'
 import HipaaModal from "../../edit/sample/HipaaModal";
-import {eq, getStatusColor, getStatusDefinition} from "../../js/functions";
+import {getStatusColor, getStatusDefinition} from "../../js/functions";
 import ClipboardCopy from "../../../ClipboardCopy";
 import SenNetAlert from "../../../SenNetAlert";
 import SenNetPopover from "../../../SenNetPopover";
-import {fetchPipelineMessage} from "@/lib/services";
 
 
 function EntityHeader({entity, data, isEditMode, values, showGroup = true, adminGroup}) {
