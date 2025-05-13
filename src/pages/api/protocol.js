@@ -1,5 +1,5 @@
 import {formatMessageForCloudwatch} from "./find";
-import {getProtocolId} from "../../components/custom/js/functions";
+import {getProtocolId} from "@/components/custom/js/functions";
 import log from "loglevel";
 
 export default async function handler(req, res) {

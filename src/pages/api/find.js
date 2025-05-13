@@ -1,5 +1,5 @@
 import {simple_query_builder} from "search-ui/lib/search-tools";
-import {getEntitiesIndex, getSearchEndPoint} from "../../config/config";
+import {getEntitiesIndex, getSearchEndPoint} from "@/config/config";
 import log from "loglevel";
 
 // a mock service to return some data

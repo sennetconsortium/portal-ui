@@ -1,7 +1,7 @@
 import Script from "next/script";
 import {getCookie} from "cookies-next";
 import {Helmet, HelmetProvider} from "react-helmet-async";
-import {getRootURL} from "../../../config/config";
+import {getRootURL} from "@/config/config";
 
 const EUIIntegration = () => {
     return (

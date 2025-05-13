@@ -1,6 +1,6 @@
 import React, {useState, useRef} from 'react'
 import {Button, Badge, Alert, Form, InputGroup, CloseButton} from 'react-bootstrap';
-import {uploadFile} from "../../../lib/services";
+import {uploadFile} from "@/lib/services";
 import SenNetPopover from "../../SenNetPopover";
 
 

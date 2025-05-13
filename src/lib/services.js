@@ -9,7 +9,7 @@ import {
 } from "@/config/config";
 import {getCookie} from "cookies-next";
 import log from "loglevel";
-import {SEARCH_ENTITIES} from "../config/search/entities";
+import {SEARCH_ENTITIES} from "@/config/search/entities";
 
 //////////////////////
 // Set header functions

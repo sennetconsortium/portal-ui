@@ -1,8 +1,8 @@
-import {useContext, useEffect, useState} from 'react'
+import {useContext, useState} from 'react'
 import PropTypes from 'prop-types'
 import Dropdown from 'react-bootstrap/Dropdown'
-import AppContext from "../../../../context/AppContext";
-import {getEntityViewUrl} from "../../js/functions";
+import AppContext from "@/context/AppContext";
+import {getEntityViewUrl} from "@/components/custom/js/functions";
 import Select from 'react-select'
 
 function VersionsDropdown({data}) {

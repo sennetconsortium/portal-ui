@@ -3,8 +3,8 @@ import React, {useContext} from 'react';
 import {useRouter} from 'next/router'
 import EntityContext, {EntityProvider} from "../../../context/EntityContext";
 import AppContext from "../../../context/AppContext";
-import {eq} from "../../../components/custom/js/functions";
-import {JobQueueProvider} from "../../../context/JobQueueContext";
+import {eq} from "@/components/custom/js/functions";
+import {JobQueueProvider} from "@/context/JobQueueContext";
 
 const AppFooter = dynamic(() => import("../../../components/custom/layout/AppFooter"))
 const AppNavbar = dynamic(() => import("../../../components/custom/layout/AppNavbar"))
