@@ -3,6 +3,7 @@ import { useRouter } from 'next/router'
 import {getCookie} from "cookies-next";
 import { ShimmerThumbnail } from "react-shimmer-effects";
 import SenNetAlert from "@/components/SenNetAlert";
+import {scaleOrdinal} from 'd3'
 
 /**
  *
@@ -26,10 +27,11 @@ function Sankey({maxHeight, showExpandButton = false}) {
         setLoadingMsg(msg)
     }
 
-    const setSankeyOptions = ()=> {
+    const setSankeyOptions = (xac)=> {
         if (xacSankey.current && xacSankey.current.setOptions) {
             const el = xacSankey.current
             const adapter = new SenNetAdapter(el)
+            el.theme.byScheme.dataset_group_name = scaleOrdinal(xac.XACSankey.blueGreyColors())
             el.setOptions({
                 ...options,
                 loading: {
@@ -79,23 +81,23 @@ function Sankey({maxHeight, showExpandButton = false}) {
 
     useEffect(()=>{
         // web components needs global window
-        import('xac-sankey')
+        import('xac-sankey').then((xac) => {
+            // the only way to pass objects is via a functional call to the exposed shadow dom
+            // must observe that this web component el is ready in DOM before calling the method
+            const targetNode = document.getElementById("__next")
+            const config = {  attributes: true, childList: true, subtree: true }
 
-        // the only way to pass objects is via a functional call to the exposed shadow dom
-        // must observe that this web component el is ready in DOM before calling the method
-        const targetNode = document.getElementById("__next")
-        const config = {  attributes: true, childList: true, subtree: true }
-
-        const callback = (mutationList, observer) => {
-            if (xacSankey.current && xacSankey.current.setOptions) {
-                // it's ready
-                setSankeyOptions()
-                observer.disconnect()
+            const callback = (mutationList, observer) => {
+                if (xacSankey.current && xacSankey.current.setOptions) {
+                    // it's ready
+                    setSankeyOptions(xac)
+                    observer.disconnect()
+                }
             }
-        }
 
-        const observer = new MutationObserver(callback)
-        observer.observe(targetNode, config)
+            const observer = new MutationObserver(callback)
+            observer.observe(targetNode, config)
+        })
 
         if (!maxHeight) {
             setSankeyHeight(window.innerHeight - 70)
