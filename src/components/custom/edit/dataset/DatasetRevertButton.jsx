@@ -1,7 +1,7 @@
-import React, {useContext, useEffect, useState} from 'react'
+import React, { useEffect, useState} from 'react'
 import PropTypes from 'prop-types'
 import AppModal from "../../../AppModal";
-import {Button, Form, Badge} from 'react-bootstrap'
+import {Button, Form} from 'react-bootstrap'
 import {getStatusColor} from "../../js/functions";
 
 export const supportedReverStatuses = () => {

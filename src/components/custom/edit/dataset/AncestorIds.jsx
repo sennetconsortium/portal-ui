@@ -9,7 +9,6 @@ import {valid_dataset_ancestor_config} from '@/config/config';
 import {TableResultsEntities} from '@/components/custom/TableResultsEntities'
 import AncestorsTable from './AncestorsTable';
 import CustomClearSearchBox from '@/components/custom/layout/CustomClearSearchBox';
-import addons from '@/components/custom/js/addons/addons';
 import $ from 'jquery'
 import SelectedFilters from '@/components/custom/layout/SelectedFilters';
 import {getUBKGFullName} from '@/components/custom/js/functions';

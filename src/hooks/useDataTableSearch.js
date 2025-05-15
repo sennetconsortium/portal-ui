@@ -1,6 +1,6 @@
 import React, {useEffect, useState, useMemo} from 'react'
 
-import {Button, Form, InputGroup, Col, Row} from 'react-bootstrap'
+import {Button, Form, InputGroup, Col} from 'react-bootstrap'
 
 const FilterComponent = ({ filterText, onFilter, onClear, className, onKeydown }) => (
     <>

@@ -1,8 +1,6 @@
 import React, {useState} from "react";
-import Badge from 'react-bootstrap/Badge'
 import {Button} from 'react-bootstrap';
 import AppModal from "../../../AppModal";
-import {getStatusColor} from "../../js/functions";
 
 const DatasetSubmissionButton = ({onClick, btnLabel, actionBtnClassName, modalBody, modalTitle, disableSubmit}) => {
     const [showModal, setShowModal] = useState(false)

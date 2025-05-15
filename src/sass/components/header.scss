@@ -11,12 +11,12 @@
 
 @include mixins.md-mx {
     .c-SelectedFacets {
-        min-height: 0px;
+        min-height: 0;
         padding: 20px 0 0;
     }
 
     .c-SelectedFacets:empty {
-        min-height: 0px;
-        padding: 0px 0;
+        min-height: 0;
+        padding: 0;
     }
 }

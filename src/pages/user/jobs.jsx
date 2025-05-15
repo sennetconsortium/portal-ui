@@ -11,26 +11,26 @@ import {
     getJobTypeColor,
     getStatusColor,
     THEME
-} from "../../components/custom/js/functions";
+} from "@/components/custom/js/functions";
 import DataTable from "react-data-table-component";
 import Alert from "react-bootstrap/Alert"
 import Button from "react-bootstrap/Button"
 import Container from "react-bootstrap/Container"
 import Form from "react-bootstrap/Form"
 import Row from "react-bootstrap/Row"
-import {getIngestEndPoint, RESULTS_PER_PAGE} from "../../config/config";
-import {getOptions, opsDict, ResultsPerPage} from "../../components/custom/search/ResultsPerPage";
+import {getIngestEndPoint, RESULTS_PER_PAGE} from "@/config/config";
+import {getOptions, opsDict, ResultsPerPage} from "@/components/custom/search/ResultsPerPage";
 import AppModal from "../../components/AppModal";
-import {tableColumns} from "../../components/custom/edit/AttributesUpload";
+import {tableColumns} from "@/components/custom/edit/AttributesUpload";
 import Swal from 'sweetalert2'
 import useDataTableSearch from "../../hooks/useDataTableSearch";
-import {getAuthJsonHeaders} from "../../lib/services";
+import {getAuthJsonHeaders} from "@/lib/services";
 import TaskAltIcon from "@mui/icons-material/TaskAlt";
 import WarningAmberIcon from "@mui/icons-material/WarningAmber";
 import Stack from '@mui/material/Stack';
 import JobQueueContext, {JobQueueProvider} from "../../context/JobQueueContext";
 import Joyride, {STATUS} from "react-joyride";
-import {SWAL_DEL_CONFIG, TUTORIAL_THEME} from "../../config/constants";
+import {SWAL_DEL_CONFIG, TUTORIAL_THEME} from "@/config/constants";
 import JobDashboardTutorialSteps from "../../components/custom/layout/JobDashboardTutorialSteps";
 import Spinner, {SpinnerEl} from "../../components/custom/Spinner";
 
