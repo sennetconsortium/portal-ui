@@ -3,7 +3,6 @@ import { useRouter } from 'next/router'
 import {getCookie} from "cookies-next";
 import { ShimmerThumbnail } from "react-shimmer-effects";
 import SenNetAlert from "@/components/SenNetAlert";
-import {scaleOrdinal} from 'd3'
 
 /**
  *
@@ -27,13 +26,17 @@ function Sankey({maxHeight, showExpandButton = false}) {
         setLoadingMsg(msg)
     }
 
-    const setSankeyOptions = (xac)=> {
+    const setSankeyOptions = ()=> {
         if (xacSankey.current && xacSankey.current.setOptions) {
             const el = xacSankey.current
             const adapter = new SenNetAdapter(el)
-            el.theme.byScheme.dataset_group_name = scaleOrdinal(xac.XACSankey.blueGreyColors())
             el.setOptions({
                 ...options,
+                theme: {
+                  palettes: {
+                      dataset_group_name: el.getColorPalettes().blueGrey
+                  }
+                },
                 loading: {
                     callback: handleLoading
                 },
@@ -65,7 +68,7 @@ function Sankey({maxHeight, showExpandButton = false}) {
         setFilters(router.query)
         setOptions({
             useShadow: true,
-            styleSheetPath: 'https://rawcdn.githack.com/x-atlas-consortia/data-sankey/1.0.10/src/lib/xac-sankey.css',
+            styleSheetPath: 'https://rawcdn.githack.com/x-atlas-consortia/data-sankey/1.0.11/src/lib/xac-sankey.css',
             api: {
                 token: getCookie('groups_token')
             },
@@ -81,7 +84,7 @@ function Sankey({maxHeight, showExpandButton = false}) {
 
     useEffect(()=>{
         // web components needs global window
-        import('xac-sankey').then((xac) => {
+        import('xac-sankey').then(() => {
             // the only way to pass objects is via a functional call to the exposed shadow dom
             // must observe that this web component el is ready in DOM before calling the method
             const targetNode = document.getElementById("__next")
@@ -90,7 +93,7 @@ function Sankey({maxHeight, showExpandButton = false}) {
             const callback = (mutationList, observer) => {
                 if (xacSankey.current && xacSankey.current.setOptions) {
                     // it's ready
-                    setSankeyOptions(xac)
+                    setSankeyOptions()
                     observer.disconnect()
                 }
             }
