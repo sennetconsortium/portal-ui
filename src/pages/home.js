@@ -61,7 +61,10 @@ function ViewHome({children}) {
                     <Container fluid>
                         <Row className={'smcFlex'}>
                             <Col lg={3} className='smcHolder smcHolder--left smcHolder--hasSib smcHolder--w-sm-50'>
-                                <SiteMapCard title={<h4>Discover</h4>}
+                                <SiteMapCard title={<div className={"d-flex d-flex-row justify-content-between"}>
+                                    <h4>Discover</h4>
+                                    <i className="icon-inline bi bi-binoculars" style={{fontSize: '2.1em'}}/>
+                                </div>}
                                              body={<p>Investigate SenNet data by entity type or through its metadata
                                                  library.</p>}>
                                     <Row className="smcHolder__footer text-center">
@@ -76,7 +79,10 @@ function ViewHome({children}) {
                             </Col>
 
                             <Col lg={3} className='smcHolder smcHolder--innerLeft smcHolder--w-sm-50'>
-                                <SiteMapCard title={<h4>Quick Start</h4>}
+                                <SiteMapCard title={<div className={"d-flex d-flex-row justify-content-between"}>
+                                    <h4>Quick Start</h4>
+                                    <i className="icon-inline bi bi-stopwatch" style={{fontSize: '2.1em'}}/>
+                                </div>}
                                              body={<p>Learn how to navigate the SenNet Consortium data portal with this
                                                  step-by-step guide.</p>}>
                                     <div className='text-sm-center'>
@@ -90,7 +96,10 @@ function ViewHome({children}) {
                             </Col>
 
                             <Col lg={3} className='smcHolder smcHolder--innerRight smcHolder--w-sm-50'>
-                                <SiteMapCard title={<h4>SenNet Consortium News</h4>}
+                                <SiteMapCard title={<div className={"d-flex d-flex-row justify-content-between"}>
+                                    <h4>SenNet Consortium News</h4>
+                                    <i className="icon-inline bi bi-newspaper" style={{fontSize: '2.1em'}}/>
+                                </div>}
                                              body={<p>Stay up to date on the latest news regarding SenNet.</p>}>
                                     <div className={'text-center'}>
                                         <Button variant="primary" className={'w-75 fs-7 mx-auto'}
@@ -100,7 +109,10 @@ function ViewHome({children}) {
                             </Col>
 
                             <Col lg={3} className='smcHolder smcHolder--right smcHolder--hasSib smcHolder--w-sm-50'>
-                                <SiteMapCard title={<h4>Members</h4>}
+                                <SiteMapCard title={<div className={"d-flex d-flex-row justify-content-between"}>
+                                    <h4>Members</h4>
+                                    <i className="icon-inline bi bi-people" style={{fontSize: '2.1em'}}/>
+                                </div>}
                                              body={<p>Explore resources available to SenNet members.</p>}>
                                     <div className={'text-center'}>
                                         <Button variant="primary" className={'w-75 fs-7 mx-auto'}
@@ -113,7 +125,7 @@ function ViewHome({children}) {
                 </section>
 
                 <section aria-label='Data Sankey' className='sui-layout-body__inner'>
-                    <Sankey/>
+                    <Sankey maxHeight={600} showExpandButton={true} />
                 </section>
 
                 <SenNetStats/>
@@ -138,7 +150,7 @@ function ViewHome({children}) {
                             <Col lg={3} className='smcHolder smcHolder--left'>
                                 <SiteMapCard title={<div className={"d-flex d-flex-row justify-content-between"}>
                                     <h4>Search Data</h4>
-                                    <i className="icon-inline bi bi-search" style={{fontSize: '2.1em'}}/>
+                                    <i className="icon-inline bi bi-binoculars" style={{fontSize: '2.1em'}}/>
                                 </div>}
                                              hover={true}
                                              body={<p>Refine your results with faceted search that support flexible
@@ -149,10 +161,10 @@ function ViewHome({children}) {
                                 <SiteMapCard title={<div className={"d-flex d-flex-row justify-content-between"}>
                                     <h4>Explore Organs</h4>
                                     <Image className="icon-inline"
-                                                               src="https://cdn.humanatlas.io/hra-design-system/icons/tools/icon-vccf.svg"
-                                                               width='50'
-                                                               height='50'
-                                                               alt={'Organs'}/>
+                                           src="https://cdn.humanatlas.io/hra-design-system/icons/tools/icon-vccf.svg"
+                                           width='50'
+                                           height='50'
+                                           alt={'Organs'}/>
                                 </div>}
                                              hover={true}
                                              body={<p>Tour senescent cell biomarkers organized by organ type.</p>}
@@ -160,12 +172,12 @@ function ViewHome({children}) {
                             </Col>
                             <Col lg={3} className='smcHolder'>
                                 <SiteMapCard title={<div className={"d-flex d-flex-row justify-content-between"}>
-                                    <h4>Exploration User Interface (EUI)</h4>
+                                    <h4>Exploration User Interface</h4>
                                     <Image className="icon-inline"
-                                                               src="https://cdn.humanatlas.io/hra-design-system/icons/tools/icon-eui.svg"
-                                                               width='50'
-                                                               height='50'
-                                                               alt={'Organs'}/>
+                                           src="https://cdn.humanatlas.io/hra-design-system/icons/tools/icon-eui.svg"
+                                           width='50'
+                                           height='50'
+                                           alt={'Organs'}/>
                                 </div>}
                                              hover={true}
                                              body={<p>Run visual searches of SenNet data by organ, donor, biomarker, or
@@ -173,7 +185,10 @@ function ViewHome({children}) {
                                              onClick={() => goIntent('/ccf-eui')}/>
                             </Col>
                             <Col lg={3} className='smcHolder smcHolder--right'>
-                                <SiteMapCard title={<h4>Take a deeper dive to</h4>}
+                                <SiteMapCard title={<div className={"d-flex d-flex-row justify-content-between"}>
+                                    <h4>Take a Deeper Dive</h4>
+                                    <i className="icon-inline bi bi-book" style={{fontSize: '2.1em'}}/>
+                                </div>}
                                              body={<p>Read on to learn more about&nbsp;
                                                  <LnkIc title='entity registration'
                                                         href={'https://docs.sennetconsortium.org/registration'}/>,
