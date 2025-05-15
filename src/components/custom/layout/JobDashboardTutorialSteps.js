@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React from "react";
 import {getJobTypeColor, getStatusColor} from "../js/functions";
 import {Button, ListGroup} from "react-bootstrap";
 

@@ -1,9 +1,8 @@
-import React, {useEffect, useState, useRef} from 'react';
+import React from 'react';
 import {
     getStatusColor,
     getStatusDefinition,
     getSubtypeProvenanceShape,
-    getUBKGFullName
 } from '@/components/custom/js/functions'
 import Button from 'react-bootstrap/Button';
 import SenNetPopover from '@/components/SenNetPopover';

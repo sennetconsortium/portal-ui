@@ -1,4 +1,3 @@
-import React from "react";
 import { withSearch } from "@elastic/react-search-ui";
 
 function SelectedFilters({ filters, removeFilter }) {

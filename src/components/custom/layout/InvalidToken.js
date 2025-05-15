@@ -1,6 +1,6 @@
 import React from "react";
 import {Col, Container, Row} from 'react-bootstrap'
-import {APP_ROUTES} from "../../../config/constants";
+import {APP_ROUTES} from "@/config/constants";
 
 const InvalidToken = () => {
     return (

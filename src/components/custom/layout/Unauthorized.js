@@ -1,9 +1,9 @@
 import React, {useContext} from "react";
 import {Col, Container, Row} from 'react-bootstrap'
-import {APP_ROUTES} from "../../../config/constants";
+import {APP_ROUTES} from "@/config/constants";
 import {getCookie} from "cookies-next";
-import {getIngestLogin} from "../../../config/config";
-import AppContext from "../../../context/AppContext";
+import {getIngestLogin} from "@/config/config";
+import AppContext from "@/context/AppContext";
 
 const Unauthorized = () => {
     const cookie = getCookie('info')

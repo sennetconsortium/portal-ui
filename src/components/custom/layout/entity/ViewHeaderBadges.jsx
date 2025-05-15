@@ -1,6 +1,5 @@
 import ClipboardCopy from "@/components/ClipboardCopy";
 import SenNetPopover from "@/components/SenNetPopover";
-import StatusError from "@/components/StatusError";
 import { APP_ROUTES } from "@/config/constants";
 import { getOrganByCode } from "@/config/organs";
 import AppContext from "@/context/AppContext";

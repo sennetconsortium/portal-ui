@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { APP_ROUTES } from "../../../config/constants";
+import { APP_ROUTES } from "@/config/constants";
 
 const SearchDropdown = ({ title }) => {
     const dropdownItems = [

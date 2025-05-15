@@ -4,7 +4,14 @@ import {getCookie} from "cookies-next";
 import { ShimmerThumbnail } from "react-shimmer-effects";
 import SenNetAlert from "@/components/SenNetAlert";
 
-function SankeyPage() {
+/**
+ *
+ * @param {int} maxHeight - A max height to set on the diagram; leave null to use client height
+ * @param {boolean} showExpandButton - whether to show outgoing expand button
+ * @returns {JSX.Element}
+ * @constructor
+ */
+function Sankey({maxHeight, showExpandButton = false}) {
 
     const router = useRouter()
     const xacSankey = useRef(null)
@@ -12,6 +19,7 @@ function SankeyPage() {
     const [loadingMsg, setLoadingMsg] = useState('')
     const [filters, setFilters] = useState(null)
     const [options, setOptions] = useState(null)
+    const [sankeyHeight, setSankeyHeight] = useState(maxHeight)
 
     const handleLoading = (ctx, msg) => {
         setLoading(msg ? true : ctx.isLoading)
@@ -59,6 +67,9 @@ function SankeyPage() {
             api: {
                 token: getCookie('groups_token')
             },
+            displayableFilterMap: {
+                status: null
+            },
             validFilterMap: {
                 dataset_type: 'dataset_type_hierarchy',
                 source_type: 'dataset_source_type'
@@ -86,19 +97,25 @@ function SankeyPage() {
         const observer = new MutationObserver(callback)
         observer.observe(targetNode, config)
 
+        if (!maxHeight) {
+            setSankeyHeight(window.innerHeight - 70)
+        }
+
     }, [])
 
 
     return (
         <div className={'c-sankey'}>
-            {filters && options && <react-consortia-sankey ref={xacSankey} options={btoa(JSON.stringify(options))
+            {showExpandButton && <a href={'/sankey'} className={'c-sankey__btn btn btn-outline-primary icon-inline'}><span>Expand</span> <i className="bi bi-arrows-angle-expand"></i></a>}
+            {filters && options && <react-consortia-sankey ref={xacSankey} options={btoa(JSON.stringify({...options, dimensions: {
+                    desktopMaxHeight: sankeyHeight
+                } }))
             } /> }
 
             {loading && <ShimmerThumbnail className={'mt-5'} rounded />}
             {loadingMsg && <SenNetAlert variant={'warning'} text={loadingMsg}></SenNetAlert>}
-
         </div>
     )
 }
 
-export default SankeyPage
+export default Sankey

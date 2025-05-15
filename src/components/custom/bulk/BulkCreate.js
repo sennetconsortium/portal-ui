@@ -13,15 +13,15 @@ import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import {Button} from "react-bootstrap";
 import {Alert, Container, Grid} from "@mui/material";
-import {getDocsRootURL, getIngestEndPoint} from "../../../config/config";
+import {getDocsRootURL, getIngestEndPoint} from "@/config/config";
 import Spinner, {SpinnerEl} from "../Spinner";
 import GroupsIcon from '@mui/icons-material/Groups';
 import GroupSelect from "../edit/GroupSelect";
 import AppModal from "../../AppModal";
 import {eq, getHeaders, getStatusColor} from "../js/functions";
-import AppContext from "../../../context/AppContext";
-import {getAuthJsonHeaders, getAuthHeader} from "../../../lib/services";
-import JobQueueContext from "../../../context/JobQueueContext";
+import AppContext from "@/context/AppContext";
+import {getAuthJsonHeaders, getAuthHeader} from "@/lib/services";
+import JobQueueContext from "@/context/JobQueueContext";
 import OptionsSelect from "../layout/entity/OptionsSelect";
 import log from 'loglevel'
 

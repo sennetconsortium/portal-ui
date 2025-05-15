@@ -3,7 +3,7 @@ import log from 'loglevel'
 import {DataConverterNeo4J, GraphGeneric, ProvenanceUI, Legend} from 'provenance-ui/dist/index'
 import 'provenance-ui/dist/ProvenanceUI.css'
 import Spinner from '../Spinner'
-import {getAuth, getEntityEndPoint} from "../../../config/config";
+import {getAuth, getEntityEndPoint} from "@/config/config";
 import AppModal from "../../AppModal";
 import $ from 'jquery'
 import {

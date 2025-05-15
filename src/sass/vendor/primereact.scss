@@ -217,7 +217,7 @@
   margin: 0;
   width: 0.5rem;
   height: 100%;
-  padding: 0px;
+  padding: 0;
   cursor: col-resize;
   border: 1px solid transparent;
 }
@@ -256,8 +256,8 @@
 
 .p-treetable-unfrozen-view {
   position: absolute;
-  top: 0px;
-  left: 0px;
+  top: 0;
+  left: 0;
 }
 
 /* Reorder */
@@ -297,8 +297,8 @@
 
 .p-tree .p-tree-container .p-treenode {
   padding: 0.143rem;
-  padding-top: 0px;
-  padding-bottom: 0px;
+  padding-top: 0;
+  padding-bottom: 0;
 }
 
 .p-tree .p-tree-container .p-treenode .p-treenode-content {

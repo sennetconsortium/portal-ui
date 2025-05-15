@@ -1,10 +1,10 @@
 import {Container, Nav, Navbar, NavDropdown} from 'react-bootstrap'
-import {getDataIngestBoardEndpoint, NAVBAR_TITLE} from '../../../config/config'
-import {APP_ROUTES, SWAL_DEL_CONFIG} from '../../../config/constants'
+import {getDataIngestBoardEndpoint, NAVBAR_TITLE} from '@/config/config'
+import {APP_ROUTES, SWAL_DEL_CONFIG} from '@/config/constants'
 import React, {useContext, useEffect} from 'react'
 import AppContext from '../../../context/AppContext'
 import {eq} from "../js/functions";
-import {deleteCookie, getCookie} from "cookies-next";
+import {getCookie} from "cookies-next";
 import Swal from 'sweetalert2'
 
 const AppNavbar = ({hidden, signoutHidden, innerRef}) => {
