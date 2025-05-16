@@ -22,10 +22,15 @@ export function getAuth() {
     return ''
 }
 
+export const supportedRuiSources = ['Human', 'Human Organoid']
+
 // Organs not supported by the CCF-RUI Tool are:
 // Adipose, Blood, Bone Marrow, Breast, Muscle, and Other
-export const nonSupportedRuiOrgans = ['AD', 'BD', 'BM', 'BS', 'BX', 'MU', 'OT']
-export const supportedRuiSources = ['Human', 'Human Organoid']
+export function supportedRuiOrgans() {
+    return window.UBKG_CACHE.organs
+        .filter((o) => o['rui_supported'] === true)
+        .map((o) => o['rui_code'])
+}
 
 export function valuesRuiSupported(values, dict) {
     try {
@@ -40,7 +45,7 @@ export function valuesRuiSupported(values, dict) {
 }
 
 export function isOrganRuiSupported(organs) {
-    return !valuesRuiSupported(organs, nonSupportedRuiOrgans)
+    return valuesRuiSupported(organs, supportedRuiOrgans())
 }
 
 export function isSampleRuiSupported(samples) {
