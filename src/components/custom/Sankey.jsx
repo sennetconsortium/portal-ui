@@ -32,11 +32,6 @@ function Sankey({maxHeight, showExpandButton = false}) {
             const adapter = new SenNetAdapter(el)
             el.setOptions({
                 ...options,
-                theme: {
-                  palettes: {
-                      dataset_group_name: el.getColorPalettes().blueGrey
-                  }
-                },
                 loading: {
                     callback: handleLoading
                 },
