@@ -277,6 +277,19 @@ export const EntityProvider = ({ children }) => {
 
     const errIcon = () => <WarningAmberIcon sx={{color: '#842029'}} />
 
+    const warningIcon = () => <WarningAmberIcon sx={{color: '#dc8e07'}} />
+
+    const setAllModalDetails = ({hasError, body, title, disableSubmit, modalProps, isWarning }) => {
+        let icon = hasError ? errIcon() : successIcon()
+        icon = isWarning ? warningIcon() : icon;
+        setHasSubmissionError(hasError)
+        setShowModal(true)
+        setDisableSubmit(disableSubmit || true)
+        setModalTitle(<span>{icon}<span className={'title-text'} >{title}</span></span>)
+        setModalBody(body)
+        setModalProps(modalProps)
+    }
+
     const setCheckAncestorModal = (body, titleTopic = 'RUI information') => {
         setHasSubmissionError(false)
         setShowModal(true)
@@ -325,17 +338,16 @@ export const EntityProvider = ({ children }) => {
 
     const getModal = () => {
         return <AppModal
-            className={`modal--ctaConfirm ${hasSubmissionError ? 'is-error' : ''}`}
+            className={`modal--ctaConfirm ${modalProps.className || ''} ${hasSubmissionError ? 'is-error' : ''}`}
             showModal={showModal}
             modalTitle={modalTitle}
             modalBody={<div>{modalBody}</div>}
-            handleSecondaryBtn={
-isEditMode() ? handleClose : goToEntity}
+            handleSecondaryBtn={ modalProps.secondaryBtnHandler || (isEditMode() ? handleClose : goToEntity)}
             handlePrimaryBtn={modalProps.actionBtnHandler ? modalProps.actionBtnHandler : handleHome}
             primaryBtnLabel={modalProps.actionBtnLabel ? modalProps.actionBtnLabel : 'Home page'}
             showSecondaryBtn={showCloseButton}
             secondaryBtnLabel={
-'Edit form'}
+                modalProps.secondaryBtnLabel ? modalProps.secondaryBtnLabel : 'Edit form'}
         />
     }
 
@@ -393,7 +405,7 @@ isEditMode() ? handleClose : goToEntity}
                 handleClose, handleHome, 
                 showModal, setShowModal,
                 modalBody, setModalBody,
-                modalTitle, setModalTitle,
+                modalTitle, setModalTitle, setAllModalDetails,
                 userWriteGroups, setUserWriteGroups, onChange, editMode, setEditMode,
                 selectedUserWriteGroupUuid, setSelectedUserWriteGroupUuid,
                 disableSubmit, setDisableSubmit,

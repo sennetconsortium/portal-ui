@@ -39,7 +39,7 @@ function EditSample() {
         validated, setValidated,
         userWriteGroups, onChange,
         editMode, setEditMode, isEditMode,
-        showModal,
+        showModal, setAllModalDetails, handleClose,
         selectedUserWriteGroupUuid,
         disableSubmit, setDisableSubmit,
         entityForm, disabled,
@@ -65,6 +65,7 @@ function EditSample() {
     const [thumbnailFileToRemove, setThumbnailFileToRemove] = useState(null)
     const [imageByteArray, setImageByteArray] = useState([])
     const alertStyle = useRef('info')
+    const issuedUserWarning = useRef(null)
 
     useEffect(() => {
         const fetchSampleCategories = async () => {
@@ -162,6 +163,7 @@ function EditSample() {
         if (router.query.hasOwnProperty('uuid')) {
             if (eq(router.query.uuid, 'register')) {
                 setData(true)
+                issuedUserWarning.value = false
                 setEditMode('Register')
             } else {
                 // fetch sample data
@@ -195,6 +197,23 @@ function EditSample() {
             checkProtocolUrl(value)
         }
     };
+
+    const checkRegistration = () => {
+       if (['Other', 'OT', null].contains(values['organ']) && eq(values['sample_category'], cache.sampleCategories.Organ)) {
+           setAllModalDetails({
+               title: <span>"Other" Organ Registration</span>,
+               isWarning: true,
+               modalProps: {
+                    actionBtnLabel: 'Confirm',
+                    actionBtnHandler: handleSave,
+                    secondaryBtnLabel: 'Fix',
+                    secondaryBtnHandler: handleClose,
+               },
+               body: <p>We have identified that you are registering a <code>Sample Organ</code> with the organ type <code>Other</code>. While it is permissible to register this organ type, you will not be able to register data against this <code>Sample</code>. Please contact our help desk to ensure that we can provide appropriate support for your work. Please click "Confirm" to complete the registration process or "Fix" to specify the Sample's organ.</p>
+           })
+       }
+        issuedUserWarning.value = true
+    }
 
     const resetSampleCategory = (e) => {
 
@@ -275,14 +294,14 @@ function EditSample() {
     const handleSave = async (event) => {
         setDisableSubmit(true);
 
-        const form = $(event.currentTarget.form)[0]
+        const form = entityForm.current
         if (form.checkValidity() === false) {
-            event.preventDefault();
-            event.stopPropagation();
+            event?.preventDefault();
+            event?.stopPropagation();
             log.debug("Form is invalid")
             setDisableSubmit(false);
         } else {
-            event.preventDefault();
+            event?.preventDefault();
             log.debug("Form is valid")
 
             if (values['group_uuid'] === null && editMode === 'Register') {
@@ -311,33 +330,36 @@ function EditSample() {
             let json = cleanJson(values);
             let uuid = data.uuid
 
+            if (issuedUserWarning.value === false) {
+                checkRegistration()
+            } else {
+                await update_create_entity(uuid, json, editMode, cache.entities.sample).then((response) => {
+                    setModalDetails({
+                        entity: cache.entities.sample, type: response.sample_category,
+                        typeHeader: _t('Sample Category'), response
+                    })
 
-            await update_create_entity(uuid, json, editMode, cache.entities.sample).then((response) => {
-                setModalDetails({
-                    entity: cache.entities.sample, type: response.sample_category,
-                    typeHeader: _t('Sample Category'), response
-                })
-
-                if (response.image_files) {
-                    setValues(prevState => ({...prevState, image_files: response.image_files}))
-                }
-                if (response.thumbnail_file) {
-                    setValues(prevState => ({...prevState, thumbnail_file: response.thumbnail_file}))
-                }
-                if (values.image_files_to_add) {
-                    delete values.image_files_to_add
-                }
-                if (values.image_files_to_remove) {
-                    delete values.image_files_to_remove
-                }
-                if (values.thumbnail_file_to_add) {
-                    delete values.thumbnail_file_to_add
-                }
-                if (values.thumbnail_file_to_remove) {
-                    delete values.thumbnail_file_to_remove
-                }
-                setImageByteArray([])
-            }).catch((e) => log.error(e))
+                    if (response.image_files) {
+                        setValues(prevState => ({...prevState, image_files: response.image_files}))
+                    }
+                    if (response.thumbnail_file) {
+                        setValues(prevState => ({...prevState, thumbnail_file: response.thumbnail_file}))
+                    }
+                    if (values.image_files_to_add) {
+                        delete values.image_files_to_add
+                    }
+                    if (values.image_files_to_remove) {
+                        delete values.image_files_to_remove
+                    }
+                    if (values.thumbnail_file_to_add) {
+                        delete values.thumbnail_file_to_add
+                    }
+                    if (values.thumbnail_file_to_remove) {
+                        delete values.thumbnail_file_to_remove
+                    }
+                    setImageByteArray([])
+                }).catch((e) => log.error(e))
+            }
         }
 
         setValidated(true);
