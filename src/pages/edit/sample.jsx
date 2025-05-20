@@ -39,7 +39,7 @@ function EditSample() {
         validated, setValidated,
         userWriteGroups, onChange,
         editMode, setEditMode, isEditMode,
-        showModal, setAllModalDetails, handleClose,
+        showModal, setAllModalDetails, handleClose, setModalProps,
         selectedUserWriteGroupUuid,
         disableSubmit, setDisableSubmit,
         entityForm, disabled,
@@ -181,6 +181,8 @@ function EditSample() {
         checkRui();
     }, [ancestorOrgan, values]);
 
+    const selectedOtherOrgan = (val) => ['Other', 'OT', null].contains(val)
+
     // callback provided to components to update the main list of form values
     const _onChange = (e, fieldId, value) => {
         // log.debug('onChange', fieldId, value)
@@ -190,6 +192,17 @@ function EditSample() {
         if (fieldId === 'direct_ancestor_uuid') {
             resetSampleCategory(e)
         }
+
+        if (fieldId === 'organ') {
+            const $organParent = document.getElementById('organ')?.parentElement?.parentElement
+            const cls = 'has-warning'
+            if (selectedOtherOrgan(value)) {
+                $organParent?.classList.add(cls)
+            } else {
+                issuedUserWarning.value = true
+                $organParent?.classList.remove(cls)
+            }
+        }
     };
 
     const _onBlur = (e, fieldId, value) => {
@@ -198,18 +211,24 @@ function EditSample() {
         }
     };
 
+    const secondaryBtnFixHandler = () => {
+        issuedUserWarning.value = false
+        setDisableSubmit(false)
+        handleClose()
+    }
+
     const checkRegistration = () => {
-       if (['Other', 'OT', null].contains(values['organ']) && eq(values['sample_category'], cache.sampleCategories.Organ)) {
+       if (selectedOtherOrgan(values['organ']) && eq(values['sample_category'], cache.sampleCategories.Organ)) {
            setAllModalDetails({
-               title: <span>"Other" Organ Registration</span>,
+               title: <span>"<span className={'text-codePink'}>Other</span>" Organ Registration</span>,
                isWarning: true,
                modalProps: {
                     actionBtnLabel: 'Confirm',
                     actionBtnHandler: handleSave,
                     secondaryBtnLabel: 'Fix',
-                    secondaryBtnHandler: handleClose,
+                    secondaryBtnHandler: secondaryBtnFixHandler,
                },
-               body: <p>We have identified that you are registering a <code>Sample Organ</code> with the organ type <code>Other</code>. While it is permissible to register this organ type, you will not be able to register data against this <code>Sample</code>. Please contact our help desk to ensure that we can provide appropriate support for your work. Please click "Confirm" to complete the registration process or "Fix" to specify the Sample's organ.</p>
+               body: <p>We have identified that you are registering a <code>Sample Organ</code> with the organ type <code>Other</code>. While it is permissible to register this organ type, you will not be able to register data against this <code>Sample</code>. Please contact our help desk to ensure that we can provide appropriate support for your work. Please click <span className={'text-primary'}>[Confirm]</span> to complete the registration process.</p>
            })
        }
         issuedUserWarning.value = true
@@ -292,6 +311,7 @@ function EditSample() {
     }
 
     const handleSave = async (event) => {
+        setModalProps({})
         setDisableSubmit(true);
 
         const form = entityForm.current
@@ -456,6 +476,7 @@ function EditSample() {
                                                 data={values}
                                                 source={source}
                                                 onChange={_onChange}
+                                                selectedOtherOrgan={selectedOtherOrgan}
                                                 isDisabled={isEditMode()}
                                             />
                                             <RUIButton

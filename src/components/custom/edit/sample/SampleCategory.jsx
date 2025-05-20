@@ -10,7 +10,8 @@ function SampleCategory({
                             data,
                             onChange,
                             sample_categories,
-                            isDisabled
+                            isDisabled,
+                            selectedOtherOrgan
                         }) {
 
     const {cache} = useContext(AppContext)
@@ -73,7 +74,7 @@ function SampleCategory({
             </Form.Group>
 
             {/*Organ Type*/}
-            <Form.Group as={Row} className="mb-3" id="organ_group"
+            <Form.Group as={Row} className={`mb-3 form-group ${selectedOtherOrgan(data.organ) ? 'has-warning' : ''}`} id="organ_group"
                         style={{display: organ_group_hide}}>
                 <Form.Label column sm="2">Organ Type <span
                     className="required">*</span></Form.Label>

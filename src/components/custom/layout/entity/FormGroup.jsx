@@ -65,7 +65,7 @@ EntityFormGroup.propTypes = {
     controlId: PropTypes.string.isRequired,
     label: PropTypes.string.isRequired,
     onChange: PropTypes.func.isRequired,
-    value: PropTypes.string.isRequired,
+    value: PropTypes.string,
     isDisabled: PropTypes.bool,
     isRequired: PropTypes.bool,
     type: PropTypes.string,

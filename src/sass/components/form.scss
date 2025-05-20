@@ -3,7 +3,7 @@
     position: relative;
 
     &.has-warning {
-      input {
+      input, select, textarea {
         border-color: var(--bs-warning) !important;
         background-image: none !important;
 
