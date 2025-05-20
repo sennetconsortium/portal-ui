@@ -3,6 +3,7 @@ import {Col, Form, Row} from 'react-bootstrap';
 import SenNetPopover from "../../../SenNetPopover";
 import AppContext from "../../../../context/AppContext";
 import {eq} from "../../js/functions";
+import WarningAmberIcon from "@mui/icons-material/WarningAmber";
 
 function SampleCategory({
                             organ_group_hide,
@@ -10,7 +11,9 @@ function SampleCategory({
                             data,
                             onChange,
                             sample_categories,
-                            isDisabled
+                            isDisabled,
+                            selectedOtherOrgan,
+                            popoverWarningText
                         }) {
 
     const {cache} = useContext(AppContext)
@@ -73,7 +76,7 @@ function SampleCategory({
             </Form.Group>
 
             {/*Organ Type*/}
-            <Form.Group as={Row} className="mb-3" id="organ_group"
+            <Form.Group as={Row} className={`mb-3 form-group select-group ${selectedOtherOrgan(data.organ) ? 'has-warning' : ''}`} id="organ_group"
                         style={{display: organ_group_hide}}>
                 <Form.Label column sm="2">Organ Type <span
                     className="required">*</span></Form.Label>
@@ -92,6 +95,11 @@ function SampleCategory({
 
                         })}
                     </Form.Select>
+                    {selectedOtherOrgan(data.organ) && <div className={'warning-icon-trigger'}>
+                        <SenNetPopover text={<>You {popoverWarningText}</>} className={`popover-warning-organ`}>
+                            <span ><WarningAmberIcon sx={{color: '#ffc107'}} /></span>
+                        </SenNetPopover>
+                    </div>}
                 </Col>
 
             </Form.Group>
