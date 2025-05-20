@@ -12,6 +12,13 @@
         }
       }
 
+      &.select-group {
+        .warning-icon-trigger {
+          top: 5px;
+          right: 20px;
+        }
+      }
+
       .warning-icon-trigger {
         position: absolute;
         top: 36px;

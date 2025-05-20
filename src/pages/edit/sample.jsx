@@ -13,6 +13,7 @@ import EntityContext, {EntityProvider} from '@/context/EntityContext'
 import {getUserEmail, getUserName, isRuiSupported} from "@/config/config";
 import {SenPopoverOptions} from "@/components/SenNetPopover";
 import $ from "jquery";
+import LnkIc from "@/components/custom/layout/LnkIc";
 
 const AncestorId = dynamic(() => import("@/components/custom/edit/sample/AncestorId"))
 const AncestorInformationBox = dynamic(() => import("@/components/custom/entities/sample/AncestorInformationBox"))
@@ -108,7 +109,7 @@ function EditSample() {
 
             setData(_data)
             setRuiSex(extractSourceSex(_data.source))
-            checkProtocolUrl(_data.protocol_url)
+
 
             // Show organ input group if sample category is 'organ'
             if (eq(_data.sample_category, cache.sampleCategories.Organ)) {
@@ -176,6 +177,18 @@ function EditSample() {
         }
     }, [router]);
 
+    useEffect(() => {
+        if (data) {
+            document.addEventListener(
+                "checkProtocolUrl",
+                (e) => {
+                    checkProtocolUrl(data.protocol_url)
+                },
+                false,
+            )
+        }
+    }, [data]);
+
     // On changes made to ancestorOrgan run checkRui function
     useEffect(() => {
         checkRui();
@@ -217,6 +230,8 @@ function EditSample() {
         handleClose()
     }
 
+    const organOtherWarning = <span>will not be able to register data against this <code>Sample</code>. Please contact our <LnkIc icClassName={'bi bi-envelope-fill'} href={'help@sennetconsortium.org'} title={'help desk'} /> to ensure that we can provide appropriate support for your work.</span>
+
     const checkRegistration = () => {
        if (selectedOtherOrgan(values['organ']) && eq(values['sample_category'], cache.sampleCategories.Organ)) {
            setAllModalDetails({
@@ -228,7 +243,7 @@ function EditSample() {
                     secondaryBtnLabel: 'Fix',
                     secondaryBtnHandler: secondaryBtnFixHandler,
                },
-               body: <p>We have identified that you are registering a <code>Sample Organ</code> with the organ type <code>Other</code>. While it is permissible to register this organ type, you will not be able to register data against this <code>Sample</code>. Please contact our help desk to ensure that we can provide appropriate support for your work. Please click <span className={'text-primary'}>[Confirm]</span> to complete the registration process.</p>
+               body: <p>We have identified that you are registering a <code>Sample Organ</code> with the organ type <code>Other</code>. While it is permissible to register this organ type, you {organOtherWarning} Please click <span className={'text-primary'}>[Confirm]</span> to complete the registration process.</p>
            })
        }
         issuedUserWarning.value = true
@@ -475,6 +490,7 @@ function EditSample() {
                                                 sample_categories={sampleCategories === null ? cache.sampleCategories : sampleCategories}
                                                 data={values}
                                                 source={source}
+                                                popoverWarningText={organOtherWarning}
                                                 onChange={_onChange}
                                                 selectedOtherOrgan={selectedOtherOrgan}
                                                 isDisabled={isEditMode()}
@@ -494,7 +510,7 @@ function EditSample() {
                                                      controlId='protocol_url' value={data.protocol_url}
                                                      isRequired={true}
                                                      className={warningClasses.protocol_url}
-                                                     popverWarningText={<>The supplied protocols.io DOI URL, formatting is
+                                                     popoverWarningText={<>The supplied protocols.io DOI URL, formatting is
                                                          correct but does not resolve. This will need to be corrected
                                                          for any <code>Dataset</code> submission that uses this entity
                                                          as an ancestor.</>}
@@ -505,6 +521,7 @@ function EditSample() {
                                                          className='lnk--ic'>https://www.protocols.io/ <i
                                                          className="bi bi-box-arrow-up-right"></i></a>.</span>}
                                                      otherInputProps={{
+                                                         'data-js-appevent': 'checkProtocolUrl',
                                                          pattern:getDOIPattern(),
                                                          onBlur: (e) => _onBlur(e, e.target.id, e.target.value)
                                                      }}
