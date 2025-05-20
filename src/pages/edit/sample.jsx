@@ -178,7 +178,7 @@ function EditSample() {
     }, [router]);
 
     useEffect(() => {
-        if (data) {
+        if (data && isEditMode()) {
             document.addEventListener(
                 "checkProtocolUrl",
                 (e) => {
@@ -243,7 +243,7 @@ function EditSample() {
                     secondaryBtnLabel: 'Fix',
                     secondaryBtnHandler: secondaryBtnFixHandler,
                },
-               body: <p>We have identified that you are registering a <code>Sample Organ</code> with the organ type <code>Other</code>. While it is permissible to register this organ type, you {organOtherWarning} Please click <span className={'text-primary'}>[Confirm]</span> to complete the registration process.</p>
+               body: <p>We have identified that you are registering a <code>Sample Organ</code> with the organ type <code>Other</code>. While it is permissible to register this organ type, you {organOtherWarning} Please click "Confirm" to complete the registration process.</p>
            })
        }
         issuedUserWarning.value = true
