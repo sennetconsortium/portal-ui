@@ -63,7 +63,7 @@ function Sankey({maxHeight, showExpandButton = false}) {
         setFilters(router.query)
         setOptions({
             useShadow: true,
-            styleSheetPath: 'https://rawcdn.githack.com/x-atlas-consortia/data-sankey/1.0.9/src/lib/xac-sankey.css',
+            styleSheetPath: 'https://rawcdn.githack.com/x-atlas-consortia/data-sankey/1.0.11/src/lib/xac-sankey.css',
             api: {
                 token: getCookie('groups_token')
             },
@@ -79,23 +79,23 @@ function Sankey({maxHeight, showExpandButton = false}) {
 
     useEffect(()=>{
         // web components needs global window
-        import('xac-sankey')
+        import('xac-sankey').then(() => {
+            // the only way to pass objects is via a functional call to the exposed shadow dom
+            // must observe that this web component el is ready in DOM before calling the method
+            const targetNode = document.getElementById("__next")
+            const config = {  attributes: true, childList: true, subtree: true }
 
-        // the only way to pass objects is via a functional call to the exposed shadow dom
-        // must observe that this web component el is ready in DOM before calling the method
-        const targetNode = document.getElementById("__next")
-        const config = {  attributes: true, childList: true, subtree: true }
-
-        const callback = (mutationList, observer) => {
-            if (xacSankey.current && xacSankey.current.setOptions) {
-                // it's ready
-                setSankeyOptions()
-                observer.disconnect()
+            const callback = (mutationList, observer) => {
+                if (xacSankey.current && xacSankey.current.setOptions) {
+                    // it's ready
+                    setSankeyOptions()
+                    observer.disconnect()
+                }
             }
-        }
 
-        const observer = new MutationObserver(callback)
-        observer.observe(targetNode, config)
+            const observer = new MutationObserver(callback)
+            observer.observe(targetNode, config)
+        })
 
         if (!maxHeight) {
             setSankeyHeight(window.innerHeight - 70)
