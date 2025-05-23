@@ -7,9 +7,10 @@ import {eq} from "../../js/functions";
 function SampleCategory({
                             organ_group_hide,
                             set_organ_group_hide,
-                            data,
-                            onChange,
                             sample_categories,
+                            data,
+                            source,
+                            onChange,
                             isDisabled
                         }) {
 
@@ -33,6 +34,23 @@ function SampleCategory({
         document.getElementById("organ").value = "";
         onChange(e, "organ", "")
 
+    }
+
+    const filteredOrgans = () => {
+        if (!source) {
+            return [];
+        }
+
+        const organs = {...cache.organTypes}
+
+        if (["Human", "Human Organoid"].includes(source["source_type"])) {
+            delete organs["UBERON:0001911"] // mammary gland
+        } else {
+            delete organs["ML"]
+            delete organs["MR"]
+        }
+
+        return organs
     }
 
     return (
@@ -78,12 +96,14 @@ function SampleCategory({
                 <Form.Label column sm="2">Organ Type <span
                     className="required">*</span></Form.Label>
                 <Col sm="10">
-                    <Form.Select aria-label="Organ Type" id="organ" disabled={isDisabled} onChange={e => {
+                    <Form.Select aria-label="Organ Type" id="organ" disabled={isDisabled || !source} onChange={e => {
                         onChange(e, e.target.id, e.target.value)
                     }}
                                  defaultValue={data.organ}>
-                        <option value="">----</option>
-                        {Object.entries(cache.organTypes).map(op => {
+                        {source ? 
+                            <option value="">----</option> :
+                            <option value="">Please select a source ancestor</option>}
+                        {Object.entries(filteredOrgans()).map(op => {
                             return (
                                 <option key={op[0]} value={op[0]}>
                                     {op[1]}
