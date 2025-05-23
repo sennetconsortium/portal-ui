@@ -1,8 +1,8 @@
-import React, {useContext} from 'react';
-import {Col, Form, Row} from 'react-bootstrap';
-import SenNetPopover from "../../../SenNetPopover";
-import AppContext from "../../../../context/AppContext";
-import {eq} from "../../js/functions";
+import { eq } from "@/components/custom/js/functions";
+import SenNetPopover from "@/components/SenNetPopover";
+import AppContext from "@/context/AppContext";
+import React, { useContext } from "react";
+import { Col, Form, Row } from "react-bootstrap";
 
 function SampleCategory({
                             organ_group_hide,
@@ -15,20 +15,20 @@ function SampleCategory({
                         }) {
 
     const {cache} = useContext(AppContext)
+
     const handleSampleCategoryChange = (e, onChange) => {
         // If sample category is 'Organ' then display the organ type input group
         if (eq(e.target.value, cache.sampleCategories.Organ)) {
             //Organ Type set display and require
-            set_organ_group_hide('')
+            set_organ_group_hide("")
             document.getElementById("organ").setAttribute("required", "")
-
         } else {
             resetOrganType(e, onChange);
         }
     };
     
     const resetOrganType = (e, onChange) => {
-        set_organ_group_hide('none')
+        set_organ_group_hide("none")
         document.getElementById("organ").removeAttribute("required")
         // Empty the value of the fields and trigger onChange
         document.getElementById("organ").value = "";
@@ -59,12 +59,12 @@ function SampleCategory({
             <Form.Group className="mb-3" controlId="sample_category">
                 <Form.Label>Sample Category <span
                     className="required">* </span>
-                    <SenNetPopover className={'sampleCat--pop'} text={<>
+                    <SenNetPopover className={"sampleCat--pop"} text={<>
                         The category of this <code>Sample</code>. Choose from one of the available options.<br />
-                        <small className='popover-note text-muted mt-2'>Note: CCF Registration User Interface (CCF-RUI)
+                        <small className="popover-note text-muted mt-2">Note: CCF Registration User Interface (CCF-RUI)
                             tool becomes available for the <code>{cache.sampleCategories.Block} Sample</code> category
                             where the <em>Ancestor</em> <code>Source</code> is of
-                            type <code>{cache.sourceTypes.Human}</code> or <code>{cache.sourceTypes['Human Organoid']}</code>,
+                            type <code>{cache.sourceTypes.Human}</code> or <code>{cache.sourceTypes["Human Organoid"]}</code>,
                             when the block has been sourced from a RUI supported organ.</small>
                     </>}>
                         <i className="bi bi-question-circle-fill"></i>
