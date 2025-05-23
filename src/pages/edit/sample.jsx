@@ -13,6 +13,7 @@ import EntityContext, {EntityProvider} from '@/context/EntityContext'
 import {getUserEmail, getUserName, isRuiSupported} from "@/config/config";
 import {SenPopoverOptions} from "@/components/SenNetPopover";
 import $ from "jquery";
+import LnkIc from "@/components/custom/layout/LnkIc";
 
 const AncestorId = dynamic(() => import("@/components/custom/edit/sample/AncestorId"))
 const AncestorInformationBox = dynamic(() => import("@/components/custom/entities/sample/AncestorInformationBox"))
@@ -39,7 +40,7 @@ function EditSample() {
         validated, setValidated,
         userWriteGroups, onChange,
         editMode, setEditMode, isEditMode,
-        showModal,
+        showModal, setAllModalDetails, handleClose, setModalProps,
         selectedUserWriteGroupUuid,
         disableSubmit, setDisableSubmit,
         entityForm, disabled,
@@ -65,6 +66,7 @@ function EditSample() {
     const [thumbnailFileToRemove, setThumbnailFileToRemove] = useState(null)
     const [imageByteArray, setImageByteArray] = useState([])
     const alertStyle = useRef('info')
+    const issuedUserWarning = useRef(null)
 
     useEffect(() => {
         const fetchSampleCategories = async () => {
@@ -107,7 +109,7 @@ function EditSample() {
 
             setData(_data)
             setRuiSex(extractSourceSex(_data.source))
-            checkProtocolUrl(_data.protocol_url)
+
 
             // Show organ input group if sample category is 'organ'
             if (eq(_data.sample_category, cache.sampleCategories.Organ)) {
@@ -162,6 +164,7 @@ function EditSample() {
         if (router.query.hasOwnProperty('uuid')) {
             if (eq(router.query.uuid, 'register')) {
                 setData(true)
+                issuedUserWarning.value = false
                 setEditMode('Register')
             } else {
                 // fetch sample data
@@ -174,10 +177,24 @@ function EditSample() {
         }
     }, [router]);
 
+    useEffect(() => {
+        if (data && isEditMode()) {
+            document.addEventListener(
+                "checkProtocolUrl",
+                (e) => {
+                    checkProtocolUrl(data.protocol_url)
+                },
+                false,
+            )
+        }
+    }, [data]);
+
     // On changes made to ancestorOrgan run checkRui function
     useEffect(() => {
         checkRui();
     }, [ancestorOrgan, values]);
+
+    const selectedOtherOrgan = (val) => ['Other', 'OT', null].contains(val)
 
     // callback provided to components to update the main list of form values
     const _onChange = (e, fieldId, value) => {
@@ -188,6 +205,17 @@ function EditSample() {
         if (fieldId === 'direct_ancestor_uuid') {
             resetSampleCategory(e)
         }
+
+        if (fieldId === 'organ') {
+            const $organParent = document.getElementById('organ')?.parentElement?.parentElement
+            const cls = 'has-warning'
+            if (selectedOtherOrgan(value)) {
+                $organParent?.classList.add(cls)
+            } else {
+                issuedUserWarning.value = true
+                $organParent?.classList.remove(cls)
+            }
+        }
     };
 
     const _onBlur = (e, fieldId, value) => {
@@ -195,6 +223,31 @@ function EditSample() {
             checkProtocolUrl(value)
         }
     };
+
+    const secondaryBtnFixHandler = () => {
+        issuedUserWarning.value = false
+        setDisableSubmit(false)
+        handleClose()
+    }
+
+    const organOtherWarning = <span>will not be able to register data against this <code>Sample</code>. Please contact our <LnkIc icClassName={'bi bi-envelope-fill'} href={'help@sennetconsortium.org'} title={'help desk'} /> to ensure that we can provide appropriate support for your work.</span>
+
+    const checkRegistration = () => {
+       if (selectedOtherOrgan(values['organ']) && eq(values['sample_category'], cache.sampleCategories.Organ)) {
+           setAllModalDetails({
+               title: <span>"<span className={'text-codePink'}>Other</span>" Organ Registration</span>,
+               isWarning: true,
+               modalProps: {
+                    actionBtnLabel: 'Confirm',
+                    actionBtnHandler: handleSave,
+                    secondaryBtnLabel: 'Fix',
+                    secondaryBtnHandler: secondaryBtnFixHandler,
+               },
+               body: <p>We have identified that you are registering a <code>Sample Organ</code> with the organ type <code>Other</code>. While it is permissible to register this organ type, you {organOtherWarning} Please click "Confirm" to complete the registration process.</p>
+           })
+       }
+        issuedUserWarning.value = true
+    }
 
     const resetSampleCategory = (e) => {
 
@@ -273,16 +326,17 @@ function EditSample() {
     }
 
     const handleSave = async (event) => {
+        setModalProps({})
         setDisableSubmit(true);
 
-        const form = $(event.currentTarget.form)[0]
+        const form = entityForm.current
         if (form.checkValidity() === false) {
-            event.preventDefault();
-            event.stopPropagation();
+            event?.preventDefault();
+            event?.stopPropagation();
             log.debug("Form is invalid")
             setDisableSubmit(false);
         } else {
-            event.preventDefault();
+            event?.preventDefault();
             log.debug("Form is valid")
 
             if (values['group_uuid'] === null && editMode === 'Register') {
@@ -311,33 +365,36 @@ function EditSample() {
             let json = cleanJson(values);
             let uuid = data.uuid
 
+            if (issuedUserWarning.value === false) {
+                checkRegistration()
+            } else {
+                await update_create_entity(uuid, json, editMode, cache.entities.sample).then((response) => {
+                    setModalDetails({
+                        entity: cache.entities.sample, type: response.sample_category,
+                        typeHeader: _t('Sample Category'), response
+                    })
 
-            await update_create_entity(uuid, json, editMode, cache.entities.sample).then((response) => {
-                setModalDetails({
-                    entity: cache.entities.sample, type: response.sample_category,
-                    typeHeader: _t('Sample Category'), response
-                })
-
-                if (response.image_files) {
-                    setValues(prevState => ({...prevState, image_files: response.image_files}))
-                }
-                if (response.thumbnail_file) {
-                    setValues(prevState => ({...prevState, thumbnail_file: response.thumbnail_file}))
-                }
-                if (values.image_files_to_add) {
-                    delete values.image_files_to_add
-                }
-                if (values.image_files_to_remove) {
-                    delete values.image_files_to_remove
-                }
-                if (values.thumbnail_file_to_add) {
-                    delete values.thumbnail_file_to_add
-                }
-                if (values.thumbnail_file_to_remove) {
-                    delete values.thumbnail_file_to_remove
-                }
-                setImageByteArray([])
-            }).catch((e) => log.error(e))
+                    if (response.image_files) {
+                        setValues(prevState => ({...prevState, image_files: response.image_files}))
+                    }
+                    if (response.thumbnail_file) {
+                        setValues(prevState => ({...prevState, thumbnail_file: response.thumbnail_file}))
+                    }
+                    if (values.image_files_to_add) {
+                        delete values.image_files_to_add
+                    }
+                    if (values.image_files_to_remove) {
+                        delete values.image_files_to_remove
+                    }
+                    if (values.thumbnail_file_to_add) {
+                        delete values.thumbnail_file_to_add
+                    }
+                    if (values.thumbnail_file_to_remove) {
+                        delete values.thumbnail_file_to_remove
+                    }
+                    setImageByteArray([])
+                }).catch((e) => log.error(e))
+            }
         }
 
         setValidated(true);
@@ -433,7 +490,9 @@ function EditSample() {
                                                 sample_categories={sampleCategories === null ? cache.sampleCategories : sampleCategories}
                                                 data={values}
                                                 source={source}
+                                                popoverWarningText={organOtherWarning}
                                                 onChange={_onChange}
+                                                selectedOtherOrgan={selectedOtherOrgan}
                                                 isDisabled={isEditMode()}
                                             />
                                             <RUIButton
@@ -451,7 +510,7 @@ function EditSample() {
                                                      controlId='protocol_url' value={data.protocol_url}
                                                      isRequired={true}
                                                      className={warningClasses.protocol_url}
-                                                     popverWarningText={<>The supplied protocols.io DOI URL, formatting is
+                                                     popoverWarningText={<>The supplied protocols.io DOI URL, formatting is
                                                          correct but does not resolve. This will need to be corrected
                                                          for any <code>Dataset</code> submission that uses this entity
                                                          as an ancestor.</>}
@@ -462,6 +521,7 @@ function EditSample() {
                                                          className='lnk--ic'>https://www.protocols.io/ <i
                                                          className="bi bi-box-arrow-up-right"></i></a>.</span>}
                                                      otherInputProps={{
+                                                         'data-js-appevent': 'checkProtocolUrl',
                                                          pattern:getDOIPattern(),
                                                          onBlur: (e) => _onBlur(e, e.target.id, e.target.value)
                                                      }}
