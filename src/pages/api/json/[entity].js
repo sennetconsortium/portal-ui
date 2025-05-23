@@ -1,6 +1,6 @@
-import {getRootURL} from "../../../config/config";
+import {getRootURL} from "@/config/config";
 import {formatMessageForCloudwatch} from "../find";
-import {getAuthHeader, getHeadersFromRequest, getJsonHeader} from "../../../lib/services";
+import {getAuthHeader, getHeadersFromRequest, getJsonHeader} from "@/lib/services";
 
 export default async function handler(req, res) {
     console.log('JSON API STARTING...')

@@ -294,7 +294,7 @@ export const getSubtypeProvenanceShape = (t, cat, sz='sm') => {
             break
         default:
             c = 'green'
-            title = cat ? getCreationActionRelationName(cat) : ''
+            title = cat ? getCreationActionRelationName(cat) : t
             if (cat && datasetIs.processed(cat)) {
                 s = 'blob'
                 c = ''

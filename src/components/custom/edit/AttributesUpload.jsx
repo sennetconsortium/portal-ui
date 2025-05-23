@@ -1,12 +1,12 @@
-import React, {useContext, useEffect, useState, useRef} from 'react'
+import React, {useEffect, useState, useRef} from 'react'
 import PropTypes from 'prop-types'
-import {Button, Form} from 'react-bootstrap';
+import {Button} from 'react-bootstrap';
 import {InputGroup} from 'react-bootstrap';
-import {getDocsRootURL, getIngestEndPoint} from "../../../config/config";
+import {getDocsRootURL, getIngestEndPoint} from "@/config/config";
 import log from 'loglevel'
 import DataTable from 'react-data-table-component';
 import $ from 'jquery'
-import { getAuthHeader } from "../../../lib/services";
+import { getAuthHeader } from "@/lib/services";
 import SenNetPopover, {SenPopoverOptions} from "../../SenNetPopover";
 import {eq, urlify} from "../js/functions";
 

@@ -1,12 +1,12 @@
 import React, {Fragment, useContext, useEffect, useState} from 'react';
-import {fetchGlobusFilepath} from "../../../../lib/services";
+import {fetchGlobusFilepath} from "@/lib/services";
 import SenNetAccordion from "../../layout/SenNetAccordion";
 import Card from 'react-bootstrap/Card';
 import DataTable from "react-data-table-component";
 import {formatByteSize} from "../../js/functions";
 import SenNetPopover from "../../../SenNetPopover";
-import {getAssetsEndpoint, getAuth, RESULTS_PER_PAGE} from "../../../../config/config";
-import DerivedContext from "../../../../context/DerivedContext";
+import {getAssetsEndpoint, getAuth, RESULTS_PER_PAGE} from "@/config/config";
+import DerivedContext from "@/context/DerivedContext";
 import Link from "next/link";
 
 export const Files = ({data}) => {
