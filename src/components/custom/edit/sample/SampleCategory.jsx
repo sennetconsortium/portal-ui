@@ -39,6 +39,23 @@ function SampleCategory({
 
     }
 
+    const filteredOrgans = () => {
+        if (!source) {
+            return [];
+        }
+
+        const organs = {...cache.organTypes}
+
+        if (["Human", "Human Organoid"].includes(source["source_type"])) {
+            delete organs["UBERON:0001911"] // mammary gland
+        } else {
+            delete organs["ML"]
+            delete organs["MR"]
+        }
+
+        return organs
+    }
+
     return (
         //Sample Category
         <>
@@ -87,7 +104,7 @@ function SampleCategory({
                     }}
                                  defaultValue={data.organ}>
                         <option value="">----</option>
-                        {Object.entries(cache.organTypes).map(op => {
+                        {Object.entries(filteredOrgans()).map(op => {
                             return (
                                 <option key={op[0]} value={op[0]}>
                                     {op[1]}
