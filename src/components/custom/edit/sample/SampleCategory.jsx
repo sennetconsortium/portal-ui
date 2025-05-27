@@ -1,14 +1,15 @@
 import React, {useContext} from 'react';
 import {Col, Form, Row} from 'react-bootstrap';
-import SenNetPopover from "../../../SenNetPopover";
-import AppContext from "../../../../context/AppContext";
-import {eq} from "../../js/functions";
+import SenNetPopover from "@/components/SenNetPopover";
+import AppContext from "@/context/AppContext";
+import {eq} from "@/components/custom/js/functions";
 import WarningAmberIcon from "@mui/icons-material/WarningAmber";
 
 function SampleCategory({
                             organ_group_hide,
                             set_organ_group_hide,
                             data,
+                            source,
                             onChange,
                             sample_categories,
                             isDisabled,
