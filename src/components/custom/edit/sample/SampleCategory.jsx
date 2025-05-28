@@ -81,14 +81,13 @@ function SampleCategory({
                                  onChange(e, e.target.id, e.target.value)
                              }}
                              defaultValue={data.sample_category}>
-                    {!isDisabled && <option value="">----</option>}
-                    {Object.entries(sample_categories).map(sample_category => {
+                    {<option value="">----</option>}
+                    {!isDisabled && Object.entries(sample_categories).map(sample_category => {
                         return (
                             <option key={sample_category[0]} value={sample_category[0]}>
                                 {sample_category[1]}
                             </option>
                         );
-
                     })}
                 </Form.Select>
             </Form.Group>
