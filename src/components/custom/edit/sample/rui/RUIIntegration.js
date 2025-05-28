@@ -80,7 +80,7 @@ class RUIIntegration extends Component {
     }
 
     updateRUIConfig() {
-        const completeOrgan = this.props.cache.organs.find(x => x.rui_code === this.props.organ[0])
+        const completeOrgan = this.props.cache.organs.find(x => x.organ_uberon === this.props.organ[0])
         const [_, organType, organSide] = completeOrgan['term'].match(
             /^((?:\w)+(?: \w+)?)(?: \((Right|Left)\))?$/
         );
