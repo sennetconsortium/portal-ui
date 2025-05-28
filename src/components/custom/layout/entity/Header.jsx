@@ -6,7 +6,7 @@ import {getStatusColor, getStatusDefinition} from "../../js/functions";
 import ClipboardCopy from "../../../ClipboardCopy";
 import SenNetAlert from "../../../SenNetAlert";
 import SenNetPopover from "../../../SenNetPopover";
-
+import {fetchPipelineMessages} from "@/lib/services";
 
 function EntityHeader({entity, data, isEditMode, values, showGroup = true, adminGroup}) {
     const {_t, getGroupName} = useContext(AppContext)
@@ -16,7 +16,7 @@ function EntityHeader({entity, data, isEditMode, values, showGroup = true, admin
     useEffect(() => {
         const fetchPipelineMessage = async () => {
             if ((data.status === 'Invalid' || data.status === 'Error') && [data.has_pipeline_message, data.has_validation_message].contains('true')) {
-                await fetchPipelineMessage(data.uuid, data.entity_type).then((pipelineMessage) => {
+                await fetchPipelineMessages(data.uuid, data.entity_type).then((pipelineMessage) => {
                     setPipelineMessage(pipelineMessage);
                 });
             }

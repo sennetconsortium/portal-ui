@@ -212,7 +212,7 @@ export async function fetchGlobusFilepath(sennetId) {
 }
 
 
-export async function fetchPipelineMessage(datasetUuid, entityType) {
+export async function fetchPipelineMessages(datasetUuid, entityType) {
     let endpoint = "pipeline-message"
     if (entityType === 'Upload') {
         endpoint = 'validation-message'
