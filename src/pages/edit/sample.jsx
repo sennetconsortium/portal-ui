@@ -12,7 +12,6 @@ import AppContext from '@/context/AppContext'
 import EntityContext, {EntityProvider} from '@/context/EntityContext'
 import {getUserEmail, getUserName, isRuiSupported} from "@/config/config";
 import {SenPopoverOptions} from "@/components/SenNetPopover";
-import $ from "jquery";
 import LnkIc from "@/components/custom/layout/LnkIc";
 import AppSuspense from "@/components/AppSuspense";
 
@@ -505,7 +504,7 @@ function EditSample() {
                                                 popoverWarningText={organOtherWarning}
                                                 onChange={_onChange}
                                                 selectedOtherOrgan={selectedOtherOrgan}
-                                                isDisabled={isEditMode()}
+                                                isDisabled={isEditMode() || !source}
                                             />
                                             <RUIButton
                                                 showRegisterLocationButton={showRuiButton}
