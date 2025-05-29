@@ -29,7 +29,7 @@ export const supportedRuiSources = ['Human', 'Human Organoid']
 export function supportedRuiOrgans() {
     return window.UBKG_CACHE.organs
         .filter((o) => o['rui_supported'] === true)
-        .map((o) => o['rui_code'])
+        .map((o) => o['organ_uberon'])
 }
 
 export function valuesRuiSupported(values, dict) {
