@@ -19,7 +19,7 @@ const BodyContent = dynamic(() => import("@/components/custom/search/BodyContent
 const FacetsContent = dynamic(() => import("@/components/custom/search/FacetsContent"))
 const Header = dynamic(() => import("@/components/custom/layout/Header"))
 const InvalidToken = dynamic(() => import("@/components/custom/layout/InvalidToken"))
-const SearchDropdown = dynamic(() => import("@/components/custom/search/SearchDropdown"))
+const SearchTypeButton = dynamic(() => import("@/components/custom/search/SearchTypeButton"))
 const SearchUIContainer = dynamic(() => import("@/search-ui/components/core/SearchUIContainer"))
 const SelectedFacets = dynamic(() => import("@/components/custom/search/SelectedFacets"))
 const Spinner = dynamic(() => import("@/components/custom/Spinner"))
@@ -105,7 +105,7 @@ function SearchMetadata() {
                                 <div data-js-ada='facets'>
                                     <CustomClearSearchBox/>
 
-                                    <SearchDropdown title='Metadata'/>
+                                    <SearchTypeButton title='Entities'/>
 
 
                                     <SelectedFilters/>
