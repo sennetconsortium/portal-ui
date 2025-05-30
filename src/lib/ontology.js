@@ -88,7 +88,7 @@ export async function getOrgans() {
 
 export async function getOrganTypes() {
     let list = await getOntologyFromCache(getUbkgCodes().organ_types)
-    list = toKeyVal(list, false,'rui_code')
+    list = toKeyVal(list, false,'organ_uberon')
     return add_other(list,'OT')
 }
 
