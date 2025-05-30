@@ -47,10 +47,10 @@ function SampleCategory({
         const organs = {...cache.organTypes}
 
         if (["Human", "Human Organoid"].includes(source["source_type"])) {
-            delete organs["MM"] // mammary gland
+            delete organs["UBERON:0001911"] // mammary gland
         } else {
-            delete organs["ML"] // mammary gland (left)
-            delete organs["MR"] // mammary gland (right)
+            delete organs["FMA:57991"] // mammary gland (left)
+            delete organs["FMA:57987"] // mammary gland (right)
         }
 
         return organs
