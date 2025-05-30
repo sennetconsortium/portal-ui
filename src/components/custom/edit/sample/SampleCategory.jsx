@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {useContext, useEffect} from 'react';
 import {Col, Form, Row} from 'react-bootstrap';
 import SenNetPopover from "@/components/SenNetPopover";
 import AppContext from "@/context/AppContext";
@@ -18,6 +18,12 @@ function SampleCategory({
                         }) {
 
     const {cache} = useContext(AppContext)
+
+    useEffect(() => {
+        console.log("===== data", data);
+        console.log("===== sample_categories", sample_categories);
+    }, [data, sample_categories]);
+
     const handleSampleCategoryChange = (e, onChange) => {
         // If sample category is 'Organ' then display the organ type input group
         if (eq(e.target.value, cache.sampleCategories.Organ)) {
@@ -49,8 +55,8 @@ function SampleCategory({
         if (["Human", "Human Organoid"].includes(source["source_type"])) {
             delete organs["UBERON:0001911"] // mammary gland
         } else {
-            delete organs["ML"]
-            delete organs["MR"]
+            delete organs["FMA:57991"] // mammary gland (left)
+            delete organs["FMA:57987"] // mammary gland (right)
         }
 
         return organs
@@ -82,7 +88,7 @@ function SampleCategory({
                              }}
                              defaultValue={data.sample_category}>
                     {<option value="">----</option>}
-                    {!isDisabled && Object.entries(sample_categories).map(sample_category => {
+                    {Object.entries(sample_categories).map(sample_category => {
                         return (
                             <option key={sample_category[0]} value={sample_category[0]}>
                                 {sample_category[1]}
