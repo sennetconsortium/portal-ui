@@ -58,7 +58,7 @@ export default function EditDataset() {
         isAdminOrHasValue, getAssignedToGroupNames,setModalProps,
         contactsTSV, contacts, setContacts, contributors, setContactsAttributes, setContactsAttributesOnFail
     } = useContext(EntityContext)
-    const {_t, cache, adminGroup, isLoggedIn, getBusyOverlay, toggleBusyOverlay, getPreviewView} = useContext(AppContext)
+    const {_t, cache, adminGroup, getBusyOverlay, toggleBusyOverlay, getPreviewView} = useContext(AppContext)
     const router = useRouter()
     const [ancestors, setAncestors] = useState(null)
     const [containsHumanGeneticSequences, setContainsHumanGeneticSequences] = useState(null)
@@ -80,14 +80,20 @@ export default function EditDataset() {
             if (response.ok) {
                 const body = await response.json()
                 const searchQuery = body.description[0].description
-                let includeFilters = []
+
+                // Build includeFilters from constraints response
+                const includeFilters = []
                 for (const query of searchQuery) {
-                    let includeFilter = {
-                        "type": 'term',
-                        "field": query.keyword,
-                        "values": [query.value]
+                    const idx = includeFilters.findIndex((filter) => filter.field === query.keyword)
+                    if (idx > -1) {
+                        includeFilters[idx].values.push(query.value)
+                    } else {
+                        includeFilters.push({
+                            'type': 'term',
+                            'field': query.keyword,
+                            'values': [query.value]
+                        })
                     }
-                    includeFilters.push(includeFilter)
                 }
                 valid_dataset_ancestor_config['searchQuery']['includeFilters'] = includeFilters
             }

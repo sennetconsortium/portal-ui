@@ -75,14 +75,20 @@ export default function EditCollection({collectionType='Collection', entitiesTab
             if (response.ok) {
                 const body = await response.json()
                 const searchQuery = body.description[0].description
-                let includeFilters = []
+
+                // Build includeFilters from constraints response
+                const includeFilters = []
                 for (const query of searchQuery) {
-                    let includeFilter = {
-                        "type": 'term',
-                        "field": query.keyword,
-                        "values": [query.value]
+                    const idx = includeFilters.findIndex((filter) => filter.field === query.keyword)
+                    if (idx > -1) {
+                        includeFilters[idx].values.push(query.value)
+                    } else {
+                        includeFilters.push({
+                            'type': 'term',
+                            'field': query.keyword,
+                            'values': [query.value]
+                        })
                     }
-                    includeFilters.push(includeFilter)
                 }
                 valid_dataset_ancestor_config['searchQuery']['includeFilters'] = includeFilters
             }
