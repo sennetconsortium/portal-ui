@@ -1,10 +1,6 @@
-import React, {createContext, useEffect, useState, useContext, useRef} from 'react'
-import { useRouter } from 'next/router'
-import {
-    getProviderGroups,
-    getReadWritePrivileges,
-    getUserWriteGroups,
-} from '@/lib/services'
+import React, {createContext, useContext, useEffect, useRef, useState} from 'react'
+import {useRouter} from 'next/router'
+import {getProviderGroups, getReadWritePrivileges, getUserWriteGroups,} from '@/lib/services'
 import log from 'loglevel'
 import {APP_ROUTES} from '@/config/constants'
 import AppModal from '@/components/AppModal'
@@ -15,10 +11,11 @@ import {Button} from 'react-bootstrap'
 import TaskAltIcon from '@mui/icons-material/TaskAlt';
 import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 import ClipboardCopy from "@/components/ClipboardCopy";
+
 const EntityContext = createContext()
 
-export const EntityProvider = ({ children }) => {
-    const {_t, cache, hasPublicAccess } = useContext(AppContext)
+export const EntityProvider = ({children}) => {
+    const {_t, cache, hasPublicAccess} = useContext(AppContext)
     const router = useRouter()
     const [authorized, setAuthorized] = useState(null)
     const [validated, setValidated] = useState(false)
@@ -50,8 +47,8 @@ export const EntityProvider = ({ children }) => {
     const [contributors, setContributors] = useState([])
     const contactsTSV = {
         excludeColumns: ['metadata_schema_id'],
-        headers: ['first_name', 'last_name', 'middle_name_or_initial	display_name','affiliation','orcid','email',
-            'is_contact','is_principal_investigator','is_operator', 'metadata_schema_id'],
+        headers: ['first_name', 'last_name', 'middle_name_or_initial	display_name', 'affiliation', 'orcid', 'email',
+            'is_contact', 'is_principal_investigator', 'is_operator', 'metadata_schema_id'],
         uploadEndpoint: 'validate-tsv'
     }
 
@@ -92,7 +89,6 @@ export const EntityProvider = ({ children }) => {
 
     // only executed on init rendering, see the []
     useEffect(() => {
-        
         getReadWritePrivileges()
             .then((response) => {
                 setAuthorized(response.write_privs)
@@ -136,7 +132,7 @@ export const EntityProvider = ({ children }) => {
     }
 
     const observePage = (targetNode, callback) => {
-        const config = { childList: true, subtree: true }
+        const config = {childList: true, subtree: true}
         const _callback = (mutationList, observer) => {
             for (const mutation of mutationList) {
                 if (mutation.type === "childList") {
@@ -189,7 +185,7 @@ export const EntityProvider = ({ children }) => {
             headers: getHeaders(),
             body: JSON.stringify(body)
         }
-        const requestParams = params ?  '?' + new URLSearchParams(params) : ''
+        const requestParams = params ? '?' + new URLSearchParams(params) : ''
         return await fetch(getEntityEndPoint() + 'constraints' + requestParams, requestOptions)
     }
 
@@ -223,13 +219,18 @@ export const EntityProvider = ({ children }) => {
                 note = <span key={'md-0'}>Metadata for this <code>{entity}</code> exists. </span>
                 break
             case 1:
-                note = <span key={'md-1'}>You may view it via <a target='_blank' className={'js-btn--json lnk--ic'} href={`/api/json/${entity.toLowerCase()}?uuid=${data.uuid}`}> the full entity JSON  <i className="bi bi-box-arrow-up-right"></i></a>. </span>
+                note = <span key={'md-1'}>You may view it via <a target='_blank' className={'js-btn--json lnk--ic'}
+                                                                 href={`/api/json/${entity.toLowerCase()}?uuid=${data.uuid}`}> the full entity JSON  <i
+                    className="bi bi-box-arrow-up-right"></i></a>. </span>
                 break
             case 2:
                 let prop = `${entity.toLowerCase()}_${field}`
                 let val = values[prop]
                 val = val[0]?.toUpperCase() + val.slice(1)
-                note =  <span key={'md-2'}>Changing the <code>{entity}</code> {field} will result in loss of this metadata and cannot be undone once submitted. <br /> Please revert back to <span role={'button'} onClick={() => window.location = `#${prop}`}><code>{entity}</code> {field}</span> <code>{val}</code> to keep current metadata.</span>
+                note =
+                    <span key={'md-2'}>Changing the <code>{entity}</code> {field} will result in loss of this metadata and cannot be undone once submitted. <br/> Please revert back to <span
+                        role={'button'}
+                        onClick={() => window.location = `#${prop}`}><code>{entity}</code> {field}</span> <code>{val}</code> to keep current metadata.</span>
                 break
             default:
                 note = <></>
@@ -245,20 +246,24 @@ export const EntityProvider = ({ children }) => {
             const verb = isEditMode() ? 'Updated' : 'Registered'
             setHasSubmissionError(false)
             let body = []
-            setModalTitle(<span key='title-0'>{successIcon()}<span key='title-1' className={'title-text'} > {entity} {verb}</span></span>)
-            body.push(<span key='bdy-1'>{_t(`Your ${entity} was ${verb.toLocaleLowerCase()}`)}. <br /></span>)
-            body.push(<span key='bdy-2'><strong>{_t(typeHeader)}:</strong> {type}<br /></span>)
+            setModalTitle(<span key='title-0'>{successIcon()}<span key='title-1'
+                                                                   className={'title-text'}> {entity} {verb}</span></span>)
+            body.push(<span key='bdy-1'>{_t(`Your ${entity} was ${verb.toLocaleLowerCase()}`)}. <br/></span>)
+            body.push(<span key='bdy-2'><strong>{_t(typeHeader)}:</strong> {type}<br/></span>)
             if (response.group_name) {
-                body.push(<span key='bdy-3'><strong>{_t('Group Name')}:</strong> {response.group_name}<br /></span>)
+                body.push(<span key='bdy-3'><strong>{_t('Group Name')}:</strong> {response.group_name}<br/></span>)
             }
-            body.push(<span key='bdy-4'><strong>{_t('SenNet ID')}:</strong> {response.sennet_id} <ClipboardCopy text={response.sennet_id} /> </span>)
+            body.push(<span key='bdy-4'><strong>{_t('SenNet ID')}:</strong> {response.sennet_id} <ClipboardCopy
+                text={response.sennet_id}/> </span>)
             setModalBody(body)
             setValues({...values, 'contains_human_genetic_sequences': response.contains_human_genetic_sequences})
             setResponse(response)
         } else if ('registered_doi' in response) {
             setModalTitle(<span key='title-0'>{successIcon()}<span key='title-1'
                                                                    className={'title-text'}> {entity} Published</span></span>)
-            setModalBody(<span key='bdy-3'><strong>{_t('Registered DOI')}:</strong> {response.registered_doi}<ClipboardCopy text={response.registered_doi} /></span>)
+            setModalBody(<span
+                key='bdy-3'><strong>{_t('Registered DOI')}:</strong> {response.registered_doi}<ClipboardCopy
+                text={response.registered_doi}/></span>)
         } else {
             const verb = isEditMode() ? 'Updating' : 'Registering'
             let responseText = "An unexpected issue occurred. The request could not have been completed."
@@ -277,19 +282,19 @@ export const EntityProvider = ({ children }) => {
         }
     }
 
-    const successIcon = () => <TaskAltIcon color={'success'} />
+    const successIcon = () => <TaskAltIcon color={'success'}/>
 
-    const errIcon = () => <WarningAmberIcon sx={{color: '#842029'}} />
+    const errIcon = () => <WarningAmberIcon sx={{color: '#842029'}}/>
 
-    const warningIcon = () => <WarningAmberIcon sx={{color: '#dc8e07'}} />
+    const warningIcon = () => <WarningAmberIcon sx={{color: '#dc8e07'}}/>
 
-    const setAllModalDetails = ({hasError, body, title, disableSubmit, modalProps, isWarning }) => {
+    const setAllModalDetails = ({hasError, body, title, disableSubmit, modalProps, isWarning}) => {
         let icon = hasError ? errIcon() : successIcon()
         icon = isWarning ? warningIcon() : icon;
         setHasSubmissionError(hasError)
         setShowModal(true)
         setDisableSubmit(disableSubmit || true)
-        setModalTitle(<span>{icon}<span className={'title-text'} >{title}</span></span>)
+        setModalTitle(<span>{icon}<span className={'title-text'}>{title}</span></span>)
         setModalBody(body)
         setModalProps(modalProps)
     }
@@ -300,13 +305,13 @@ export const EntityProvider = ({ children }) => {
         setModalTitle(<span><span className={'title-text'}>Validating {titleTopic} ...</span></span>)
         setModalBody(body)
     }
-    
+
     const setSubmissionModal = (body, hasError) => {
         const icon = hasError ? errIcon() : successIcon()
         setHasSubmissionError(hasError)
         setShowModal(true)
         setDisableSubmit(false)
-        setModalTitle(<span>{icon}<span className={'title-text'} >Submitted dataset for processing</span></span>)
+        setModalTitle(<span>{icon}<span className={'title-text'}>Submitted dataset for processing</span></span>)
         setModalBody(body)
     }
 
@@ -335,7 +340,7 @@ export const EntityProvider = ({ children }) => {
         const url = isRegister ? APP_ROUTES.search : `/${entity}?uuid=${router.query.uuid}`
         return (
             <Button variant="outline-primary rounded-0 js-btn--cancel"
-                    href={url} > Cancel
+                    href={url}> Cancel
             </Button>
         )
     }
@@ -346,7 +351,7 @@ export const EntityProvider = ({ children }) => {
             showModal={showModal}
             modalTitle={modalTitle}
             modalBody={<div>{modalBody}</div>}
-            handleSecondaryBtn={ modalProps.secondaryBtnHandler || (isEditMode() ? handleClose : goToEntity)}
+            handleSecondaryBtn={modalProps.secondaryBtnHandler || (isEditMode() ? handleClose : goToEntity)}
             handlePrimaryBtn={modalProps.actionBtnHandler ? modalProps.actionBtnHandler : handleHome}
             primaryBtnLabel={modalProps.actionBtnLabel ? modalProps.actionBtnLabel : 'Home page'}
             showSecondaryBtn={showCloseButton}
@@ -359,7 +364,9 @@ export const EntityProvider = ({ children }) => {
 
     const getAssignedToGroupNames = (adminGroup) => {
         if (adminGroup) {
-            return providerGroups.map(item => {if (item.data_provider) return item})
+            return providerGroups.map(item => {
+                if (item.data_provider) return item
+            })
         } else {
             return [
                 {
@@ -389,35 +396,73 @@ export const EntityProvider = ({ children }) => {
     }
 
     const isPreview = (error) => {
-        if (error  && hasPublicAccess(data)) return false
+        if (error && hasPublicAccess(data)) return false
         return ((isUnauthorized() || isAuthorizing()) || !data)
     }
 
     return (
         <EntityContext.Provider
             value={{
-                isUnauthorized, isAuthorizing, isPreview,
-                getModal, setModalDetails,
+                isUnauthorized,
+                isAuthorizing,
+                isPreview,
+                getModal,
+                setModalDetails,
                 setSubmissionModal,
                 setCheckAncestorModal,
                 isEditMode,
-                data, setData,
-                error, setError,
-                values, setValues,
-                errorMessage, setErrorMessage,
-                validated, setValidated,
-                handleClose, handleHome, 
-                showModal, setShowModal,
-                modalBody, setModalBody,
-                modalTitle, setModalTitle, setAllModalDetails,
-                userWriteGroups, setUserWriteGroups, onChange, editMode, setEditMode,
-                selectedUserWriteGroupUuid, setSelectedUserWriteGroupUuid,
-                disableSubmit, setDisableSubmit,
-                getEntityConstraints, getSampleEntityConstraints, buildConstraint,
-                getMetadataNote, successIcon, errIcon, checkProtocolUrl,
-                warningClasses, setWarningClasses, getCancelBtn, setModalProps,
-                isAdminOrHasValue, getAssignedToGroupNames, entityForm, disabled, disableElements,
-                contactsTSV, contacts, setContacts, contributors, setContributors, setContactsAttributes, setContactsAttributesOnFail
+                data,
+                setData,
+                error,
+                setError,
+                values,
+                setValues,
+                errorMessage,
+                setErrorMessage,
+                validated,
+                setValidated,
+                handleClose,
+                handleHome,
+                showModal,
+                setShowModal,
+                modalBody,
+                setModalBody,
+                modalTitle,
+                setModalTitle,
+                setAllModalDetails,
+                userWriteGroups,
+                setUserWriteGroups,
+                onChange,
+                editMode,
+                setEditMode,
+                selectedUserWriteGroupUuid,
+                setSelectedUserWriteGroupUuid,
+                disableSubmit,
+                setDisableSubmit,
+                getEntityConstraints,
+                getSampleEntityConstraints,
+                buildConstraint,
+                getMetadataNote,
+                successIcon,
+                errIcon,
+                checkProtocolUrl,
+                warningClasses,
+                setWarningClasses,
+                getCancelBtn,
+                setModalProps,
+                isAdminOrHasValue,
+                getAssignedToGroupNames,
+                entityForm,
+                disabled,
+                setDisabled,
+                disableElements,
+                contactsTSV,
+                contacts,
+                setContacts,
+                contributors,
+                setContributors,
+                setContactsAttributes,
+                setContactsAttributesOnFail
             }}
         >
             {children}

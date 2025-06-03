@@ -52,7 +52,7 @@ export default function EditDataset() {
         showModal, setShowModal,
         selectedUserWriteGroupUuid,
         disableSubmit, setDisableSubmit,
-        entityForm, disabled,
+        entityForm, disabled, setDisabled,
         getEntityConstraints,
         buildConstraint, successIcon, errIcon, getCancelBtn,
         isAdminOrHasValue, getAssignedToGroupNames,setModalProps,
@@ -64,7 +64,6 @@ export default function EditDataset() {
     const [containsHumanGeneticSequences, setContainsHumanGeneticSequences] = useState(null)
     const [dataTypes, setDataTypes] = useState(null)
     const isPrimary = useRef(false)
-
 
     useEffect(() => {
         async function fetchAncestorConstraints() {
@@ -188,6 +187,7 @@ export default function EditDataset() {
             if (eq(router.query.uuid, 'register')) {
                 setData(true)
                 setEditMode("Register")
+                setDisabled(false)
             } else {
                 // fetch dataset data
                 fetchData(router.query.uuid)
@@ -520,7 +520,7 @@ export default function EditDataset() {
                                     {/*editMode is only set when page is ready to load */}
                                     {editMode &&
                                         <AncestorIds data={data} values={values} ancestors={ancestors} onChange={onChange}
-                                                     disableDelete={data.dataset_category !=='primary' || disabled}
+                                                     disableDelete={disabled || isEditMode()}
                                                      fetchAncestors={fetchAncestors} deleteAncestor={deleteAncestor}
                                                      addButtonDisabled={disabled || isEditMode() }/>
                                     }
