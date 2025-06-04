@@ -52,19 +52,18 @@ export default function EditDataset() {
         showModal, setShowModal,
         selectedUserWriteGroupUuid,
         disableSubmit, setDisableSubmit,
-        entityForm, disabled,
+        entityForm, disabled, setDisabled,
         getEntityConstraints,
         buildConstraint, successIcon, errIcon, getCancelBtn,
         isAdminOrHasValue, getAssignedToGroupNames,setModalProps,
         contactsTSV, contacts, setContacts, contributors, setContactsAttributes, setContactsAttributesOnFail
     } = useContext(EntityContext)
-    const {_t, cache, adminGroup, isLoggedIn, getBusyOverlay, toggleBusyOverlay, getPreviewView} = useContext(AppContext)
+    const {_t, cache, adminGroup, getBusyOverlay, toggleBusyOverlay, getPreviewView} = useContext(AppContext)
     const router = useRouter()
     const [ancestors, setAncestors] = useState(null)
     const [containsHumanGeneticSequences, setContainsHumanGeneticSequences] = useState(null)
     const [dataTypes, setDataTypes] = useState(null)
     const isPrimary = useRef(false)
-
 
     useEffect(() => {
         async function fetchAncestorConstraints() {
@@ -80,14 +79,20 @@ export default function EditDataset() {
             if (response.ok) {
                 const body = await response.json()
                 const searchQuery = body.description[0].description
-                let includeFilters = []
+
+                // Build includeFilters from constraints response
+                const includeFilters = []
                 for (const query of searchQuery) {
-                    let includeFilter = {
-                        "type": 'term',
-                        "field": query.keyword,
-                        "values": [query.value]
+                    const idx = includeFilters.findIndex((filter) => filter.field === query.keyword)
+                    if (idx > -1) {
+                        includeFilters[idx].values.push(query.value)
+                    } else {
+                        includeFilters.push({
+                            'type': 'term',
+                            'field': query.keyword,
+                            'values': [query.value]
+                        })
                     }
-                    includeFilters.push(includeFilter)
                 }
                 valid_dataset_ancestor_config['searchQuery']['includeFilters'] = includeFilters
             }
@@ -182,6 +187,7 @@ export default function EditDataset() {
             if (eq(router.query.uuid, 'register')) {
                 setData(true)
                 setEditMode("Register")
+                setDisabled(false)
             } else {
                 // fetch dataset data
                 fetchData(router.query.uuid)
@@ -514,7 +520,7 @@ export default function EditDataset() {
                                     {/*editMode is only set when page is ready to load */}
                                     {editMode &&
                                         <AncestorIds data={data} values={values} ancestors={ancestors} onChange={onChange}
-                                                     disableDelete={data.dataset_category !=='primary' || disabled}
+                                                     disableDelete={disabled || isEditMode()}
                                                      fetchAncestors={fetchAncestors} deleteAncestor={deleteAncestor}
                                                      addButtonDisabled={disabled || isEditMode() }/>
                                     }

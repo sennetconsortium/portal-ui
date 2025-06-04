@@ -84,11 +84,11 @@ export const EntityProvider = ({ children }) => {
         }
         setShowModal(false)
     }
+
     const handleHome = () => router.push(APP_ROUTES.search)
 
     // only executed on init rendering, see the []
     useEffect(() => {
-        
         getReadWritePrivileges()
             .then((response) => {
                 setAuthorized(response.write_privs)
@@ -412,7 +412,7 @@ export const EntityProvider = ({ children }) => {
                 getEntityConstraints, getSampleEntityConstraints, buildConstraint,
                 getMetadataNote, successIcon, errIcon, checkProtocolUrl,
                 warningClasses, setWarningClasses, getCancelBtn, setModalProps,
-                isAdminOrHasValue, getAssignedToGroupNames, entityForm, disabled, disableElements,
+                isAdminOrHasValue, getAssignedToGroupNames, entityForm, disabled, setDisabled, disableElements,
                 contactsTSV, contacts, setContacts, contributors, setContributors, setContactsAttributes, setContactsAttributesOnFail
             }}
         >
