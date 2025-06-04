@@ -63,7 +63,7 @@ function Sankey({maxHeight, showExpandButton = false}) {
         setFilters(router.query)
         setOptions({
             useShadow: true,
-            styleSheetPath: 'https://rawcdn.githack.com/x-atlas-consortia/data-sankey/1.0.12/src/lib/xac-sankey.css',
+            styleSheetPath: 'https://rawcdn.githack.com/x-atlas-consortia/data-sankey/1.0.11/src/lib/xac-sankey.css',
             api: {
                 token: getCookie('groups_token')
             },
