@@ -44,6 +44,11 @@ function SearchMetadata() {
         onSubmit(event)
     }
 
+    const getFacetName = (term) => {
+        return term.length ? getUBKGFullName(term) : 'None'
+    }
+
+
     if (validatingToken() || isAuthorizing()) {
         return <Spinner/>
     } else if (hasInvalidToken()) {
@@ -110,7 +115,7 @@ function SearchMetadata() {
 
                                     <SelectedFilters/>
 
-                                    <FacetsContent transformFunction={getUBKGFullName}/>
+                                    <FacetsContent transformFunction={getFacetName}/>
                                 </div>
                             }
                             bodyContent={

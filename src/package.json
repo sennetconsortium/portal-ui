@@ -1,6 +1,6 @@
 {
   "name": "portal-ui",
-  "version": "1.9.12",
+  "version": "1.9.13",
   "private": true,
   "watch": {
     "plugins": "./components/custom/js/addons/plugins*.js"
@@ -35,7 +35,7 @@
     "react-toastify": "^9.1.1",
     "search-ui": "file:search-ui",
     "vitessce": "^3.5.7",
-    "xac-sankey": "github:x-atlas-consortia/data-sankey#1.0.12"
+    "xac-sankey": "github:x-atlas-consortia/data-sankey#1.0.11"
   },
   "devDependencies": {
     "@babel/cli": "^7.24.6",
