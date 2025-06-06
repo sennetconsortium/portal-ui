@@ -40,6 +40,7 @@ const AppFooter = () => {
                                     <li className="nav-item"><a href="https://sennetconsortium.org/involvement/">Funded Research</a></li>
                                     <li className="nav-item"><a href="https://docs.sennetconsortium.org/">Documentation</a></li>
                                     <li className="nav-item"><a href="mailto:help@sennetconsortium.org">Contact</a></li>
+                                    <li className="nav-item"><a href="https://docs.sennetconsortium.org//status/">APIs Stats</a></li>
                                 </ul>
                             </Col>
                             <Col sm={2}>
