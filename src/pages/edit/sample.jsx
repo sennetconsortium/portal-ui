@@ -193,7 +193,7 @@ function EditSample() {
         checkRui();
     }, [ancestorOrgan, values]);
 
-    const selectedOtherOrgan = (val) => ['Other', 'OT', null].contains(val)
+    const selectedOtherOrgan = (val) => ['Other', 'UBERON:0010000', null].contains(val)
 
     // callback provided to components to update the main list of form values
     const _onChange = (e, fieldId, value) => {

@@ -51,11 +51,6 @@ function toKeyVal(list, lowerProp = false, key = 'term', key2 = 'term') {
     return result
 }
 
-function add_other(list, key = 'Other') {
-    list[key] = 'Other'
-    return list
-}
-
 export async function getSampleCategories() {
     let list = await getOntologyFromCache(getUbkgCodes().specimen_categories)
     return toKeyVal(list)
@@ -89,7 +84,7 @@ export async function getOrgans() {
 export async function getOrganTypes() {
     let list = await getOntologyFromCache(getUbkgCodes().organ_types)
     list = toKeyVal(list, false,'organ_uberon')
-    return add_other(list,'OT')
+    return list
 }
 
 export async function getSourceTypes() {
