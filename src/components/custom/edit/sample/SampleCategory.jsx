@@ -1,14 +1,15 @@
-import React, {useContext} from 'react';
+import React, {useContext, useEffect} from 'react';
 import {Col, Form, Row} from 'react-bootstrap';
-import SenNetPopover from "../../../SenNetPopover";
-import AppContext from "../../../../context/AppContext";
-import {eq} from "../../js/functions";
+import SenNetPopover from "@/components/SenNetPopover";
+import AppContext from "@/context/AppContext";
+import {eq} from "@/components/custom/js/functions";
 import WarningAmberIcon from "@mui/icons-material/WarningAmber";
 
 function SampleCategory({
                             organ_group_hide,
                             set_organ_group_hide,
                             data,
+                            source,
                             onChange,
                             sample_categories,
                             isDisabled,
@@ -17,6 +18,12 @@ function SampleCategory({
                         }) {
 
     const {cache} = useContext(AppContext)
+
+    useEffect(() => {
+        console.log("===== data", data);
+        console.log("===== sample_categories", sample_categories);
+    }, [data, sample_categories]);
+
     const handleSampleCategoryChange = (e, onChange) => {
         // If sample category is 'Organ' then display the organ type input group
         if (eq(e.target.value, cache.sampleCategories.Organ)) {
@@ -36,6 +43,23 @@ function SampleCategory({
         document.getElementById("organ").value = "";
         onChange(e, "organ", "")
 
+    }
+
+    const filteredOrgans = () => {
+        if (!source) {
+            return [];
+        }
+
+        const organs = {...cache.organTypes}
+
+        if (["Human", "Human Organoid"].includes(source["source_type"])) {
+            delete organs["UBERON:0001911"] // mammary gland
+        } else {
+            delete organs["FMA:57991"] // mammary gland (left)
+            delete organs["FMA:57987"] // mammary gland (right)
+        }
+
+        return organs
     }
 
     return (
@@ -63,14 +87,13 @@ function SampleCategory({
                                  onChange(e, e.target.id, e.target.value)
                              }}
                              defaultValue={data.sample_category}>
-                    {!isDisabled && <option value="">----</option>}
+                    {<option value="">----</option>}
                     {Object.entries(sample_categories).map(sample_category => {
                         return (
                             <option key={sample_category[0]} value={sample_category[0]}>
                                 {sample_category[1]}
                             </option>
                         );
-
                     })}
                 </Form.Select>
             </Form.Group>
@@ -86,7 +109,7 @@ function SampleCategory({
                     }}
                                  defaultValue={data.organ}>
                         <option value="">----</option>
-                        {Object.entries(cache.organTypes).map(op => {
+                        {Object.entries(filteredOrgans()).map(op => {
                             return (
                                 <option key={op[0]} value={op[0]}>
                                     {op[1]}
