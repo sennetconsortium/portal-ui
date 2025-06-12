@@ -24,6 +24,7 @@ const EUIIntegration = () => {
 
             <Script
                 only="ccf-eui"
+                type="module"
                 src="https://cdn.humanatlas.io/ui/ccf-eui/wc.js"
             />
         </HelmetProvider>
