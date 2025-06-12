@@ -9,7 +9,7 @@ import log from 'loglevel'
 import {APP_ROUTES} from '@/config/constants'
 import AppModal from '@/components/AppModal'
 import AppContext from './AppContext'
-import {eq, fetchProtocols, getHeaders} from "@/components/custom/js/functions";
+import {eq, fetchProtocols, getHeaders, getUBKGFullName} from "@/components/custom/js/functions";
 import {getEntityEndPoint} from "@/config/config";
 import {Button} from 'react-bootstrap'
 import TaskAltIcon from '@mui/icons-material/TaskAlt';
@@ -196,7 +196,7 @@ export const EntityProvider = ({ children }) => {
             const sample_category = entity.sample_category.toLowerCase()
             body['sub_type'] = [sample_category]
             if (eq(sample_category, cache.sampleCategories.Organ)) {
-                body['sub_type_val'] = [entity.organ]
+                body['sub_type_val'] = [getUBKGFullName(entity.organ)]
             }
         }
 
