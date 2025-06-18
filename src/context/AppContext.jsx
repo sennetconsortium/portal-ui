@@ -51,7 +51,7 @@ export const AppProvider = ({ cache, banners, children }) => {
             setCookie('groups_token', groupsToken, {sameSite: "Lax"})
             getReadWritePrivileges()
                 .then((read_write_privileges) => {
-                    if (read_write_privileges.read_privs === true) {
+                    if (read_write_privileges?.read_privs === true) {
                         setCookie(authKey, true, {sameSite: "Lax"})
                     }
                 })
