@@ -663,12 +663,11 @@ export default function EditDataset() {
 
                                         {!['Processing', 'Published'].contains(data['status']) && isPrimary.current && adminGroup && isEditMode() &&
                                             <SenNetPopover
-                                                text={<>Validate this <code>Dataset</code>.</>} className={'initiate-dataset-validation'}>
+                                                text={<>Validate this <code>Dataset</code> via the Ingest Pipeline.</>} className={'initiate-dataset-validation'}>
                                                 <DatasetSubmissionButton
                                                     btnLabel={"Validate"}
                                                     modalTitle={'Validation'}
-                                                    modalBody={<div><p>Click "Validate" to check
-                                                        this <code>Dataset</code>.
+                                                    modalBody={<div><p>Click "Validate" yo test the readiness for submission of this <code>Dataset</code> via the Ingest Pipeline.
 
                                                         </p>
                                                     </div>}
