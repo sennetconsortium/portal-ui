@@ -307,7 +307,7 @@ function ViewDataset() {
                                             }
 
                                         {/*Files*/}
-                                        {data && <FileTreeView data={data}/>}
+                                        {data && (!dataProducts || !dataProducts.length) && <FileTreeView data={data}/>}
 
                                         {/*Contributors*/}
                                         {!!(data.contributors && Object.keys(data.contributors).length) &&
