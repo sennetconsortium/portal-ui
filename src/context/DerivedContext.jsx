@@ -151,6 +151,7 @@ export const DerivedProvider = ({children, showVitessceList, setShowVitessceList
                 if (datasetIs.processed(descendant.creation_action)) {
                     const promise = getEntityData(descendant.uuid);
                     promises.push(promise)
+                    break
                 }
             }
 
