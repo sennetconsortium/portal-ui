@@ -667,7 +667,7 @@ export default function EditDataset() {
                                                 <DatasetSubmissionButton
                                                     btnLabel={"Validate"}
                                                     modalTitle={'Validation'}
-                                                    modalBody={<div><p>Click "Validate" yo test the readiness for submission of this <code>Dataset</code> via the Ingest Pipeline.
+                                                    modalBody={<div><p>Click "Validate" to test the readiness for submission of this <code>Dataset</code> via the Ingest Pipeline.
 
                                                         </p>
                                                     </div>}
