@@ -355,7 +355,6 @@ export default function EditDataset() {
     }
 
     const _handleValidate = async () => {
-        toggleBusyOverlay(true, <><code>Validate</code> the <code>Dataset</code></>)
         handleValidate('datasets')
     }
 

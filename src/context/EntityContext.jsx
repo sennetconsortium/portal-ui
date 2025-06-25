@@ -391,21 +391,28 @@ export const EntityProvider = ({ children }) => {
     }
 
     const handleValidate = async (entityType) => {
-        const url = getIngestEndPoint() + `/${entityType}/validate`;
+        const url = getIngestEndPoint() + `${entityType}/validate`;
         const requestOptions = {
             method: 'POST',
             headers: getAuthJsonHeaders(),
             body: JSON.stringify([data.uuid])
         }
         const resp = await fetch(url, requestOptions)
+        const json = await resp.json()
+        const hasError =  !['200', '202'].contains(`${resp.status}`)
 
         setAllModalDetails({
             title: <span>Validation results</span>,
-            isWarning: [200, 202].contains(resp.statusCode),
+            isWarning: hasError,
             modalProps: {
-                secondaryBtnHandler: () => setShowModal(false)
+                className: 'is-error',
+                secondaryBtnHandler: () => {
+                    setDisableSubmit(false)
+                    setShowModal(false)
+                    setModalProps({})
+                }
             },
-            body: <code>{resp.json()}</code>
+            body: <code>{JSON.stringify(json)}</code>
         })
     }
 
