@@ -106,10 +106,10 @@ export const SEARCH_ENTITIES = {
                 isAggregationActive: true,
                 isFacetVisible: doesAggregationHaveBuckets('dataset_type')
             },
-            has_qa_derived_dataset: {
+            has_qa_published_derived_dataset: {
                 label: 'Has QA Derived Datasets',
                 type: 'value',
-                field: 'has_qa_derived_dataset.keyword',
+                field: 'has_qa_published_derived_dataset.keyword',
                 isExpanded: false,
                 filterType: 'any',
                 isFilterable: false,
@@ -121,7 +121,7 @@ export const SEARCH_ENTITIES = {
                     }
                     return false
                 },
-                isFacetVisible: doesAggregationHaveBuckets('has_qa_derived_dataset')
+                isFacetVisible: doesAggregationHaveBuckets('has_qa_published_derived_dataset')
             },
             'sources.source_type': {
                 label: 'Source Type',
