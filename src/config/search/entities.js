@@ -91,7 +91,7 @@ export const SEARCH_ENTITIES = {
                 filterType: 'any',
                 isFilterable: false,
                 facetType: 'term',
-                isAggregationActive: doesTermFilterContainValues('entity_type', ['Dataset']),
+                isAggregationActive: doesTermFilterContainValues('entity_type', ['Dataset', 'Upload']),
                 isFacetVisible: doesAggregationHaveBuckets('status')
             },
             dataset_type: {
