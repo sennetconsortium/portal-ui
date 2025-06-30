@@ -405,7 +405,7 @@ export const EntityProvider = ({ children }) => {
             title: <span>Validation results</span>,
             isWarning: hasError,
             modalProps: {
-                className: 'is-error',
+                className: hasError ? 'is-error' : '',
                 secondaryBtnHandler: () => {
                     setDisableSubmit(false)
                     setShowModal(false)
