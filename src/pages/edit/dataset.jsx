@@ -56,7 +56,7 @@ export default function EditDataset() {
         getEntityConstraints,
         buildConstraint, successIcon, errIcon, getCancelBtn,
         isAdminOrHasValue, getAssignedToGroupNames,setModalProps,
-        contactsTSV, contacts, setContacts, contributors, setContactsAttributes, setContactsAttributesOnFail
+        contactsTSV, contacts, setContacts, contributors, setContactsAttributes, setContactsAttributesOnFail, handleValidate
     } = useContext(EntityContext)
     const {_t, cache, adminGroup, getBusyOverlay, toggleBusyOverlay, getPreviewView} = useContext(AppContext)
     const router = useRouter()
@@ -352,6 +352,10 @@ export default function EditDataset() {
         await updateCreateDataset(data.uuid, json, editMode).then((response) => {
             modalResponse(response)
         }).catch((e) => log.error(e))
+    }
+
+    const _handleValidate = async () => {
+        handleValidate('datasets')
     }
 
     const preProcessingCheck = async () => {
@@ -653,6 +657,20 @@ export default function EditDataset() {
                                                         </p>
                                                     </div>}
                                                     onClick={handleSubmit} disableSubmit={disableSubmit}/>
+                                            </SenNetPopover>
+                                        }
+
+                                        {!['Processing', 'Published'].contains(data['status']) && isPrimary.current && adminGroup && isEditMode() &&
+                                            <SenNetPopover
+                                                text={<>Validate this <code>Dataset</code> via the Ingest Pipeline.</>} className={'initiate-dataset-validation'}>
+                                                <DatasetSubmissionButton
+                                                    btnLabel={"Validate"}
+                                                    modalTitle={'Validation'}
+                                                    modalBody={<div><p>Click "Validate" to test the readiness for submission of this <code>Dataset</code> via the Ingest Pipeline.
+
+                                                        </p>
+                                                    </div>}
+                                                    onClick={_handleValidate} disableSubmit={disableSubmit}/>
                                             </SenNetPopover>
                                         }
 

@@ -40,7 +40,7 @@ function EditUpload() {
         showModal,
         selectedUserWriteGroupUuid,
         disableSubmit, setDisableSubmit,
-        entityForm,
+        entityForm, handleValidate,
         getCancelBtn, isAdminOrHasValue, getAssignedToGroupNames
     } = useContext(EntityContext)
     const {_t, cache, adminGroup, getBusyOverlay, toggleBusyOverlay, getPreviewView} = useContext(AppContext)
@@ -157,9 +157,9 @@ function EditUpload() {
         setValidated(true);
     };
 
-    const handleValidate = () => {
+    const _handleValidate = () => {
         toggleBusyOverlay(true, <><code>Validate</code> the <code>Upload</code></>)
-        handlePut('validate')
+        handleValidate('uploads')
     }
 
     const handleRevert = async () => {
@@ -437,7 +437,7 @@ function EditUpload() {
                                                             upload checks are met and
                                                             be ready for submitting.</p>
                                                         </div>}
-                                                        onClick={handleValidate} disableSubmit={disableSubmit}/>
+                                                        onClick={_handleValidate} disableSubmit={disableSubmit}/>
                                                 </SenNetPopover>}
 
                                             {!eq(data['status'], 'Processing') && adminGroup && isEditMode() && (eq(data['status'], 'Valid') || eq(data['status'], 'Submitted')) &&
