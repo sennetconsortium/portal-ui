@@ -35,26 +35,33 @@ const DataUsageModal = ({data, filepath}) => {
     }
 
     useEffect(() => {
-        if (data && data.data_access_level) {
-            switch (data.data_access_level) {
-                case 'consortium':
-                    setDUACookie('has_agreed_to_Consortium_DUA')
-                    if (hasAgreedToConsortiumDUA) {
-                        setHasAgreedDUA(true)
-                    }
-                    break;
-                case 'protected':
-                    setDUACookie('has_agreed_to_Protected_DUA')
-                    if (hasAgreedToProtectedDUA) {
-                        setHasAgreedDUA(true)
-                    }
-                    break;
-                case 'public':
-                    setDUACookie('has_agreed_to_Public_DUA')
-                    if (hasAgreedToPublicDUA) {
-                        setHasAgreedDUA(true)
-                    }
-                    break;
+        if (data) {
+            if (eq(data.entity_type, "Upload")) {
+                setDUACookie('has_agreed_to_Consortium_DUA')
+                if (hasAgreedToConsortiumDUA) {
+                    setHasAgreedDUA(true)
+                }
+            } else if (data.data_access_level) {
+                switch (data.data_access_level) {
+                    case 'consortium':
+                        setDUACookie('has_agreed_to_Consortium_DUA')
+                        if (hasAgreedToConsortiumDUA) {
+                            setHasAgreedDUA(true)
+                        }
+                        break;
+                    case 'protected':
+                        setDUACookie('has_agreed_to_Protected_DUA')
+                        if (hasAgreedToProtectedDUA) {
+                            setHasAgreedDUA(true)
+                        }
+                        break;
+                    case 'public':
+                        setDUACookie('has_agreed_to_Public_DUA')
+                        if (hasAgreedToPublicDUA) {
+                            setHasAgreedDUA(true)
+                        }
+                        break;
+                }
             }
         }
     }, [data])
@@ -104,7 +111,7 @@ const DataUsageModal = ({data, filepath}) => {
                     </h3>
                     <div>
                         The SenNet External Data Sharing Policy can be found at <a target={"_blank"}
-                        href={"https://sennetconsortium.org/external-data-use/"}>https://sennetconsortium.org/external-data-use/</a> .
+                                                                                   href={"https://sennetconsortium.org/external-data-use/"}>https://sennetconsortium.org/external-data-use/</a> .
                     </div>
                     <br></br>
 
@@ -115,7 +122,7 @@ const DataUsageModal = ({data, filepath}) => {
                                 className={"form-check-input"}
                                 type='checkbox'
                                 onClick={handleClick}
-                                checked={checked}
+                                defaultChecked={checked}
                             />
                             I have read and agree to the above data use guidelines.</label>
                     </div>
