@@ -158,7 +158,6 @@ function EditUpload() {
     };
 
     const _handleValidate = () => {
-        toggleBusyOverlay(true, <><code>Validate</code> the <code>Upload</code></>)
         handleValidate('uploads')
     }
 
