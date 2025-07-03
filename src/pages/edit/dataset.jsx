@@ -665,6 +665,7 @@ export default function EditDataset() {
                                                 text={<>Validate this <code>Dataset</code> via the Ingest Pipeline.</>} className={'initiate-dataset-validation'}>
                                                 <DatasetSubmissionButton
                                                     btnLabel={"Validate"}
+                                                    actionBtnClassName={"js-btn--validate"}
                                                     modalTitle={'Validation'}
                                                     modalBody={<div><p>Click "Validate" to test the readiness for submission of this <code>Dataset</code> via the Ingest Pipeline.
 
@@ -683,7 +684,7 @@ export default function EditDataset() {
                                                 text={<>Process this <code>Dataset</code> via the Ingest Pipeline.</>}
                                                 className={'initiate-dataset-processing'}>
                                                 <DatasetSubmissionButton
-                                                    primaryBtnClassName={'js-btn--process'}
+                                                    actionBtnClassName={'js-btn--process'}
                                                     btnLabel={"Process"}
                                                     modalBody={<div><p>By clicking "Process"
                                                         this <code>Dataset</code> will
