@@ -56,7 +56,7 @@ export default function EditDataset() {
         getEntityConstraints,
         buildConstraint, successIcon, errIcon, getCancelBtn,
         isAdminOrHasValue, getAssignedToGroupNames,setModalProps,
-        contactsTSV, contacts, setContacts, contributors, setContactsAttributes, setContactsAttributesOnFail
+        contactsTSV, contacts, setContacts, contributors, setContactsAttributes, setContactsAttributesOnFail, handleValidate
     } = useContext(EntityContext)
     const {_t, cache, adminGroup, getBusyOverlay, toggleBusyOverlay, getPreviewView} = useContext(AppContext)
     const router = useRouter()
@@ -352,6 +352,10 @@ export default function EditDataset() {
         await updateCreateDataset(data.uuid, json, editMode).then((response) => {
             modalResponse(response)
         }).catch((e) => log.error(e))
+    }
+
+    const _handleValidate = async () => {
+        handleValidate('datasets')
     }
 
     const preProcessingCheck = async () => {
@@ -656,6 +660,21 @@ export default function EditDataset() {
                                             </SenNetPopover>
                                         }
 
+                                        {!['Processing', 'Published'].contains(data['status']) && isPrimary.current && adminGroup && isEditMode() &&
+                                            <SenNetPopover
+                                                text={<>Validate this <code>Dataset</code> via the Ingest Pipeline.</>} className={'initiate-dataset-validation'}>
+                                                <DatasetSubmissionButton
+                                                    btnLabel={"Validate"}
+                                                    actionBtnClassName={"js-btn--validate"}
+                                                    modalTitle={'Validation'}
+                                                    modalBody={<div><p>Click "Validate" to test the readiness for submission of this <code>Dataset</code> via the Ingest Pipeline.
+
+                                                        </p>
+                                                    </div>}
+                                                    onClick={_handleValidate} disableSubmit={disableSubmit}/>
+                                            </SenNetPopover>
+                                        }
+
                                         {/*
                                          If a user is a data admin and the status is either 'New' or 'Submitted' allow this Dataset to be
                                          processed via the pipeline.
@@ -665,7 +684,7 @@ export default function EditDataset() {
                                                 text={<>Process this <code>Dataset</code> via the Ingest Pipeline.</>}
                                                 className={'initiate-dataset-processing'}>
                                                 <DatasetSubmissionButton
-                                                    primaryBtnClassName={'js-btn--process'}
+                                                    actionBtnClassName={'js-btn--process'}
                                                     btnLabel={"Process"}
                                                     modalBody={<div><p>By clicking "Process"
                                                         this <code>Dataset</code> will
