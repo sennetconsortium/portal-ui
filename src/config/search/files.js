@@ -49,16 +49,16 @@ export const SEARCH_FILES = {
                 isAggregationActive: true,
                 isFacetVisible: doesAggregationHaveBuckets('file_extension')
             },
-            'organs.type': {
+            'organs.label': {
                 label: 'Organs',
                 type: 'value',
-                field: 'organs.type.keyword',
+                field: 'organs.label.keyword',
                 isExpanded: false,
                 filterType: 'any',
                 isFilterable: false,
                 facetType: 'term',
                 isAggregationActive: true,
-                isFacetVisible: doesAggregationHaveBuckets('organs.type')
+                isFacetVisible: doesAggregationHaveBuckets('organs.label')
             },
             dataset_type: {
                 label: 'Dataset Type',
@@ -92,14 +92,16 @@ export const SEARCH_FILES = {
             dataset_sennet_id: {type: 'value'},
             dataset_type: {type: 'value'}
         },
-        source_fields: sourceItems
+        source_fields: sourceItems,
+        // Moving this configuration into `searchQuery` so the config inside search-tools can read this
+        trackTotalHits: true,
     },
     initialState: {
         current: 1,
         resultsPerPage: 20,
         sortList: [{
-            field: 'source.file_info_refresh_timestamp',
-            direction: 'desc'
+            field: 'size',
+            direction: 'asc'
         }]
     },
     urlPushDebounceLength: 100,

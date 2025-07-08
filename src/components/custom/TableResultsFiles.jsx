@@ -82,12 +82,12 @@ function TableResultsFiles({children, filters, forData = false, rowFn, inModal =
                     organs: file.organs,
                     samples: file.samples,
                     list: [],
-                    size: 0,
+                    files_count: 0,
                 }    
             }
 
             results[file.dataset_uuid].list.push(file)
-            results[file.dataset_uuid].size += 1
+            results[file.dataset_uuid].files_count += 1
         }
 
         return Object.values(results)
@@ -187,13 +187,13 @@ function TableResultsFiles({children, filters, forData = false, rowFn, inModal =
 
         cols.push(
             {
-                name: 'Dataset SenNet ID',
-                id: 'dataset_sennet_id',
+                name: 'Dataset UUID',
+                id: 'dataset_uuid',
                 width: '200px',
-                selector: row => raw(row.dataset_sennet_id),
+                selector: row => raw(row.dataset_uuid),
                 sortable: true,
                 reorder: true,
-                format: column => inModal ? raw(column.dataset_sennet_id) : <span data-field='dataset_sennet_id'><a href={getHotLink(column)}>{raw(column.dataset_sennet_id)}</a> <ClipboardCopy text={raw(column.dataset_sennet_id)} title={'Copy SenNet ID {text} to clipboard'} /></span>,
+                format: column => inModal ? raw(column.dataset_uuid) : <span data-field='dataset_uuid'><a href={getHotLink(column)}>{raw(column.dataset_uuid)}</a> <ClipboardCopy text={raw(column.dataset_sennet_id)} title={'Copy UUID {text} to clipboard'} /></span>,
             }
         )
 
@@ -235,12 +235,12 @@ function TableResultsFiles({children, filters, forData = false, rowFn, inModal =
 
         cols.push(
             {
-                name: 'Sample Type',
-                id: 'samples',
+                name: 'Organ',
+                id: 'organs',
                 selector: row => {
-                    let val = raw(row.samples)
+                    let val = raw(row.organs)
                     if (val) {
-                        return Array.isArray(val) ? val[0].type : val.type
+                        return Array.isArray(val) ? getUBKGFullName(val[0].code) : val.code
                     }
                 },
                 sortable: true,
@@ -254,7 +254,7 @@ function TableResultsFiles({children, filters, forData = false, rowFn, inModal =
                 name: 'Dataset Type',
                 id: 'dataset_types',
                 selector: row => {
-                    let val = raw(row.dataset_types)
+                    let val = raw(row.dataset_type)
                     if (val) {
                         return Array.isArray(val) ? getUBKGFullName(val[0]) : val
                     }
@@ -266,12 +266,12 @@ function TableResultsFiles({children, filters, forData = false, rowFn, inModal =
 
         cols.push(
             {
-                name: 'Size',
-                id: 'size',
-                selector: row => raw(row.size),
+                name: 'Files',
+                id: 'files_count',
+                selector: row => raw(row.files_count),
                 sortable: true,
                 reorder: true,
-                format: row => <span>{formatByteSize(raw(row.size))}</span>
+                format: row => <span>{raw(row.files_count)}</span>
             }
         )
 
@@ -318,6 +318,8 @@ function TableResultsFiles({children, filters, forData = false, rowFn, inModal =
     // Prepare opsDict
     getOptions(children.length)
 
+    const getSearchContext = () => `files.${tableContext.current}`
+
     return (
         <>
             <TableResultsProvider columnsRef={currentColumns} getId={getId} rows={results} filters={filters} onRowClicked={onRowClicked} forData={forData} raw={raw} inModal={inModal}>
@@ -333,9 +335,10 @@ function TableResultsFiles({children, filters, forData = false, rowFn, inModal =
                 </> />
                 <ResultsBlock
                     index={'files'}
-                    searchContext={`files.${tableContext.current}`}
+                    searchContext={getSearchContext}
                     tableClassName={'rdt_Results--Files'}
                     getTableColumns={getTableColumns}
+                    totalRows={results.length}
                 />
                 <AppModal
                     className={`modal--filesView`}

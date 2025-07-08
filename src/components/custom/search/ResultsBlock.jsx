@@ -11,7 +11,7 @@ import {eq} from '../js/functions'
 import {COLS_ORDER_KEY} from "@/config/config";
 import Spinner from '../Spinner';
 
-function ResultsBlock({getTableColumns, disableRowClick, tableClassName = '', defaultHiddenColumns = [], searchContext}) {
+function ResultsBlock({getTableColumns, disableRowClick, tableClassName = '', defaultHiddenColumns = [], searchContext, totalRows}) {
 
     const {
         getTableData,
@@ -45,7 +45,7 @@ function ResultsBlock({getTableColumns, disableRowClick, tableClassName = '', de
                     <ResultsPerPage updateTablePagination={updateTablePagination}
                                     resultsPerPage={pageSize}
                                     setResultsPerPage={setResultsPerPage}
-                                    totalRows={rawResponse.record_count}  />
+                                    totalRows={totalRows || rawResponse.record_count}  />
                 </div>
             </div>
 
@@ -74,7 +74,7 @@ function ResultsBlock({getTableColumns, disableRowClick, tableClassName = '', de
                         pagination
                         paginationServer
                         paginationDefaultPage={pageNumber}
-                        paginationTotalRows={rawResponse.record_count}
+                        paginationTotalRows={totalRows || rawResponse.record_count}
                         progressPending={isLoading}
                         progressComponent={<Spinner />}
                 />}
