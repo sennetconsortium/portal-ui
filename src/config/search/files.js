@@ -100,7 +100,7 @@ export const SEARCH_FILES = {
         current: 1,
         resultsPerPage: 20,
         sortList: [{
-            field: 'size',
+            field: 'dataset_uuid.keyword',
             direction: 'asc'
         }]
     },
