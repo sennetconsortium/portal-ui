@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import {
     autoBlobDownloader,
     checkFilterType,
-    checkMultipleFilterType, formatByteSize, getEntityViewUrl,
+    checkMultipleFilterType, formatByteSize, getEntityViewUrl, getHeaders,
     getUBKGFullName, matchArrayOrder,
 } from './js/functions'
 import BulkExport, {getCheckAll, getCheckboxes, handleCheckbox} from "./BulkExport";
@@ -19,7 +19,8 @@ import SenNetPopover from "../SenNetPopover";
 import AppModal from "../AppModal";
 import FileTreeView from "./entities/dataset/FileTreeView";
 import {COLS_ORDER_KEY, FILE_KEY_SEPARATOR} from "@/config/config";
-import {parseJson} from "@/lib/services";
+import {fetchSearchAPIEntities, filesQuery, parseJson} from "@/lib/services";
+import {useSearchUIContext} from "@/search-ui/components/core/SearchUIContext";
 
 const downloadSizeAttr = 'data-download-size'
 export const clearDownloadSizeLabel = () => {
@@ -35,24 +36,50 @@ function TableResultsFiles({children, filters, forData = false, rowFn, inModal =
     const [showModal, setShowModal] = useState(false)
     const [fileSelection, setFileSelection] = useState(null)
 
-    const [results, setResults] = useState(transformResults())
+    const [results, setResults] = useState([])
     const [treeViewData, setTreeViewData] = useState([])
     const [showModalDownloadBtn, setShowModalDownloadBtn] = useState(false)
     const currentDatasetUuid = useRef(null)
     const selectedFilesModal = useRef({})
     const hiddenColumns = useRef(null)
     const tableContext = useRef(null)
+    const [isBusy, setIsBusy] = useState(true)
+    const [searchResponse, setSearchResponse] = useState({})
+    const {pageNumber, pageSize} = useSearchUIContext()
 
     useEffect(() => {
         const totalFileCount = rawResponse.records.files.length
         $('.sui-paging-info').append(` Datasets (<strong>${totalFileCount}</strong> Total Files)`)
     }, [])
 
+    const fetchData =  async () => {
+        filesQuery.query.bool.filter = []
+        for (let f of filters) {
+            filesQuery.query.bool.filter.push({
+                terms: {
+                    [`${f.field}.keyword`]: f.values
+                }
+            })
+        }
+        console.log(filesQuery)
+        filesQuery.size = pageSize;
+        filesQuery.from = pageSize * (pageNumber - 1)
+
+        const req = await fetchSearchAPIEntities(filesQuery, 'files')
+
+        setIsBusy(false)
+        return req
+    }
+
     useEffect(()=> {
-        const results = transformResults()
-        setResults(results)
-        updatePagingInfo(results.length)
-    }, [rawResponse])
+        fetchData().then((resp)=>{
+            const results = transformResults(resp)
+            setResults(results)
+            setSearchResponse(resp)
+            updatePagingInfo(resp.aggregations?.total_datasets.value, resp)
+        })
+
+    }, [rawResponse, pageSize, pageSize])
 
     const raw = rowFn ? rowFn : ((obj) => obj ? (obj.raw || obj) : null)
     const applyDownloadSizeLabel = (total) => {
@@ -62,32 +89,36 @@ function TableResultsFiles({children, filters, forData = false, rowFn, inModal =
         }
     }
 
-    function updatePagingInfo(resultsCount) {
+    function updatePagingInfo(resultsCount, resp) {
         $('.sui-paging-info strong').eq(1).text(resultsCount)
-        $('.sui-paging-info strong').eq(2).text(rawResponse.records.files.length)
+        $('.sui-paging-info strong').eq(2).text(resp.hits?.total.value)
     }
 
-    function transformResults() {
+    function transformResults(resp) {
         const results = {}
 
         // group files by dataset_uuid
-        for (let file of rawResponse.records.files) {
-            if (!results.hasOwnProperty(file.dataset_uuid)) {
-                results[file.dataset_uuid] = {
-                    dataset_type: file.dataset_type,
-                    dataset_sennet_id: file.dataset_sennet_id,
-                    dataset_uuid: file.dataset_uuid,
-                    donors: file.donors,
-                    id: file.dataset_uuid,
-                    organs: file.organs,
-                    samples: file.samples,
-                    list: [],
-                    files_count: 0,
+        for (let file of resp?.hits?.hits) {
+            let uuid = file.fields['dataset_uuid.keyword'][0]
+            if (!results.hasOwnProperty(uuid)) {
+                let list = []
+                for (let l of file.inner_hits.files.hits.hits) {
+                    list.push(l._source)
+                }
+                results[uuid] = {
+                    dataset_type: list[0].dataset_type,
+                    dataset_sennet_id: list[0].dataset_sennet_id,
+                    dataset_uuid: list[0].dataset_uuid,
+                    donors: list[0].donors,
+                    id: list[0].dataset_uuid,
+                    organs: list[0].organs,
+                    samples: list[0].samples,
+                    list: list,
+                    files_count: file.inner_hits.files.hits.total.value,
                 }    
             }
 
-            results[file.dataset_uuid].list.push(file)
-            results[file.dataset_uuid].files_count += 1
+
         }
 
         return Object.values(results)
@@ -335,10 +366,11 @@ function TableResultsFiles({children, filters, forData = false, rowFn, inModal =
                 </> />
                 <ResultsBlock
                     index={'files'}
+                    isBusy={isBusy}
                     searchContext={getSearchContext}
                     tableClassName={'rdt_Results--Files'}
                     getTableColumns={getTableColumns}
-                    totalRows={results.length}
+                    totalRows={searchResponse.aggregations?.total_datasets.value}
                 />
                 <AppModal
                     className={`modal--filesView`}

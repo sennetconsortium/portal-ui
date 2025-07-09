@@ -14,19 +14,16 @@ const connector = new SearchAPIConnector({
 })
 
 const sourceItems = [
-    'sennet_id',
-    'dataset_sennet_id',
-    'checksum',
-    'dataset_type',
-    'description',
+    'md5_checksum',
+    'sha256_checksum',
     'dataset_uuid',
-    'donors',
+    'dataset_type',
     'file_extension',
-    'file_info_refresh_timestamp',
+    'file_uuid',
     'organs',
+    'size',
     'rel_path',
-    'samples',
-    'size'
+    'sources.source_type'
 ]
 
 export const SEARCH_FILES = {
