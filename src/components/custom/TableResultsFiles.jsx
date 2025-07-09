@@ -102,8 +102,20 @@ function TableResultsFiles({children, filters, forData = false, rowFn, inModal =
             let uuid = file.fields['dataset_uuid.keyword'][0]
             if (!results.hasOwnProperty(uuid)) {
                 let list = []
+                let meta = {
+                    files: file.inner_hits.files.hits.total.value,
+                    extensions: []
+                }
                 for (let l of file.inner_hits.files.hits.hits) {
                     list.push(l._source)
+                }
+                for (let l of resp.aggregations.file_extension.buckets) {
+                    if (l.key['dataset_uuid.keyword'] === uuid) {
+                        meta.extensions.push({
+                            name: l.key['file_extension.keyword'],
+                            count: l.doc_count
+                        })
+                    }
                 }
                 results[uuid] = {
                     dataset_type: list[0].dataset_type,
@@ -114,7 +126,7 @@ function TableResultsFiles({children, filters, forData = false, rowFn, inModal =
                     organs: list[0].organs,
                     samples: list[0].samples,
                     list: list,
-                    files_count: file.inner_hits.files.hits.total.value,
+                    meta: meta,
                 }    
             }
 
@@ -224,15 +236,15 @@ function TableResultsFiles({children, filters, forData = false, rowFn, inModal =
                 selector: row => raw(row.dataset_uuid),
                 sortable: true,
                 reorder: true,
-                format: column => inModal ? raw(column.dataset_uuid) : <span data-field='dataset_uuid'><a href={getHotLink(column)}>{raw(column.dataset_uuid)}</a> <ClipboardCopy text={raw(column.dataset_sennet_id)} title={'Copy UUID {text} to clipboard'} /></span>,
+                format: column => inModal ? raw(column.dataset_uuid) : <span data-field='dataset_uuid'><a href={getHotLink(column)}>{raw(column.dataset_uuid)}</a> <ClipboardCopy text={raw(column.dataset_uuid)} title={'Copy UUID {text} to clipboard'} /></span>,
             }
         )
 
         cols.push(
             {
                 name: 'Files',
-                id: 'description',
-                minWidth: '50%',
+                id: 'rel_path',
+                minWidth: '35%',
                 selector: row => raw(row.description),
                 sortable: true,
                 reorder: true,
@@ -267,7 +279,8 @@ function TableResultsFiles({children, filters, forData = false, rowFn, inModal =
         cols.push(
             {
                 name: 'Organ',
-                id: 'organs',
+                id: 'organs.label',
+                width: '10%',
                 selector: row => {
                     let val = raw(row.organs)
                     if (val) {
@@ -283,7 +296,8 @@ function TableResultsFiles({children, filters, forData = false, rowFn, inModal =
         cols.push(
             {
                 name: 'Dataset Type',
-                id: 'dataset_types',
+                width: '15%',
+                id: 'dataset_type',
                 selector: row => {
                     let val = raw(row.dataset_type)
                     if (val) {
@@ -299,15 +313,31 @@ function TableResultsFiles({children, filters, forData = false, rowFn, inModal =
             {
                 name: 'Files',
                 id: 'files_count',
-                selector: row => raw(row.files_count),
-                sortable: true,
+                width: '15%',
+                selector: row => raw(row.meta.files),
+                sortable: false,
                 reorder: true,
-                format: row => <span>{raw(row.files_count)}</span>
+                format: row => {
+                    let res = []
+                    const data = {
+                        uuid: row.dataset_uuid
+                    }
+                    for (let e of row.meta.extensions) {
+                        res.push(<Chip
+                            key={e.name}
+                            avatar={<span className={'MuiChip--ext'}>{e.name}</span>}
+                            label={<span>{e.count}</span>}
+                            variant="outlined"
+                        />)
+                        data[e.name || 'N/A'] = e.count
+                    }
+
+                    return <div className={'table__cellFiles'}><div className='table__chips'>{res}</div></div>
+                }
             }
         )
 
         cols = cols.concat(columns)
-
         return cols;
     }
 
