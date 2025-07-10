@@ -29,7 +29,7 @@ function VersionDropdown({className = '', data}) {
         let results = [];
         const setUrl = (_entity) => {
             if (data.uuid === _entity.uuid) return '#'
-            return getEntityViewUrl(cache.entities.dataset, _entity.uuid, {isEdit: false})
+            return getEntityViewUrl(cache.entities.dataset, _entity.uuid, {isEdit: false}, {})
         }
 
         const getActive = (_entity) => setUrl(_entity) === '#' ? true : null

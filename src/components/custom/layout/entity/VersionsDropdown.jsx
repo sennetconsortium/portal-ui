@@ -20,7 +20,7 @@ function VersionsDropdown({data}) {
     }
 
     const handleChange = (e) => {
-        window.location = getEntityViewUrl(cache.entities.dataset, e.value, {isEdit: false})
+        window.location = getEntityViewUrl(cache.entities.dataset, e.value, {isEdit: false}, {})
     }
 
 

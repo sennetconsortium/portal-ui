@@ -11,7 +11,7 @@ function Collections({ entityType, data }) {
     const getCollectionsView = () => {
         return data?.map((collection) =>
             <span key={collection.uuid}>
-                <a href={getEntityViewUrl('Collection', collection.uuid, {})}>{collection.sennet_id}</a><ClipboardCopy text={collection.sennet_id}/>
+                <a href={getEntityViewUrl('Collection', collection.uuid, {}, {})}>{collection.sennet_id}</a><ClipboardCopy text={collection.sennet_id}/>
                 &nbsp;
             </span>
         );
