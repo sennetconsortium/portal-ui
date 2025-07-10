@@ -142,7 +142,8 @@ function ViewDataset() {
                 .catch(log.error);
 
             if(router.query.hasOwnProperty("redirectedFrom")) {
-                toast.info(`You have been redirected to the unified view for ${router.query.redirectedFrom}.`, {
+                let message = router.query.redirectedFrom.replace(/\/$/, '')
+                toast.info(`You have been redirected to the unified view for ${message}.`, {
                     position: 'top-right',
                 });
             }
@@ -173,7 +174,7 @@ function ViewDataset() {
                                 {primaryDatasetData && (
                                     <>
                                         <span>To view the <code>Primary Dataset</code>, visit &nbsp;</span>
-                                        <a href={getEntityViewUrl('dataset', primaryDatasetData.uuid, {})}>{primaryDatasetData.sennet_id}</a>
+                                        <a href={getEntityViewUrl('dataset', primaryDatasetData.uuid, {}, {})}>{primaryDatasetData.sennet_id}</a>
                                     </>
                                 )}
                             </Alert>
