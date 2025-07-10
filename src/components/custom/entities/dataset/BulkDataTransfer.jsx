@@ -97,7 +97,7 @@ function BulkDataTransfer({data}) {
 
         let c
         for (let d of tabData) {
-            if (isLoggedIn()) {
+            if (isLoggedIn() || d.globusPath) {
                 if (!d.globusPath) {
                     c = loggedInNoAccess(d)
                 } else {
