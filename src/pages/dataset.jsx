@@ -18,19 +18,18 @@ import AppContext from "@/context/AppContext";
 import Alert from 'react-bootstrap/Alert';
 import {EntityViewHeader} from "@/components/custom/layout/entity/ViewHeader";
 import DerivedContext, {DerivedProvider} from "@/context/DerivedContext";
-import FileTreeView from "@/components/custom/entities/dataset/FileTreeView";
 import WarningIcon from '@mui/icons-material/Warning'
 import LoadingAccordion from "@/components/custom/layout/LoadingAccordion";
 import AppNavbar from "@/components/custom/layout/AppNavbar"
 import Description from "@/components/custom/entities/sample/Description";
 import Upload from "@/components/custom/entities/dataset/Upload";
 import Collections from "@/components/custom/entities/Collections";
+import FilesDataProducts from "@/components/custom/entities/dataset/FilesDataProducts";
 
 const AppFooter = dynamic(() => import("@/components/custom/layout/AppFooter"))
 const Attribution = dynamic(() => import("@/components/custom/entities/sample/Attribution"))
 const ContributorsContacts = dynamic(() => import("@/components/custom/entities/ContributorsContacts"))
 const CreationActionRelationship = dynamic(() => import("@/components/custom/entities/dataset/CreationActionRelationship"))
-const DataProducts = dynamic(() => import("@/components/custom/entities/dataset/DataProducts"))
 const Header = dynamic(() => import("@/components/custom/layout/Header"))
 const Metadata = dynamic(() => import("@/components/custom/entities/Metadata"))
 const Provenance = dynamic(() => import("@/components/custom/entities/Provenance"), {
@@ -230,11 +229,7 @@ function ViewDataset() {
                                                 </li>
                                             }
 
-                                        <li className="nav-item">
-                                            <a href="#Files"
-                                               className="nav-link"
-                                               data-bs-parent="#sidebar">Files</a>
-                                        </li>
+
 
                                         {!!(data.contributors && Object.keys(data.contributors).length) &&
                                             <li className="nav-item">
@@ -278,8 +273,8 @@ function ViewDataset() {
                                         }
 
                                         {/*Data Products*/}
-                                        {(datasetIs.primary(data.creation_action) || datasetIs.processed(data.creation_action)) && dataProducts && (dataProducts.length > 0) &&
-                                            <DataProducts data={data} files={dataProducts}/>
+                                        { data &&
+                                            <FilesDataProducts data={data} dataProducts={dataProducts}  />
                                         }
 
                                         {/*Upload*/}
@@ -306,8 +301,7 @@ function ViewDataset() {
                                                 />
                                             }
 
-                                        {/*Files*/}
-                                        {data && <FileTreeView data={data}/>}
+
 
                                         {/*Contributors*/}
                                         {!!(data.contributors && Object.keys(data.contributors).length) &&
