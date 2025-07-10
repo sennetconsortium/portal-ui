@@ -747,6 +747,8 @@ export const filesQuery = {
     },
     "_source": {
         "includes": [
+            "dataset_sennet_id",
+            "last_modified_at",
             "md5_checksum",
             "sha256_checksum",
             "dataset_uuid",
