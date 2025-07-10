@@ -445,9 +445,10 @@ export function goToSearch() {
     goIntent('search')
 }
 
-export function getEntityViewUrl(entity, uuid, {isEdit = false}) {
+export function getEntityViewUrl(entity, uuid, {isEdit = false}, {redirectedFrom = ''}) {
     const pre = isEdit ? '/edit' : ''
-    return pre + "/" + entity?.toLowerCase() + "?uuid=" + uuid
+    const redirect = redirectedFrom !== '' ? `&redirectedFrom=${redirectedFrom}` : ''
+    return pre + "/" + entity?.toLowerCase() + "?uuid=" + uuid + redirect
 }
 
 export function autoBlobDownloader(data, type, filename) {

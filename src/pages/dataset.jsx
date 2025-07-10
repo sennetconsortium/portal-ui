@@ -25,6 +25,8 @@ import AppNavbar from "@/components/custom/layout/AppNavbar"
 import Description from "@/components/custom/entities/sample/Description";
 import Upload from "@/components/custom/entities/dataset/Upload";
 import Collections from "@/components/custom/entities/Collections";
+import {toast} from "react-toastify";
+
 
 const AppFooter = dynamic(() => import("@/components/custom/layout/AppFooter"))
 const Attribution = dynamic(() => import("@/components/custom/entities/sample/Attribution"))
@@ -138,6 +140,12 @@ function ViewDataset() {
             // fetch dataset data
             fetchData(router.query.uuid)
                 .catch(log.error);
+
+            if(router.query.hasOwnProperty("redirectedFrom")) {
+                toast.info(`You have been redirected to the unified view for ${router.query.redirectedFrom}.`, {
+                    position: 'top-right',
+                });
+            }
         } else {
             setData(null);
         }
