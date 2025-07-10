@@ -289,7 +289,7 @@ export default function EditDataset() {
                     }
                     let icon = currentValid ? successIcon() : errIcon()
                     results.push(<span key={`rui-check-${i}`}>{icon} <a
-                        href={getEntityViewUrl(ancestor.entity_type, ancestor.uuid, {isEdit: true})}
+                        href={getEntityViewUrl(ancestor.entity_type, ancestor.uuid, {isEdit: true}, {})}
                         target='_blank'>{ancestor.sennet_id}</a>  <br/></span>)
                     i++
                 }
@@ -327,7 +327,7 @@ export default function EditDataset() {
                     }
                     let icon = apiResult ? successIcon() : errIcon()
                     results.push(<span key={`doi-check-${i}`}>{icon} <a
-                        href={getEntityViewUrl(ancestor.entity_type, ancestor.uuid, {isEdit: true})}
+                        href={getEntityViewUrl(ancestor.entity_type, ancestor.uuid, {isEdit: true}, {})}
                         target='_blank'>{ancestor.sennet_id}</a>  <br/></span>)
                     i++
                 }
