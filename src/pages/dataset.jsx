@@ -187,13 +187,7 @@ function ViewDataset() {
                                                    data-bs-parent="#sidebar">Multi-Assay Relationship</a>
                                             </li>
                                         }
-                                        {(datasetIs.primary(data.creation_action) || datasetIs.processed(data.creation_action)) && dataProducts && (dataProducts.length > 0) &&
-                                            <li className="nav-item">
-                                                <a href="#data-products"
-                                                   className="nav-link "
-                                                   data-bs-parent="#sidebar">Data Products</a>
-                                            </li>
-                                        }
+
                                         {isLoggedIn() && data.upload &&
                                             <li className="nav-item">
                                                 <a href="#Upload"
@@ -229,7 +223,11 @@ function ViewDataset() {
                                                 </li>
                                             }
 
-
+                                        <li className="nav-item">
+                                            <a href="#files-data-products"
+                                               className="nav-link "
+                                               data-bs-parent="#sidebar">Files & Data Products</a>
+                                        </li>
 
                                         {!!(data.contributors && Object.keys(data.contributors).length) &&
                                             <li className="nav-item">
