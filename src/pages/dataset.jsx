@@ -25,6 +25,7 @@ import Description from "@/components/custom/entities/sample/Description";
 import Upload from "@/components/custom/entities/dataset/Upload";
 import Collections from "@/components/custom/entities/Collections";
 import FilesDataProducts from "@/components/custom/entities/dataset/FilesDataProducts";
+import BulkDataTransfer from "@/components/custom/entities/dataset/BulkDataTransfer";
 
 const AppFooter = dynamic(() => import("@/components/custom/layout/AppFooter"))
 const Attribution = dynamic(() => import("@/components/custom/entities/sample/Attribution"))
@@ -229,6 +230,12 @@ function ViewDataset() {
                                                data-bs-parent="#sidebar">Files & Data Products</a>
                                         </li>
 
+                                        <li className="nav-item">
+                                            <a href="#bulk-data-transfer"
+                                               className="nav-link "
+                                               data-bs-parent="#sidebar">Bulk Data Transfer</a>
+                                        </li>
+
                                         {!!(data.contributors && Object.keys(data.contributors).length) &&
                                             <li className="nav-item">
                                                 <a href="#Contributors"
@@ -270,11 +277,6 @@ function ViewDataset() {
                                             <CreationActionRelationship entity={data} data={datasetCategories}/>
                                         }
 
-                                        {/*Data Products*/}
-                                        { data &&
-                                            <FilesDataProducts data={data} dataProducts={dataProducts}  />
-                                        }
-
                                         {/*Upload*/}
                                         {isLoggedIn() && data.upload && <Upload data={data.upload}/>}
 
@@ -299,7 +301,14 @@ function ViewDataset() {
                                                 />
                                             }
 
+                                        {/*Data Products*/}
+                                        { data &&
+                                            <FilesDataProducts data={data} dataProducts={dataProducts}  />
+                                        }
 
+                                        { datasetCategories &&
+                                            <BulkDataTransfer data={datasetCategories}  />
+                                        }
 
                                         {/*Contributors*/}
                                         {!!(data.contributors && Object.keys(data.contributors).length) &&

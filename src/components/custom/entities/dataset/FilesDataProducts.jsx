@@ -21,15 +21,17 @@ function FilesDataProducts({ data, dataProducts }) {
                     variant="pills"
                 >
 
-                    <Tab eventKey="files" title={'Files'}>
-                        <FileTreeView data={data} withoutAccordion={true}/>
-                    </Tab>
-
                     {(datasetIs.primary(data.creation_action) || datasetIs.processed(data.creation_action)) && dataProducts && (dataProducts.length > 0) &&
                         <Tab eventKey="data-products" title={'Data Products'}>
                             <DataProducts data={data} files={dataProducts}/>
                         </Tab>
                     }
+
+                    <Tab eventKey="files" title={'File Browser'}>
+                        <FileTreeView data={data} withoutAccordion={true}/>
+                    </Tab>
+
+
                 </Tabs>
             </SenNetAccordion>
         </>
