@@ -37,7 +37,13 @@ function TableResultsEntities({children, filters, onRowClicked, currentColumns =
         hiddenColumns.current = {}
     }, [filters])
 
-    const getHotLink = (row) => getEntityViewUrl(raw(row.entity_type)?.toLowerCase(), raw(row.uuid), {})
+    const getHotLink = (row) => {
+        if (raw(row.entity_type)?.toLowerCase() === 'dataset' && raw(row.dataset_category) === 'component') {
+            return getEntityViewUrl(raw(row.entity_type)?.toLowerCase(), raw(row.primary_dataset_uuid), {}, {redirectedFrom: encodeURIComponent(raw(row.dataset_type) + " dataset " + raw(row.sennet_id))})
+        } else {
+            return getEntityViewUrl(raw(row.entity_type)?.toLowerCase(), raw(row.uuid), {})
+        }
+    }
 
     const getId = (column) => column.id || column.uuid
 

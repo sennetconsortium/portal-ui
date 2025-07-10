@@ -327,7 +327,9 @@ export const SEARCH_ENTITIES = {
             'title',
             'description',
             'dataset_type_hierarchy',
-            'has_all_published_datasets'
+            'has_all_published_datasets',
+            'primary_dataset_uuid',
+            'dataset_category'
         ],
         // Moving this configuration into `searchQuery` so the config inside search-tools can read this
         trackTotalHits: true,
