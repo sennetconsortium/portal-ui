@@ -31,6 +31,7 @@ function ViewUpload() {
     const [errorMessage, setErrorMessage] = useState(null)
     const [hasWritePrivilege, setHasWritePrivilege] = useState(false)
     const {isRegisterHidden, _t, cache, isPreview, getPreviewView} = useContext(AppContext);
+    const [showFilesSection, setShowFilesSection] = useState(null)
 
     useEffect(() => {
         const fetchData = async (uuid) => {
@@ -72,6 +73,13 @@ function ViewUpload() {
         }
     }, [router]);
 
+    const toggleFilesSection = ({hasData, filepath, status}) => {
+        const has = hasData || (filepath?.length > 0) || (status > 200)
+        if (has !== showFilesSection && showFilesSection !== true) {
+            setShowFilesSection(has)
+        }
+    }
+
     if (isPreview(data, error))  {
         return getPreviewView(data)
     } else {
@@ -98,11 +106,11 @@ function ViewUpload() {
                                                    className="nav-link "
                                                    data-bs-parent="#sidebar">Summary</a>
                                             </li>
-                                            <li className="nav-item">
+                                            {showFilesSection == null || showFilesSection && <li className="nav-item">
                                                 <a href="#Files"
                                                    className="nav-link"
                                                    data-bs-parent="#sidebar">Files</a>
-                                            </li>
+                                            </li>}
                                             {data.datasets?.length > 0 && <li className="nav-item">
                                                 <a href="#Datasets"
                                                    className="nav-link"
@@ -135,7 +143,8 @@ function ViewUpload() {
                                             />
 
                                             {/*Files*/}
-                                            <FileTreeView data={data}/>
+
+                                            {(showFilesSection == null || showFilesSection) && <FileTreeView onStateUpdateCallback={toggleFilesSection} data={data}/>}
 
                                             {/*Datasets*/}
                                             {isDatasetsLoading ? (
