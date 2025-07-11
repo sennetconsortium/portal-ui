@@ -234,7 +234,7 @@ function ViewDataset() {
                                         {data && showFilesSection && <li className="nav-item">
                                             <a href="#files-data-products"
                                                className="nav-link "
-                                               data-bs-parent="#sidebar">Files & Data Products</a>
+                                               data-bs-parent="#sidebar">Files</a>
                                         </li>}
 
                                         <li className="nav-item">
