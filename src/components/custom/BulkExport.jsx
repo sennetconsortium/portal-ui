@@ -290,7 +290,7 @@ function BulkExport({ data = [], raw, columns, filters, exportKind, onCheckAll, 
             <div id='sui-tbl-checkbox-actions' className={'js-gtm--download'}>
                 <Dropdown>
                     <Dropdown.Toggle  id="dropdown-basic" variant={'secondary-outline'}>
-                        ...
+                        <i className="bi bi-download text-primary fs-5"></i>
                     </Dropdown.Toggle>
 
                     <Dropdown.Menu className={`${getMenuItems().length > 2 ? 'menu--lg' : ''}`}>
