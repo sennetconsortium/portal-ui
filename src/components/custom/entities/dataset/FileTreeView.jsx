@@ -73,8 +73,6 @@ export const FileTreeView = ({data, selection = {}, keys = {files: 'files', uuid
         if (data[keys.files] && getLength(data[keys.files])) {
             _hasFiles(true)
             buildTree(data[keys.uuid], data[keys.files])
-        } else {
-            _hasFiles(false)
         }
     }, [])
 
@@ -83,6 +81,10 @@ export const FileTreeView = ({data, selection = {}, keys = {files: 'files', uuid
             if (isPrimaryDataset && derivedDataset[keys.files] && getLength(derivedDataset[keys.files])) {
                 _hasFiles(true)
                 buildTree(derivedDataset[keys.uuid], derivedDataset[keys.files])
+            } else {
+                if (!hasData) {
+                    _hasFiles(false)
+                }
             }
         }
 
