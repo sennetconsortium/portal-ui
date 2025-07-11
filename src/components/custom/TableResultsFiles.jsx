@@ -230,13 +230,13 @@ function TableResultsFiles({children, filters, forData = false, rowFn, inModal =
 
         cols.push(
             {
-                name: 'Dataset UUID',
+                name: 'Dataset SenNet ID',
                 id: 'dataset_uuid',
                 width: '200px',
-                selector: row => raw(row.dataset_uuid),
+                selector: row => raw(row.dataset_sennet_id),
                 sortable: true,
                 reorder: true,
-                format: column => inModal ? raw(column.dataset_uuid) : <span data-field='dataset_uuid'><a href={getHotLink(column)}>{raw(column.dataset_uuid)}</a> <ClipboardCopy text={raw(column.dataset_uuid)} title={'Copy UUID {text} to clipboard'} /></span>,
+                format: column => inModal ? raw(column.dataset_sennet_id) : <span data-field='dataset_sennet_id'><a href={getHotLink(column)}>{raw(column.dataset_sennet_id)}</a> <ClipboardCopy text={raw(column.dataset_sennet_id)} title={'Copy SenNet ID {text} to clipboard'} /></span>,
             }
         )
 
