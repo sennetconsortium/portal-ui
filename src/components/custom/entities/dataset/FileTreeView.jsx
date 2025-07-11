@@ -20,7 +20,7 @@ import DataUsageModal from "@/components/custom/entities/dataset/DataUsageModal"
 export const FileTreeView = ({data, selection = {}, keys = {files: 'files', uuid: 'uuid'},
                                  loadDerived = true, treeViewOnly = false, className = '', filesClassName = '',
                                  showQAButton = true, showDataProductButton = true, includeDescription= false,
-                                 showDownloadAllButton = false, withoutAccordion = false}) => {
+                                 showDownloadAllButton = false, withoutAccordion = false, onStateUpdateCallback}) => {
     const filterByValues = {
         default: "label",
         qa: "data.is_qa_qc",
@@ -47,11 +47,23 @@ export const FileTreeView = ({data, selection = {}, keys = {files: 'files', uuid
         return Array.isArray(obj) ? obj.length : Object.keys(obj).length
     }
 
+    const _onStateUpdateCallback = (states)=> {
+        if (onStateUpdateCallback) {
+            onStateUpdateCallback(states)
+        }
+    }
+
+    const _hasFiles = (has) => {
+        setHasData(has)
+        _onStateUpdateCallback({hasData: has, filepath, status})
+    }
+
     useEffect( () => {
         async function fetchData() {
             await fetchGlobusFilepath(data[keys.uuid]).then((globusData) => {
                 setStatus(globusData.status);
                 setFilepath(globusData.filepath);
+                _onStateUpdateCallback({hasData: null, filepath: globusData.filepath, status: globusData.status})
             });
         }
 
@@ -59,15 +71,17 @@ export const FileTreeView = ({data, selection = {}, keys = {files: 'files', uuid
 
         //Default to use files, otherwise wait until derivedDataset is populated
         if (data[keys.files] && getLength(data[keys.files])) {
-            setHasData(true)
+            _hasFiles(true)
             buildTree(data[keys.uuid], data[keys.files])
+        } else {
+            _hasFiles(false)
         }
     }, [])
 
     useEffect(() => {
         if (derivedDataset && loadDerived) {
             if (isPrimaryDataset && derivedDataset[keys.files] && getLength(derivedDataset[keys.files])) {
-                setHasData(true)
+                _hasFiles(true)
                 buildTree(derivedDataset[keys.uuid], derivedDataset[keys.files])
             }
         }
@@ -362,9 +376,9 @@ export const FileTreeView = ({data, selection = {}, keys = {files: 'files', uuid
     }
 
     const fragment = (<>
-        <Card border={'0'} className={"mb-2 pb-2"}>
+        <Card border={'0'}>
             {status === 200 && filepath &&
-                <DataUsageModal data={data} filepath={filepath}/>
+                <DataUsageModal includeIntroText={false} data={data} filepath={filepath}/>
             }
 
             {status > 200 &&
@@ -382,7 +396,7 @@ export const FileTreeView = ({data, selection = {}, keys = {files: 'files', uuid
         </Card>
 
         {hasData &&
-            <Card border={'0'} className={"mt-2 pt-2 mb-2 pb-2"}>
+            <Card border={'0'} className={"mt-2 mb-2 pb-2"}>
                 {derivedDataset &&
                     <span className={'fw-light fs-6 mb-2'}>
                                 Files from descendant
