@@ -18,13 +18,14 @@ import AppContext from "@/context/AppContext";
 import Alert from 'react-bootstrap/Alert';
 import {EntityViewHeader} from "@/components/custom/layout/entity/ViewHeader";
 import DerivedContext, {DerivedProvider} from "@/context/DerivedContext";
-import FileTreeView from "@/components/custom/entities/dataset/FileTreeView";
 import WarningIcon from '@mui/icons-material/Warning'
 import LoadingAccordion from "@/components/custom/layout/LoadingAccordion";
 import AppNavbar from "@/components/custom/layout/AppNavbar"
 import Description from "@/components/custom/entities/sample/Description";
 import Upload from "@/components/custom/entities/dataset/Upload";
 import Collections from "@/components/custom/entities/Collections";
+import FilesDataProducts from "@/components/custom/entities/dataset/FilesDataProducts";
+import BulkDataTransfer from "@/components/custom/entities/dataset/BulkDataTransfer";
 import {toast} from "react-toastify";
 
 
@@ -32,7 +33,6 @@ const AppFooter = dynamic(() => import("@/components/custom/layout/AppFooter"))
 const Attribution = dynamic(() => import("@/components/custom/entities/sample/Attribution"))
 const ContributorsContacts = dynamic(() => import("@/components/custom/entities/ContributorsContacts"))
 const CreationActionRelationship = dynamic(() => import("@/components/custom/entities/dataset/CreationActionRelationship"))
-const DataProducts = dynamic(() => import("@/components/custom/entities/dataset/DataProducts"))
 const Header = dynamic(() => import("@/components/custom/layout/Header"))
 const Metadata = dynamic(() => import("@/components/custom/entities/Metadata"))
 const Provenance = dynamic(() => import("@/components/custom/entities/Provenance"), {
@@ -197,13 +197,7 @@ function ViewDataset() {
                                                    data-bs-parent="#sidebar">Multi-Assay Relationship</a>
                                             </li>
                                         }
-                                        {(datasetIs.primary(data.creation_action) || datasetIs.processed(data.creation_action)) && dataProducts && (dataProducts.length > 0) &&
-                                            <li className="nav-item">
-                                                <a href="#data-products"
-                                                   className="nav-link "
-                                                   data-bs-parent="#sidebar">Data Products</a>
-                                            </li>
-                                        }
+
                                         {isLoggedIn() && data.upload &&
                                             <li className="nav-item">
                                                 <a href="#Upload"
@@ -240,9 +234,15 @@ function ViewDataset() {
                                             }
 
                                         <li className="nav-item">
-                                            <a href="#Files"
-                                               className="nav-link"
-                                               data-bs-parent="#sidebar">Files</a>
+                                            <a href="#files-data-products"
+                                               className="nav-link "
+                                               data-bs-parent="#sidebar">Files & Data Products</a>
+                                        </li>
+
+                                        <li className="nav-item">
+                                            <a href="#bulk-data-transfer"
+                                               className="nav-link "
+                                               data-bs-parent="#sidebar">Bulk Data Transfer</a>
                                         </li>
 
                                         {!!(data.contributors && Object.keys(data.contributors).length) &&
@@ -286,11 +286,6 @@ function ViewDataset() {
                                             <CreationActionRelationship entity={data} data={datasetCategories}/>
                                         }
 
-                                        {/*Data Products*/}
-                                        {(datasetIs.primary(data.creation_action) || datasetIs.processed(data.creation_action)) && dataProducts && (dataProducts.length > 0) &&
-                                            <DataProducts data={data} files={dataProducts}/>
-                                        }
-
                                         {/*Upload*/}
                                         {isLoggedIn() && data.upload && <Upload data={data.upload}/>}
 
@@ -315,8 +310,14 @@ function ViewDataset() {
                                                 />
                                             }
 
-                                        {/*Files*/}
-                                        {data && <FileTreeView data={data}/>}
+                                        {/*Data Products*/}
+                                        { data &&
+                                            <FilesDataProducts data={data} dataProducts={dataProducts}  />
+                                        }
+
+                                        { datasetCategories &&
+                                            <BulkDataTransfer data={datasetCategories}  />
+                                        }
 
                                         {/*Contributors*/}
                                         {!!(data.contributors && Object.keys(data.contributors).length) &&

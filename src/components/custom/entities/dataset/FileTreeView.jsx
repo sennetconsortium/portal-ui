@@ -20,7 +20,7 @@ import DataUsageModal from "@/components/custom/entities/dataset/DataUsageModal"
 export const FileTreeView = ({data, selection = {}, keys = {files: 'files', uuid: 'uuid'},
                                  loadDerived = true, treeViewOnly = false, className = '', filesClassName = '',
                                  showQAButton = true, showDataProductButton = true, includeDescription= false,
-                                 showDownloadAllButton = false}) => {
+                                 showDownloadAllButton = false, withoutAccordion = false}) => {
     const filterByValues = {
         default: "label",
         qa: "data.is_qa_qc",
@@ -361,44 +361,51 @@ export const FileTreeView = ({data, selection = {}, keys = {files: 'files', uuid
         return treeView
     }
 
-    return (<Fragment>
-        <SenNetAccordion title={'Files'}>
-            <Card border={'0'} className={"mb-2 pb-2"}>
-                {status === 200 && filepath &&
-                    <DataUsageModal data={data} filepath={filepath}/>
-                }
+    const fragment = (<>
+        <Card border={'0'} className={"mb-2 pb-2"}>
+            {status === 200 && filepath &&
+                <DataUsageModal data={data} filepath={filepath}/>
+            }
 
-                {status > 200 &&
-                    <p className={'fw-light fs-6 mb-2'}>Access to the files on the Globus Research Management system is restricted. You may
-                        not have
-                        access to these files because the Consortium
-                        is still curating data and/or the data is protected data that requires you to be a
-                        member of the
-                        Consortium "Protected Data Group".
-                        Such protected data will be available via dbGaP in the future.
-                        If you believe this to be an error, please contact <a className={'lnk--ic'}
-                                                                              href={'mailto:help@sennetconsortium.org'}>help@sennetconsortium.org <i
-                            className="bi bi-envelope-fill"></i></a>
-                    </p>}
-            </Card>
+            {status > 200 &&
+                <p className={'fw-light fs-6 mb-2'}>Access to the files on the Globus Research Management system is restricted. You may
+                    not have
+                    access to these files because the Consortium
+                    is still curating data and/or the data is protected data that requires you to be a
+                    member of the
+                    Consortium "Protected Data Group".
+                    Such protected data will be available via dbGaP in the future.
+                    If you believe this to be an error, please contact <a className={'lnk--ic'}
+                                                                          href={'mailto:help@sennetconsortium.org'}>help@sennetconsortium.org <i
+                        className="bi bi-envelope-fill"></i></a>
+                </p>}
+        </Card>
 
-            {hasData &&
-                <Card border={'0'} className={"mt-2 pt-2 mb-2 pb-2"}>
-                    {derivedDataset &&
-                        <span className={'fw-light fs-6 mb-2'}>
+        {hasData &&
+            <Card border={'0'} className={"mt-2 pt-2 mb-2 pb-2"}>
+                {derivedDataset &&
+                    <span className={'fw-light fs-6 mb-2'}>
                                 Files from descendant
                                 <Link target="_blank" href={{pathname: '/dataset', query: {uuid: derivedDataset.uuid}}}>
                                     <span className={'ms-2 me-2'}>{derivedDataset.sennet_id}</span>
                                 </Link>
                             </span>
-                    }
-                    {treeData &&
-                        <div className={"c-treeView"}>
-                            {treeView}
-                        </div>
-                    }
-                </Card>
-            }
+                }
+                {treeData &&
+                    <div className={"c-treeView"}>
+                        {treeView}
+                    </div>
+                }
+            </Card>
+        }
+    </>)
+    if (withoutAccordion) {
+        return fragment
+    }
+
+    return (<Fragment>
+        <SenNetAccordion title={'Files'}>
+            {fragment}
         </SenNetAccordion>
     </Fragment>)
 }
