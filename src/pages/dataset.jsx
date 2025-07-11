@@ -53,6 +53,7 @@ function ViewDataset() {
     const [hasWritePrivilege, setHasWritePrivilege] = useState(false)
     const {router, isRegisterHidden, _t, cache, isPreview, getPreviewView, isLoggedIn} = useContext(AppContext)
     const [primaryDatasetData, setPrimaryDatasetInfo] = useState(null)
+    const [showFilesSection, setShowFilesSection] = useState(null)
     const {
         showVitessce,
         initVitessceConfig,
@@ -152,6 +153,12 @@ function ViewDataset() {
         }
     }, [router]);
 
+    const toggleFilesSection = ({hasData, filepath, status}) => {
+        if (hasData != null && showFilesSection !== true) {
+            setShowFilesSection(hasData)
+        }
+    }
+
     if (isPreview(data, error))  {
         return getPreviewView(data)
     } else {
@@ -233,11 +240,11 @@ function ViewDataset() {
                                                 </li>
                                             }
 
-                                        <li className="nav-item">
+                                        {data && showFilesSection && <li className="nav-item">
                                             <a href="#files-data-products"
                                                className="nav-link "
-                                               data-bs-parent="#sidebar">Files & Data Products</a>
-                                        </li>
+                                               data-bs-parent="#sidebar">Files</a>
+                                        </li>}
 
                                         <li className="nav-item">
                                             <a href="#bulk-data-transfer"
@@ -312,7 +319,7 @@ function ViewDataset() {
 
                                         {/*Data Products*/}
                                         { data &&
-                                            <FilesDataProducts data={data} dataProducts={dataProducts}  />
+                                            <FilesDataProducts setShowFilesSection={toggleFilesSection} showFilesSection={showFilesSection} data={data} dataProducts={dataProducts}  />
                                         }
 
                                         { datasetCategories &&
