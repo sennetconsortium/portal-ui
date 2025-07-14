@@ -163,17 +163,7 @@ export const SEARCH_FILES = {
                 facetType: 'term',
                 isAggregationActive: true,
                 isFacetVisible: doesAggregationHaveBuckets('dataset_type')
-            },
-            file_info_refresh_timestamp: {
-                label: 'Modification Date',
-                type: 'range',
-                field: 'last_modified_at',
-                isExpanded: false,
-                filterType: 'any',
-                isFilterable: true,
-                facetType: 'daterange',
-                isFacetVisible: isDateFacetVisible
-            },
+            }
         },
         disjunctiveFacets: [],
         conditionalFacets: {},
