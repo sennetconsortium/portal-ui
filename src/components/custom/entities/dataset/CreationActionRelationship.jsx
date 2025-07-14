@@ -11,7 +11,7 @@ import Alert from 'react-bootstrap/Alert';
 
 function CreationActionRelationship({entity, data}) {
     const relationshipNames = {
-        component: 'Component Dataset (Raw)',
+        component: 'Component Dataset(s) (Raw)',
         processed: 'Primary Dataset (Processed)',
         primary: 'Primary Dataset (Raw)'
     }
