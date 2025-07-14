@@ -11,6 +11,81 @@ const connector = new SearchAPIConnector({
     indexName: getFilesIndex(),
     indexUrl: getSearchEndPoint(),
     accessToken: getAuth(),
+    beforeSearchCall: (queryOptions, next) => {
+        // append addtional aggregations needs for the table
+        const aggs = queryOptions.aggs || {};
+        aggs.total_datasets = {
+            cardinality: {
+                field: "dataset_uuid.keyword"
+            }
+        };
+        aggs.table_file_extension = {
+            composite: {
+                size: 40,
+                sources: [
+                    {
+                        "dataset_uuid.keyword": {
+                            terms: {
+                                field: "dataset_uuid.keyword"
+                            }
+                        }
+                    },
+                    {
+                        "file_extension.keyword": {
+                            terms: {
+                                field: "file_extension.keyword"
+                            }
+                        }
+                    }
+                ]
+            }
+        }
+        aggs.table_organs = {
+            composite: {
+                size: 40,
+                sources: [
+                    {
+                        "dataset_uuid.keyword": {
+                            terms: {
+                                field: "dataset_uuid.keyword"
+                            }
+                        }
+                    },
+                    {
+                        "organs.label.keyword": {
+                            terms: {
+                                field: "organs.label.keyword"
+                            }
+                        }
+                    }
+                ]
+            }
+        };
+        aggs.table_dataset_type = {
+            composite: {
+                size: 40,
+                sources: [
+                    {
+                        "dataset_uuid.keyword": {
+                            terms: {
+                                field: "dataset_uuid.keyword"
+                            }
+                        }
+                    },
+                    {
+                        "dataset_type.keyword": {
+                            terms: {
+                                field: "dataset_type.keyword"
+                            }
+                        }
+                    }
+                ]
+            }
+        }
+        queryOptions.aggs = aggs;
+
+        return next(queryOptions)
+    }
 })
 
 const sourceItems = [
