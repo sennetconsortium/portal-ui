@@ -46,3 +46,8 @@
 .sticky-top.navbar {
   z-index: 1000 !important;
 }
+
+.nav-link .shape:after {
+  position: relative;
+  top: 3px;
+}

@@ -1,7 +1,7 @@
 import {createContext, useCallback, useRef, useState} from "react";
 import $ from "jquery";
 import log from "loglevel";
-import {datasetIs, fetchEntity} from "@/components/custom/js/functions";
+import {datasetIs, fetchEntity, getDatasetTypeDisplay} from "@/components/custom/js/functions";
 import {fetchVitessceConfiguration, getProvInfo, getEntityData} from "@/lib/services";
 import useVitessceEncoder from "@/hooks/useVitessceEncoder";
 
@@ -137,7 +137,7 @@ export const DerivedProvider = ({children, showVitessceList, setShowVitessceList
         let _files = []
         for (let file of allFiles) {
             if (file?.is_data_product) {
-                _files.push({...file, uuid: parent.uuid, sennet_id: parent.sennet_id})
+                _files.push({...file, display_subtype: getDatasetTypeDisplay(parent), uuid: parent.uuid, sennet_id: parent.sennet_id})
             }
         }
         return _files
@@ -147,8 +147,8 @@ export const DerivedProvider = ({children, showVitessceList, setShowVitessceList
         let files = []
         if (datasetIs.primary(data.creation_action)) {
             const promises = []
-            for (let descendant of data.descendants) {
-                if (datasetIs.processed(descendant.creation_action)) {
+            for (const descendant of data.descendants) {
+                if (datasetIs.processed(descendant.creation_action) && isDatasetStatusPassed(descendant)) {
                     const promise = getEntityData(descendant.uuid);
                     promises.push(promise)
                     break
@@ -156,7 +156,7 @@ export const DerivedProvider = ({children, showVitessceList, setShowVitessceList
             }
 
             const processedDatasets = await Promise.all(promises)
-            for (let processed of processedDatasets) {
+            for (const processed of processedDatasets) {
                 if (processed.hasOwnProperty("error")) {
                     log.error("Error fetching data products", processed)
                     continue

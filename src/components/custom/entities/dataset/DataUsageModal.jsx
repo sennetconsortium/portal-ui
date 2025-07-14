@@ -1,11 +1,11 @@
 import React, {useEffect, useState} from "react";
 import Modal from 'react-bootstrap/Modal';
 import {Button} from 'react-bootstrap';
-import {eq} from "@/components/custom/js/functions";
+import {eq, getDatasetTypeDisplay} from "@/components/custom/js/functions";
 import {getCookie, setCookie} from "cookies-next";
 
 
-const DataUsageModal = ({data, filepath}) => {
+const DataUsageModal = ({data, filepath, includeIntroText = true}) => {
     const [showModal, setShowModal] = useState(false)
     const [checked, setChecked] = useState(false)
     const [hasAgreedDUA, setHasAgreedDUA] = useState(false)
@@ -69,12 +69,10 @@ const DataUsageModal = ({data, filepath}) => {
 
     return (
         <>
-            <p className={'fw-light fs-6 mb-2'}>Files for this <code>{data.entity_type}</code> are available through the
-                Globus Research Data Management System.
-                Access <a
-                    onClick={() => hasAgreedDUA ? window.open(filepath, '_blank') : displayModal()}
-                    className="icon-inline link"><span
-                    className="me-1">{data.sennet_id} Globus</span> <i className="bi bi-box-arrow-up-right"></i></a>
+            <p><a
+                onClick={() => hasAgreedDUA ? window.open(filepath, '_blank') : displayModal()}
+                className="lnk lnk--ic ">{`${getDatasetTypeDisplay(data)} (${data.sennet_id}`}) <i
+                className="bi bi-box-arrow-up-right"></i></a>
             </p>
             <Modal size="lg" show={showModal} keyboard={false}>
                 <Modal.Header>
