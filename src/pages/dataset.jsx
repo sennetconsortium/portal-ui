@@ -167,7 +167,7 @@ function ViewDataset() {
 
                 {data && !error &&
                     <div className="container-fluid">
-                        {/*Primary dataset alert*/}
+                        {/*Processed/Component dataset alert*/}
                         {!datasetIs.primary(data.creation_action) &&
                             <Alert className={'mt-4'} variant='info'><WarningIcon /> You are viewing a&nbsp;
                                 <code>{getCreationActionRelationName(data.creation_action)}</code>.&nbsp;
@@ -177,6 +177,22 @@ function ViewDataset() {
                                         <a href={getEntityViewUrl('dataset', primaryDatasetData.uuid, {}, {})}>{primaryDatasetData.sennet_id}</a>
                                     </>
                                 )}
+                            </Alert>
+                        }
+
+                        {/*Banner for Multi Assaay Datasets when a user has been redirected*/}
+                        {router.query.hasOwnProperty("redirectedFrom") && datasetIs.primary(data.creation_action) && datasetCategories && (datasetCategories.component.length > 0) &&
+                            <Alert className={'mt-4'} variant='info'><WarningIcon/>
+                                You have been redirect to
+                                the <code>{getCreationActionRelationName(data.creation_action)}</code>, which contains
+                                the following <code>Component Dataset(s)</code>:&nbsp;
+                                {datasetCategories.component.map((component, index) => {
+                                    return (<>
+                                            <span>{component.dataset_type}</span>
+                                            {index < datasetCategories.component.length - 1 && ', '}
+                                        </>
+                                    )
+                                })}
                             </Alert>
                         }
 
