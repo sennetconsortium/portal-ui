@@ -40,7 +40,7 @@ function EditUpload() {
         showModal,
         selectedUserWriteGroupUuid,
         disableSubmit, setDisableSubmit,
-        entityForm,
+        entityForm, handleValidate,
         getCancelBtn, isAdminOrHasValue, getAssignedToGroupNames
     } = useContext(EntityContext)
     const {_t, cache, adminGroup, getBusyOverlay, toggleBusyOverlay, getPreviewView} = useContext(AppContext)
@@ -157,9 +157,8 @@ function EditUpload() {
         setValidated(true);
     };
 
-    const handleValidate = () => {
-        toggleBusyOverlay(true, <><code>Validate</code> the <code>Upload</code></>)
-        handlePut('validate')
+    const _handleValidate = () => {
+        handleValidate('uploads')
     }
 
     const handleRevert = async () => {
@@ -427,7 +426,7 @@ function EditUpload() {
                                                     </>}
                                                     className={'initiate-upload-validation'}>
                                                     <DatasetSubmissionButton
-                                                        primaryBtnClassName={'js-btn--validate'}
+                                                        actionBtnClassName={'js-btn--validate'}
                                                         btnLabel={"Validate"}
                                                         modalTitle={'Validation'}
                                                         modalBody={<div><p>By clicking "Validate"
@@ -437,7 +436,7 @@ function EditUpload() {
                                                             upload checks are met and
                                                             be ready for submitting.</p>
                                                         </div>}
-                                                        onClick={handleValidate} disableSubmit={disableSubmit}/>
+                                                        onClick={_handleValidate} disableSubmit={disableSubmit}/>
                                                 </SenNetPopover>}
 
                                             {!eq(data['status'], 'Processing') && adminGroup && isEditMode() && (eq(data['status'], 'Valid') || eq(data['status'], 'Submitted')) &&
@@ -446,7 +445,7 @@ function EditUpload() {
                                                     </>}
                                                     className={'initiate-upload-reorganization'}>
                                                     <DatasetSubmissionButton
-                                                        primaryBtnClassName={'js-btn--reorganize'}
+                                                        actionBtnClassName={'js-btn--reorganize'}
                                                         btnLabel={"Reorganize"}
                                                         modalTitle={'Reorganization'}
                                                         modalBody={<div><p>By clicking "Reorganize"
