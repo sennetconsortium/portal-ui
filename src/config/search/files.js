@@ -131,6 +131,17 @@ export const SEARCH_FILES = {
                 isAggregationActive: true,
                 isFacetVisible: doesAggregationHaveBuckets('file_extension')
             },
+            'sources.source_type': {
+                label: 'Source',
+                type: 'value',
+                field: 'sources.source_type.keyword',
+                isExpanded: false,
+                filterType: 'any',
+                isFilterable: false,
+                facetType: 'term',
+                isAggregationActive: true,
+                isFacetVisible: doesAggregationHaveBuckets('sources.source_type')
+            },
             'organs.label': {
                 label: 'Organs',
                 type: 'value',
@@ -156,7 +167,7 @@ export const SEARCH_FILES = {
             file_info_refresh_timestamp: {
                 label: 'Modification Date',
                 type: 'range',
-                field: 'file_info_refresh_timestamp',
+                field: 'last_modified_at',
                 isExpanded: false,
                 filterType: 'any',
                 isFilterable: true,
