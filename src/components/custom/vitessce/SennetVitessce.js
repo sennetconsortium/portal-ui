@@ -115,7 +115,7 @@ export const SennetVitessce = ({ title, id, expanded = true, className = '' }) =
                         <span className={'fw-light'}>
                             From descendant
                             <Link target="_blank" href={{pathname: '/dataset', query: {uuid: derivedDataset.uuid}}}>
-                                <span className={'ms-2 me-2'}>{`${getDatasetTypeDisplay(derivedDataset)} ${derivedDataset.sennet_id}`}</span>
+                                <span className={'ms-2 me-2 icon-inline'}>{`${getDatasetTypeDisplay(derivedDataset)} ${derivedDataset.sennet_id}`}</span>
                             </Link>
                         </span>
                     }

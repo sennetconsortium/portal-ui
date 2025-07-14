@@ -403,7 +403,7 @@ export const FileTreeView = ({data, selection = {}, keys = {files: 'files', uuid
                     <span className={'fw-light fs-6 mb-2'}>
                                 Files from descendant
                         <Link target="_blank" href={{pathname: '/dataset', query: {uuid: derivedDataset.uuid}}}>
-                                    <span className={'ms-2 me-2'}>{`${getDatasetTypeDisplay(derivedDataset)} ${derivedDataset.sennet_id}`}</span>
+                                    <span className={'ms-2 me-2 icon-inline'}>{`${getDatasetTypeDisplay(derivedDataset)} ${derivedDataset.sennet_id}`}</span>
                                 </Link>
                             </span>
                 }
