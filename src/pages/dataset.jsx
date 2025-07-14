@@ -25,6 +25,8 @@ import AppNavbar from "@/components/custom/layout/AppNavbar"
 import Description from "@/components/custom/entities/sample/Description";
 import Upload from "@/components/custom/entities/dataset/Upload";
 import Collections from "@/components/custom/entities/Collections";
+import {toast} from "react-toastify";
+
 
 const AppFooter = dynamic(() => import("@/components/custom/layout/AppFooter"))
 const Attribution = dynamic(() => import("@/components/custom/entities/sample/Attribution"))
@@ -138,6 +140,13 @@ function ViewDataset() {
             // fetch dataset data
             fetchData(router.query.uuid)
                 .catch(log.error);
+
+            if(router.query.hasOwnProperty("redirectedFrom")) {
+                let message = router.query.redirectedFrom.replace(/\/$/, '')
+                toast.info(`You have been redirected to the unified view for ${message}.`, {
+                    position: 'top-right',
+                });
+            }
         } else {
             setData(null);
         }
@@ -158,16 +167,32 @@ function ViewDataset() {
 
                 {data && !error &&
                     <div className="container-fluid">
-                        {/*Primary dataset alert*/}
+                        {/*Processed/Component dataset alert*/}
                         {!datasetIs.primary(data.creation_action) &&
                             <Alert className={'mt-4'} variant='info'><WarningIcon /> You are viewing a&nbsp;
                                 <code>{getCreationActionRelationName(data.creation_action)}</code>.&nbsp;
                                 {primaryDatasetData && (
                                     <>
                                         <span>To view the <code>Primary Dataset</code>, visit &nbsp;</span>
-                                        <a href={getEntityViewUrl('dataset', primaryDatasetData.uuid, {})}>{primaryDatasetData.sennet_id}</a>
+                                        <a href={getEntityViewUrl('dataset', primaryDatasetData.uuid, {}, {})}>{primaryDatasetData.sennet_id}</a>
                                     </>
                                 )}
+                            </Alert>
+                        }
+
+                        {/*Banner for Multi Assaay Datasets when a user has been redirected*/}
+                        {router.query.hasOwnProperty("redirectedFrom") && datasetIs.primary(data.creation_action) && datasetCategories && (datasetCategories.component.length > 0) &&
+                            <Alert className={'mt-4'} variant='info'><WarningIcon/>
+                                You have been redirect to
+                                the <code>{getCreationActionRelationName(data.creation_action)}</code>, which contains
+                                the following <code>Component Dataset(s)</code>:&nbsp;
+                                {datasetCategories.component.map((component, index) => {
+                                    return (<>
+                                            <span>{component.dataset_type}</span>
+                                            {index < datasetCategories.component.length - 1 && ', '}
+                                        </>
+                                    )
+                                })}
                             </Alert>
                         }
 

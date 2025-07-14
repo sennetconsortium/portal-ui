@@ -4,11 +4,11 @@
   &--info {
     .Toastify {
       &__progress-bar {
-        background: swatch.$col-bs-btn-gray;
+        background: swatch.$col-bs-blue;
       }
       &__toast-icon {
         svg {
-          fill: swatch.$col-bs-btn-gray;
+          fill: swatch.$col-bs-blue;
         }
       }
     }
