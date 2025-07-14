@@ -35,7 +35,7 @@ export const SennetVitessce = ({ title, id, expanded = true, className = '' }) =
     return (
         <SenNetAccordion title={title || 'Visualization'} id={id || 'Vitessce'} expanded={expanded} className={`accordion--vitessce ${className}`}>
             <div className={'row'}>
-                <div className={'col p-2 m-2'}>
+                <div className={'col col-2 p-2 m-2'}>
                     <span className={'fw-light fs-6'}>Powered by
                         <a className={'ms-2'} target="_blank" href="http://vitessce.io/" rel="noopener noreferrer"
                            title={'Vitessce.io'}>
