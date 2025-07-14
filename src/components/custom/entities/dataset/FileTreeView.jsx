@@ -3,7 +3,6 @@ import Card from 'react-bootstrap/Card';
 import SenNetAccordion from "@/components/custom/layout/SenNetAccordion";
 import Link from "next/link";
 import DerivedContext from "@/context/DerivedContext";
-import {fetchGlobusFilepath} from "@/lib/services";
 import {FILE_KEY_SEPARATOR, getAssetsEndpoint, getAuth} from "@/config/config";
 import SenNetPopover, {SenPopoverOptions} from "../../../SenNetPopover";
 import {formatByteSize, getDatasetTypeDisplay} from "../../js/functions";
@@ -14,7 +13,6 @@ import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
 import {Tree} from 'primereact/tree';
 import 'primeicons/primeicons.css';
-import DataUsageModal from "@/components/custom/entities/dataset/DataUsageModal"
 
 
 export const FileTreeView = ({data, selection = {}, keys = {files: 'files', uuid: 'uuid'},
@@ -27,8 +25,6 @@ export const FileTreeView = ({data, selection = {}, keys = {files: 'files', uuid
         dataProduct: "data.is_data_product"
     }
 
-    const [status, setStatus] = useState(null)
-    const [filepath, setFilepath] = useState(null)
     const [treeData, setTreeData] = useState(null)
     const [qaChecked, setQAChecked] = useState(false)
     const [dataProductChecked, setDataProductChecked] = useState(false)
@@ -55,20 +51,10 @@ export const FileTreeView = ({data, selection = {}, keys = {files: 'files', uuid
 
     const _hasFiles = (has) => {
         setHasData(has)
-        _onStateUpdateCallback({hasData: has, filepath, status})
+        _onStateUpdateCallback({hasData: has})
     }
 
     useEffect( () => {
-        async function fetchData() {
-            await fetchGlobusFilepath(data[keys.uuid]).then((globusData) => {
-                setStatus(globusData.status);
-                setFilepath(globusData.filepath);
-                _onStateUpdateCallback({hasData: null, filepath: globusData.filepath, status: globusData.status})
-            });
-        }
-
-        fetchData()
-
         //Default to use files, otherwise wait until derivedDataset is populated
         if (data[keys.files] && getLength(data[keys.files])) {
             _hasFiles(true)
@@ -378,25 +364,6 @@ export const FileTreeView = ({data, selection = {}, keys = {files: 'files', uuid
     }
 
     const fragment = (<>
-        <Card border={'0'}>
-            {status === 200 && filepath &&
-                <DataUsageModal includeIntroText={false} data={data} filepath={filepath}/>
-            }
-
-            {status > 200 &&
-                <p className={'fw-light fs-6 mb-2'}>Access to the files on the Globus Research Management system is restricted. You may
-                    not have
-                    access to these files because the Consortium
-                    is still curating data and/or the data is protected data that requires you to be a
-                    member of the
-                    Consortium "Protected Data Group".
-                    Such protected data will be available via dbGaP in the future.
-                    If you believe this to be an error, please contact <a className={'lnk--ic'}
-                                                                          href={'mailto:help@sennetconsortium.org'}>help@sennetconsortium.org <i
-                        className="bi bi-envelope-fill"></i></a>
-                </p>}
-        </Card>
-
         {hasData &&
             <Card border={'0'} className={"mt-2 mb-2 pb-2"}>
                 {derivedDataset &&
