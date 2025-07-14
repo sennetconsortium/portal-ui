@@ -8,6 +8,7 @@ import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import SenNetAccordion from "@/components/custom/layout/SenNetAccordion";
 import MultiProfileSelector from "./MultiProfileSelector";
 import SuspendVitessce from "./SuspendVitessce";
+import {getDatasetTypeDisplay} from "@/components/custom/js/functions";
 
 export const SennetVitessce = ({ title, id, expanded = true, className = '' }) => {
     const {
@@ -45,7 +46,7 @@ export const SennetVitessce = ({ title, id, expanded = true, className = '' }) =
                 <div className={'col p-2 m-2'}>
                     {isPrimaryDataset && derivedDataset &&
                         <span className={'fw-light fs-6 m-2 p-2'}>
-                            From descendant
+                            From descendant {getDatasetTypeDisplay(derivedDataset)}
                             <Link target="_blank" href={{pathname: '/dataset', query: {uuid: derivedDataset.uuid}}}>
                                 <span className={'ms-2 me-2'}>{derivedDataset.sennet_id}</span>
                             </Link>
