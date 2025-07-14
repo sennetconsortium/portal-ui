@@ -341,14 +341,14 @@ export const uploadFile = async file => {
     }
 }
 
-const fetchSearchAPIEntities = async (body) => {
+export const fetchSearchAPIEntities = async (body, index='entities') => {
     const token = getAuth();
     const headers = getJsonHeader()
     if (token) {
         headers.append("Authorization", `Bearer ${token}`)
     }
     try {
-        const res = await fetch(`${getSearchEndPoint()}/entities/search`, {
+        const res = await fetch(`${getSearchEndPoint()}${index}/search`, {
             method: "POST",
             headers: headers,
             body: JSON.stringify(body),

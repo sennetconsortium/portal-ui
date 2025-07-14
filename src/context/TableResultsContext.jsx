@@ -10,7 +10,7 @@ import { useSearchUIContext } from "search-ui/components/core/SearchUIContext";
 
 const TableResultsContext = createContext({})
 
-export const TableResultsProvider = ({ index, columnsRef, children, getHotLink, rows, filters, onRowClicked, forData = false, raw, getId, inModal = false }) => {
+export const TableResultsProvider = ({ columnsRef, children, getHotLink, rows, filters, onRowClicked, raw, getId, inModal = false }) => {
 
     const {isLoggedIn} = useContext(AppContext)
     const {isLoading, rawResponse, pageNumber, setPageNumber, pageSize, setPageSize, setSort, addFilter, clearSearchTerm} = useSearchUIContext()
@@ -22,6 +22,7 @@ export const TableResultsProvider = ({ index, columnsRef, children, getHotLink, 
     const [resultsPerPage, setResultsPerPage] = useState(RESULTS_PER_PAGE[1])
 
     const currentColumns = useRef(columnsRef)
+    const [isSearching, setIsSearching] = useState(isLoading)
 
 
     useEffect(() => {
@@ -173,6 +174,8 @@ export const TableResultsProvider = ({ index, columnsRef, children, getHotLink, 
         handlePageChange,
         noResultsMessage,
         isLoading,
+        setIsSearching,
+        isSearching,
         rawResponse,
         updateTablePagination
     }}>
