@@ -11,6 +11,7 @@ import {eq, getCreationActionRelationName, getDatasetTypeDisplay} from '@/compon
 import BlockIcon from '@mui/icons-material/Block';
 import GppGoodIcon from '@mui/icons-material/GppGood';
 import SenNetPopover from "@/components/SenNetPopover";
+import DataUsageModal from "@/components/custom/entities/dataset/DataUsageModal";
 
 
 function BulkDataTransfer({data}) {
@@ -88,7 +89,7 @@ function BulkDataTransfer({data}) {
         return (<>
             <h6>Globus Access {tooltip(entity.uuid)} <GppGoodIcon color={'success'} /></h6>
             <p>Files are available through the Globus Research Data Management System. If you require additional help, {contactUs} with the <code>Dataset</code> ID and information about the files you are trying to access.</p>
-            <p><LnkIc href={entity.globusPath} title={`${getDatasetTypeDisplay(entity)} (${entity.sennet_id})`}/></p>
+            <DataUsageModal data={entity} filepath={entity.globusPath}/>
         </>)
     }
 
