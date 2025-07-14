@@ -147,8 +147,8 @@ export const DerivedProvider = ({children, showVitessceList, setShowVitessceList
         let files = []
         if (datasetIs.primary(data.creation_action)) {
             const promises = []
-            for (let descendant of data.descendants) {
-                if (datasetIs.processed(descendant.creation_action)) {
+            for (const descendant of data.descendants) {
+                if (datasetIs.processed(descendant.creation_action) && isDatasetStatusPassed(descendant)) {
                     const promise = getEntityData(descendant.uuid);
                     promises.push(promise)
                     break
@@ -156,7 +156,7 @@ export const DerivedProvider = ({children, showVitessceList, setShowVitessceList
             }
 
             const processedDatasets = await Promise.all(promises)
-            for (let processed of processedDatasets) {
+            for (const processed of processedDatasets) {
                 if (processed.hasOwnProperty("error")) {
                     log.error("Error fetching data products", processed)
                     continue
