@@ -19,7 +19,7 @@ import SenNetPopover from "../SenNetPopover";
 import AppModal from "../AppModal";
 import FileTreeView from "./entities/dataset/FileTreeView";
 import {COLS_ORDER_KEY, FILE_KEY_SEPARATOR} from "@/config/config";
-import {fetchSearchAPIEntities, filesQuery, parseJson} from "@/lib/services";
+import {parseJson} from "@/lib/services";
 import {useSearchUIContext} from "@/search-ui/components/core/SearchUIContext";
 
 const downloadSizeAttr = 'data-download-size'
@@ -48,36 +48,17 @@ function TableResultsFiles({children, filters, forData = false, rowFn, inModal =
     const {pageNumber, pageSize} = useSearchUIContext()
 
     useEffect(() => {
-        const totalFileCount = rawResponse.records.files.length
+        const totalFileCount = rawResponse.record_count
         $('.sui-paging-info').append(` Datasets (<strong>${totalFileCount}</strong> Total Files)`)
     }, [])
 
-    const fetchData =  async () => {
-        filesQuery.query.bool.filter = []
-        for (let f of filters) {
-            filesQuery.query.bool.filter.push({
-                terms: {
-                    [`${f.field}.keyword`]: f.values
-                }
-            })
-        }
-        console.log(filesQuery)
-        filesQuery.size = pageSize;
-        filesQuery.from = pageSize * (pageNumber - 1)
-
-        const req = await fetchSearchAPIEntities(filesQuery, 'files')
-
-        setIsBusy(false)
-        return req
-    }
-
     useEffect(()=> {
-        fetchData().then((resp)=>{
-            const results = transformResults(resp)
-            setResults(results)
-            setSearchResponse(resp)
-            updatePagingInfo(resp.aggregations?.total_datasets.value, resp)
-        })
+        const resp = rawResponse
+        const results = transformResults(rawResponse)
+        setResults(results)
+        setSearchResponse(resp)
+        updatePagingInfo(resp.aggregations?.total_datasets.value, resp)
+        setIsBusy(false)
 
     }, [rawResponse, pageSize, pageSize])
 
@@ -91,14 +72,14 @@ function TableResultsFiles({children, filters, forData = false, rowFn, inModal =
 
     function updatePagingInfo(resultsCount, resp) {
         $('.sui-paging-info strong').eq(1).text(resultsCount)
-        $('.sui-paging-info strong').eq(2).text(resp.hits?.total.value)
+        $('.sui-paging-info strong').eq(2).text(resp.record_count)
     }
 
     function transformResults(resp) {
         const results = {}
 
         // group files by dataset_uuid
-        for (let file of resp?.hits?.hits) {
+        for (let file of resp?.records?.files) {
             let uuid = file.fields['dataset_uuid.keyword'][0]
             if (!results.hasOwnProperty(uuid)) {
                 let list = []
@@ -109,7 +90,7 @@ function TableResultsFiles({children, filters, forData = false, rowFn, inModal =
                 for (let l of file.inner_hits.files.hits.hits) {
                     list.push(l._source)
                 }
-                for (let l of resp.aggregations.file_extension.buckets) {
+                for (let l of resp.aggregations.table_file_extension.buckets) {
                     if (l.key['dataset_uuid.keyword'] === uuid) {
                         meta.extensions.push({
                             name: l.key['file_extension.keyword'],

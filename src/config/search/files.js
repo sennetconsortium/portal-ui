@@ -12,7 +12,17 @@ const connector = new SearchAPIConnector({
     indexUrl: getSearchEndPoint(),
     accessToken: getAuth(),
     beforeSearchCall: (queryOptions, next) => {
-        // append addtional aggregations needs for the table
+
+        queryOptions.collapse=  {
+            "field" : "dataset_uuid.keyword",
+                "inner_hits": {
+                "name": "files",
+                    "size": 5,
+                    "sort": [{ "dataset_uuid.keyword": "asc" }]
+            },
+            "max_concurrent_group_searches": 4
+        };
+        // append additional aggregations needs for the table
         const aggs = queryOptions.aggs || {};
         aggs.total_datasets = {
             cardinality: {
