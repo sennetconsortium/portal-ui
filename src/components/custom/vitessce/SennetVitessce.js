@@ -8,6 +8,7 @@ import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import SenNetAccordion from "@/components/custom/layout/SenNetAccordion";
 import MultiProfileSelector from "./MultiProfileSelector";
 import SuspendVitessce from "./SuspendVitessce";
+import {getDatasetTypeDisplay} from "@/components/custom/js/functions";
 
 export const SennetVitessce = ({ title, id, expanded = true, className = '' }) => {
     const {
@@ -34,7 +35,7 @@ export const SennetVitessce = ({ title, id, expanded = true, className = '' }) =
     return (
         <SenNetAccordion title={title || 'Visualization'} id={id || 'Vitessce'} expanded={expanded} className={`accordion--vitessce ${className}`}>
             <div className={'row'}>
-                <div className={'col p-2 m-2'}>
+                <div className={'col m-2'}>
                     <span className={'fw-light fs-6'}>Powered by
                         <a className={'ms-2'} target="_blank" href="http://vitessce.io/" rel="noopener noreferrer"
                            title={'Vitessce.io'}>
@@ -42,17 +43,7 @@ export const SennetVitessce = ({ title, id, expanded = true, className = '' }) =
                         </a>
                     </span>
                 </div>
-                <div className={'col p-2 m-2'}>
-                    {isPrimaryDataset && derivedDataset &&
-                        <span className={'fw-light fs-6 m-2 p-2'}>
-                            From descendant
-                            <Link target="_blank" href={{pathname: '/dataset', query: {uuid: derivedDataset.uuid}}}>
-                                <span className={'ms-2 me-2'}>{derivedDataset.sennet_id}</span>
-                            </Link>
-                        </span>
-                    }
-                </div>
-                <div className={'col text-end p-2 m-2'}>
+                <div className={'col text-end m-2'}>
                     <OverlayTrigger
                         placement={'top'}
                         overlay={
@@ -116,6 +107,19 @@ export const SennetVitessce = ({ title, id, expanded = true, className = '' }) =
                         setProfileIndex={setProfileIndex} />
                 }
 
+            </div>
+
+            <div className={'row'}>
+                <div className={'col m-2'}>
+                    {isPrimaryDataset && derivedDataset &&
+                        <span className={'fw-light'}>
+                            From descendant
+                            <Link target="_blank" href={{pathname: '/dataset', query: {uuid: derivedDataset.uuid}}}>
+                                <span className={'ms-2 me-2 icon-inline'}>{`${getDatasetTypeDisplay(derivedDataset)} ${derivedDataset.sennet_id}`}</span>
+                            </Link>
+                        </span>
+                    }
+                </div>
             </div>
             <Snackbar open={showExitFullscreenMessage} autoHideDuration={8000}
                       anchorOrigin={{vertical: 'top', horizontal: 'center'}}

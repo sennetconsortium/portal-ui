@@ -7,7 +7,7 @@ import {fetchGlobusFilepath} from "@/lib/services";
 import Spinner from "@/components/custom/Spinner";
 import AppContext from "@/context/AppContext";
 import LnkIc from "@/components/custom/layout/LnkIc";
-import {eq, getCreationActionRelationName} from '@/components/custom/js/functions'
+import {eq, getCreationActionRelationName, getDatasetTypeDisplay} from '@/components/custom/js/functions'
 import BlockIcon from '@mui/icons-material/Block';
 import GppGoodIcon from '@mui/icons-material/GppGood';
 import SenNetPopover from "@/components/SenNetPopover";
@@ -88,7 +88,7 @@ function BulkDataTransfer({data}) {
         return (<>
             <h6>Globus Access {tooltip(entity.uuid)} <GppGoodIcon color={'success'} /></h6>
             <p>Files are available through the Globus Research Data Management System. If you require additional help, {contactUs} with the <code>Dataset</code> ID and information about the files you are trying to access.</p>
-            <p><LnkIc href={entity.globusPath} title={`${entity.dataset_type} (${entity.sennet_id})`}/></p>
+            <p><LnkIc href={entity.globusPath} title={`${getDatasetTypeDisplay(entity)} (${entity.sennet_id})`}/></p>
         </>)
     }
 
@@ -108,7 +108,7 @@ function BulkDataTransfer({data}) {
                 c = notLoggedIn(d)
             }
 
-            res.push(<Tab key={d.sennet_id} eventKey={d.sennet_id} title={<span className={'c-help'}><span title={getCreationActionRelationName(d.creation_action)} className={`shape shape--${d.shape} ${eq(d.shape, 'circle') ? 'green' : ''}`}>{d.dataset_type}</span></span>}>
+            res.push(<Tab key={d.sennet_id} eventKey={d.sennet_id} title={<span className={'c-help'}><span title={getCreationActionRelationName(d.creation_action)} className={`shape shape--${d.shape} ${eq(d.shape, 'circle') ? 'green' : ''}`}>{getDatasetTypeDisplay(d)}</span></span>}>
                 <div className={'my-3'}>{c}</div>
             </Tab>)
         }

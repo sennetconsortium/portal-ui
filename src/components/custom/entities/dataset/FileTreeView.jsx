@@ -6,7 +6,7 @@ import DerivedContext from "@/context/DerivedContext";
 import {fetchGlobusFilepath} from "@/lib/services";
 import {FILE_KEY_SEPARATOR, getAssetsEndpoint, getAuth} from "@/config/config";
 import SenNetPopover, {SenPopoverOptions} from "../../../SenNetPopover";
-import {formatByteSize} from "../../js/functions";
+import {formatByteSize, getDatasetTypeDisplay} from "../../js/functions";
 import {Button, Row} from 'react-bootstrap';
 import Col from 'react-bootstrap/Col';
 import ToggleButton from 'react-bootstrap/ToggleButton';
@@ -402,8 +402,8 @@ export const FileTreeView = ({data, selection = {}, keys = {files: 'files', uuid
                 {derivedDataset &&
                     <span className={'fw-light fs-6 mb-2'}>
                                 Files from descendant
-                                <Link target="_blank" href={{pathname: '/dataset', query: {uuid: derivedDataset.uuid}}}>
-                                    <span className={'ms-2 me-2'}>{derivedDataset.sennet_id}</span>
+                        <Link target="_blank" href={{pathname: '/dataset', query: {uuid: derivedDataset.uuid}}}>
+                                    <span className={'ms-2 me-2 icon-inline'}>{`${getDatasetTypeDisplay(derivedDataset)} ${derivedDataset.sennet_id}`}</span>
                                 </Link>
                             </span>
                 }

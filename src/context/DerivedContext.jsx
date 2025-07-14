@@ -1,7 +1,7 @@
 import {createContext, useCallback, useRef, useState} from "react";
 import $ from "jquery";
 import log from "loglevel";
-import {datasetIs, fetchEntity} from "@/components/custom/js/functions";
+import {datasetIs, fetchEntity, getDatasetTypeDisplay} from "@/components/custom/js/functions";
 import {fetchVitessceConfiguration, getProvInfo, getEntityData} from "@/lib/services";
 import useVitessceEncoder from "@/hooks/useVitessceEncoder";
 
@@ -137,7 +137,7 @@ export const DerivedProvider = ({children, showVitessceList, setShowVitessceList
         let _files = []
         for (let file of allFiles) {
             if (file?.is_data_product) {
-                _files.push({...file, uuid: parent.uuid, sennet_id: parent.sennet_id})
+                _files.push({...file, display_subtype: getDatasetTypeDisplay(parent), uuid: parent.uuid, sennet_id: parent.sennet_id})
             }
         }
         return _files
