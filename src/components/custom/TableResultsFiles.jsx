@@ -187,10 +187,10 @@ function TableResultsFiles({children, filters, forData = false, rowFn, inModal =
         if (globusLinks.current[row.dataset_uuid] === undefined) {
             fetchGlobusFilepath(row.dataset_uuid).then((globusData) => {
                 globusLinks.current[row.dataset_uuid] = globusData.filepath
-                setGlobusText(<DataUsageModal data={row} filepath={globusData.filepath}/>)
+                setGlobusText(<DataUsageModal includeIntroText={true} data={row} filepath={globusData.filepath}/>)
             })
         } else {
-            setGlobusText(<DataUsageModal data={row} filepath={globusLinks.current[row.dataset_uuid]}/>)
+            setGlobusText(<DataUsageModal includeIntroText={true} data={row} filepath={globusLinks.current[row.dataset_uuid]}/>)
         }
 
     }
