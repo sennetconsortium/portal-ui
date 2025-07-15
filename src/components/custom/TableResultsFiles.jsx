@@ -335,7 +335,7 @@ function TableResultsFiles({children, filters, forData = false, rowFn, inModal =
                         data[e.name || 'N/A'] = e.count
                     }
 
-                    return <div className={'table__cellFiles'}><div className='table__chips'>{res}</div></div>
+                    return <div className={'table__cellFiles'}><div className='table__chips'>{row.meta.files > 1 && res.length > 1 && <small className={'badge rounded-pill bg-secondary'}>{row.meta.files} total files</small>} {res}</div></div>
                 }
             }
         )
