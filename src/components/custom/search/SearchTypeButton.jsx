@@ -15,22 +15,30 @@ const SearchTypeButton = ({ title }) => {
 
     const onCondition = (b) => {
         let entity
-        let canShow = true
+        let canShow = eq(title, 'entities') ? false : true
         if (eq(b, 'metadata')) {
 
             for (let i = 0; i < filters.length; i++) {
                 if (eq(filters[i].field, 'entity_type') && ['Dataset', 'Sample', 'Source'].contains(filters[i].values[0])) {
                     entity = filters[i].values[0]
+                    canShow = true
                 }
 
                 if (eq(filters[i].field, 'sample_category') && eq(filters[i].values[0], 'organ')) {
                     canShow = false
-                    break;
+                    return {entity, canShow}
                 }
             }
-
         }
-        return {entity, canShow}
+        if (eq(b, 'files')) {
+            for (let i = 0; i < filters.length; i++) {
+                if (eq(filters[i].field, 'entity_type') && ['Dataset'].contains(filters[i].values[0])) {
+                    entity = filters[i].values[0]
+                    canShow = true
+                }
+            }
+        }
+        return {canShow}
     }
 
     const buildLinks = () => {

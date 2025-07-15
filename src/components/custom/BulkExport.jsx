@@ -138,6 +138,17 @@ function BulkExport({ data = [], raw, columns, filters, exportKind, onCheckAll, 
         return tableDataTSV
     }
 
+    const hasFileFilter = ()=> {
+        if (filters.length) {
+            for (let f of filters) {
+                if (eq(f.field, 'file_extension')) {
+                    return true
+                }
+            }
+        }
+        return false
+    }
+
     const generateManifestData = (selected, isAll) => {
         let manifestData  = ''
         try {
@@ -151,6 +162,9 @@ function BulkExport({ data = [], raw, columns, filters, exportKind, onCheckAll, 
                         for (let subItem of item.list) {
                             manifestData += `${raw(subItem.dataset_uuid)} /${raw(subItem.rel_path)}\n`
                         }
+
+                    } else if (hasFileFilter()) {
+                        manifestData += `${id} /`
                     } else {
                         manifestData += `${id} /${raw(item.rel_path)}\n`
                     }

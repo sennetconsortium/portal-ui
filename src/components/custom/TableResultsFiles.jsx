@@ -201,7 +201,7 @@ function TableResultsFiles({children, filters, forData = false, rowFn, inModal =
             cols.push({
                 id: 'bulkExport',
                 ignoreRowClick: true,
-                name: <BulkExport onCheckAll={onCheckAll} data={results} raw={raw} hiddenColumns={hiddenColumns} columns={currentColumns} exportKind={'manifest'} />,
+                name: <BulkExport filters={filters} onCheckAll={onCheckAll} data={results} raw={raw} hiddenColumns={hiddenColumns} columns={currentColumns} exportKind={'manifest'} />,
                 width: '100px',
                 className: 'text-center',
                 selector: row => row.id,
@@ -396,14 +396,19 @@ function TableResultsFiles({children, filters, forData = false, rowFn, inModal =
                     showModal={showModal}
                     modalTitle={'Files Details'}
                     modalBody={
-                        <FileTreeView data={treeViewData}
-                        showQAButton={false}
-                        showDataProductButton={false}
-                        selection={{mode: 'checkbox', value: fileSelection, setValue: handleFileSelection, args: treeViewData }}
-                        keys={{files: 'list', uuid: 'dataset_uuid'}}
-                        loadDerived={false}
-                        treeViewOnly={true}
-                        className={'c-treeView__main--inTable'} />
+                        <>
+                            {treeViewData && (treeViewData?.list?.length != treeViewData?.meta?.files) &&
+                                <p>Currently showing <strong>{treeViewData?.list?.length}</strong> out of <strong>{treeViewData?.meta?.files}</strong> files.</p>}
+
+                            <FileTreeView data={treeViewData}
+                                          showQAButton={false}
+                                          showDataProductButton={false}
+                                          selection={{mode: 'checkbox', value: fileSelection, setValue: handleFileSelection, args: treeViewData }}
+                                          keys={{files: 'list', uuid: 'dataset_uuid'}}
+                                          loadDerived={false}
+                                          treeViewOnly={true}
+                                          className={'c-treeView__main--inTable'} />
+                        </>
                 }
                     handleSecondaryBtn={
 hideModal}
