@@ -17,7 +17,7 @@ const connector = new SearchAPIConnector({
             "field" : "dataset_uuid.keyword",
                 "inner_hits": {
                 "name": "files",
-                    "size": 5,
+                    "size": 20,
                     "sort": [{ "dataset_uuid.keyword": "asc" }]
             },
             "max_concurrent_group_searches": 4

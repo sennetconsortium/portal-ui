@@ -19,8 +19,10 @@ import SenNetPopover from "../SenNetPopover";
 import AppModal from "../AppModal";
 import FileTreeView from "./entities/dataset/FileTreeView";
 import {COLS_ORDER_KEY, FILE_KEY_SEPARATOR} from "@/config/config";
-import {parseJson} from "@/lib/services";
+import {fetchGlobusFilepath, parseJson} from "@/lib/services";
 import {useSearchUIContext} from "@/search-ui/components/core/SearchUIContext";
+import DataUsageModal from "@/components/custom/entities/dataset/DataUsageModal";
+import {ShimmerText} from "react-shimmer-effects";
 
 const downloadSizeAttr = 'data-download-size'
 export const clearDownloadSizeLabel = () => {
@@ -46,6 +48,8 @@ function TableResultsFiles({children, filters, forData = false, rowFn, inModal =
     const [isBusy, setIsBusy] = useState(true)
     const [searchResponse, setSearchResponse] = useState({})
     const {pageNumber, pageSize} = useSearchUIContext()
+    const globusLinks = useRef({})
+    const [globusText, setGlobusText] = useState(<ShimmerText line={2} gap={5} />)
 
     useEffect(() => {
         const totalFileCount = rawResponse.record_count
@@ -176,9 +180,19 @@ function TableResultsFiles({children, filters, forData = false, rowFn, inModal =
     }
 
     const filesModal = (row) => {
+        setGlobusText(<ShimmerText line={2} gap={5} />)
         setShowModal(true)
         currentDatasetUuid.current = row.dataset_uuid
         setTreeViewData(row)
+        if (globusLinks.current[row.dataset_uuid] === undefined) {
+            fetchGlobusFilepath(row.dataset_uuid).then((globusData) => {
+                globusLinks.current[row.dataset_uuid] = globusData.filepath
+                setGlobusText(<DataUsageModal includeIntroText={true} data={row} filepath={globusData.filepath}/>)
+            })
+        } else {
+            setGlobusText(<DataUsageModal includeIntroText={true} data={row} filepath={globusLinks.current[row.dataset_uuid]}/>)
+        }
+
     }
 
     const handleFileSelection = (e, row) => {
@@ -201,7 +215,7 @@ function TableResultsFiles({children, filters, forData = false, rowFn, inModal =
             cols.push({
                 id: 'bulkExport',
                 ignoreRowClick: true,
-                name: <BulkExport onCheckAll={onCheckAll} data={results} raw={raw} hiddenColumns={hiddenColumns} columns={currentColumns} exportKind={'manifest'} />,
+                name: <BulkExport filters={filters} onCheckAll={onCheckAll} data={results} raw={raw} hiddenColumns={hiddenColumns} columns={currentColumns} exportKind={'manifest'} />,
                 width: '100px',
                 className: 'text-center',
                 selector: row => row.id,
@@ -396,14 +410,19 @@ function TableResultsFiles({children, filters, forData = false, rowFn, inModal =
                     showModal={showModal}
                     modalTitle={'Files Details'}
                     modalBody={
-                        <FileTreeView data={treeViewData}
-                        showQAButton={false}
-                        showDataProductButton={false}
-                        selection={{mode: 'checkbox', value: fileSelection, setValue: handleFileSelection, args: treeViewData }}
-                        keys={{files: 'list', uuid: 'dataset_uuid'}}
-                        loadDerived={false}
-                        treeViewOnly={true}
-                        className={'c-treeView__main--inTable'} />
+                        <>
+                            {treeViewData && (treeViewData?.list?.length != treeViewData?.meta?.files) &&
+                                <p>Currently showing <strong>{treeViewData?.list?.length}</strong> out of <strong>{treeViewData?.meta?.files}</strong> files.</p>}
+                            {globusText}
+                            <FileTreeView data={treeViewData}
+                                          showQAButton={false}
+                                          showDataProductButton={false}
+                                          selection={{mode: 'checkbox', value: fileSelection, setValue: handleFileSelection, args: treeViewData }}
+                                          keys={{files: 'list', uuid: 'dataset_uuid'}}
+                                          loadDerived={false}
+                                          treeViewOnly={true}
+                                          className={'c-treeView__main--inTable'} />
+                        </>
                 }
                     handleSecondaryBtn={
 hideModal}
