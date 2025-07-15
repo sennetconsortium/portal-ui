@@ -31,7 +31,7 @@ const connector = new SearchAPIConnector({
         };
         aggs.table_file_extension = {
             composite: {
-                size: 40,
+                size: 10000,
                 sources: [
                     {
                         "dataset_uuid.keyword": {
@@ -52,7 +52,7 @@ const connector = new SearchAPIConnector({
         }
         aggs.table_organs = {
             composite: {
-                size: 40,
+                size: 10000,
                 sources: [
                     {
                         "dataset_uuid.keyword": {
@@ -73,7 +73,7 @@ const connector = new SearchAPIConnector({
         };
         aggs.table_dataset_type = {
             composite: {
-                size: 40,
+                size: 10000,
                 sources: [
                     {
                         "dataset_uuid.keyword": {
