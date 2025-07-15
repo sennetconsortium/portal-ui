@@ -1,6 +1,6 @@
 {
   "name": "portal-ui",
-  "version": "1.10.1",
+  "version": "1.10.2",
   "private": true,
   "watch": {
     "plugins": "./components/custom/js/addons/plugins*.js"
