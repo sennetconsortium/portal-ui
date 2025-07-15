@@ -47,9 +47,10 @@ function TableResultsFiles({children, filters, forData = false, rowFn, inModal =
     const tableContext = useRef(null)
     const [isBusy, setIsBusy] = useState(true)
     const [searchResponse, setSearchResponse] = useState({})
-    const {pageNumber, pageSize} = useSearchUIContext()
+    const {pageSize} = useSearchUIContext()
     const globusLinks = useRef({})
-    const [globusText, setGlobusText] = useState(<ShimmerText line={2} gap={5} />)
+    const loadingComponent = <ShimmerText line={2} gap={10} />
+    const [globusText, setGlobusText] = useState(loadingComponent)
 
     useEffect(() => {
         const totalFileCount = rawResponse.record_count
@@ -111,6 +112,7 @@ function TableResultsFiles({children, filters, forData = false, rowFn, inModal =
                     organs: list[0].organs,
                     samples: list[0].samples,
                     sources: list[0].sources,
+                    entity_type: 'Dataset',
                     list: list,
                     meta: meta,
                 }    
@@ -180,7 +182,7 @@ function TableResultsFiles({children, filters, forData = false, rowFn, inModal =
     }
 
     const filesModal = (row) => {
-        setGlobusText(<ShimmerText line={2} gap={5} />)
+        setGlobusText(loadingComponent)
         setShowModal(true)
         currentDatasetUuid.current = row.dataset_uuid
         setTreeViewData(row)
@@ -334,7 +336,7 @@ function TableResultsFiles({children, filters, forData = false, rowFn, inModal =
                         data[e.name || 'N/A'] = e.count
                     }
 
-                    return <div className={'table__cellFiles'}><div className='table__chips'>{res}</div></div>
+                    return <div className={'table__cellFiles'}><div className='table__chips'>{row.meta.files > 1 && res.length > 1 && <small className={'badge rounded-pill bg-secondary'}>{row.meta.files} total files</small>} {res}</div></div>
                 }
             }
         )
