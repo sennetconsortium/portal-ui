@@ -158,13 +158,12 @@ function BulkExport({ data = [], raw, columns, filters, exportKind, onCheckAll, 
             for (let item of data) {
                 let id = item.props ? raw(item.props.result.uuid) : raw(item.uuid) || raw(item.id)
                 if (isAll || selected[id]) {
-                    if (item.list) {
+                     if (hasFileFilter()) {
+                        manifestData += `${id} /`
+                    } else if (item.list) {
                         for (let subItem of item.list) {
                             manifestData += `${raw(subItem.dataset_uuid)} /${raw(subItem.rel_path)}\n`
                         }
-
-                    } else if (hasFileFilter()) {
-                        manifestData += `${id} /`
                     } else {
                         manifestData += `${id} /${raw(item.rel_path)}\n`
                     }
