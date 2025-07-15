@@ -7,6 +7,7 @@ import {getAuth, getEntityEndPoint} from "@/config/config";
 import AppModal from "../../AppModal";
 import $ from 'jquery'
 import {
+    datasetIs,
     eq,
     fetchProtocols,
     getClickableLink,
@@ -270,9 +271,18 @@ function ProvenanceGraph({ data }) {
         return {href: value, value: title}
     }
 
+    const onSenNetIdUrl = (d, property, value) => {
+        if (datasetIs.component(d['sennet:creation_action'])) {
+          return {value}
+        } else {
+            return {href: `/${d['sennet:entity_type'].toLowerCase()}?uuid=${d['sennet:uuid']}`, value}
+        }
+
+    }
+
     const graphOptions = {
         idNavigate: {
-            props: {'sennet:sennet_id': true,
+            props: {'sennet:sennet_id': {callback: onSenNetIdUrl},
                 'manuscript': {callback: publicationUrl},
                 'sennet:protocol_url': {callback: protocolUrl},
                 'sennet:processing_information': {callback: jsonView}},
