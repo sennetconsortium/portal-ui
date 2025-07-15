@@ -106,6 +106,7 @@ function TableResultsFiles({children, filters, forData = false, rowFn, inModal =
                     id: list[0].dataset_uuid,
                     organs: list[0].organs,
                     samples: list[0].samples,
+                    sources: list[0].sources,
                     list: list,
                     meta: meta,
                 }    
@@ -225,7 +226,7 @@ function TableResultsFiles({children, filters, forData = false, rowFn, inModal =
             {
                 name: 'Files',
                 id: 'rel_path',
-                minWidth: '35%',
+                minWidth: '25%',
                 selector: row => raw(row.description),
                 sortable: true,
                 reorder: true,
@@ -248,15 +249,21 @@ function TableResultsFiles({children, filters, forData = false, rowFn, inModal =
             }
         )
 
-        // if (hasMultipleFileTypes) {
-        //     cols.push({
-        //         name: 'File Type',
-        //         selector: row => raw(row.file_extension),
-        //         sortable: true,
-        //         format: row => <span data-field={fileTypeField}>{raw(row.file_extension)?.toUpperCase()}</span>,
-        //     })
-        // }
-
+        cols.push(
+            {
+                name: 'Source',
+                id: 'sources.source_type',
+                width: '10%',
+                selector: row => {
+                    let val = raw(row.sources)
+                    if (val) {
+                        return Array.isArray(val) ? getUBKGFullName(val[0].source_type) : val.source_type
+                    }
+                },
+                sortable: true,
+                reorder: true,
+            }
+        )
         cols.push(
             {
                 name: 'Organ',
@@ -292,9 +299,9 @@ function TableResultsFiles({children, filters, forData = false, rowFn, inModal =
 
         cols.push(
             {
-                name: 'Files',
+                name: 'File Types',
                 id: 'files_count',
-                width: '15%',
+                width: '18%',
                 selector: row => raw(row.meta.files),
                 sortable: false,
                 reorder: true,
