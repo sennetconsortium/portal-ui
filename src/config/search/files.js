@@ -4,7 +4,6 @@ import {
     getAuth,
     getFilesIndex,
     getSearchEndPoint,
-    isDateFacetVisible
 } from '../config';
 
 const connector = new SearchAPIConnector({
