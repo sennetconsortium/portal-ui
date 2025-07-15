@@ -102,7 +102,7 @@ function SearchFiles() {
                                 <div data-js-ada='facets'>
                                     <CustomClearSearchBox />
 
-                                    <SearchTypeButton title='Entities' />
+                                    <SearchTypeButton title='Files' />
 
 
                                     <SelectedFilters />
