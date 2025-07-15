@@ -112,6 +112,7 @@ function TableResultsFiles({children, filters, forData = false, rowFn, inModal =
                     organs: list[0].organs,
                     samples: list[0].samples,
                     sources: list[0].sources,
+                    entity_type: 'Dataset',
                     list: list,
                     meta: meta,
                 }    
