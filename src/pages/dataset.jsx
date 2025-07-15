@@ -18,19 +18,21 @@ import AppContext from "@/context/AppContext";
 import Alert from 'react-bootstrap/Alert';
 import {EntityViewHeader} from "@/components/custom/layout/entity/ViewHeader";
 import DerivedContext, {DerivedProvider} from "@/context/DerivedContext";
-import FileTreeView from "@/components/custom/entities/dataset/FileTreeView";
 import WarningIcon from '@mui/icons-material/Warning'
 import LoadingAccordion from "@/components/custom/layout/LoadingAccordion";
 import AppNavbar from "@/components/custom/layout/AppNavbar"
 import Description from "@/components/custom/entities/sample/Description";
 import Upload from "@/components/custom/entities/dataset/Upload";
 import Collections from "@/components/custom/entities/Collections";
+import FilesDataProducts from "@/components/custom/entities/dataset/FilesDataProducts";
+import BulkDataTransfer from "@/components/custom/entities/dataset/BulkDataTransfer";
+import {toast} from "react-toastify";
+
 
 const AppFooter = dynamic(() => import("@/components/custom/layout/AppFooter"))
 const Attribution = dynamic(() => import("@/components/custom/entities/sample/Attribution"))
 const ContributorsContacts = dynamic(() => import("@/components/custom/entities/ContributorsContacts"))
 const CreationActionRelationship = dynamic(() => import("@/components/custom/entities/dataset/CreationActionRelationship"))
-const DataProducts = dynamic(() => import("@/components/custom/entities/dataset/DataProducts"))
 const Header = dynamic(() => import("@/components/custom/layout/Header"))
 const Metadata = dynamic(() => import("@/components/custom/entities/Metadata"))
 const Provenance = dynamic(() => import("@/components/custom/entities/Provenance"), {
@@ -51,6 +53,7 @@ function ViewDataset() {
     const [hasWritePrivilege, setHasWritePrivilege] = useState(false)
     const {router, isRegisterHidden, _t, cache, isPreview, getPreviewView, isLoggedIn} = useContext(AppContext)
     const [primaryDatasetData, setPrimaryDatasetInfo] = useState(null)
+    const [showFilesSection, setShowFilesSection] = useState(null)
     const {
         showVitessce,
         initVitessceConfig,
@@ -138,10 +141,23 @@ function ViewDataset() {
             // fetch dataset data
             fetchData(router.query.uuid)
                 .catch(log.error);
+
+            if(router.query.hasOwnProperty("redirectedFrom")) {
+                let message = router.query.redirectedFrom.replace(/\/$/, '')
+                toast.info(`You have been redirected to the unified view for ${message}.`, {
+                    position: 'top-right',
+                });
+            }
         } else {
             setData(null);
         }
     }, [router]);
+
+    const toggleFilesSection = ({hasData, filepath, status}) => {
+        if (hasData != null && showFilesSection !== true) {
+            setShowFilesSection(hasData)
+        }
+    }
 
     if (isPreview(data, error))  {
         return getPreviewView(data)
@@ -158,16 +174,32 @@ function ViewDataset() {
 
                 {data && !error &&
                     <div className="container-fluid">
-                        {/*Primary dataset alert*/}
+                        {/*Processed/Component dataset alert*/}
                         {!datasetIs.primary(data.creation_action) &&
                             <Alert className={'mt-4'} variant='info'><WarningIcon /> You are viewing a&nbsp;
                                 <code>{getCreationActionRelationName(data.creation_action)}</code>.&nbsp;
                                 {primaryDatasetData && (
                                     <>
                                         <span>To view the <code>Primary Dataset</code>, visit &nbsp;</span>
-                                        <a href={getEntityViewUrl('dataset', primaryDatasetData.uuid, {})}>{primaryDatasetData.sennet_id}</a>
+                                        <a href={getEntityViewUrl('dataset', primaryDatasetData.uuid, {}, {})}>{primaryDatasetData.sennet_id}</a>
                                     </>
                                 )}
+                            </Alert>
+                        }
+
+                        {/*Banner for Multi Assaay Datasets when a user has been redirected*/}
+                        {router.query.hasOwnProperty("redirectedFrom") && datasetIs.primary(data.creation_action) && datasetCategories && (datasetCategories.component.length > 0) &&
+                            <Alert className={'mt-4'} variant='info'><WarningIcon/>
+                                You have been redirect to
+                                the <code>{getCreationActionRelationName(data.creation_action)}</code>, which contains
+                                the following <code>Component Dataset(s)</code>:&nbsp;
+                                {datasetCategories.component.map((component, index) => {
+                                    return (<>
+                                            <span>{component.dataset_type}</span>
+                                            {index < datasetCategories.component.length - 1 && ', '}
+                                        </>
+                                    )
+                                })}
                             </Alert>
                         }
 
@@ -188,13 +220,7 @@ function ViewDataset() {
                                                    data-bs-parent="#sidebar">Multi-Assay Relationship</a>
                                             </li>
                                         }
-                                        {(datasetIs.primary(data.creation_action) || datasetIs.processed(data.creation_action)) && dataProducts && (dataProducts.length > 0) &&
-                                            <li className="nav-item">
-                                                <a href="#data-products"
-                                                   className="nav-link "
-                                                   data-bs-parent="#sidebar">Data Products</a>
-                                            </li>
-                                        }
+
                                         {isLoggedIn() && data.upload &&
                                             <li className="nav-item">
                                                 <a href="#Upload"
@@ -230,10 +256,16 @@ function ViewDataset() {
                                                 </li>
                                             }
 
-                                        <li className="nav-item">
-                                            <a href="#Files"
-                                               className="nav-link"
+                                        {data && showFilesSection && <li className="nav-item">
+                                            <a href="#files-data-products"
+                                               className="nav-link "
                                                data-bs-parent="#sidebar">Files</a>
+                                        </li>}
+
+                                        <li className="nav-item">
+                                            <a href="#bulk-data-transfer"
+                                               className="nav-link "
+                                               data-bs-parent="#sidebar">Bulk Data Transfer</a>
                                         </li>
 
                                         {!!(data.contributors && Object.keys(data.contributors).length) &&
@@ -277,11 +309,6 @@ function ViewDataset() {
                                             <CreationActionRelationship entity={data} data={datasetCategories}/>
                                         }
 
-                                        {/*Data Products*/}
-                                        {(datasetIs.primary(data.creation_action) || datasetIs.processed(data.creation_action)) && dataProducts && (dataProducts.length > 0) &&
-                                            <DataProducts data={data} files={dataProducts}/>
-                                        }
-
                                         {/*Upload*/}
                                         {isLoggedIn() && data.upload && <Upload data={data.upload}/>}
 
@@ -306,8 +333,14 @@ function ViewDataset() {
                                                 />
                                             }
 
-                                        {/*Files*/}
-                                        {data && <FileTreeView data={data}/>}
+                                        {/*Data Products*/}
+                                        { data &&
+                                            <FilesDataProducts setShowFilesSection={toggleFilesSection} showFilesSection={showFilesSection} data={data} dataProducts={dataProducts}  />
+                                        }
+
+                                        { datasetCategories &&
+                                            <BulkDataTransfer data={datasetCategories}  />
+                                        }
 
                                         {/*Contributors*/}
                                         {!!(data.contributors && Object.keys(data.contributors).length) &&

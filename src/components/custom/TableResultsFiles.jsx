@@ -140,7 +140,7 @@ function TableResultsFiles({children, filters, forData = false, rowFn, inModal =
         hasClicked.current = false
     }
 
-    const getHotLink = (row) => getEntityViewUrl('dataset', raw(row.dataset_uuid), {})
+    const getHotLink = (row) => getEntityViewUrl('dataset', raw(row.dataset_uuid), {}, {})
 
     const handleFileCheckbox = (e, data) => {
         handleCheckbox(e)
