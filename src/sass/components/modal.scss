@@ -2,6 +2,14 @@
 @use "../general/mixins";
 
 .modal {
+  &--filesView {
+    .c-treeView__main--inTable {
+      max-height: 500px;
+      overflow-y: auto;
+    }
+  }
+
+
   &-body {
     .sui-layout-body__inner {
       margin-top: 20px;

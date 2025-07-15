@@ -145,7 +145,7 @@ function BulkExport({ data = [], raw, columns, filters, exportKind, onCheckAll, 
                 data = Object.values(data)
             }
             for (let item of data) {
-                let id = item.props ? raw(item.props.result.uuid) : raw(item.uuid)
+                let id = item.props ? raw(item.props.result.uuid) : raw(item.uuid) || raw(item.id)
                 if (isAll || selected[id]) {
                     if (item.list) {
                         for (let subItem of item.list) {
