@@ -51,7 +51,7 @@ export const handleCheckAll = (setTotalSelected) => {
     getCheckAll().prop('checked', false)
 }
 
-function BulkExport({ data = [], raw, columns, filters, exportKind, onCheckAll, hiddenColumns, replaceFirst = 'uuid' }) {
+function BulkExport({ data = [], raw, columns, filters, exportKind, onCheckAll, hiddenColumns, context = 'entities', replaceFirst = 'uuid' }) {
 
     const [totalSelected, setTotalSelected] = useState(0)
 
@@ -158,7 +158,7 @@ function BulkExport({ data = [], raw, columns, filters, exportKind, onCheckAll, 
             for (let item of data) {
                 let id = item.props ? raw(item.props.result.uuid) : raw(item.uuid) || raw(item.id)
                 if (isAll || selected[id]) {
-                     if (hasFileFilter()) {
+                     if (!hasFileFilter() && eq(context, 'files')) {
                         manifestData += `${id} /`
                     } else if (item.list) {
                         for (let subItem of item.list) {

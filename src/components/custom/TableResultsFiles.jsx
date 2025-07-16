@@ -217,7 +217,7 @@ function TableResultsFiles({children, filters, forData = false, rowFn, inModal =
             cols.push({
                 id: 'bulkExport',
                 ignoreRowClick: true,
-                name: <BulkExport filters={filters} onCheckAll={onCheckAll} data={results} raw={raw} hiddenColumns={hiddenColumns} columns={currentColumns} exportKind={'manifest'} />,
+                name: <BulkExport context={'files'} filters={filters} onCheckAll={onCheckAll} data={results} raw={raw} hiddenColumns={hiddenColumns} columns={currentColumns} exportKind={'manifest'} />,
                 width: '100px',
                 className: 'text-center',
                 selector: row => row.id,
