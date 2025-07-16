@@ -14,7 +14,7 @@ import SenNetPopover from "@/components/SenNetPopover";
 import DataUsageModal from "@/components/custom/entities/dataset/DataUsageModal";
 
 
-function BulkDataTransfer({data}) {
+function BulkDataTransfer({data, entityType}) {
     const {isLoggedIn} = useContext(AppContext)
 
     const [tabData, setTabData] = useState([])
@@ -28,17 +28,24 @@ function BulkDataTransfer({data}) {
             component: 'triangle',
             processed: 'blob'
         }
-        for (let k of keys) {
-            if (data[k].length) {
-                data[k][0].shape = icons[k]
-                list.push(data[k][0])
+        console.log(entityType)
+        if(eq(entityType, "Upload") || eq(entityType, "Publication")) {
+            data['shape'] = icons['primary']
+            list.push(data)
+        }
+        else {
+            for (let k of keys) {
+                if (data[k].length) {
+                    data[k][0].shape = icons[k]
+                    list.push(data[k][0])
 
-                if (k === 'component' && data[k].length > 1) {
-                    data[k][1].shape = icons[k]
-                    list.push(data[k][1])
+                    if (k === 'component' && data[k].length > 1) {
+                        data[k][1].shape = icons[k]
+                        list.push(data[k][1])
+                    }
                 }
-            }
 
+            }
         }
         for (let d of list) {
             const gData = await fetchGlobusFilepath(d.uuid);
@@ -109,9 +116,18 @@ function BulkDataTransfer({data}) {
                 c = notLoggedIn(d)
             }
 
-            res.push(<Tab key={d.sennet_id} eventKey={d.sennet_id} title={<span className={'c-help'}><span title={getCreationActionRelationName(d.creation_action)} className={`shape shape--${d.shape} ${eq(d.shape, 'circle') ? 'green' : ''}`}>{getDatasetTypeDisplay(d)}</span></span>}>
-                <div className={'my-3'}>{c}</div>
-            </Tab>)
+            if (eq(entityType, "Upload") || eq(entityType, "Publication")) {
+                res.push(<Tab key={d.sennet_id} eventKey={d.sennet_id} title={<span className={'c-help'}><span
+                    title={entityType}>{data.sennet_id}</span></span>}>
+                    <div className={'my-3'}>{c}</div>
+                </Tab>)
+            } else {
+                res.push(<Tab key={d.sennet_id} eventKey={d.sennet_id} title={<span className={'c-help'}><span
+                    title={getCreationActionRelationName(d.creation_action)}
+                    className={`shape shape--${d.shape} ${eq(d.shape, 'circle') ? 'green' : ''}`}>{getDatasetTypeDisplay(d)}</span></span>}>
+                    <div className={'my-3'}>{c}</div>
+                </Tab>)
+            }
         }
 
         return res
@@ -121,7 +137,7 @@ function BulkDataTransfer({data}) {
     return (
         <>
             <SenNetAccordion title={'Bulk Data Transfer'} id={'bulk-data-transfer'}>
-                <p>This section explains how to bulk download the raw and processed data for this <code>Dataset</code>. Files for individual raw or processed data can be downloaded via Globus or dbGaP from the respective tabs. To download files from multiple Globus directories simultaneously, use the <LnkIc title={'SenNet Command Line Transfer (CLT) Tool'} href={' https://docs.sennetconsortium.org/libraries/clt/'} />. Note that processed data has separate download directories in Globus or dbGaP, distinct from the raw data directory.</p>
+                <p>This section explains how to bulk download the raw and processed data for this <code>{entityType ? entityType : 'Dataset'}</code>. Files for individual raw or processed data can be downloaded via Globus or dbGaP from the respective tabs. To download files from multiple Globus directories simultaneously, use the <LnkIc title={'SenNet Command Line Transfer (CLT) Tool'} href={' https://docs.sennetconsortium.org/libraries/clt/'} />. Note that processed data has separate download directories in Globus or dbGaP, distinct from the raw data directory.</p>
 
                 {!isBusy && <Tabs
                     defaultActiveKey={tabData[0].sennet_id}

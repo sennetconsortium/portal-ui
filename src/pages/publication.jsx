@@ -11,6 +11,7 @@ import LoadingAccordion from "@/components/custom/layout/LoadingAccordion";
 import AppNavbar from "@/components/custom/layout/AppNavbar"
 import Description from "@/components/custom/entities/sample/Description";
 import VignetteList from "@/components/custom/vitessce/VignetteList";
+import BulkDataTransfer from "@/components/custom/entities/dataset/BulkDataTransfer";
 
 const AppFooter = dynamic(() => import("@/components/custom/layout/AppFooter"))
 const Attribution = dynamic(() => import("@/components/custom/entities/sample/Attribution"))
@@ -148,9 +149,9 @@ function ViewPublication() {
                                             </li>
 
                                             <li className="nav-item">
-                                                <a href="#Files"
-                                                   className="nav-link"
-                                                   data-bs-parent="#sidebar">Files</a>
+                                                <a href="#bulk-data-transfer"
+                                                   className="nav-link "
+                                                   data-bs-parent="#sidebar">Bulk Data Transfer</a>
                                             </li>
 
                                             {!!(data.contacts && Object.keys(data.contacts).length) &&
@@ -203,8 +204,8 @@ function ViewPublication() {
                                             {/*Provenance*/}
                                             <Provenance data={data} hasAncestry={hasAncestry}/>
 
-                                            {/*Files*/}
-                                            <FileTreeView data={data}/>
+                                            {/*Bulk Data Transfer*/}
+                                            <BulkDataTransfer data={data} entityType={data.entity_type} />
 
                                              {!!(data.contacts && Object.keys(data.contacts).length) &&
                                                 <ContributorsContacts title={'Authors'} data={data.contacts}/>
