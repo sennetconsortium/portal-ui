@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import {
     autoBlobDownloader,
     checkFilterType,
-    checkMultipleFilterType, formatByteSize, getEntityViewUrl, getHeaders,
+    checkMultipleFilterType, formatByteSize, getEntityViewUrl,
     getUBKGFullName, matchArrayOrder,
 } from './js/functions'
 import BulkExport, {getCheckAll, getCheckboxes, handleCheckbox} from "./BulkExport";
@@ -287,9 +287,20 @@ function TableResultsFiles({children, filters, forData = false, rowFn, inModal =
                 width: '10%',
                 selector: row => {
                     let val = raw(row.organs)
+                    let organs = new Set()
                     if (val) {
-                        return Array.isArray(val) ? getUBKGFullName(val[0].code) : val.code
+                        if (Array.isArray(val)) {
+                            for (let o of val) {
+                                organs.add(getUBKGFullName(o.code))
+                            }
+                        } else {
+                            organs.add(getUBKGFullName(val.code))
+                        }
+                        if (organs.size > 0) {
+                            return [...organs].join(', ')
+                        }
                     }
+                    return ''
                 },
                 sortable: true,
                 reorder: true,

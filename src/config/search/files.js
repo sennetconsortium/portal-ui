@@ -142,7 +142,7 @@ export const SEARCH_FILES = {
                 isFacetVisible: doesAggregationHaveBuckets('sources.source_type')
             },
             'organs.label': {
-                label: 'Organs',
+                label: 'Organ',
                 type: 'value',
                 field: 'organs.label.keyword',
                 isExpanded: false,
