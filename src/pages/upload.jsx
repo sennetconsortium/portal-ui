@@ -18,6 +18,8 @@ import Description from "@/components/custom/entities/sample/Description";
 import FileTreeView from "@/components/custom/entities/dataset/FileTreeView";
 import Datasets from "@/components/custom/entities/collection/Datasets";
 import Attribution from "@/components/custom/entities/sample/Attribution";
+import FilesDataProducts from "@/components/custom/entities/dataset/FilesDataProducts";
+import BulkDataTransfer from "@/components/custom/entities/dataset/BulkDataTransfer";
 
 const AppFooter = dynamic(() => import("@/components/custom/layout/AppFooter"))
 const Header = dynamic(() => import("@/components/custom/layout/Header"))
@@ -106,11 +108,11 @@ function ViewUpload() {
                                                    className="nav-link "
                                                    data-bs-parent="#sidebar">Summary</a>
                                             </li>
-                                            {showFilesSection == null || showFilesSection && <li className="nav-item">
-                                                <a href="#Files"
-                                                   className="nav-link"
-                                                   data-bs-parent="#sidebar">Files</a>
-                                            </li>}
+                                            <li className="nav-item">
+                                                <a href="#bulk-data-transfer"
+                                                   className="nav-link "
+                                                   data-bs-parent="#sidebar">Bulk Data Transfer</a>
+                                            </li>
                                             {data.datasets?.length > 0 && <li className="nav-item">
                                                 <a href="#Datasets"
                                                    className="nav-link"
@@ -142,9 +144,8 @@ function ViewUpload() {
                                                          data={data}
                                             />
 
-                                            {/*Files*/}
-
-                                            {(showFilesSection == null || showFilesSection) && <FileTreeView onStateUpdateCallback={toggleFilesSection} data={data}/>}
+                                            {/*Bulk Data Transfer*/}
+                                             <BulkDataTransfer data={data} entityType={data.entity_type} />
 
                                             {/*Datasets*/}
                                             {isDatasetsLoading ? (
