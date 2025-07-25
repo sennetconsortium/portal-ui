@@ -19,7 +19,10 @@ import SenNetPopover from "../SenNetPopover";
 import AppModal from "../AppModal";
 import FileTreeView from "./entities/dataset/FileTreeView";
 import {COLS_ORDER_KEY, FILE_KEY_SEPARATOR} from "@/config/config";
-import {parseJson} from "@/lib/services";
+import {fetchGlobusFilepath, parseJson} from "@/lib/services";
+import {useSearchUIContext} from "@/search-ui/components/core/SearchUIContext";
+import DataUsageModal from "@/components/custom/entities/dataset/DataUsageModal";
+import {ShimmerText} from "react-shimmer-effects";
 
 const downloadSizeAttr = 'data-download-size'
 export const clearDownloadSizeLabel = () => {
@@ -35,24 +38,34 @@ function TableResultsFiles({children, filters, forData = false, rowFn, inModal =
     const [showModal, setShowModal] = useState(false)
     const [fileSelection, setFileSelection] = useState(null)
 
-    const [results, setResults] = useState(transformResults())
+    const [results, setResults] = useState([])
     const [treeViewData, setTreeViewData] = useState([])
     const [showModalDownloadBtn, setShowModalDownloadBtn] = useState(false)
     const currentDatasetUuid = useRef(null)
     const selectedFilesModal = useRef({})
     const hiddenColumns = useRef(null)
     const tableContext = useRef(null)
+    const [isBusy, setIsBusy] = useState(true)
+    const [searchResponse, setSearchResponse] = useState({})
+    const {pageSize} = useSearchUIContext()
+    const globusLinks = useRef({})
+    const loadingComponent = <ShimmerText line={2} gap={10} />
+    const [globusText, setGlobusText] = useState(loadingComponent)
 
     useEffect(() => {
-        const totalFileCount = rawResponse.records.files.length
+        const totalFileCount = rawResponse.record_count
         $('.sui-paging-info').append(` Datasets (<strong>${totalFileCount}</strong> Total Files)`)
     }, [])
 
     useEffect(()=> {
-        const results = transformResults()
+        const resp = rawResponse
+        const results = transformResults(rawResponse)
         setResults(results)
-        updatePagingInfo(results.length)
-    }, [rawResponse])
+        setSearchResponse(resp)
+        updatePagingInfo(resp.aggregations?.total_datasets.value, resp)
+        setIsBusy(false)
+
+    }, [rawResponse, pageSize, pageSize])
 
     const raw = rowFn ? rowFn : ((obj) => obj ? (obj.raw || obj) : null)
     const applyDownloadSizeLabel = (total) => {
@@ -62,32 +75,50 @@ function TableResultsFiles({children, filters, forData = false, rowFn, inModal =
         }
     }
 
-    function updatePagingInfo(resultsCount) {
+    function updatePagingInfo(resultsCount, resp) {
         $('.sui-paging-info strong').eq(1).text(resultsCount)
-        $('.sui-paging-info strong').eq(2).text(rawResponse.records.files.length)
+        $('.sui-paging-info strong').eq(2).text(resp.record_count)
     }
 
-    function transformResults() {
+    function transformResults(resp) {
         const results = {}
 
         // group files by dataset_uuid
-        for (let file of rawResponse.records.files) {
-            if (!results.hasOwnProperty(file.dataset_uuid)) {
-                results[file.dataset_uuid] = {
-                    dataset_type: file.dataset_type,
-                    dataset_sennet_id: file.dataset_sennet_id,
-                    dataset_uuid: file.dataset_uuid,
-                    donors: file.donors,
-                    id: file.dataset_uuid,
-                    organs: file.organs,
-                    samples: file.samples,
-                    list: [],
-                    size: 0,
+        for (let file of resp?.records?.files) {
+            let uuid = file.fields['dataset_uuid.keyword'][0]
+            if (!results.hasOwnProperty(uuid)) {
+                let list = []
+                let meta = {
+                    files: file.inner_hits.files.hits.total.value,
+                    extensions: []
+                }
+                for (let l of file.inner_hits.files.hits.hits) {
+                    list.push(l._source)
+                }
+                for (let l of resp.aggregations.table_file_extension.buckets) {
+                    if (l.key['dataset_uuid.keyword'] === uuid) {
+                        meta.extensions.push({
+                            name: l.key['file_extension.keyword'],
+                            count: l.doc_count
+                        })
+                    }
+                }
+                results[uuid] = {
+                    dataset_type: list[0].dataset_type,
+                    dataset_sennet_id: list[0].dataset_sennet_id,
+                    dataset_uuid: list[0].dataset_uuid,
+                    donors: list[0].donors,
+                    id: list[0].dataset_uuid,
+                    organs: list[0].organs,
+                    samples: list[0].samples,
+                    sources: list[0].sources,
+                    entity_type: 'Dataset',
+                    list: list,
+                    meta: meta,
                 }    
             }
 
-            results[file.dataset_uuid].list.push(file)
-            results[file.dataset_uuid].size += 1
+
         }
 
         return Object.values(results)
@@ -151,9 +182,19 @@ function TableResultsFiles({children, filters, forData = false, rowFn, inModal =
     }
 
     const filesModal = (row) => {
+        setGlobusText(loadingComponent)
         setShowModal(true)
         currentDatasetUuid.current = row.dataset_uuid
         setTreeViewData(row)
+        if (globusLinks.current[row.dataset_uuid] === undefined) {
+            fetchGlobusFilepath(row.dataset_uuid).then((globusData) => {
+                globusLinks.current[row.dataset_uuid] = globusData.filepath
+                setGlobusText(<DataUsageModal includeIntroText={true} data={row} filepath={globusData.filepath}/>)
+            })
+        } else {
+            setGlobusText(<DataUsageModal includeIntroText={true} data={row} filepath={globusLinks.current[row.dataset_uuid]}/>)
+        }
+
     }
 
     const handleFileSelection = (e, row) => {
@@ -176,7 +217,7 @@ function TableResultsFiles({children, filters, forData = false, rowFn, inModal =
             cols.push({
                 id: 'bulkExport',
                 ignoreRowClick: true,
-                name: <BulkExport onCheckAll={onCheckAll} data={results} raw={raw} hiddenColumns={hiddenColumns} columns={currentColumns} exportKind={'manifest'} />,
+                name: <BulkExport context={'files'} filters={filters} onCheckAll={onCheckAll} data={results} raw={raw} hiddenColumns={hiddenColumns} columns={currentColumns} exportKind={'manifest'} />,
                 width: '100px',
                 className: 'text-center',
                 selector: row => row.id,
@@ -188,7 +229,7 @@ function TableResultsFiles({children, filters, forData = false, rowFn, inModal =
         cols.push(
             {
                 name: 'Dataset SenNet ID',
-                id: 'dataset_sennet_id',
+                id: 'dataset_uuid',
                 width: '200px',
                 selector: row => raw(row.dataset_sennet_id),
                 sortable: true,
@@ -200,8 +241,8 @@ function TableResultsFiles({children, filters, forData = false, rowFn, inModal =
         cols.push(
             {
                 name: 'Files',
-                id: 'description',
-                minWidth: '50%',
+                id: 'rel_path',
+                minWidth: '25%',
                 selector: row => raw(row.description),
                 sortable: true,
                 reorder: true,
@@ -224,24 +265,42 @@ function TableResultsFiles({children, filters, forData = false, rowFn, inModal =
             }
         )
 
-        // if (hasMultipleFileTypes) {
-        //     cols.push({
-        //         name: 'File Type',
-        //         selector: row => raw(row.file_extension),
-        //         sortable: true,
-        //         format: row => <span data-field={fileTypeField}>{raw(row.file_extension)?.toUpperCase()}</span>,
-        //     })
-        // }
-
         cols.push(
             {
-                name: 'Sample Type',
-                id: 'samples',
+                name: 'Source',
+                id: 'sources.source_type',
+                width: '10%',
                 selector: row => {
-                    let val = raw(row.samples)
+                    let val = raw(row.sources)
                     if (val) {
-                        return Array.isArray(val) ? val[0].type : val.type
+                        return Array.isArray(val) ? getUBKGFullName(val[0].source_type) : val.source_type
                     }
+                },
+                sortable: true,
+                reorder: true,
+            }
+        )
+        cols.push(
+            {
+                name: 'Organ',
+                id: 'organs.label',
+                width: '10%',
+                selector: row => {
+                    let val = raw(row.organs)
+                    let organs = new Set()
+                    if (val) {
+                        if (Array.isArray(val)) {
+                            for (let o of val) {
+                                organs.add(getUBKGFullName(o.code))
+                            }
+                        } else {
+                            organs.add(getUBKGFullName(val.code))
+                        }
+                        if (organs.size > 0) {
+                            return [...organs].join(', ')
+                        }
+                    }
+                    return ''
                 },
                 sortable: true,
                 reorder: true,
@@ -252,9 +311,10 @@ function TableResultsFiles({children, filters, forData = false, rowFn, inModal =
         cols.push(
             {
                 name: 'Dataset Type',
-                id: 'dataset_types',
+                width: '15%',
+                id: 'dataset_type',
                 selector: row => {
-                    let val = raw(row.dataset_types)
+                    let val = raw(row.dataset_type)
                     if (val) {
                         return Array.isArray(val) ? getUBKGFullName(val[0]) : val
                     }
@@ -266,17 +326,33 @@ function TableResultsFiles({children, filters, forData = false, rowFn, inModal =
 
         cols.push(
             {
-                name: 'Size',
-                id: 'size',
-                selector: row => raw(row.size),
-                sortable: true,
+                name: 'File Types',
+                id: 'files_count',
+                width: '18%',
+                selector: row => raw(row.meta.files),
+                sortable: false,
                 reorder: true,
-                format: row => <span>{formatByteSize(raw(row.size))}</span>
+                format: row => {
+                    let res = []
+                    const data = {
+                        uuid: row.dataset_uuid
+                    }
+                    for (let e of row.meta.extensions) {
+                        res.push(<Chip
+                            key={e.name}
+                            avatar={<span className={'MuiChip--ext'}>{e.name}</span>}
+                            label={<span>{e.count}</span>}
+                            variant="outlined"
+                        />)
+                        data[e.name || 'N/A'] = e.count
+                    }
+
+                    return <div className={'table__cellFiles'}><div className='table__chips'>{row.meta.files > 1 && res.length > 1 && <small className={'badge rounded-pill bg-secondary'}>{row.meta.files} total files</small>} {res}</div></div>
+                }
             }
         )
 
         cols = cols.concat(columns)
-
         return cols;
     }
 
@@ -318,6 +394,8 @@ function TableResultsFiles({children, filters, forData = false, rowFn, inModal =
     // Prepare opsDict
     getOptions(children.length)
 
+    const getSearchContext = () => `files.${tableContext.current}`
+
     return (
         <>
             <TableResultsProvider columnsRef={currentColumns} getId={getId} rows={results} filters={filters} onRowClicked={onRowClicked} forData={forData} raw={raw} inModal={inModal}>
@@ -333,9 +411,11 @@ function TableResultsFiles({children, filters, forData = false, rowFn, inModal =
                 </> />
                 <ResultsBlock
                     index={'files'}
-                    searchContext={`files.${tableContext.current}`}
+                    isBusy={isBusy}
+                    searchContext={getSearchContext}
                     tableClassName={'rdt_Results--Files'}
                     getTableColumns={getTableColumns}
+                    totalRows={searchResponse.aggregations?.total_datasets.value}
                 />
                 <AppModal
                     className={`modal--filesView`}
@@ -343,14 +423,19 @@ function TableResultsFiles({children, filters, forData = false, rowFn, inModal =
                     showModal={showModal}
                     modalTitle={'Files Details'}
                     modalBody={
-                        <FileTreeView data={treeViewData}
-                        showQAButton={false}
-                        showDataProductButton={false}
-                        selection={{mode: 'checkbox', value: fileSelection, setValue: handleFileSelection, args: treeViewData }}
-                        keys={{files: 'list', uuid: 'dataset_uuid'}}
-                        loadDerived={false}
-                        treeViewOnly={true}
-                        className={'c-treeView__main--inTable'} />
+                        <>
+                            {treeViewData && (treeViewData?.list?.length != treeViewData?.meta?.files) &&
+                                <p>Currently showing <strong>{treeViewData?.list?.length}</strong> out of <strong>{treeViewData?.meta?.files}</strong> files.</p>}
+                            {globusText}
+                            <FileTreeView data={treeViewData}
+                                          showQAButton={false}
+                                          showDataProductButton={false}
+                                          selection={{mode: 'checkbox', value: fileSelection, setValue: handleFileSelection, args: treeViewData }}
+                                          keys={{files: 'list', uuid: 'dataset_uuid'}}
+                                          loadDerived={false}
+                                          treeViewOnly={true}
+                                          className={'c-treeView__main--inTable'} />
+                        </>
                 }
                     handleSecondaryBtn={
 hideModal}

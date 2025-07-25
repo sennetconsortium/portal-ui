@@ -108,7 +108,7 @@ function SearchEntities() {
                                 <div data-js-ada='facets'>
                                     <CustomClearSearchBox/>
 
-                                    <SearchTypeButton title='Metadata'/>
+                                    <SearchTypeButton title='Entities'/>
 
 
                                     <SelectedFilters/>

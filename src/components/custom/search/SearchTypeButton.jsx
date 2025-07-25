@@ -5,47 +5,66 @@ import {eq} from "@/components/custom/js/functions";
 
 const SearchTypeButton = ({ title }) => {
     const { filters } = useSearchUIContext()
-    const [visible, setVisible] = useState(true)
-    const [entity, setEntity] = useState('Dataset')
+    const [links, setLinks] = useState(<></>)
 
-    useEffect(() => {
-        if (eq(title, 'metadata')) {
-            let e;
-            let canShow = false
+    const validButtons = {
+        Entities: APP_ROUTES.search,
+        Metadata: APP_ROUTES.search + "/metadata",
+        Files: APP_ROUTES.search + "/files"
+    }
+
+    const onCondition = (b) => {
+        let entity
+        let canShow = eq(title, 'entities') ? false : true
+        if (eq(b, 'metadata')) {
+
             for (let i = 0; i < filters.length; i++) {
                 if (eq(filters[i].field, 'entity_type') && ['Dataset', 'Sample', 'Source'].contains(filters[i].values[0])) {
-                    e = filters[i].values[0]
+                    entity = filters[i].values[0]
                     canShow = true
                 }
 
                 if (eq(filters[i].field, 'sample_category') && eq(filters[i].values[0], 'organ')) {
                     canShow = false
-                    break;
+                    return {entity, canShow}
                 }
             }
-            setEntity(e)
-            setVisible(canShow)
         }
-
-    }, [filters]);
-
-    const validButtons = {
-        Entities: APP_ROUTES.search,
-        Metadata: APP_ROUTES.search + "/metadata"
+        if (eq(b, 'files')) {
+            for (let i = 0; i < filters.length; i++) {
+                if (eq(filters[i].field, 'entity_type') && ['Dataset'].contains(filters[i].values[0])) {
+                    entity = filters[i].values[0]
+                    canShow = true
+                }
+            }
+        }
+        return {canShow}
     }
 
-    const createLinkView = (url) => {
-        return (
-            <a className="btn btn-outline-primary rounded-0 w-100 js-searchType mt-2" href={`${url}?addFilters=entity_type=${entity}`}>
-                Search {title}
-            </a>
-        );
+    const buildLinks = () => {
+        let res = []
+        for (let b in validButtons) {
+            let condition = onCondition(b)
+            if (!eq(title, b) && condition.canShow) {
+                res.push (
+                    <a key={b} className="btn btn-outline-primary rounded-0 w-100 js-searchType mt-2"
+                       href={`${validButtons[b]}${condition.entity ? `?addFilters=entity_type=${condition.entity}` : ''}`}>
+                        Search {b}
+                    </a>
+                );
+            }
+
+        }
+
+        setLinks(res)
     };
 
-    if (!visible) return <></>
+    useEffect(() => {
+        buildLinks()
+    }, [filters]);
 
     return (
-        <>{createLinkView(validButtons[title])}</>
+        <>{links}</>
     );
 };
 

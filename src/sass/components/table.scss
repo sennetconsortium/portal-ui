@@ -1,6 +1,24 @@
 @use "../config/swatch";
 
 .table {
+  &__cellFiles {
+    max-height: 100px;
+    overflow-y: auto !important;
+  }
+  &__chips {
+    cursor: default;
+    .MuiChip-outlined {
+      display: inline-block;
+      height: 24px;
+      margin: 2px;
+    }
+
+    .MuiChip-label {
+      span {
+        color: swatch.$col-soot;
+      }
+    }
+  }
   &--derivedDataset {
     max-height: 300px;
     overflow: auto;

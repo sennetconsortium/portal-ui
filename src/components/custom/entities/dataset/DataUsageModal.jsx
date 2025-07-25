@@ -5,7 +5,7 @@ import {eq, getDatasetTypeDisplay} from "@/components/custom/js/functions";
 import {getCookie, setCookie} from "cookies-next";
 
 
-const DataUsageModal = ({data, filepath, includeIntroText = true}) => {
+const DataUsageModal = ({data, filepath, includeIntroText = false}) => {
     const [showModal, setShowModal] = useState(false)
     const [checked, setChecked] = useState(false)
     const [hasAgreedDUA, setHasAgreedDUA] = useState(false)
@@ -69,9 +69,11 @@ const DataUsageModal = ({data, filepath, includeIntroText = true}) => {
 
     return (
         <>
-            <p><a
+            <p>{includeIntroText && <span>Files for this <code>{data.entity_type}</code> are available through the
+                Globus Research Data Management System.
+                Access </span>}<a
                 onClick={() => hasAgreedDUA ? window.open(filepath, '_blank') : displayModal()}
-                className="lnk lnk--ic ">{`${getDatasetTypeDisplay(data)} (${data.sennet_id}`}) <i
+                className="lnk lnk--ic ">{`${getDatasetTypeDisplay(data)} (${data.sennet_id || data.dataset_sennet_id}`}) <i
                 className="bi bi-box-arrow-up-right"></i></a>
             </p>
             <Modal size="lg" show={showModal} keyboard={false}>
