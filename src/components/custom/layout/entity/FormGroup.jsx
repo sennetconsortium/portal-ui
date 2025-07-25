@@ -64,7 +64,7 @@ EntityFormGroup.propTypes = {
     children: PropTypes.node,
     controlId: PropTypes.string.isRequired,
     label: PropTypes.string.isRequired,
-    onChange: PropTypes.func.isRequired,
+    onChange: PropTypes.func,
     value: PropTypes.string,
     isDisabled: PropTypes.bool,
     isRequired: PropTypes.bool,
