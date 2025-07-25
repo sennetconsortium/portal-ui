@@ -11,22 +11,104 @@ const connector = new SearchAPIConnector({
     indexName: getFilesIndex(),
     indexUrl: getSearchEndPoint(),
     accessToken: getAuth(),
+    beforeSearchCall: (queryOptions, next) => {
+
+        queryOptions.collapse=  {
+            "field" : "dataset_uuid.keyword",
+                "inner_hits": {
+                "name": "files",
+                    "size": 5,
+                    "sort": [{ "dataset_uuid.keyword": "asc" }]
+            },
+            "max_concurrent_group_searches": 4
+        };
+        // append additional aggregations needs for the table
+        const aggs = queryOptions.aggs || {};
+        aggs.total_datasets = {
+            cardinality: {
+                field: "dataset_uuid.keyword"
+            }
+        };
+        aggs.table_file_extension = {
+            composite: {
+                size: 40,
+                sources: [
+                    {
+                        "dataset_uuid.keyword": {
+                            terms: {
+                                field: "dataset_uuid.keyword"
+                            }
+                        }
+                    },
+                    {
+                        "file_extension.keyword": {
+                            terms: {
+                                field: "file_extension.keyword"
+                            }
+                        }
+                    }
+                ]
+            }
+        }
+        aggs.table_organs = {
+            composite: {
+                size: 40,
+                sources: [
+                    {
+                        "dataset_uuid.keyword": {
+                            terms: {
+                                field: "dataset_uuid.keyword"
+                            }
+                        }
+                    },
+                    {
+                        "organs.label.keyword": {
+                            terms: {
+                                field: "organs.label.keyword"
+                            }
+                        }
+                    }
+                ]
+            }
+        };
+        aggs.table_dataset_type = {
+            composite: {
+                size: 40,
+                sources: [
+                    {
+                        "dataset_uuid.keyword": {
+                            terms: {
+                                field: "dataset_uuid.keyword"
+                            }
+                        }
+                    },
+                    {
+                        "dataset_type.keyword": {
+                            terms: {
+                                field: "dataset_type.keyword"
+                            }
+                        }
+                    }
+                ]
+            }
+        }
+        queryOptions.aggs = aggs;
+
+        return next(queryOptions)
+    }
 })
 
 const sourceItems = [
-    'sennet_id',
-    'dataset_sennet_id',
-    'checksum',
-    'dataset_type',
-    'description',
+    'md5_checksum',
+    'sha256_checksum',
     'dataset_uuid',
-    'donors',
+    'dataset_type',
     'file_extension',
-    'file_info_refresh_timestamp',
+    'file_uuid',
     'organs',
+    'size',
     'rel_path',
-    'samples',
-    'size'
+    'sources.source_type'
 ]
 
 export const SEARCH_FILES = {
@@ -49,16 +131,16 @@ export const SEARCH_FILES = {
                 isAggregationActive: true,
                 isFacetVisible: doesAggregationHaveBuckets('file_extension')
             },
-            'organs.type': {
+            'organs.label': {
                 label: 'Organs',
                 type: 'value',
-                field: 'organs.type.keyword',
+                field: 'organs.label.keyword',
                 isExpanded: false,
                 filterType: 'any',
                 isFilterable: false,
                 facetType: 'term',
                 isAggregationActive: true,
-                isFacetVisible: doesAggregationHaveBuckets('organs.type')
+                isFacetVisible: doesAggregationHaveBuckets('organs.label')
             },
             dataset_type: {
                 label: 'Dataset Type',
@@ -92,14 +174,16 @@ export const SEARCH_FILES = {
             dataset_sennet_id: {type: 'value'},
             dataset_type: {type: 'value'}
         },
-        source_fields: sourceItems
+        source_fields: sourceItems,
+        // Moving this configuration into `searchQuery` so the config inside search-tools can read this
+        trackTotalHits: true,
     },
     initialState: {
         current: 1,
         resultsPerPage: 20,
         sortList: [{
-            field: 'source.file_info_refresh_timestamp',
-            direction: 'desc'
+            field: 'dataset_uuid.keyword',
+            direction: 'asc'
         }]
     },
     urlPushDebounceLength: 100,

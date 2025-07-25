@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react'
+import React, {useContext, useEffect, useState} from 'react'
 import PropTypes from 'prop-types'
 import {opsDict, ResultsPerPage} from "./ResultsPerPage";
 import DataTable from "react-data-table-component";
@@ -11,7 +11,7 @@ import {eq} from '../js/functions'
 import {COLS_ORDER_KEY} from "@/config/config";
 import Spinner from '../Spinner';
 
-function ResultsBlock({getTableColumns, disableRowClick, tableClassName = '', defaultHiddenColumns = [], searchContext}) {
+function ResultsBlock({getTableColumns, disableRowClick, tableClassName = '', defaultHiddenColumns = [], searchContext, totalRows, isBusy}) {
 
     const {
         getTableData,
@@ -25,12 +25,19 @@ function ResultsBlock({getTableColumns, disableRowClick, tableClassName = '', de
         handleRowsPerPageChange,
         handleOnRowClicked,
         handlePageChange,
-        isLoading,
+        isSearching,
+        setIsSearching,
         rawResponse,
         updateTablePagination,
         pageSize,
         pageNumber,
     } = useContext(TableResultsContext)
+
+    useEffect(() => {
+        if (isBusy !== undefined) {
+            setIsSearching(isBusy)
+        }
+    }, [isBusy]);
 
 
     const [hiddenColumns, setHiddenColumns] = useState(null)
@@ -45,7 +52,7 @@ function ResultsBlock({getTableColumns, disableRowClick, tableClassName = '', de
                     <ResultsPerPage updateTablePagination={updateTablePagination}
                                     resultsPerPage={pageSize}
                                     setResultsPerPage={setResultsPerPage}
-                                    totalRows={rawResponse.record_count}  />
+                                    totalRows={totalRows || rawResponse.record_count}  />
                 </div>
             </div>
 
@@ -74,8 +81,8 @@ function ResultsBlock({getTableColumns, disableRowClick, tableClassName = '', de
                         pagination
                         paginationServer
                         paginationDefaultPage={pageNumber}
-                        paginationTotalRows={rawResponse.record_count}
-                        progressPending={isLoading}
+                        paginationTotalRows={totalRows || rawResponse.record_count}
+                        progressPending={isSearching}
                         progressComponent={<Spinner />}
                 />}
         </>
