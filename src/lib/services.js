@@ -456,10 +456,31 @@ export const getOrganDataTypeQuantities = async (organCodes) => {
             }
         },
         aggs: {
-            dataset_type: {
+            dataset_type_hierarchy: {
                 terms: {
-                    field: 'dataset_type_hierarchy.second_level.keyword',
+                    field: 'dataset_type_hierarchy.first_level.keyword',
                     size: 40
+                }
+            },
+            dataset_types: {
+                composite: {
+                    size: 40,
+                    sources: [
+                        {
+                            'dataset_type_hierarchy.first_level.keyword': {
+                                terms: {
+                                    field: 'dataset_type_hierarchy.first_level.keyword'
+                                }
+                            }
+                        },
+                        {
+                            'dataset_type_hierarchy.second_level.keyword': {
+                                terms: {
+                                    field: 'dataset_type_hierarchy.second_level.keyword'
+                                }
+                            }
+                        }
+                    ]
                 }
             }
         }
@@ -468,13 +489,28 @@ export const getOrganDataTypeQuantities = async (organCodes) => {
     if (!content) {
         return null;
     }
-    return content.aggregations['dataset_type'].buckets.reduce(
+
+    let response = {}
+    response['dataset_types'] = content.aggregations['dataset_types'].buckets.reduce(
+        (acc, bucket) => {
+            if (bucket.key['dataset_type_hierarchy.first_level.keyword'] in acc) {
+                acc[bucket.key['dataset_type_hierarchy.first_level.keyword']].push(bucket.key['dataset_type_hierarchy.second_level.keyword'])
+            } else {
+                acc[bucket.key['dataset_type_hierarchy.first_level.keyword']] = [bucket.key['dataset_type_hierarchy.second_level.keyword']];
+            }
+            return acc;
+        },
+        {}
+    )
+
+    response['dataset_type_hierarchy'] = content.aggregations['dataset_type_hierarchy'].buckets.reduce(
         (acc, bucket) => {
             acc[bucket.key] = bucket.doc_count;
             return acc;
         },
         {}
     );
+    return response;
 }
 
 export const getOrganQuantities = async () => {
