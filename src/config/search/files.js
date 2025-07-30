@@ -168,6 +168,7 @@ export const SEARCH_FILES = {
         conditionalFacets: {},
         search_fields: {
             rel_path: {type: 'value'},
+            description: {type: 'value'},
             file_extension: {type: 'value'},
             'organs.type': {type: 'value'},
             'samples.type': {type: 'value'},

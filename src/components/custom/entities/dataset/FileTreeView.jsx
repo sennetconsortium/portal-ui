@@ -5,7 +5,7 @@ import Link from "next/link";
 import DerivedContext from "@/context/DerivedContext";
 import {FILE_KEY_SEPARATOR, getAssetsEndpoint, getAuth} from "@/config/config";
 import SenNetPopover, {SenPopoverOptions} from "../../../SenNetPopover";
-import {formatByteSize, getDatasetTypeDisplay} from "../../js/functions";
+import {formatByteSize, getDatasetTypeDisplay, urlify} from "../../js/functions";
 import {Button, Row} from 'react-bootstrap';
 import Col from 'react-bootstrap/Col';
 import ToggleButton from 'react-bootstrap/ToggleButton';
@@ -166,9 +166,9 @@ export const FileTreeView = ({data, selection = {}, keys = {files: 'files', uuid
                                href={`${getAssetsURL(node.data.uuid, node.data.rel_path)}`}><span
                                className="me-1">{node.label}</span>
                             </a>
-                            {!includeDescription && <SenNetPopover className={`file-${node.label}`}
-                                           trigger={SenPopoverOptions.triggers.hover}
-                                           text={`${node.data.description}`}><i className="bi bi-info-circle-fill"></i>
+                            {!includeDescription && <SenNetPopover className={`file-${self.crypto.randomUUID()}`}
+                                           trigger={SenPopoverOptions.triggers.hoverOnClickOff}
+                                           text={<div dangerouslySetInnerHTML={{__html: urlify(node.data.description)}}></div>}><i className="bi bi-info-circle-fill"></i>
                             </SenNetPopover>}
                         </Col>
                         <Col md={2} sm={2} className={"text-end"}>
