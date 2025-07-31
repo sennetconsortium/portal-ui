@@ -173,7 +173,8 @@ export const SEARCH_FILES = {
             'organs.type': {type: 'value'},
             'samples.type': {type: 'value'},
             dataset_sennet_id: {type: 'value'},
-            dataset_type: {type: 'value'}
+            dataset_type: {type: 'value'},
+            all_text: {type: 'value'}
         },
         source_fields: sourceItems,
         // Moving this configuration into `searchQuery` so the config inside search-tools can read this
