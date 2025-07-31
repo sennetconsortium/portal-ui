@@ -467,14 +467,12 @@ function ProvenanceGraph({ data }) {
             filterValue: 'PrimaryDataset',
         },
         DatasetComponent: {
-            iconContainerClass: 'c-help',
             icon: 'shape shape--triangle',
             filterValue: 'ComponentDataset',
             name: 'Dataset (Component)',
             title: 'Dataset (Component)'
         },
         DatasetDerived: {
-            iconContainerClass: 'c-help',
             icon: 'shape shape--blob',
             filterValue: 'ProcessedDataset',
             title: 'Dataset (Derived)',

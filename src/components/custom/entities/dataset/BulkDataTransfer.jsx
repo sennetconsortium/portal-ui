@@ -123,15 +123,15 @@ function BulkDataTransfer({data, entityType}) {
                 c = notLoggedIn(d)
             }
 
-            if (eq(entityType, "Upload") || eq(entityType, "Publication")) {
-                res.push(<Tab key={d.sennet_id} eventKey={d.sennet_id} title={<span className={'c-help'}><span
-                    title={entityType}>{data.sennet_id}</span></span>}>
+            if (["Upload", "Publication"].contains(entityType)) {
+                res.push(<Tab key={d.sennet_id} eventKey={d.sennet_id} title={<span
+                    title={entityType}>{data.sennet_id}</span>}>
                     <div className={'my-3'}>{c}</div>
                 </Tab>)
             } else {
-                res.push(<Tab key={d.sennet_id} eventKey={d.sennet_id} title={<span className={'c-help'}><span
+                res.push(<Tab key={d.sennet_id} eventKey={d.sennet_id} title={<span
                     title={getCreationActionRelationName(d.creation_action)}
-                    className={`shape shape--${d.shape} ${eq(d.shape, 'circle') ? 'green' : ''}`}>{getDatasetTypeDisplay(d)}</span></span>}>
+                    className={`shape shape--${d.shape} ${eq(d.shape, 'circle') ? 'green' : ''}`}>{getDatasetTypeDisplay(d)}</span>}>
                     <div className={'my-3'}>{c}</div>
                 </Tab>)
             }
