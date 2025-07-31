@@ -107,6 +107,7 @@ function TableResultsFiles({children, filters, forData = false, rowFn, inModal =
                     dataset_type: list[0].dataset_type,
                     dataset_sennet_id: list[0].dataset_sennet_id,
                     dataset_uuid: list[0].dataset_uuid,
+                    description: list[0].description,
                     donors: list[0].donors,
                     id: list[0].dataset_uuid,
                     organs: list[0].organs,
@@ -255,7 +256,7 @@ function TableResultsFiles({children, filters, forData = false, rowFn, inModal =
                         )
                         i++
                     }
-                    return (<div>{raw(row.description)} {raw(row.description) && <br />}
+                    return (<div>
                         {paths.length > 2 ? paths.slice(0, 2) : paths}
                         {paths.length > 2 && <SenNetPopover text={'View more files details'} className={`popover-${getId(row)}`}>
                             <Chip label={<MoreHorizIcon />} size="small" onClick={()=> filesModal(row)} />

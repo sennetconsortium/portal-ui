@@ -3,6 +3,10 @@
 .popover {
   z-index: 10000 !important;
 
+  .popover-body {
+    word-break: break-word;
+  }
+
   &-clipboard {
     &-pc {
       &:hover {
