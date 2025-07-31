@@ -53,11 +53,11 @@ const Organ = () => {
 
                                 <li className='nav-item'>
                                     <a
-                                        href='#DataTypes'
+                                        href='#DatasetTypes'
                                         className='nav-link'
                                         data-bs-parent='#sidebar'
                                     >
-                                        Data Types
+                                        Dataset Types
                                     </a>
                                 </li>
                                 <li className='nav-item'>
@@ -89,7 +89,7 @@ const Organ = () => {
 
                         {/* Data Types */}
                         <DataTypeQuantities
-                            id='DataTypes'
+                            id='DatasetTypes'
                             organ={organDetail}
                         />
 
