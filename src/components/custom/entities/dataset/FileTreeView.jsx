@@ -166,7 +166,7 @@ export const FileTreeView = ({data, selection = {}, keys = {files: 'files', uuid
                                href={`${getAssetsURL(node.data.uuid, node.data.rel_path)}`}><span
                                className="me-1">{node.label}</span>
                             </a>
-                            {!includeDescription && <SenNetPopover className={`file-${self.crypto.randomUUID()}`}
+                            {!includeDescription && node.data.description && <SenNetPopover className={`file-${self.crypto.randomUUID()}`}
                                            trigger={SenPopoverOptions.triggers.hoverOnClickOff}
                                            text={<div dangerouslySetInnerHTML={{__html: urlify(node.data.description)}}></div>}><i className="bi bi-info-circle-fill"></i>
                             </SenNetPopover>}
@@ -177,7 +177,7 @@ export const FileTreeView = ({data, selection = {}, keys = {files: 'files', uuid
                         <Col md={2} sm={2} className={"text-end"}>
                             {formatByteSize(node.data.size)}
                         </Col>
-                        {includeDescription && <span>{node.data.description}</span>}
+                        {includeDescription && node.data.description && <span>{node.data.description}</span>}
                     </Row>) : (<>{node.label}</>)}
             </Fragment>
         );
@@ -271,7 +271,7 @@ export const FileTreeView = ({data, selection = {}, keys = {files: 'files', uuid
             data: {
                 uuid: uuid,
                 rel_path: file.rel_path,
-                description: file.description || file.rel_path,
+                description: file.description,
                 is_qa_qc: file?.is_qa_qc?.toString(),
                 is_data_product: file?.is_data_product?.toString(),
                 size: file.size
@@ -321,7 +321,7 @@ export const FileTreeView = ({data, selection = {}, keys = {files: 'files', uuid
                         data: {
                             uuid: uuid,
                             rel_path: file.rel_path,
-                            description: file.description || file.rel_path,
+                            description: file.description,
                             is_qa_qc: file?.is_qa_qc,
                             is_data_product: file?.is_data_product,
                             size: file.size
