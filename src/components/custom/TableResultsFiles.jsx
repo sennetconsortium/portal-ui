@@ -258,9 +258,9 @@ function TableResultsFiles({children, filters, forData = false, rowFn, inModal =
                     }
                     return (<div>
                         {paths.length > 2 ? paths.slice(0, 2) : paths}
-                        {paths.length > 2 && <SenNetPopover text={'View more files details'} className={`popover-${getId(row)}`}>
+                        <SenNetPopover text={'View more files details'} className={`popover-${getId(row)}`}>
                             <Chip label={<MoreHorizIcon />} size="small" onClick={()=> filesModal(row)} />
-                        </SenNetPopover>}
+                        </SenNetPopover>
                     </div>)
                 }
             }
