@@ -34,7 +34,8 @@ function BodyContent({ handleChangeAncestor, data }) {
         if (!includedExclude.current && data && data.uuid) {
             includedExclude.current = true
             valid_dataset_ancestor_config['searchQuery']['excludeFilters'].push({
-                keyword: "uuid.keyword",
+                type: 'term',
+                field: "uuid.keyword",
                 value: data['uuid']
             })
         }
