@@ -252,7 +252,6 @@ function EditSource() {
 
                                     {/*Case Selection Protocol*/}
                                     <EntityFormGroup label="Case Selection Protocol" placeholder='protocols.io DOI'
-                                                     popoverTrigger={SenPopoverOptions.triggers.hoverOnClickOff}
                                                      controlId='protocol_url' value={data.protocol_url}
                                                      isRequired={true}
                                                      className={warningClasses.protocol_url}

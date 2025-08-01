@@ -513,7 +513,6 @@ function EditSample() {
                                                          correct but does not resolve. This will need to be corrected
                                                          for any <code>Dataset</code> submission that uses this entity
                                                          as an ancestor.</>}
-                                                     popoverTrigger={SenPopoverOptions.triggers.hoverOnClickOff}
                                                      onChange={_onChange}
                                                      popoverHelpText={<span>The protocol used when procuring or preparing the tissue. This must be provided as a protocols.io DOI URL see: <a
                                                          href="https://www.protocols.io/." target='_blank'

@@ -1,21 +1,8 @@
 @use "../config/swatch";
 
+// This popover is the one seen in the table when a user tries to select the same ancestor
 .popover {
   z-index: 10000 !important;
-
-  .popover-body {
-    word-break: break-word;
-  }
-
-  &-clipboard {
-    &-pc {
-      &:hover {
-        svg {
-          fill: var(--bs-link-hover-color)
-        }
-      }
-    }
-  }
 
   &.is-error {
     color: swatch.$col-err-txt;
