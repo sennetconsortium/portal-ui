@@ -38,17 +38,19 @@ function SenNetPopover({children, text, placement = SenPopoverOptions.placement.
         }, 2000)
     }
 
-    const disableHover = eq(trigger, SenPopoverOptions.triggers.click) ? true : undefined
+    const isClickTrigger = eq(trigger, SenPopoverOptions.triggers.click)
 
-    const popover = <Tooltip open={eq(trigger, SenPopoverOptions.triggers.click) ? (show || showTooltip) : undefined}
-                                  onClose={eq(trigger, SenPopoverOptions.triggers.click) ? handleTooltipClose : undefined}
+    const disableHover = isClickTrigger ? true : undefined
+
+    const popover = <Tooltip open={isClickTrigger ? (show || showTooltip) : undefined}
+                                  onClose={isClickTrigger ? handleTooltipClose : undefined}
                                   classes={{ popper: 'snPopover' }}
                                   disableFocusListener={disableHover}
                                   disableHoverListener={disableHover}
                                   disableTouchListener={disableHover}
                                   placement={placement} title={text}
                                   arrow slots={{transition: Zoom}}>
-            <span onClick={eq(trigger, SenPopoverOptions.triggers.click) ? handleTooltipOpen : undefined} className={triggerClassName} style={{display: 'inline-block'}}>
+            <span onClick={isClickTrigger ? handleTooltipOpen : undefined} className={triggerClassName} style={{display: 'inline-block'}}>
                 {children}
             </span>
     </Tooltip>
