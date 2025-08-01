@@ -1,7 +1,6 @@
 import React, {useState} from 'react'
 import PropTypes from 'prop-types'
-import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
-import { styled } from '@mui/material/styles';
+import Tooltip from '@mui/material/Tooltip';
 import Zoom from "@mui/material/Zoom";
 import {
     eq,
@@ -22,17 +21,6 @@ export const SenPopoverOptions = {
 
 }
 
-const LightTooltip = styled(({ className, ...props }) => (
-    <Tooltip {...props} classes={{ popper: className }} />
-))(({ theme }) => ({
-    [`& .${tooltipClasses.tooltip}`]: {
-        backgroundColor: theme.palette.common.white,
-        color: 'rgba(0, 0, 0, 0.87)',
-        boxShadow: theme.shadows[1],
-        fontSize: 11,
-    },
-}));
-
 
 function SenNetPopover({children, text, placement = SenPopoverOptions.placement.top, className = 'sen-popover', trigger = SenPopoverOptions.triggers.hover, show}) {
 
@@ -52,20 +40,18 @@ function SenNetPopover({children, text, placement = SenPopoverOptions.placement.
 
     const disableHover = eq(trigger, SenPopoverOptions.triggers.click) ? true : undefined
 
-    const popover = <LightTooltip open={eq(trigger, SenPopoverOptions.triggers.click) ? (show || showTooltip) : undefined}
+    const popover = <Tooltip open={eq(trigger, SenPopoverOptions.triggers.click) ? (show || showTooltip) : undefined}
                                   onClose={eq(trigger, SenPopoverOptions.triggers.click) ? handleTooltipClose : undefined}
-                                  className={'snPopover'}
+                                  classes={{ popper: 'snPopover' }}
                                   disableFocusListener={disableHover}
                                   disableHoverListener={disableHover}
                                   disableTouchListener={disableHover}
                                   placement={placement} title={text}
-                                  arrow slots={{
-        transition: Zoom,
-    }}>
+                                  arrow slots={{transition: Zoom}}>
             <span onClick={eq(trigger, SenPopoverOptions.triggers.click) ? handleTooltipOpen : undefined} className={triggerClassName} style={{display: 'inline-block'}}>
                 {children}
             </span>
-    </LightTooltip>
+    </Tooltip>
 
     if (disableHover) {
         return (
