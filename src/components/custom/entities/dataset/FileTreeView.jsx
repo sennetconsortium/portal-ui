@@ -167,7 +167,7 @@ export const FileTreeView = ({data, selection = {}, keys = {files: 'files', uuid
                                className="me-1">{node.label}</span>
                             </a>
                             {!includeDescription && node.data.description && <SenNetPopover className={`file-${self.crypto.randomUUID()}`}
-                                           trigger={SenPopoverOptions.triggers.hoverOnClickOff}
+
                                            text={<div dangerouslySetInnerHTML={{__html: urlify(node.data.description)}}></div>}><i role={'presentation'} className="bi bi-info-circle-fill cursor-pointer"></i>
                             </SenNetPopover>}
                         </Col>

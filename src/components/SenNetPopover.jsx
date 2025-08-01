@@ -16,9 +16,9 @@ export const SenPopoverOptions = {
       bottom: 'bottom'
     },
     triggers: {
-        hover: ['hover', 'focus'],
+
         click: 'click',
-        hoverOnClickOff: 'hover-on-click-off'
+        hover: 'hover'
     }
 
 }
@@ -35,7 +35,7 @@ const LightTooltip = styled(({ className, ...props }) => (
 }));
 
 
-function SenNetPopover({children, text, placement = SenPopoverOptions.placement.top, className = 'sen-popover', trigger = SenPopoverOptions.triggers.hoverOnClickOff, show}) {
+function SenNetPopover({children, text, placement = SenPopoverOptions.placement.top, className = 'sen-popover', trigger = SenPopoverOptions.triggers.hover, show}) {
 
     const [showTooltip, setShowTooltip] = useState(false)
     const triggerClassName = `${className}-pc`
