@@ -1,6 +1,7 @@
 import React, {createContext, useEffect, useState, useContext, useRef} from 'react'
 import { useRouter } from 'next/router'
 import {
+    getAuthJsonHeaders,
     getProviderGroups,
     getReadWritePrivileges,
     getUserWriteGroups,
@@ -10,7 +11,7 @@ import {APP_ROUTES} from '@/config/constants'
 import AppModal from '@/components/AppModal'
 import AppContext from './AppContext'
 import {eq, fetchProtocols, getHeaders, getUBKGFullName} from "@/components/custom/js/functions";
-import {getEntityEndPoint} from "@/config/config";
+import {getEntityEndPoint, getIngestEndPoint} from "@/config/config";
 import {Button} from 'react-bootstrap'
 import TaskAltIcon from '@mui/icons-material/TaskAlt';
 import WarningAmberIcon from '@mui/icons-material/WarningAmber';
@@ -389,6 +390,32 @@ export const EntityProvider = ({ children }) => {
         return ((isUnauthorized() || isAuthorizing()) || !data)
     }
 
+    const handleValidate = async (entityType) => {
+        const url = getIngestEndPoint() + `${entityType}/validate`;
+        const requestOptions = {
+            method: 'POST',
+            headers: getAuthJsonHeaders(),
+            body: JSON.stringify([data.uuid])
+        }
+        const resp = await fetch(url, requestOptions)
+        const json = await resp.json()
+        const hasError =  !['200', '202'].contains(`${resp.status}`)
+
+        setAllModalDetails({
+            title: <span>Validation results</span>,
+            isWarning: hasError,
+            modalProps: {
+                className: hasError ? 'is-error' : '',
+                secondaryBtnHandler: () => {
+                    setDisableSubmit(false)
+                    setShowModal(false)
+                    setModalProps({})
+                }
+            },
+            body: <code>{JSON.stringify(json)}</code>
+        })
+    }
+
     return (
         <EntityContext.Provider
             value={{
@@ -411,7 +438,7 @@ export const EntityProvider = ({ children }) => {
                 disableSubmit, setDisableSubmit,
                 getEntityConstraints, getSampleEntityConstraints, buildConstraint,
                 getMetadataNote, successIcon, errIcon, checkProtocolUrl,
-                warningClasses, setWarningClasses, getCancelBtn, setModalProps,
+                warningClasses, setWarningClasses, getCancelBtn, setModalProps, handleValidate,
                 isAdminOrHasValue, getAssignedToGroupNames, entityForm, disabled, setDisabled, disableElements,
                 contactsTSV, contacts, setContacts, contributors, setContributors, setContactsAttributes, setContactsAttributesOnFail
             }}

@@ -45,7 +45,7 @@
     padding: 0;
   }
 
-  @include mixins.sm {
+  @include mixins.xsm {
     padding: 0;
   }
 
@@ -53,6 +53,9 @@
     padding-left: 0;
     &.smcHolder--hasSib {
       padding-right: calc(var(--bs-gutter-x) * 0.2);
+      @include mixins.xsm {
+        padding: 0;
+      }
     }
   }
 
@@ -71,6 +74,9 @@
     padding-right: 0;
     &.smcHolder--hasSib {
       padding-left: calc(var(--bs-gutter-x) * 0.2);
+      @include mixins.xsm {
+        padding: 0;
+      }
     }
   }
 

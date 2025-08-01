@@ -19,15 +19,18 @@ import {RESULTS_PER_PAGE} from "@/config/config";
  */
 const DataTypeQuantities = ({ id, organ }) => {
     const { setLocalSettings } = useLocalSettings()
-    const [dataTypes, setDataTypes] = useState(null)
+    const [datasetTypeHierarchy, setDatasetTypeHierarchy] = useState(null)
+    const [datasetTypes, setDatasetTypes] = useState(null)
 
     useEffect(() => {
         const getQuantities = async () => {
             const qtys = await getOrganDataTypeQuantities(organ.codes)
-            const res = Object.entries(qtys || []).map((qty) => {
-                return { dataType: qty[0], count: qty[1] }
+            const hierarchy = Object.entries(qtys['dataset_type_hierarchy'] || []).map((qty) => {
+                return { datasetTypeHierarchy: qty[0], count: qty[1] }
             })
-            setDataTypes(res)
+            setDatasetTypeHierarchy(hierarchy)
+
+            setDatasetTypes(qtys['dataset_types'])
         }
         getQuantities()
     }, [organ])
@@ -37,11 +40,11 @@ const DataTypeQuantities = ({ id, organ }) => {
         { field: 'origin_samples.organ', values: organ.codes, type: 'any' }
     ], 20)
 
-    const searchUrlForDatasetType = (datasetType) => {
+    const searchUrlForDatasetType = (types) => {
         return `${APP_ROUTES.search}?` + searchUIQueryString([
             { field: 'entity_type', values: ['Dataset'], type: 'any' },
             { field: 'origin_samples.organ', values: organ.codes, type: 'any' },
-            { field: 'dataset_type', values: [datasetType], type: 'any' }
+            { field: 'dataset_type', values: types, type: 'any' }
         ], 20)
     }
 
@@ -73,10 +76,10 @@ const DataTypeQuantities = ({ id, organ }) => {
             cell: (row, index, column, id) => {
                 return (
                     <Link
-                        href={searchUrlForDatasetType(row.dataType)}
+                        href={searchUrlForDatasetType(datasetTypes[row.datasetTypeHierarchy])}
                         onClick={handleDatasetTypeRowClick}
                     >
-                        {row.dataType}
+                        {row.datasetTypeHierarchy}
                     </Link>
                 )
             }
@@ -99,10 +102,10 @@ const DataTypeQuantities = ({ id, organ }) => {
                     View on search page
                 </Link>
             </div>
-            {dataTypes && (
+            {datasetTypeHierarchy && (
                 <DataTable
                     columns={columns}
-                    data={dataTypes}
+                    data={datasetTypeHierarchy}
                     fixedHeader={true}
                     paginationRowsPerPageOptions={RESULTS_PER_PAGE}
                     pagination
