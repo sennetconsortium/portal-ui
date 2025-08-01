@@ -252,7 +252,11 @@ function TableResultsFiles({children, filters, forData = false, rowFn, inModal =
                     let i = 0
                     for (let item of row.list) {
                         paths.push(
-                            <span key={`rel_path_${i}`} className={'cell-nowrap'}><span className={'pi pi-fw pi-file'} role={'presentation'}></span><small><a data-field='rel_path' href={'#'}>{raw(item.rel_path)}</a></small><br /></span>
+                            <span key={`rel_path_${i}`} className={'cell-nowrap'}>
+                                <span className={'pi pi-fw pi-file'} role={'presentation'}></span>
+                                <small><span role={'button'} aria-label={`View more details for ${raw(item.rel_path)}`} className={'text-decoration-underline'} data-field='rel_path' onClick={()=> filesModal(row)}>{raw(item.rel_path)}</span></small>
+                                <br />
+                            </span>
                         )
                         i++
                     }
