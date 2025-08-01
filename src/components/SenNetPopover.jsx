@@ -16,7 +16,6 @@ export const SenPopoverOptions = {
       bottom: 'bottom'
     },
     triggers: {
-
         click: 'click',
         hover: 'hover'
     }
@@ -46,9 +45,9 @@ function SenNetPopover({children, text, placement = SenPopoverOptions.placement.
 
     const handleTooltipOpen = () => {
         setShowTooltip(true)
-        setTimeout(()=>{
-            setShowTooltip(false)
-        }, 2000)
+        // setTimeout(()=>{
+        //     setShowTooltip(false)
+        // }, 2000)
     }
 
     const disableHover = eq(trigger, SenPopoverOptions.triggers.click) ? true : undefined
