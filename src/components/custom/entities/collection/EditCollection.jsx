@@ -416,7 +416,6 @@ export default function EditCollection({collectionType='Collection', entitiesTab
                                                  otherWithAdd={<>&nbsp; &nbsp;
                                                      <SenNetPopover
                                                          placement={SenPopoverOptions.placement.top}
-                                                         trigger={SenPopoverOptions.triggers.hoverOnClickOff}
                                                          className={`c-metadataUpload__popover--entity_uuids`}
                                                          text={bulkAddBtnTooltip}
                                                      ><Button variant="outline-secondary rounded-0 mt-1"
@@ -454,7 +453,6 @@ export default function EditCollection({collectionType='Collection', entitiesTab
                                                                onChange={handleBulkAddTextChange}/>
                                                      <SenNetPopover
                                                          placement={SenPopoverOptions.placement.top}
-                                                         trigger={SenPopoverOptions.triggers.hover}
                                                          className={`c-metadataUpload__popover--btnClose`}
                                                          text={<span>Click here to cancel/close this field.</span>}
                                                      >
@@ -465,7 +463,6 @@ export default function EditCollection({collectionType='Collection', entitiesTab
 
                                                      {bulkAddField && bulkAddTextareaVal && <SenNetPopover
                                                          placement={SenPopoverOptions.placement.bottom}
-                                                         trigger={SenPopoverOptions.triggers.hover}
                                                          className={`c-metadataUpload__popover--btnAdd`}
                                                          text={
                                                              <span>Click here to bulk add <code>Entities</code> to the <code>Collection</code></span>}

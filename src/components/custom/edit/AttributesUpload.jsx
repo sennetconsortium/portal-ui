@@ -240,7 +240,7 @@ function AttributesUpload({ setAttribute, attribute = 'metadata', ingestEndpoint
                        name='entity_metadata' ref={attributeInputRef}/>
 
                 <SenNetPopover placement={SenPopoverOptions.placement.right}
-                               trigger={SenPopoverOptions.triggers.hoverOnClickOff}
+                               trigger={SenPopoverOptions.triggers.hover}
                                className={`c-metadataUpload__popover--${attribute}`}
                                text={getTooltip()}
                 >

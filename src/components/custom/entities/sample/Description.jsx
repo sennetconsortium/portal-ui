@@ -147,7 +147,7 @@ export default function Description({data, citationData, labId, primaryDateTitle
                     <Card.Body>
                         <Card.Subtitle>Citation &nbsp;
                             <SenNetPopover text={<span>Citation is provided in AMA format.</span>}
-                                           trigger={SenPopoverOptions.triggers.hover}
+
                                            className={`popover-citation`}>
                                 <i className="bi bi-question-circle-fill"></i>
                             </SenNetPopover>

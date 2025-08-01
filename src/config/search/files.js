@@ -4,7 +4,6 @@ import {
     getAuth,
     getFilesIndex,
     getSearchEndPoint,
-    isDateFacetVisible
 } from '../config';
 
 const connector = new SearchAPIConnector({
@@ -17,7 +16,7 @@ const connector = new SearchAPIConnector({
             "field" : "dataset_uuid.keyword",
                 "inner_hits": {
                 "name": "files",
-                    "size": 5,
+                    "size": 20,
                     "sort": [{ "dataset_uuid.keyword": "asc" }]
             },
             "max_concurrent_group_searches": 4
@@ -31,7 +30,7 @@ const connector = new SearchAPIConnector({
         };
         aggs.table_file_extension = {
             composite: {
-                size: 40,
+                size: 10000,
                 sources: [
                     {
                         "dataset_uuid.keyword": {
@@ -131,8 +130,19 @@ export const SEARCH_FILES = {
                 isAggregationActive: true,
                 isFacetVisible: doesAggregationHaveBuckets('file_extension')
             },
+            'sources.source_type': {
+                label: 'Source',
+                type: 'value',
+                field: 'sources.source_type.keyword',
+                isExpanded: false,
+                filterType: 'any',
+                isFilterable: false,
+                facetType: 'term',
+                isAggregationActive: true,
+                isFacetVisible: doesAggregationHaveBuckets('sources.source_type')
+            },
             'organs.label': {
-                label: 'Organs',
+                label: 'Organ',
                 type: 'value',
                 field: 'organs.label.keyword',
                 isExpanded: false,
@@ -152,27 +162,19 @@ export const SEARCH_FILES = {
                 facetType: 'term',
                 isAggregationActive: true,
                 isFacetVisible: doesAggregationHaveBuckets('dataset_type')
-            },
-            file_info_refresh_timestamp: {
-                label: 'Modification Date',
-                type: 'range',
-                field: 'file_info_refresh_timestamp',
-                isExpanded: false,
-                filterType: 'any',
-                isFilterable: true,
-                facetType: 'daterange',
-                isFacetVisible: isDateFacetVisible
-            },
+            }
         },
         disjunctiveFacets: [],
         conditionalFacets: {},
         search_fields: {
             rel_path: {type: 'value'},
+            description: {type: 'value'},
             file_extension: {type: 'value'},
             'organs.type': {type: 'value'},
             'samples.type': {type: 'value'},
             dataset_sennet_id: {type: 'value'},
-            dataset_type: {type: 'value'}
+            dataset_type: {type: 'value'},
+            all_text: {type: 'value'}
         },
         source_fields: sourceItems,
         // Moving this configuration into `searchQuery` so the config inside search-tools can read this

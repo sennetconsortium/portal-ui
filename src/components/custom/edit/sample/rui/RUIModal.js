@@ -3,16 +3,10 @@ import {Button, Modal} from 'react-bootstrap';
 import SenNetPopover, {SenPopoverOptions} from "../../../../SenNetPopover";
 
 const RUIModal = ({hide, show, tissueBlockSpatialData}) => {
-    const [showTooltip, setShowTooltip] = useState(false)
+
 
    const copyToClipboard = () => {
         navigator.clipboard.writeText(ruiLocation)
-        setShowTooltip(true)
-        let st
-        clearTimeout(st)
-        st = setTimeout(()=>{
-            setShowTooltip(false)
-        }, 2000)
     }
 
     let ruiLocation
@@ -37,7 +31,7 @@ const RUIModal = ({hide, show, tissueBlockSpatialData}) => {
                 </pre>
             </Modal.Body>
             <Modal.Footer>
-                <SenNetPopover text={'Copied!'} show={showTooltip} trigger={SenPopoverOptions.triggers.click}
+                <SenNetPopover text={'Copied!'} trigger={SenPopoverOptions.triggers.click}
                                className={`popover-clipboard`}>
                     <Button variant={'outline-primary'} className={'rounded-0'} onClick={copyToClipboard}>Copy</Button>
                 </SenNetPopover>
