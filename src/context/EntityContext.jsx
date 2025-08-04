@@ -412,7 +412,11 @@ export const EntityProvider = ({ children }) => {
                     setModalProps({})
                 }
             },
-            body: <code>{JSON.stringify(json)}</code>
+            body: <div>
+                {!hasError && <p>Validation has started for the following UUIDs: </p>}
+                {!hasError &&<code>{json.join(', ')}</code>}
+                {hasError &&<code>{JSON.stringify(json)}</code>}
+            </div>
         })
     }
 
