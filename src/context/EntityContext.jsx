@@ -414,7 +414,8 @@ export const EntityProvider = ({ children }) => {
             },
             body: <div>
                 {!hasError && <p>Validation has started for the following UUIDs: </p>}
-                <code>{JSON.stringify(json)}</code>
+                {!hasError &&<code>{json.join(', ')}</code>}
+                {hasError &&<code>{JSON.stringify(json)}</code>}
             </div>
         })
     }
