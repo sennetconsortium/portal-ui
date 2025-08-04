@@ -146,7 +146,7 @@ function BulkExport({ data = [], raw, columns, filters, exportKind, onCheckAll, 
                 }
             }
         }
-        return false
+        return document.getElementById('search')?.value.length > 0
     }
 
     const generateManifestData = (selected, isAll) => {
@@ -159,7 +159,7 @@ function BulkExport({ data = [], raw, columns, filters, exportKind, onCheckAll, 
                 let id = item.props ? raw(item.props.result.uuid) : raw(item.uuid) || raw(item.id)
                 if (isAll || selected[id]) {
                      if (!hasFileFilter() && eq(context, 'files')) {
-                        manifestData += `${id} /`
+                        manifestData += `${id} /\n`
                     } else if (item.list) {
                         for (let subItem of item.list) {
                             manifestData += `${raw(subItem.dataset_uuid)} /${raw(subItem.rel_path)}\n`
