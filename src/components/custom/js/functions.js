@@ -305,7 +305,7 @@ export const getSubtypeProvenanceShape = (t, cat, sz='sm') => {
             }
 
     }
-    return <span className={'c-help'}><span className={`shape shape--${sz} ${c} shape--${s}`} title={title}><span className={'shape-name'}>{t}</span></span></span>
+    return <span className={`shape shape--${sz} ${c} shape--${s}`} title={title}><span className={'shape-name'}>{t}</span></span>
 }
 
 export function getJobTypeColor(type) {
