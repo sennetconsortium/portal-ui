@@ -5,7 +5,7 @@ import Link from "next/link";
 import DerivedContext from "@/context/DerivedContext";
 import {FILE_KEY_SEPARATOR, getAssetsEndpoint, getAuth} from "@/config/config";
 import SenNetPopover, {SenPopoverOptions} from "../../../SenNetPopover";
-import {formatByteSize, getDatasetTypeDisplay} from "../../js/functions";
+import {formatByteSize, getDatasetTypeDisplay, urlify} from "../../js/functions";
 import {Button, Row} from 'react-bootstrap';
 import Col from 'react-bootstrap/Col';
 import ToggleButton from 'react-bootstrap/ToggleButton';
@@ -166,9 +166,9 @@ export const FileTreeView = ({data, selection = {}, keys = {files: 'files', uuid
                                href={`${getAssetsURL(node.data.uuid, node.data.rel_path)}`}><span
                                className="me-1">{node.label}</span>
                             </a>
-                            {!includeDescription && <SenNetPopover className={`file-${node.label}`}
-                                           trigger={SenPopoverOptions.triggers.hover}
-                                           text={`${node.data.description}`}><i className="bi bi-info-circle-fill"></i>
+                            {!includeDescription && node.data.description && <SenNetPopover className={`file-${self.crypto.randomUUID()}`}
+
+                                           text={<div dangerouslySetInnerHTML={{__html: urlify(node.data.description)}}></div>}><i role={'presentation'} className="bi bi-info-circle-fill cursor-pointer"></i>
                             </SenNetPopover>}
                         </Col>
                         <Col md={2} sm={2} className={"text-end"}>
@@ -177,7 +177,7 @@ export const FileTreeView = ({data, selection = {}, keys = {files: 'files', uuid
                         <Col md={2} sm={2} className={"text-end"}>
                             {formatByteSize(node.data.size)}
                         </Col>
-                        {includeDescription && <span>{node.data.description}</span>}
+                        {includeDescription && node.data.description && <span>{node.data.description}</span>}
                     </Row>) : (<>{node.label}</>)}
             </Fragment>
         );
@@ -271,7 +271,7 @@ export const FileTreeView = ({data, selection = {}, keys = {files: 'files', uuid
             data: {
                 uuid: uuid,
                 rel_path: file.rel_path,
-                description: file.description || file.rel_path,
+                description: file.description,
                 is_qa_qc: file?.is_qa_qc?.toString(),
                 is_data_product: file?.is_data_product?.toString(),
                 size: file.size
@@ -321,7 +321,7 @@ export const FileTreeView = ({data, selection = {}, keys = {files: 'files', uuid
                         data: {
                             uuid: uuid,
                             rel_path: file.rel_path,
-                            description: file.description || file.rel_path,
+                            description: file.description,
                             is_qa_qc: file?.is_qa_qc,
                             is_data_product: file?.is_data_product,
                             size: file.size
