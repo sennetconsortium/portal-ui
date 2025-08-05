@@ -1,6 +1,6 @@
 import SearchAPIConnector from 'search-ui/packages/search-api-connector';
 import {
-    doesAggregationHaveBuckets,
+    doesAggregationHaveBuckets, doesTermFilterContainValues,
     getAuth,
     getFilesIndex,
     getSearchEndPoint,
@@ -162,6 +162,26 @@ export const SEARCH_FILES = {
                 facetType: 'term',
                 isAggregationActive: true,
                 isFacetVisible: doesAggregationHaveBuckets('dataset_type')
+            },
+            'is_data_product': {
+                label: 'Is Data Product',
+                type: 'exists',
+                field: 'is_data_product.keyword',
+                isExpanded: false,
+                filterType: 'any',
+                isFilterable: false,
+                facetType: 'term',
+                isFacetVisible: doesAggregationHaveBuckets('is_data_product')
+            },
+            'is_qa_qc': {
+                label: 'Is QA',
+                type: 'exists',
+                field: 'is_qa_qc.keyword',
+                isExpanded: false,
+                filterType: 'any',
+                isFilterable: false,
+                facetType: 'term',
+                isFacetVisible: doesAggregationHaveBuckets('is_qa_qc')
             }
         },
         disjunctiveFacets: [],
