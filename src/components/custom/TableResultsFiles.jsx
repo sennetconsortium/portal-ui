@@ -173,7 +173,6 @@ function TableResultsFiles({children, filters, forData = false, rowFn, inModal =
 
     const downloadManifest = () => {
         let manifestData  = ''
-        debugger
         for (let key in selectedFilesModal.current[currentDatasetUuid.current].selected){
             let keys = key.split(FILE_KEY_SEPARATOR)
             let file = keys[keys.length - 1]
