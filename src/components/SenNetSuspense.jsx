@@ -1,8 +1,9 @@
 import {useEffect} from 'react'
 import PropTypes from 'prop-types'
 import {ShimmerThumbnail} from "react-shimmer-effects";
+import LoadingAccordion from "@/components/custom/layout/LoadingAccordion";
 
-function SenNetSuspense({children, showChildren}) {
+function SenNetSuspense({children, showChildren,  suspenseElements, id, title, style}) {
     useEffect(() => {
     }, [])
 
@@ -11,7 +12,10 @@ function SenNetSuspense({children, showChildren}) {
     }
 
     return (
-        <div className={`c-SenNetSuspense`}><ShimmerThumbnail className={'mt-5'} rounded /></div>
+        <LoadingAccordion id={id} title={title} style={style}>
+            {!suspenseElements && <ShimmerThumbnail className={'mt-5'} rounded />}
+            {suspenseElements}
+        </LoadingAccordion>
     )
 }
 

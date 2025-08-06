@@ -28,6 +28,7 @@ import FilesDataProducts from "@/components/custom/entities/dataset/FilesDataPro
 import BulkDataTransfer from "@/components/custom/entities/dataset/BulkDataTransfer";
 import {toast} from "react-toastify";
 import SenNetSuspense from "@/components/SenNetSuspense";
+import {ShimmerText, ShimmerThumbnail} from "react-shimmer-effects";
 
 
 const AppFooter = dynamic(() => import("@/components/custom/layout/AppFooter"))
@@ -39,9 +40,8 @@ const Metadata = dynamic(() => import("@/components/custom/entities/Metadata"))
 const Provenance = dynamic(() => import("@/components/custom/entities/Provenance"), {
     loading: () => <LoadingAccordion id="Provenance" title="Provenance" style={{ height:'490px' }} />
 })
-const SennetVitessce = dynamic(() => import("@/components/custom/vitessce/SennetVitessce"), {
-    loading: () => <LoadingAccordion id="Vitessce" title="Vitessce" style={{ height:'800px' }} />
-})
+const SennetVitessce = dynamic(() => import("@/components/custom/vitessce/SennetVitessce"))
+
 const SidebarBtn = dynamic(() => import("@/components/SidebarBtn"))
 
 function ViewDataset() {
@@ -321,7 +321,13 @@ function ViewDataset() {
                                         )}
 
                                         {/* Vitessce */}
-                                        <SenNetSuspense showChildren={showVitessce}>
+                                        <SenNetSuspense showChildren={showVitessce}
+                                                        suspenseElements={<>
+                                                            <ShimmerText line={3} gap={10} />
+                                                            <ShimmerThumbnail height={700} className={'mt-2'} rounded />
+                                                        </>}
+                                                        id="Vitessce" title="Visualization"
+                                                        style={{ height:'800px' }}>
                                             <SennetVitessce data={data}/>
                                         </SenNetSuspense>
 
