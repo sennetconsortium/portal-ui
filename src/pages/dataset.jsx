@@ -7,7 +7,7 @@ import {
     fetchDataCite,
     getCreationActionRelationName,
     getEntityViewUrl,
-    getRequestHeaders
+    getRequestHeaders, eq
 } from "@/components/custom/js/functions";
 import {
     getWritePrivilegeForGroupUuid,
@@ -84,7 +84,9 @@ function ViewDataset() {
     useEffect(() => {
         if (data && data.ancestors) {
             fetchDataProducts(data)
-            initVitessceConfig(data)
+            if (eq(data.has_visualization, 'true')) {
+                initVitessceConfig(data)
+            }
             if (datasetIs.primary(data.creation_action)) {
                 setDatasetCategories(getAssaySplitData(data))
             } else {
