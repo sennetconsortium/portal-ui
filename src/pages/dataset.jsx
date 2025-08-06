@@ -27,6 +27,7 @@ import Collections from "@/components/custom/entities/Collections";
 import FilesDataProducts from "@/components/custom/entities/dataset/FilesDataProducts";
 import BulkDataTransfer from "@/components/custom/entities/dataset/BulkDataTransfer";
 import {toast} from "react-toastify";
+import SenNetSuspense from "@/components/SenNetSuspense";
 
 
 const AppFooter = dynamic(() => import("@/components/custom/layout/AppFooter"))
@@ -320,7 +321,9 @@ function ViewDataset() {
                                         )}
 
                                         {/* Vitessce */}
-                                        {showVitessce && <SennetVitessce data={data}/>}
+                                        <SenNetSuspense showChildren={showVitessce}>
+                                            <SennetVitessce data={data}/>
+                                        </SenNetSuspense>
 
                                         {/*Provenance*/}
                                         <Provenance data={data} hasAncestry={hasAncestry}/>
