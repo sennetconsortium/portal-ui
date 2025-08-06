@@ -321,7 +321,7 @@ function ViewDataset() {
                                         )}
 
                                         {/* Vitessce */}
-                                        <SenNetSuspense showChildren={showVitessce}
+                                        {data && eq(data.has_visualization, 'true') && <SenNetSuspense showChildren={showVitessce}
                                                         suspenseElements={<>
                                                             <ShimmerText line={3} gap={10} />
                                                             <ShimmerThumbnail height={700} className={'mt-2'} rounded />
@@ -329,7 +329,7 @@ function ViewDataset() {
                                                         id="Vitessce" title="Visualization"
                                                         style={{ height:'800px' }}>
                                             <SennetVitessce data={data}/>
-                                        </SenNetSuspense>
+                                        </SenNetSuspense>}
 
                                         {/*Provenance*/}
                                         <Provenance data={data} hasAncestry={hasAncestry}/>
