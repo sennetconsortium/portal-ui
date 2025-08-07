@@ -352,6 +352,7 @@ function TableResultsFiles({children, filters, forData = false, rowFn, inModal =
                     running.</small>
                 </> />
                 <ResultsBlock
+                    exportKind={'manifest'}
                     index={'files'}
                     isBusy={isBusy}
                     searchContext={getSearchContext}

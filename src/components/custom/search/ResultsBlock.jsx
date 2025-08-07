@@ -8,9 +8,8 @@ import {eq} from '../js/functions'
 import {COLS_ORDER_KEY} from "@/config/config";
 import Spinner from '../Spinner';
 import SearchActions from "@/components/custom/search/SearchActions";
-import {getCheckboxes} from "@/components/custom/BulkExport";
 
-function ResultsBlock({getTableColumns, disableRowClick, tableClassName = '', defaultHiddenColumns = [], searchContext, totalRows, isBusy}) {
+function ResultsBlock({getTableColumns, disableRowClick, tableClassName = '', exportKind, defaultHiddenColumns = [], searchContext, totalRows, isBusy}) {
 
     const {
         getTableData,
@@ -39,6 +38,21 @@ function ResultsBlock({getTableColumns, disableRowClick, tableClassName = '', de
         }
     }, [isBusy]);
 
+    useEffect(() => {
+        setTimeout(()=>{
+            $('.rdt_TableBody [type=checkbox]').on('click', (e)=>{
+                const $el = $(e.currentTarget)
+                const uuid = $el.attr('name').replace('select-row-', '')
+
+                if (!$el.is(':checked')) {
+                    selectedRows.current = selectedRows.current.filter((e) => e.id !== uuid)
+                    updateLabel()
+                }
+
+            })
+        }, 1000)
+    }, [pageNumber, pageSize]);
+
     const selectedRows = useRef([])
     const sel = {
         selectAllIo: 'select-all-rows',
@@ -47,17 +61,23 @@ function ResultsBlock({getTableColumns, disableRowClick, tableClassName = '', de
 
     const [hiddenColumns, setHiddenColumns] = useState(null)
 
-    const handleRowSelected = useCallback(state => {
+    const updateLabel = () => {
         const $selAllIo =  $(`[name="${sel.selectAllIo}"`)
 
         const $checkBoxAll = $($selAllIo).parent()
         $checkBoxAll.find(`.${sel.selectedCount}`).remove()
+        $checkBoxAll.append(`<span data-js-appevent="snRowsSelected" data-count="${selectedRows.current.length}" class="${sel.selectedCount}"></span>`)
+        if (selectedRows.current.length) {
+            // add count label
+            $checkBoxAll.append(`<span class="${sel.selectedCount}">(${selectedRows.current.length})</span>`)
+        }
+    }
 
+    const handleRowSelected = useCallback(state => {
         if (state.selectedCount) {
             selectedRows.current = state.selectedRows
-            // add count label
-            $checkBoxAll.append(`<span for="${sel.selectAllIo}" class="${sel.selectedCount}">(${state.selectedCount})</span>`)
         }
+        updateLabel()
     }, [])
 
 
@@ -71,7 +91,7 @@ function ResultsBlock({getTableColumns, disableRowClick, tableClassName = '', de
             <div className='sui-layout-main-header'>
                 <div className='sui-layout-main-header__inner'>
 
-                    <SearchActions selectedRows={selectedRows.current} filters={filters} data={getTableData()} raw={raw} hiddenColumns={hiddenColumns} columns={currentColumns.current} />
+                    <SearchActions exportKind={exportKind} selectedRows={selectedRows.current} filters={filters} data={getTableData()} raw={raw} hiddenColumns={hiddenColumns} columns={currentColumns.current} />
                     {rows.length > 0 && <ColumnsDropdown searchContext={searchContext} filters={filters} defaultHiddenColumns={defaultHiddenColumns} getTableColumns={getTableColumns} setHiddenColumns={setHiddenColumns}
                                       currentColumns={currentColumns.current} />}
                     <ResultsPerPage updateTablePagination={updateTablePagination}

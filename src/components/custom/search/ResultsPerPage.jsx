@@ -1,4 +1,3 @@
-import {handleCheckAll} from "../BulkExport";
 import {RESULTS_PER_PAGE} from "@/config/config";
 import React, {useState} from "react";
 import Select from 'react-select'

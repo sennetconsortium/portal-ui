@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import PropTypes from 'prop-types'
 import { styled, alpha } from '@mui/material/styles';
 import Button from '@mui/material/Button';
@@ -16,7 +16,6 @@ import {
 } from "@elastic/react-search-ui";
 import {autoBlobDownloader, eq} from "@/components/custom/js/functions";
 import SenNetPopover from "@/components/SenNetPopover";
-import {getCheckboxes} from "@/components/custom/BulkExport";
 
 const StyledMenu = styled((props) => (
     <Menu
@@ -275,6 +274,23 @@ function SearchActions({selectedRows, data = [], raw, columns, filters, exportKi
         return results
     }
 
+    const hasSelectedRows = () => {
+        return totalSelected > 0
+    }
+
+    const [totalSelected, setTotalSelected] = useState(selectedRows?.length)
+
+    useEffect(() => {
+        document.addEventListener(
+            "snRowsSelected",
+            (e) => {
+                const el = e.detail.el
+                setTotalSelected(Number(el.getAttribute('data-count')))
+            },
+            false,
+        )
+    }, []);
+
     return (
         <div>
             <Button
@@ -307,11 +323,11 @@ function SearchActions({selectedRows, data = [], raw, columns, filters, exportKi
                 <MenuItem className={'dropdown-item'} key={`export-all`}>All to&nbsp;
                     {getMenuItems('all')}
                 </MenuItem>
-                {selectedRows?.length > 0 && <MenuItem className={'dropdown-item'}  key={`export-selected`} >Selected to&nbsp;
+                {hasSelectedRows() && <MenuItem className={'dropdown-item'}  key={`export-selected`} >Selected to&nbsp;
                     {getMenuItems()}
                 </MenuItem>}
 
-                {selectedRows?.length > 0 &&<div>
+                {hasSelectedRows() &&<div>
 
                     <ListSubheader>
                         <InsightsIcon />
