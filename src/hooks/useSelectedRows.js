@@ -1,8 +1,22 @@
-import {useCallback, useEffect, useRef, useState} from 'react'
+import {useCallback, useEffect, useRef} from 'react'
 
 function useSelectedRows({pageNumber, pageSize}) {
-    useEffect(() => {
+
+    const selectedRows = useRef([])
+    const sel = {
+        selectAllIo: 'select-all-rows',
+        selectedCount: 'sui-selected-count'
+    }
+
+    const handleCheckboxes = () => {
         setTimeout(()=>{
+            $(`[name="${sel.selectAllIo}"`).on('click', (e)=>{
+                const $el = $(e.currentTarget)
+                if (!$el.is(':checked')) {
+                    selectedRows.current = []
+                    updateLabel()
+                }
+            })
             $('.rdt_TableBody [type=checkbox]').on('click', (e)=>{
                 const $el = $(e.currentTarget)
                 const uuid = $el.attr('name').replace('select-row-', '')
@@ -14,13 +28,14 @@ function useSelectedRows({pageNumber, pageSize}) {
 
             })
         }, 1000)
-    }, [pageNumber, pageSize]);
-
-    const selectedRows = useRef([])
-    const sel = {
-        selectAllIo: 'select-all-rows',
-        selectedCount: 'sui-selected-count'
     }
+
+    useEffect(() => {
+        handleCheckboxes()
+
+        // the listeners are lost on pagination updates
+        // so need to bind them again
+    }, [pageNumber, pageSize]);
 
     const updateLabel = () => {
         const $selAllIo =  $(`[name="${sel.selectAllIo}"`)
@@ -35,13 +50,20 @@ function useSelectedRows({pageNumber, pageSize}) {
     }
 
     const handleRowSelected = useCallback(state => {
+        // For whatever weird reason,
+        // the callback is triggered on pagination changes
+        // due to not using the DataTable persistence options:
+        // paginationServerOptions={{persistSelectedOnPageChange: true, persistSelectedOnSort: true}} ,
+        // state.selectedCount is eq to 0 on pagination updates
+        // thus we will only update selected rows when state contains a value
+        // and use our own custom listeners to manage deletions in handleCheckboxes
         if (state.selectedCount) {
             selectedRows.current = state.selectedRows
         }
         updateLabel()
     }, [])
 
-
+    // DataTable uses this to determine pre-selections like on pagination
     const rowSelectCriteria = row => {
         let rows = selectedRows.current.map((e)=> e.id)
         return rows.indexOf(row.id) !== -1
