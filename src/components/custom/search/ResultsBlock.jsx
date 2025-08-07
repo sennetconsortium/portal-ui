@@ -8,6 +8,7 @@ import {eq} from '../js/functions'
 import {COLS_ORDER_KEY} from "@/config/config";
 import Spinner from '../Spinner';
 import SearchActions from "@/components/custom/search/SearchActions";
+import useSelectedRows from "@/hooks/useSelectedRows";
 
 function ResultsBlock({getTableColumns, disableRowClick, tableClassName = '', exportKind, defaultHiddenColumns = [], searchContext, totalRows, isBusy}) {
 
@@ -38,53 +39,8 @@ function ResultsBlock({getTableColumns, disableRowClick, tableClassName = '', ex
         }
     }, [isBusy]);
 
-    useEffect(() => {
-        setTimeout(()=>{
-            $('.rdt_TableBody [type=checkbox]').on('click', (e)=>{
-                const $el = $(e.currentTarget)
-                const uuid = $el.attr('name').replace('select-row-', '')
-
-                if (!$el.is(':checked')) {
-                    selectedRows.current = selectedRows.current.filter((e) => e.id !== uuid)
-                    updateLabel()
-                }
-
-            })
-        }, 1000)
-    }, [pageNumber, pageSize]);
-
-    const selectedRows = useRef([])
-    const sel = {
-        selectAllIo: 'select-all-rows',
-        selectedCount: 'sui-selected-count'
-    }
-
     const [hiddenColumns, setHiddenColumns] = useState(null)
-
-    const updateLabel = () => {
-        const $selAllIo =  $(`[name="${sel.selectAllIo}"`)
-
-        const $checkBoxAll = $($selAllIo).parent()
-        $checkBoxAll.find(`.${sel.selectedCount}`).remove()
-        $checkBoxAll.append(`<span data-js-appevent="snRowsSelected" data-count="${selectedRows.current.length}" class="${sel.selectedCount}"></span>`)
-        if (selectedRows.current.length) {
-            // add count label
-            $checkBoxAll.append(`<span class="${sel.selectedCount}">(${selectedRows.current.length})</span>`)
-        }
-    }
-
-    const handleRowSelected = useCallback(state => {
-        if (state.selectedCount) {
-            selectedRows.current = state.selectedRows
-        }
-        updateLabel()
-    }, [])
-
-
-    const rowSelectCriteria = row => {
-        let rows = selectedRows.current.map((e)=> e.id)
-        return rows.indexOf(row.id) !== -1
-    }
+    const {selectedRows,handleRowSelected, rowSelectCriteria  } = useSelectedRows({pageNumber, pageSize})
 
     return (
         <>
