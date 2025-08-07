@@ -2,12 +2,10 @@ import {handleCheckAll} from "../BulkExport";
 import {RESULTS_PER_PAGE} from "@/config/config";
 import React, {useState} from "react";
 import Select from 'react-select'
-import {clearDownloadSizeLabel} from "../TableResultsFiles";
 
 export const handleTableControls = () => {
     try {
         handleCheckAll()
-        clearDownloadSizeLabel()
     } catch (e) {
         console.error(e)
     }
@@ -37,7 +35,7 @@ export function ResultsPerPage({resultsPerPage, setResultsPerPage, totalRows, up
         setResultsPerPage(e.value)
         setValue(e)
         updateTablePagination(1, e.value)
-        handleTableControls()
+        $('.rdt_Pagination select').val(e.value.toString())
     }
 
     const getCurrentValue = () => {

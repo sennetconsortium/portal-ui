@@ -236,8 +236,10 @@
 }
 
 #sui-tbl-checkbox-actions {
-  position: absolute;
-  right: 0;
+
+  .MuiMenuItem-root {
+    font-size: 12px;
+  }
 
   code {
     color: var(--bs-code-color);
@@ -356,8 +358,14 @@
   display: none;
 }
 
-.sui-check-all {
-  span {
+.sui-selected-count{
     font-size: 11px;
-  }
+    position: absolute;
+    left: 35px;
+}
+
+
+.sui-paging-info {
+  text-transform: none;
+  color: white;
 }

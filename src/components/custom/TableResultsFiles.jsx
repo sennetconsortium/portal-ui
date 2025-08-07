@@ -6,7 +6,6 @@ import {
     checkMultipleFilterType, formatByteSize, getEntityViewUrl,
     getUBKGFullName, matchArrayOrder,
 } from './js/functions'
-import BulkExport, {getCheckAll, getCheckboxes, handleCheckbox} from "./BulkExport";
 import {getOptions} from "./search/ResultsPerPage";
 import ResultsBlock from "./search/ResultsBlock";
 import {TableResultsProvider} from "@/context/TableResultsContext";
@@ -24,17 +23,10 @@ import {useSearchUIContext} from "@/search-ui/components/core/SearchUIContext";
 import DataUsageModal from "@/components/custom/entities/dataset/DataUsageModal";
 import {ShimmerText} from "react-shimmer-effects";
 
-const downloadSizeAttr = 'data-download-size'
-export const clearDownloadSizeLabel = () => {
-    getCheckAll().removeAttr(downloadSizeAttr)
-    $('.sui-paging-info .download-size').remove()
-}
-
 function TableResultsFiles({children, filters, forData = false, rowFn, inModal = false, rawResponse}) {
     const fileTypeField = 'file_extension'
     let hasMultipleFileTypes = checkMultipleFilterType(filters, fileTypeField);
     const currentColumns = useRef([])
-    const hasClicked = useRef(false)
     const [showModal, setShowModal] = useState(false)
     const [fileSelection, setFileSelection] = useState(null)
 
@@ -68,12 +60,6 @@ function TableResultsFiles({children, filters, forData = false, rowFn, inModal =
     }, [rawResponse, pageSize, pageSize])
 
     const raw = rowFn ? rowFn : ((obj) => obj ? (obj.raw || obj) : null)
-    const applyDownloadSizeLabel = (total) => {
-        if (total > 0) {
-            getCheckAll().attr(downloadSizeAttr, total)
-            $('.sui-paging-info').append(`<span class="download-size"> | Estimated download ${formatByteSize(total)}</span>`)
-        }
-    }
 
     function updatePagingInfo(resultsCount, resp) {
         $('.sui-paging-info strong').eq(1).text(resultsCount)
@@ -125,47 +111,9 @@ function TableResultsFiles({children, filters, forData = false, rowFn, inModal =
         return Object.values(results)
     }
 
-    const onRowClicked = (e, uuid, data, clicked = false) => {
-        const sel = `[name="check-${getId(data)}"]`
-
-        if (!clicked) {
-            hasClicked.current = true
-            document.querySelector(sel).click()
-        }
-        const isChecked = $(sel).is(':checked')
-        const $checkAll = getCheckAll()
-        let total = $checkAll.attr(downloadSizeAttr)
-        console.log('Total', total, isChecked)
-        total = total ? Number(total) : 0
-        total = isChecked ? total + raw(data.size) : total - raw(data.size)
-        clearDownloadSizeLabel()
-        applyDownloadSizeLabel(total)
-        hasClicked.current = false
-    }
-
     const getHotLink = (row) => getEntityViewUrl('dataset', raw(row.dataset_uuid), {}, {})
 
-    const handleFileCheckbox = (e, data) => {
-        handleCheckbox(e)
-        if (!hasClicked.current) {
-            onRowClicked(e, data.id, data, true)
-        }
-    }
-
     const getId = (column) => column.id || column.dataset_uuid
-
-    const onCheckAll = (e, checkAll) => {
-        let total = 0
-        if (checkAll) {
-            getCheckboxes().each((i, el) => {
-                if ($(el).is(':checked')) {
-                    total += Number($(el).attr('data-size'))
-                }
-            })
-        }
-        clearDownloadSizeLabel()
-        applyDownloadSizeLabel(total)
-    }
 
     const hideModal = () => {
         setShowModal(false)
@@ -214,18 +162,7 @@ function TableResultsFiles({children, filters, forData = false, rowFn, inModal =
 
     const defaultColumns = ({hasMultipleFileTypes = true, columns = [], _isLoggedIn}) => {
         let cols = []
-        if (!inModal) {
-            cols.push({
-                id: 'bulkExport',
-                ignoreRowClick: true,
-                name: <BulkExport context={'files'} filters={filters} onCheckAll={onCheckAll} data={results} raw={raw} hiddenColumns={hiddenColumns} columns={currentColumns} exportKind={'manifest'} />,
-                width: '100px',
-                className: 'text-center',
-                selector: row => row.id,
-                sortable: false,
-                format: column => <input type={'checkbox'} data-size={raw(column.size)} onClick={(e) => handleFileCheckbox(e, column)} value={getId(column)} name={`check-${getId(column)}`}/>
-            })
-        }
+
 
         cols.push(
             {
@@ -403,7 +340,7 @@ function TableResultsFiles({children, filters, forData = false, rowFn, inModal =
 
     return (
         <>
-            <TableResultsProvider columnsRef={currentColumns} getId={getId} rows={results} filters={filters} onRowClicked={onRowClicked} forData={forData} raw={raw} inModal={inModal}>
+            <TableResultsProvider columnsRef={currentColumns} getId={getId} rows={results} filters={filters} forData={forData} raw={raw} inModal={inModal}>
                 <SenNetAlert variant={'warning'} className="clt-alert"
                              text=<>In order to download the files that are included in the manifest file,&nbsp;
                 <a href="https://github.com/x-atlas-consortia/clt" target='_blank' className={'lnk--ic'}>install <i
