@@ -303,8 +303,8 @@ function SearchActions({selectedRows, data = [], raw, columns, filters, exportKi
                 onClick={handleClick}
                 endIcon={<KeyboardArrowDownIcon />}
             >
-                <PagingInfo />
-                {/*{selectedRows.length > 0 && <span>&nbsp; {selectedRows.length} selected</span>}*/}
+                <i className="bi bi-download fs-5 me-2"></i>
+                <PagingInfo/>
             </Button>
             <StyledMenu
                 id="sui-tbl-checkbox-actions"
@@ -318,8 +318,11 @@ function SearchActions({selectedRows, data = [], raw, columns, filters, exportKi
                 onClose={handleClose}
             >
                 <ListSubheader>
-                    <FileDownloadIcon />
-                    Export</ListSubheader>
+                    <i className="bi bi-download fs-5 mx-2"></i>
+                    <SenNetPopover text={<>Click a format below to download the file to your local device.</>}>
+                    <span>Export</span>
+                    </SenNetPopover>
+                </ListSubheader>
                 <MenuItem className={'dropdown-item'} key={`export-all`}>All to&nbsp;
                     {getMenuItems('all')}
                 </MenuItem>
@@ -330,7 +333,7 @@ function SearchActions({selectedRows, data = [], raw, columns, filters, exportKi
                 {hasSelectedRows() &&<div>
 
                     <ListSubheader>
-                        <InsightsIcon />
+                        <InsightsIcon className={'mx-2'} />
                         Visualize</ListSubheader>
                     <MenuItem className={'dropdown-item'} key={`export-all`}>Compare Datasets
                     </MenuItem>
