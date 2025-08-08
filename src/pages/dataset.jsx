@@ -55,6 +55,7 @@ function ViewDataset() {
     const {router, isRegisterHidden, _t, cache, isPreview, getPreviewView, isLoggedIn} = useContext(AppContext)
     const [primaryDatasetData, setPrimaryDatasetInfo] = useState(null)
     const [showFilesSection, setShowFilesSection] = useState(null)
+    const [hasViz, setHasViz] = useState(false)
     const {
         showVitessce,
         initVitessceConfig,
@@ -85,7 +86,7 @@ function ViewDataset() {
     useEffect(() => {
         if (data && data.ancestors) {
             fetchDataProducts(data)
-            if (eq(data.has_visualization, 'true')) {
+            if (hasViz) {
                 initVitessceConfig(data)
             }
             if (datasetIs.primary(data.creation_action)) {
@@ -112,9 +113,23 @@ function ViewDataset() {
 
             // set state with the result
             setData(_data)
+            let hasViz = eq(_data.has_visualization, 'true')
+            setHasViz(hasViz)
 
             // fetch ancestry data
             getAncestryData(_data.uuid).then(ancestry => {
+                if (!hasViz) {
+                    // Primary gets processed and updated to QA but the derived dataset is still processed.
+                    // This could lead to a scenario where the primary has the property has_visualization: false but the processed is true.
+                    // So let's check that a descendant has_visualization: true
+                    for (const descendant of ancestry.descendants) {
+                        if (eq(descendant.has_visualization, 'true')) {
+                            setHasViz(true)
+                            break;
+                        }
+                    }
+                }
+
                 Object.assign(_data, ancestry)
                 setData(_data)
                 setHasAncestry(true)
@@ -238,7 +253,7 @@ function ViewDataset() {
                                                    data-bs-parent="#sidebar">Associated Collections</a>
                                             </li>
                                         )}
-                                        {showVitessce &&
+                                        {hasViz &&
                                             <li className="nav-item">
                                                 <a href="#Vitessce"
                                                    className="nav-link"
@@ -321,7 +336,7 @@ function ViewDataset() {
                                         )}
 
                                         {/* Vitessce */}
-                                        {data && eq(data.has_visualization, 'true') && <SenNetSuspense showChildren={showVitessce}
+                                        {data && hasViz && <SenNetSuspense showChildren={showVitessce}
                                                         suspenseElements={<>
                                                             <ShimmerText line={3} gap={10} />
                                                             <ShimmerThumbnail height={700} className={'mt-2'} rounded />
