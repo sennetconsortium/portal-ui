@@ -1,5 +1,7 @@
 import {useCallback, useEffect, useRef} from 'react'
 
+export const getCheckboxes = () => $('.rdt_TableBody [type=checkbox]')
+
 function useSelectedRows({pageNumber, pageSize}) {
 
     const selectedRows = useRef([])
@@ -17,7 +19,7 @@ function useSelectedRows({pageNumber, pageSize}) {
                     updateLabel()
                 }
             })
-            $('.rdt_TableBody [type=checkbox]').on('click', (e)=>{
+            getCheckboxes().on('click', (e)=>{
                 const $el = $(e.currentTarget)
                 const uuid = $el.attr('name').replace('select-row-', '')
 
@@ -70,8 +72,6 @@ function useSelectedRows({pageNumber, pageSize}) {
     }
 
     return {rowSelectCriteria, selectedRows, handleRowSelected}
-
-
 }
 
 

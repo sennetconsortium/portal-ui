@@ -14,6 +14,7 @@ import {
 import {autoBlobDownloader, eq} from "@/components/custom/js/functions";
 import SenNetPopover from "@/components/SenNetPopover";
 import AppTutorial from "@/components/custom/layout/AppTutorial";
+import {getCheckboxes} from "@/hooks/useSelectedRows";
 
 const StyledMenu = styled((props) => (
     <Menu
@@ -292,10 +293,7 @@ function SearchActions({selectedRows, data = [], raw, columns, filters, exportKi
         return has
     }
 
-    const hasSelectedDatasets = () => {
-
-        return hasSelectedRows() && hasDatasetFilter()
-    }
+    const hasSelectedDatasets = () => hasSelectedRows() && hasDatasetFilter()
 
     useEffect(() => {
         document.addEventListener(
@@ -311,7 +309,7 @@ function SearchActions({selectedRows, data = [], raw, columns, filters, exportKi
     useEffect(() => {
         if (hasDatasetFilter() && !hasListened.current) {
             hasListened.current = true
-            $('.rdt_TableBody [type=checkbox]').on('click', (e)=>{
+            getCheckboxes().on('click', (e)=>{
                 setShowTutorial(hasDatasetFilter())
             })
         }
