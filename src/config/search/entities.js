@@ -236,6 +236,19 @@ export const SEARCH_ENTITIES = {
                 ],
                 isFacetVisible: doesAggregationHaveBuckets('has_metadata')
             },
+            'has_visualization': {
+                label: 'Has Visualization',
+                type: 'exists',
+                field: 'has_visualization.keyword',
+                isExpanded: false,
+                filterType: 'any',
+                isFilterable: false,
+                facetType: 'term',
+                isAggregationActive: [
+                    doesTermFilterContainValues('entity_type', ['Dataset']),
+                ],
+                isFacetVisible: doesAggregationHaveBuckets('has_visualization')
+            },
             has_all_published_datasets: {
                 label: 'Has All Primary Published',
                 type: 'value',
