@@ -272,12 +272,12 @@ function ProvenanceGraph({ data }) {
     }
 
     const onSenNetIdUrl = (d, property, value) => {
+        if (!d['sennet:entity_type']) return {}
         if (datasetIs.component(d['sennet:creation_action'])) {
           return {value}
         } else {
-            return {href: `/${d['sennet:entity_type'].toLowerCase()}?uuid=${d['sennet:uuid']}`, value}
+            return {href: `/${d['sennet:entity_type']?.toLowerCase()}?uuid=${d['sennet:uuid']}`, value}
         }
-
     }
 
     const graphOptions = {
