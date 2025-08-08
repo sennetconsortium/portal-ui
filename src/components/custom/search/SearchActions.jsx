@@ -1,13 +1,10 @@
-import React, {useEffect, useState} from 'react'
+import React, {useEffect, useRef, useState} from 'react'
 import PropTypes from 'prop-types'
 import { styled, alpha } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import InsightsIcon from '@mui/icons-material/Insights';
-import Divider from '@mui/material/Divider';
-import SettingsSuggestIcon from '@mui/icons-material/SettingsSuggest';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import ListSubheader from '@mui/material/ListSubheader';
 
@@ -16,6 +13,7 @@ import {
 } from "@elastic/react-search-ui";
 import {autoBlobDownloader, eq} from "@/components/custom/js/functions";
 import SenNetPopover from "@/components/SenNetPopover";
+import AppTutorial from "@/components/custom/layout/AppTutorial";
 
 const StyledMenu = styled((props) => (
     <Menu
@@ -64,14 +62,15 @@ const StyledMenu = styled((props) => (
 }));
 
 function SearchActions({selectedRows, data = [], raw, columns, filters, exportKind, hiddenColumns, context = 'entities'}) {
-    const [anchorEl, setAnchorEl] = useState(null);
-    const open = Boolean(anchorEl);
-    const handleClick = (event) => {
-        setAnchorEl(event.currentTarget);
-    };
-    const handleClose = () => {
-        setAnchorEl(null);
-    };
+    const [anchorEl, setAnchorEl] = useState(null)
+    const [totalSelected, setTotalSelected] = useState(selectedRows?.length)
+    const [showTutorial, setShowTutorial] = useState(false)
+    const open = Boolean(anchorEl)
+    const hasListened = useRef(false)
+
+
+    const handleClick = (event) => setAnchorEl(event.currentTarget)
+    const handleClose = () => setAnchorEl(null)
 
     const getId = (column) => column.id || column.uuid
 
@@ -208,6 +207,8 @@ function SearchActions({selectedRows, data = [], raw, columns, filters, exportKi
         autoBlobDownloader(blob, type, `${fileName}.${fileType}`)
     }
 
+    const _isDatasetFilter = (f) => eq(f.field, 'entity_type') && f.values.contains('dataset')
+
 
     const getActions = () => {
         let actions = {
@@ -222,7 +223,7 @@ function SearchActions({selectedRows, data = [], raw, columns, filters, exportKi
 
         if (filters) {
             for (let f of filters) {
-                if (eq(f.field, 'entity_type') && f.values.contains('dataset')) {
+                if (_isDatasetFilter(f)) {
                     actions.manifest = 'Manifest TXT'
                     break
                 }
@@ -278,7 +279,23 @@ function SearchActions({selectedRows, data = [], raw, columns, filters, exportKi
         return totalSelected > 0
     }
 
-    const [totalSelected, setTotalSelected] = useState(selectedRows?.length)
+    const hasDatasetFilter = ()=> {
+        let has = false
+        if (filters) {
+            for (let f of filters) {
+                if (_isDatasetFilter(f)) {
+                    has = true
+                    break;
+                }
+            }
+        }
+        return has
+    }
+
+    const hasSelectedDatasets = () => {
+
+        return hasSelectedRows() && hasDatasetFilter()
+    }
 
     useEffect(() => {
         document.addEventListener(
@@ -291,11 +308,22 @@ function SearchActions({selectedRows, data = [], raw, columns, filters, exportKi
         )
     }, []);
 
+    useEffect(() => {
+        if (hasDatasetFilter() && !hasListened.current) {
+            hasListened.current = true
+            $('.rdt_TableBody [type=checkbox]').on('click', (e)=>{
+                setShowTutorial(hasDatasetFilter())
+            })
+        }
+
+
+    }, [filters]);
+
     return (
         <div>
             <Button
-                id="demo-customized-button"
-                aria-controls={open ? 'demo-customized-menu' : undefined}
+                id="sui-search-actions-btn"
+                aria-controls={open ? 'sui-search-actions-menu' : undefined}
                 aria-haspopup="true"
                 aria-expanded={open ? 'true' : undefined}
                 variant="contained"
@@ -303,14 +331,14 @@ function SearchActions({selectedRows, data = [], raw, columns, filters, exportKi
                 onClick={handleClick}
                 endIcon={<KeyboardArrowDownIcon />}
             >
-                <i className="bi bi-download fs-5 me-2"></i>
+                <i className="bi bi-download fs-6 me-2"></i>
                 <PagingInfo/>
             </Button>
             <StyledMenu
                 id="sui-tbl-checkbox-actions"
                 slotProps={{
                     list: {
-                        'aria-labelledby': 'demo-customized-button',
+                        'aria-labelledby': 'sui-search-actions-btn',
                     },
                 }}
                 anchorEl={anchorEl}
@@ -318,7 +346,7 @@ function SearchActions({selectedRows, data = [], raw, columns, filters, exportKi
                 onClose={handleClose}
             >
                 <ListSubheader>
-                    <i className="bi bi-download fs-5 mx-2"></i>
+                    <i className="bi bi-download fs-6 mx-2"></i>
                     <SenNetPopover text={<>Click a format below to download the file to your local device.</>}>
                     <span>Export</span>
                     </SenNetPopover>
@@ -330,7 +358,7 @@ function SearchActions({selectedRows, data = [], raw, columns, filters, exportKi
                     {getMenuItems()}
                 </MenuItem>}
 
-                {hasSelectedRows() &&<div>
+                {hasSelectedDatasets() &&<div>
 
                     <ListSubheader>
                         <InsightsIcon className={'mx-2'} />
@@ -341,6 +369,7 @@ function SearchActions({selectedRows, data = [], raw, columns, filters, exportKi
 
 
             </StyledMenu>
+            {showTutorial && <AppTutorial name={'searchActions'} autoStart={true} /> }
         </div>
     );
 }
