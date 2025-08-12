@@ -25,7 +25,7 @@ export const DescendantInfo = ({isPrimaryDataset, derivedDataset, wrapClassNames
     </div>)
 }
 
-export const SenNetVitessce = ({ title, id, expanded = true, showPoweredInfo = true, showDescendantInfo = true, className = '' }) => {
+export const SenNetVitessce = ({ title, id, expanded = true, showPoweredInfo = true, showDescendantInfo = true, afterButton, className = '' }) => {
     const {
         vitessceTheme,
         setVitessceTheme,
@@ -48,7 +48,7 @@ export const SenNetVitessce = ({ title, id, expanded = true, showPoweredInfo = t
     } = useContext(DerivedContext)
 
     return (
-        <SenNetAccordion title={title || 'Visualization'} id={id || 'Vitessce'} expanded={expanded} className={`accordion--vitessce ${className}`}>
+        <SenNetAccordion title={title || 'Visualization'} id={id || 'Vitessce'} expanded={expanded} className={`accordion--vitessce ${className}`} afterButton={afterButton}>
             <div className={'row'}>
                 {showPoweredInfo &&<div className={'col m-2'}>
                      <span className={'fw-light fs-6'}>Powered by

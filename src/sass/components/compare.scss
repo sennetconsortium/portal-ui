@@ -1,6 +1,19 @@
 @use "../config/swatch";
 .c-compare {
   &__quadrantTitle {
+    &.accordion-button {
+      position: absolute;
+      top: 0;
+      z-index: 100;
+      width: 90%;
+
+      .fw-light {
+        font-size: 0.7em;
+      }
+      &:after {
+        content: none;
+      }
+    }
     .bi-pencil {
       &:before {
         color: swatch.$col-bs-blue;

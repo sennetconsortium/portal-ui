@@ -45,12 +45,17 @@ function VitessceQuadrant({data, setQ, fetchData, resultsFilterCallback}) {
                                                </>}
                                                id={'viz-'+ data.uuid} title={data.sennet_id}
                                                style={{ height:'800px' }}>
-                <SenNetVitessce showDescendantInfo={false} showPoweredInfo={false} id={'viz-'+ data.uuid} title={
-                    <div className={'c-compare__quadrantTitle'}>
+                <SenNetVitessce showDescendantInfo={false} showPoweredInfo={false} id={'viz-'+ data.uuid} title={<span>&nbsp;</span>} afterButton={
+                    <div className={'c-compare__quadrantTitle accordion-button'}>
 
                         <span className='pt-1 d-block'>
                             <span>{data.sennet_id}</span>
-                            <i className="bi bi-pencil mx-2" aria-label={`Modify Dataset ${data.sennet_id}`} onClick={()=>setShowHideModal(true)}></i>
+                            <ClipboardCopy text={data.sennet_id} title={'Copy SenNet ID {text} to clipboard'}/>
+                            <i className="bi bi-pencil mx-2" aria-label={`Modify Dataset ${data.sennet_id}`} onClick={(e)=> {
+                                e.preventDefault()
+                                e.stopPropagation()
+                                setShowHideModal(true)
+                            }}></i>
                         </span>
 
                         <DescendantInfo isPrimaryDataset={isPrimaryDataset} derivedDataset={derivedDataset} wrapClassNames={''} />

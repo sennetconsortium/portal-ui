@@ -2,7 +2,7 @@ import PropTypes from 'prop-types'
 import { forwardRef } from 'react'
 import { cls } from '@/components/custom/js/functions'
 
-const SenNetAccordion = forwardRef(({ children, title, id, afterTitle, className = '', style = {}, expanded = true }, ref) => {
+const SenNetAccordion = forwardRef(({ children, title, id, afterTitle, afterButton, className = '', style = {}, expanded = true }, ref) => {
     const refId = id || title
 
     return (
@@ -20,6 +20,7 @@ const SenNetAccordion = forwardRef(({ children, title, id, afterTitle, className
                         <span className={'me-2'}>{title}</span>
                         {afterTitle}
                     </button>
+                    {afterButton}
                 </div>
                 <div
                     id={`${refId}-collapse`}
