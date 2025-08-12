@@ -39,6 +39,7 @@ export const organIcons = {
     'UBERON:0002118': `${BASE_ICON_URL}/organs/organ-icon-ovary-right.svg`,
     'UBERON:0001264': `${BASE_ICON_URL}/organs/organ-icon-pancreas.svg`,
     'UBERON:0001987': `${BASE_ICON_URL}/organs/organ-icon-placenta.svg`,
+    'UBERON:0002106': `${BASE_ICON_URL}/organs/organ-icon-spleen.svg`,
     'UBERON:0002240': `${BASE_ICON_URL}/organs/organ-icon-spinal-cord.svg`,
     'UBERON:0002097': `${BASE_ICON_URL}/organs/organ-icon-skin.svg`,
     'UBERON:0001474': `${BASE_ICON_URL}/organs/organ-icon-bone-marrow.svg`,
@@ -232,6 +233,15 @@ export const organs = [
         url: 'http://purl.obolibrary.org/obo/UBERON_0002240'
     },
     {
+        codes: ['UBERON:0002106'],
+        hraSupported: true,
+        icon: organIcons['UBERON:0002106'],
+        label: 'Spleen',
+        path: 'spleen',
+        subLabel: 'UBERON:0002106',
+        url: 'http://purl.obolibrary.org/obo/UBERON_0002106'
+    },
+    {
         codes: ['UBERON:0002370'],
         hraSupported: true,
         icon: organIcons['UBERON:0002370'],
@@ -249,7 +259,7 @@ export const organs = [
         subLabel: 'FMA:54973',
         url: 'http://purl.org/sig/ont/fma/fma54973'
     },
-     {
+    {
         codes: ['UBERON:0003126'],
         hraSupported: true,
         icon: organIcons['UBERON:0003126'],
