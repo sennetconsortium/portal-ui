@@ -56,9 +56,19 @@ function BodyContent({ handleChangeAncestor, data, resultsFilterCallback }) {
     )
 }
 
-function AncestorsModal({data, hideModal, changeAncestor, showHideModal, handleSearchFormSubmit, resultsFilterCallback}) {
+function AncestorsModal({data, hideModal, changeAncestor, showHideModal, handleSearchFormSubmit, resultsFilterCallback, searchValue}) {
+    const hasInit = useRef(false)
     useEffect(() => {
+
     }, [])
+
+    const getValue = (value) => {
+        if (!hasInit.current && searchValue) {
+            hasInit.current = true;
+            return searchValue
+        }
+        return value
+    }
 
     const {
         adminGroup,
@@ -87,12 +97,12 @@ function AncestorsModal({data, hideModal, changeAncestor, showHideModal, handleS
                             <div className="search-box-header js-gtm--search">
                                 <SearchBox
                                     view={({onChange, value, onSubmit}) => (
-                                        <Form
+                                        <Form id={'modal-search-form'}
                                             onSubmit={e => handleSearchFormSubmit(e, onSubmit)}>
                                             <Form.Group controlId="search">
                                                 <InputGroup>
                                                     <Form.Control
-                                                        value={value}
+                                                        value={getValue(value)}
                                                         onChange={(e) => onChange(e.currentTarget.value)}
                                                         className="right-border-none form-control form-control-lg rounded-1"
                                                         placeholder="Search"

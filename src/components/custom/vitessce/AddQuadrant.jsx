@@ -11,6 +11,7 @@ import {SearchBox} from '@elastic/react-search-ui';
 
 function AddQuadrant({setQ, fetchData, resultsFilterCallback}) {
     const [showHideModal, setShowHideModal] = useState(false)
+    const [searchValue, setSearchValue] = useState("")
 
     const {
         adminGroup,
@@ -43,40 +44,22 @@ function AddQuadrant({setQ, fetchData, resultsFilterCallback}) {
         <Stack className={'c-compare__addQuadrant'} spacing={2}>
             <div className={'c-compare__search'}>
 
-
-                <SearchUIContainer config={valid_dataset_ancestor_config} name={undefined} authState={authState}>
-                    <Layout
-                        header={
-                            <div className="search-box-header js-gtm--search">
-                                <SearchBox
-                                    view={({onChange, value, onSubmit}) => (
-                                        <Form
-                                            onSubmit={e => handleSearchFormSubmit(e, onSubmit)}>
-                                            <Form.Group className={`sui-filterableComponent`} as={Col} controlId="search">
-                                                <InputGroup>
-                                                    <Form.Control
-                                                        value={value}
-                                                        onChange={(e) => onChange(e.currentTarget.value)}
-                                                    />
-                                                    <InputGroup.Text className={"transparent"}><i className="bi bi-search"></i></InputGroup.Text>
-                                                    <Button type="button" label={'Reset'}><i className="bi bi-x"></i></Button>
-                                                </InputGroup>
-                                            </Form.Group>
-
-                                            {/*onClick={e => handleSearchFormSubmit(e, onSubmit)}*/}
-                                        </Form>
-                                    )}
-                                />
-                            </div>
-                        }
-                        sideContent={
-                            <span></span>
-                        }
-                        bodyContent={<span></span>
-
-                        }
-                    />
-                </SearchUIContainer>
+                <Form
+                    onSubmit={e => {
+                        e.preventDefault()
+                        setShowHideModal(true)
+                    }}>
+                <Form.Group className={`sui-filterableComponent`} as={Col} controlId="search">
+                    <InputGroup>
+                        <Form.Control
+                            value={searchValue}
+                            onChange={(e) => setSearchValue(e.currentTarget.value)}
+                        />
+                        <InputGroup.Text className={"transparent"}><i className="bi bi-search"></i></InputGroup.Text>
+                        <Button type="button" label={'Reset'}><i className="bi bi-x"></i></Button>
+                    </InputGroup>
+                </Form.Group>
+                </Form>
             </div>
             <div className={'text-center c-compare__addBtn'}>
                 <i className="bi bi-plus-lg" onClick={() => setShowHideModal(true)}></i>
@@ -84,6 +67,7 @@ function AddQuadrant({setQ, fetchData, resultsFilterCallback}) {
 
             <AncestorsModal resultsFilterCallback={resultsFilterCallback} data={[]} hideModal={hideModal}
                             changeAncestor={changeAncestor} showHideModal={showHideModal}
+                            searchValue={searchValue}
                             handleSearchFormSubmit={handleSearchFormSubmit} />
 
         </Stack>

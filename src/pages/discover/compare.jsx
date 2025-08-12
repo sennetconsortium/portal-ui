@@ -32,11 +32,11 @@ function ViewCompare() {
             'field': 'entity_type.keyword',
             'values': ['Dataset']
         })
-        _config['searchQuery']['includeFilters'].push({
-            'type': 'term',
-            'field': 'has_visualization.keyword',
-            'values': ['True']
-        })
+        // _config['searchQuery']['includeFilters'].push({
+        //     'type': 'term',
+        //     'field': 'has_visualization.keyword',
+        //     'values': ['True']
+        // })
     }
 
     const fetchData = async (uuid, stateFn, cb) => {
