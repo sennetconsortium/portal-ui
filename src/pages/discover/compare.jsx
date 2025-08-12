@@ -1,10 +1,17 @@
 import dynamic from "next/dynamic";
-import React, {useContext} from "react"
+import React, {useContext, useEffect, useState} from "react"
 import {APP_TITLE} from "@/config/config"
 import AppContext from "@/context/AppContext"
+import { useRouter } from 'next/router'
 
 import Container from "react-bootstrap/Container"
 import DataTable from "react-data-table-component";
+import {getAncestryData, getEntityData} from "@/lib/services";
+import {eq} from "@/components/custom/js/functions";
+import VitessceQuadrant from "@/components/custom/vitessce/VitessceQuadrant";
+import {DerivedProvider} from "@/context/DerivedContext";
+import ViewDataset from "@/pages/dataset";
+import AddQuadrant from "@/components/custom/vitessce/AddQuadrant";
 
 const AppNavbar = dynamic(() => import("../../components/custom/layout/AppNavbar"))
 const Header = dynamic(() => import("../../components/custom/layout/Header"))
@@ -12,12 +19,86 @@ const Spinner = dynamic(() => import("../../components/custom/Spinner"))
 
 function ViewCompare() {
     const {logout, isRegisterHidden, isAuthorizing, isUnauthorized, hasAuthenticationCookie} = useContext(AppContext)
+    const router = useRouter()
+    const [q1, setQ1] = useState(null)
+    const [q2, setQ2] = useState(null)
+    const [q3, setQ3] = useState(null)
+    const [q4, setQ4] = useState(null)
+    const [loadSortable, setLoadSortable] = useState(false)
 
-    const columns = [
-        {
+    const fetchData = async (uuid, stateFn, cb) => {
+        const _data = await getEntityData(uuid, ['ancestors', 'descendants'])
+        let hasViz = eq(_data.has_visualization, 'true')
 
+        if (!_data.error) {
+            getAncestryData(_data.uuid).then(ancestry => {
+                if (!hasViz) {
+                    // Primary gets processed and updated to QA but the derived dataset is still processed.
+                    // This could lead to a scenario where the primary has the property has_visualization: false but the processed is true.
+                    // So let's check that a descendant has_visualization: true
+                    for (const descendant of ancestry?.descendants) {
+                        if (eq(descendant.has_visualization, 'true')) {
+                            hasViz = true
+                            break;
+                        }
+                    }
+                }
+                if (hasViz) {
+                    Object.assign(_data, ancestry)
+                    stateFn(_data)
+                }
+                if (cb) {
+                    cb(_data)
+                }
+            })
         }
-    ]
+    }
+
+    const loadQ = (i, n, uuids, stateFn) => {
+        const uuid = uuids[i]
+        if (!uuid || !stateFn) return
+        const cb = () => {
+            if (i === (n-1)) {
+                setLoadSortable(true)
+            }
+        }
+        fetchData(uuid, stateFn, cb)
+
+    }
+
+    const getQuadrants = () => {
+        let res = []
+        const states = [setQ1, setQ2, setQ3, setQ4]
+        const vals = [q1, q2, q3, q4]
+        let i = 0;
+        for (let q of vals) {
+            res.push(
+                <div key={`q-${i}`} className={'c-compare__quadrant col col-6'}>
+                    <div className={'c-compare__sortableHead'}></div>
+                    {q && <DerivedProvider><VitessceQuadrant data={q} /></DerivedProvider>}
+                    {!q && <AddQuadrant setQ={states[i]} fetchData={fetchData} />}
+                </div>
+            )
+            i++
+        }
+        return res
+    }
+
+    useEffect(() => {
+        if (!router.isReady) return
+        let uuids = router.query.uuids?.split(',') || []
+        const n = uuids.length
+        const states = [setQ1, setQ2, setQ3, setQ4]
+        for (let i = 0; i < n; i++) {
+            loadQ(i, n, uuids, states[i])
+        }
+    }, [router.isReady, router.query])
+
+    useEffect(()=> {
+        if (loadSortable) {
+            $( "#sortable" ).sortable()
+        }
+    }, [loadSortable])
 
     if (isAuthorizing()) {
         return <Spinner/>
@@ -30,13 +111,20 @@ function ViewCompare() {
         return (
             <>
                 <Header title={APP_TITLE}/>
+
                 <AppNavbar hidden={isRegisterHidden}/>
-                <Container className="mb-5 d-block">
+                <div className="mb-5 container-fluid">
                     {/*<DataTable  columns={} data={} />*/}
-                </Container>
+                    <div id="sortable" className={'c-compare row m-0'}>
+                        {getQuadrants()}
+
+                    </div>
+                </div>
             </>
         )
     }
 }
+
+
 
 export default ViewCompare

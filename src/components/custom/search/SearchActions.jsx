@@ -15,6 +15,7 @@ import {autoBlobDownloader, eq} from "@/components/custom/js/functions";
 import SenNetPopover from "@/components/SenNetPopover";
 import AppTutorial from "@/components/custom/layout/AppTutorial";
 import {getCheckboxes} from "@/hooks/useSelectedRows";
+import {APP_ROUTES} from "@/config/constants";
 
 const StyledMenu = styled((props) => (
     <Menu
@@ -64,7 +65,7 @@ const StyledMenu = styled((props) => (
 
 function SearchActions({selectedRows, data = [], raw, columns, filters, exportKind, hiddenColumns, context = 'entities'}) {
     const [anchorEl, setAnchorEl] = useState(null)
-    const [totalSelected, setTotalSelected] = useState(selectedRows?.length)
+    const [totalSelected, setTotalSelected] = useState(selectedRows.current?.length)
     const [showTutorial, setShowTutorial] = useState(false)
     const open = Boolean(anchorEl)
     const hasListened = useRef(false)
@@ -165,7 +166,7 @@ function SearchActions({selectedRows, data = [], raw, columns, filters, exportKi
 
 
         if (!isAll) {
-            for (let s of selectedRows) {
+            for (let s of selectedRows.current) {
                 val = s.id
                 if (!Object.values(selected).length) {
                     fileName = val
@@ -317,6 +318,11 @@ function SearchActions({selectedRows, data = [], raw, columns, filters, exportKi
 
     }, [filters]);
 
+    const goCompare = () => {
+        const uuids = selectedRows.current.map((e) => e.id)
+        window.location = APP_ROUTES.discover + '/compare?uuids=' + uuids.join(',')
+    }
+
     return (
         <div>
             <Button
@@ -361,7 +367,7 @@ function SearchActions({selectedRows, data = [], raw, columns, filters, exportKi
                     <ListSubheader>
                         <InsightsIcon className={'mx-2'} />
                         Visualize</ListSubheader>
-                    <MenuItem className={'dropdown-item'} key={`export-all`}>Compare Datasets
+                    <MenuItem className={'dropdown-item'} key={`export-all`} onClick={goCompare}>Compare Datasets
                     </MenuItem>
                 </div>}
 
