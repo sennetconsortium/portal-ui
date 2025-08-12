@@ -7,7 +7,7 @@ import {
     fetchDataCite,
     getCreationActionRelationName,
     getEntityViewUrl,
-    getRequestHeaders
+    getRequestHeaders, eq
 } from "@/components/custom/js/functions";
 import {
     getWritePrivilegeForGroupUuid,
@@ -27,6 +27,8 @@ import Collections from "@/components/custom/entities/Collections";
 import FilesDataProducts from "@/components/custom/entities/dataset/FilesDataProducts";
 import BulkDataTransfer from "@/components/custom/entities/dataset/BulkDataTransfer";
 import {toast} from "react-toastify";
+import SenNetSuspense from "@/components/SenNetSuspense";
+import {ShimmerText, ShimmerThumbnail} from "react-shimmer-effects";
 
 
 const AppFooter = dynamic(() => import("@/components/custom/layout/AppFooter"))
@@ -38,9 +40,8 @@ const Metadata = dynamic(() => import("@/components/custom/entities/Metadata"))
 const Provenance = dynamic(() => import("@/components/custom/entities/Provenance"), {
     loading: () => <LoadingAccordion id="Provenance" title="Provenance" style={{ height:'490px' }} />
 })
-const SennetVitessce = dynamic(() => import("@/components/custom/vitessce/SennetVitessce"), {
-    loading: () => <LoadingAccordion id="Vitessce" title="Vitessce" style={{ height:'800px' }} />
-})
+const SennetVitessce = dynamic(() => import("@/components/custom/vitessce/SennetVitessce"))
+
 const SidebarBtn = dynamic(() => import("@/components/SidebarBtn"))
 
 function ViewDataset() {
@@ -54,6 +55,7 @@ function ViewDataset() {
     const {router, isRegisterHidden, _t, cache, isPreview, getPreviewView, isLoggedIn} = useContext(AppContext)
     const [primaryDatasetData, setPrimaryDatasetInfo] = useState(null)
     const [showFilesSection, setShowFilesSection] = useState(null)
+    const [hasViz, setHasViz] = useState(false)
     const {
         showVitessce,
         initVitessceConfig,
@@ -84,7 +86,9 @@ function ViewDataset() {
     useEffect(() => {
         if (data && data.ancestors) {
             fetchDataProducts(data)
-            initVitessceConfig(data)
+            if (hasViz) {
+                initVitessceConfig(data)
+            }
             if (datasetIs.primary(data.creation_action)) {
                 setDatasetCategories(getAssaySplitData(data))
             } else {
@@ -109,9 +113,23 @@ function ViewDataset() {
 
             // set state with the result
             setData(_data)
+            let hasViz = eq(_data.has_visualization, 'true')
+            setHasViz(hasViz)
 
             // fetch ancestry data
             getAncestryData(_data.uuid).then(ancestry => {
+                if (!hasViz) {
+                    // Primary gets processed and updated to QA but the derived dataset is still processed.
+                    // This could lead to a scenario where the primary has the property has_visualization: false but the processed is true.
+                    // So let's check that a descendant has_visualization: true
+                    for (const descendant of ancestry.descendants) {
+                        if (eq(descendant.has_visualization, 'true')) {
+                            setHasViz(true)
+                            break;
+                        }
+                    }
+                }
+
                 Object.assign(_data, ancestry)
                 setData(_data)
                 setHasAncestry(true)
@@ -235,7 +253,7 @@ function ViewDataset() {
                                                    data-bs-parent="#sidebar">Associated Collections</a>
                                             </li>
                                         )}
-                                        {showVitessce &&
+                                        {hasViz &&
                                             <li className="nav-item">
                                                 <a href="#Vitessce"
                                                    className="nav-link"
@@ -318,7 +336,15 @@ function ViewDataset() {
                                         )}
 
                                         {/* Vitessce */}
-                                        {showVitessce && <SennetVitessce data={data}/>}
+                                        {data && hasViz && <SenNetSuspense showChildren={showVitessce}
+                                                        suspenseElements={<>
+                                                            <ShimmerText line={3} gap={10} />
+                                                            <ShimmerThumbnail height={700} className={'mt-2'} rounded />
+                                                        </>}
+                                                        id="Vitessce" title="Visualization"
+                                                        style={{ height:'800px' }}>
+                                            <SennetVitessce data={data}/>
+                                        </SenNetSuspense>}
 
                                         {/*Provenance*/}
                                         <Provenance data={data} hasAncestry={hasAncestry}/>

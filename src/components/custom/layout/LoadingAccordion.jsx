@@ -1,6 +1,6 @@
 import Spinner from "../Spinner"
 
-const LoadingAccordion = ({id, title, style={ height:'100px' }, expanded=true}) => {
+const LoadingAccordion = ({id, title, children, style={ height:'100px' }, expanded=true}) => {
     return (
         <div id={id} className={`accordion accordion-flush sui-result`}>
             <div className='accordion-item'>
@@ -18,7 +18,8 @@ const LoadingAccordion = ({id, title, style={ height:'100px' }, expanded=true}) 
                 </div>
                 <div id={`${id}-collapse`} style={style} className={`accordion-collapse collapse ${expanded ? 'show' : 'show-invisible'}`} >
                     <div className='accordion-body'>
-                        <Spinner />
+                        {children}
+                        {!children && <Spinner />}
                     </div>
                 </div>
             </div>
