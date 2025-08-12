@@ -1,5 +1,13 @@
 @use "../config/swatch";
 .c-compare {
+  &__quadrantTitle {
+    .bi-pencil {
+      &:before {
+        color: swatch.$col-bs-blue;
+        cursor: pointer;
+      }
+    }
+  }
   &__sortableHead {
     width: 100%;
     height: 20px;

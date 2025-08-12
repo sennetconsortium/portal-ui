@@ -1,21 +1,38 @@
 import React, {useContext, useEffect, useState} from 'react'
-import PropTypes from 'prop-types'
 import DerivedContext from "@/context/DerivedContext";
 import SenNetSuspense from "@/components/SenNetSuspense";
 import {ShimmerText, ShimmerThumbnail} from "react-shimmer-effects";
 import dynamic from "next/dynamic";
+import AncestorsModal from "@/components/custom/edit/dataset/AncestorsModal";
+import {DescendantInfo} from "@/components/custom/vitessce/SenNetVitessce";
 
-const SennetVitessce = dynamic(() => import("@/components/custom/vitessce/SennetVitessce"))
+const SenNetVitessce = dynamic(() => import("@/components/custom/vitessce/SenNetVitessce"))
 
-function VitessceQuadrant({data, children}) {
+function VitessceQuadrant({data, setQ, fetchData}) {
     const {
         showVitessce,
-        initVitessceConfig
+        initVitessceConfig,
+        isPrimaryDataset,
+        derivedDataset,
     } = useContext(DerivedContext)
 
     useEffect(() => {
         initVitessceConfig(data)
     }, [])
+
+    const [showHideModal, setShowHideModal] = useState(false)
+
+    const handleSearchFormSubmit = (event, onSubmit) => {
+        onSubmit(event)
+    }
+
+    const changeAncestor = async (e, ancestorId) => {
+        fetchData(ancestorId, setQ, hideModal)
+    }
+
+    const hideModal = () => {
+        setShowHideModal(false)
+    }
 
     return (
         <div>
@@ -27,19 +44,18 @@ function VitessceQuadrant({data, children}) {
                                                </>}
                                                id={'viz-'+ data.uuid} title={data.sennet_id}
                                                style={{ height:'800px' }}>
-                <SennetVitessce id={'viz-'+ data.uuid} title={data.sennet_id} data={data}/>
+                <SenNetVitessce showDescendantInfo={false} showPoweredInfo={false} id={'viz-'+ data.uuid} title={
+                    <div className={'c-compare__quadrantTitle'}>
+                <span>{data.sennet_id}</span>
+                        <i className="bi bi-pencil mx-2" aria-label={`Modify Dataset ${data.sennet_id}`} onClick={()=>setShowHideModal(true)}></i>
+                        <DescendantInfo isPrimaryDataset={isPrimaryDataset} derivedDataset={derivedDataset} wrapClassNames={''} />
+                    </div>} data={data}/>
             </SenNetSuspense>
+            <AncestorsModal data={[]} hideModal={hideModal} changeAncestor={changeAncestor} showHideModal={showHideModal} handleSearchFormSubmit={handleSearchFormSubmit} />
         </div>
 
     )
 }
-
-
-VitessceQuadrant.propTypes = {
-    children: PropTypes.node
-}
-
-
 
 
 export default VitessceQuadrant

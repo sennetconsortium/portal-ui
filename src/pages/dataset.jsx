@@ -40,7 +40,7 @@ const Metadata = dynamic(() => import("@/components/custom/entities/Metadata"))
 const Provenance = dynamic(() => import("@/components/custom/entities/Provenance"), {
     loading: () => <LoadingAccordion id="Provenance" title="Provenance" style={{ height:'490px' }} />
 })
-const SennetVitessce = dynamic(() => import("@/components/custom/vitessce/SennetVitessce"))
+const SenNetVitessce = dynamic(() => import("@/components/custom/vitessce/SenNetVitessce"))
 
 const SidebarBtn = dynamic(() => import("@/components/SidebarBtn"))
 
@@ -343,7 +343,7 @@ function ViewDataset() {
                                                         </>}
                                                         id="Vitessce" title="Visualization"
                                                         style={{ height:'800px' }}>
-                                            <SennetVitessce data={data}/>
+                                            <SenNetVitessce data={data}/>
                                         </SenNetSuspense>}
 
                                         {/*Provenance*/}

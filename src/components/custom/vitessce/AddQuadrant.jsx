@@ -13,7 +13,6 @@ function AddQuadrant({setQ, fetchData}) {
 
     const changeAncestor = async (e, ancestorId) => {
         fetchData(ancestorId, setQ, hideModal)
-
     }
 
     const hideModal = () => {
