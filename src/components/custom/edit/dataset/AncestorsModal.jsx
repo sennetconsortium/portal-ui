@@ -17,7 +17,7 @@ import {Results, SearchBox} from '@elastic/react-search-ui';
 import {Form} from 'react-bootstrap';
 
 
-function BodyContent({ handleChangeAncestor, data }) {
+function BodyContent({ handleChangeAncestor, data, resultsFilterCallback }) {
     const {hasAuthenticationCookie, isUnauthorized } = useContext(AppContext)
     const { wasSearched, filters } = useSearchUIContext();
     const includedExclude = useRef(false)
@@ -38,6 +38,9 @@ function BodyContent({ handleChangeAncestor, data }) {
                 value: data['uuid']
             })
         }
+        if (resultsFilterCallback) {
+            resultsFilterCallback(valid_dataset_ancestor_config)
+        }
     }, [])
 
     return (
@@ -53,7 +56,7 @@ function BodyContent({ handleChangeAncestor, data }) {
     )
 }
 
-function AncestorsModal({data, hideModal, changeAncestor, showHideModal, handleSearchFormSubmit}) {
+function AncestorsModal({data, hideModal, changeAncestor, showHideModal, handleSearchFormSubmit, resultsFilterCallback}) {
     useEffect(() => {
     }, [])
 
@@ -118,7 +121,7 @@ function AncestorsModal({data, hideModal, changeAncestor, showHideModal, handleS
                             </div>
                         }
                         bodyContent={
-                            <BodyContent handleChangeAncestor={changeAncestor} data={data} />
+                            <BodyContent handleChangeAncestor={changeAncestor} data={data} resultsFilterCallback={resultsFilterCallback} />
                         }
                     />
                 </SearchUIContainer>

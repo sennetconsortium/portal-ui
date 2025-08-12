@@ -4,7 +4,7 @@ import {Autocomplete, TextField} from "@mui/material";
 import Stack from "@mui/material/Stack";
 import AncestorsModal from "@/components/custom/edit/dataset/AncestorsModal";
 
-function AddQuadrant({setQ, fetchData}) {
+function AddQuadrant({setQ, fetchData, resultsFilterCallback}) {
     const [showHideModal, setShowHideModal] = useState(false)
 
     const handleSearchFormSubmit = (event, onSubmit) => {
@@ -37,7 +37,7 @@ function AddQuadrant({setQ, fetchData}) {
                 <i className="bi bi-plus-lg" onClick={()=> setShowHideModal(true)}></i>
             </div>
 
-            <AncestorsModal data={[]} hideModal={hideModal} changeAncestor={changeAncestor} showHideModal={showHideModal} handleSearchFormSubmit={handleSearchFormSubmit} />
+            <AncestorsModal resultsFilterCallback={resultsFilterCallback} data={[]} hideModal={hideModal} changeAncestor={changeAncestor} showHideModal={showHideModal} handleSearchFormSubmit={handleSearchFormSubmit} />
 
         </Stack>
     )

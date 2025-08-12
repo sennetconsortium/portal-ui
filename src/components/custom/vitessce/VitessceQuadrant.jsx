@@ -8,7 +8,7 @@ import {DescendantInfo} from "@/components/custom/vitessce/SenNetVitessce";
 
 const SenNetVitessce = dynamic(() => import("@/components/custom/vitessce/SenNetVitessce"))
 
-function VitessceQuadrant({data, setQ, fetchData}) {
+function VitessceQuadrant({data, setQ, fetchData, resultsFilterCallback}) {
     const {
         showVitessce,
         initVitessceConfig,
@@ -51,7 +51,7 @@ function VitessceQuadrant({data, setQ, fetchData}) {
                         <DescendantInfo isPrimaryDataset={isPrimaryDataset} derivedDataset={derivedDataset} wrapClassNames={''} />
                     </div>} data={data}/>
             </SenNetSuspense>
-            <AncestorsModal data={[]} hideModal={hideModal} changeAncestor={changeAncestor} showHideModal={showHideModal} handleSearchFormSubmit={handleSearchFormSubmit} />
+            <AncestorsModal resultsFilterCallback={resultsFilterCallback} data={[]} hideModal={hideModal} changeAncestor={changeAncestor} showHideModal={showHideModal} handleSearchFormSubmit={handleSearchFormSubmit} />
         </div>
 
     )

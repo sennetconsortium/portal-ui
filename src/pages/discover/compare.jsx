@@ -3,14 +3,10 @@ import React, {useContext, useEffect, useState} from "react"
 import {APP_TITLE} from "@/config/config"
 import AppContext from "@/context/AppContext"
 import { useRouter } from 'next/router'
-
-import Container from "react-bootstrap/Container"
-import DataTable from "react-data-table-component";
 import {getAncestryData, getEntityData} from "@/lib/services";
 import {eq} from "@/components/custom/js/functions";
 import VitessceQuadrant from "@/components/custom/vitessce/VitessceQuadrant";
 import {DerivedProvider} from "@/context/DerivedContext";
-import ViewDataset from "@/pages/dataset";
 import AddQuadrant from "@/components/custom/vitessce/AddQuadrant";
 
 const AppNavbar = dynamic(() => import("../../components/custom/layout/AppNavbar"))
@@ -25,6 +21,23 @@ function ViewCompare() {
     const [q3, setQ3] = useState(null)
     const [q4, setQ4] = useState(null)
     const [loadSortable, setLoadSortable] = useState(false)
+
+
+    const resultsFilterCallback = (_config) => {
+        if (!_config) return
+
+        _config['searchQuery']['includeFilters'] = _config['searchQuery']['includeFilters'] || []
+        _config['searchQuery']['includeFilters']?.push({
+            'type': 'term',
+            'field': 'entity_type.keyword',
+            'values': ['Dataset']
+        })
+        _config['searchQuery']['includeFilters'].push({
+            'type': 'term',
+            'field': 'has_visualization.keyword',
+            'values': ['True']
+        })
+    }
 
     const fetchData = async (uuid, stateFn, cb) => {
         const _data = await getEntityData(uuid, ['ancestors', 'descendants'])
@@ -75,8 +88,8 @@ function ViewCompare() {
             res.push(
                 <div key={`q-${i}`} className={'c-compare__quadrant col col-6'}>
                     <div className={'c-compare__sortableHead'}></div>
-                    {q && <DerivedProvider><VitessceQuadrant data={q} /></DerivedProvider>}
-                    {!q && <AddQuadrant setQ={states[i]} fetchData={fetchData} />}
+                    {q && <DerivedProvider><VitessceQuadrant resultsFilterCallback={resultsFilterCallback} data={q} /></DerivedProvider>}
+                    {!q && <AddQuadrant resultsFilterCallback={resultsFilterCallback} setQ={states[i]} fetchData={fetchData} />}
                 </div>
             )
             i++
