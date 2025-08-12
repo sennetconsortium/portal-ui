@@ -173,10 +173,16 @@ function TableResultsFiles({children, filters, forData = false, rowFn, inModal =
 
     const downloadManifest = () => {
         let manifestData  = ''
-
         for (let key in selectedFilesModal.current[currentDatasetUuid.current].selected){
             let keys = key.split(FILE_KEY_SEPARATOR)
-            manifestData += `${keys[0]} /${keys[keys.length - 1]}\n`
+            let file = keys[keys.length - 1]
+            if (file.contains('.')) {
+                let uuid = keys[0]
+                // remove the first two due to formatting of tree component, aren't needed
+                keys.shift()
+                keys.shift()
+                manifestData += `${uuid} /${keys.join('/')}\n`
+            }
         }
 
         autoBlobDownloader([manifestData], 'text/plain', `data-manifest.txt`)
@@ -203,7 +209,6 @@ function TableResultsFiles({children, filters, forData = false, rowFn, inModal =
         e.originalEvent.stopPropagation()
 
         let _dict = JSON.parse(JSON.stringify(e.value))
-
         selectedFilesModal.current[row.dataset_uuid] = {row, selected: _dict}
 
         const show = Object.values(selectedFilesModal.current[row.dataset_uuid].selected).length > 0
