@@ -135,8 +135,6 @@ function AncestorsModal({data, hideModal, changeAncestor, showHideModal, handleS
     )
 }
 
-AncestorsModal.defaultProps = {}
-
 AncestorsModal.propTypes = {
     children: PropTypes.node
 }
