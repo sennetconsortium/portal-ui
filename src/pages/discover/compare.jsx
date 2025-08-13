@@ -86,7 +86,7 @@ function ViewCompare() {
             res.push(
                 <div key={`q-${i}`} className={'c-compare__quadrant col col-6'}>
                     <div className={'c-compare__sortableHead'}></div>
-                    {q && <DerivedProvider><VitessceQuadrant resultsFilterCallback={resultsFilterCallback} data={q} /></DerivedProvider>}
+                    {q && <DerivedProvider><VitessceQuadrant resultsFilterCallback={resultsFilterCallback} setQ={states[i]} data={q} fetchData={fetchData} /></DerivedProvider>}
                     {!q && <AddQuadrant resultsFilterCallback={resultsFilterCallback} setQ={states[i]} fetchData={fetchData} />}
                 </div>
             )
