@@ -3,27 +3,10 @@ import PropTypes from 'prop-types'
 import {Button, Form, InputGroup, Col} from 'react-bootstrap'
 import Stack from "@mui/material/Stack";
 import AncestorsModal from "@/components/custom/edit/dataset/AncestorsModal";
-import {valid_dataset_ancestor_config} from "@/config/config";
-import SearchUIContainer from "@/search-ui/components/core/SearchUIContainer";
-import AppContext from "@/context/AppContext";
-import {Layout} from '@elastic/react-search-ui-views';
-import {SearchBox} from '@elastic/react-search-ui';
 
 function AddQuadrant({setQ, fetchData, resultsFilterCallback}) {
     const [showHideModal, setShowHideModal] = useState(false)
     const [searchValue, setSearchValue] = useState("")
-
-    const {
-        adminGroup,
-        authorized,
-        hasAuthenticationCookie
-    } = useContext(AppContext);
-
-    const authState = {
-        isAuthenticated: hasAuthenticationCookie() === true,
-        isAuthorized: authorized === true,
-        isAdmin: adminGroup === true
-    }
 
     const handleSearchFormSubmit = (event, onSubmit) => {
         onSubmit(event)

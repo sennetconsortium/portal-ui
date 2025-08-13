@@ -23,7 +23,9 @@ function ViewCompare() {
     const [loadSortable, setLoadSortable] = useState(false)
 
 
-    const resultsFilterCallback = (_config) => {
+    const resultsFilterCallback = (_config, addFilter) => {
+        addFilter('entity_type', 'Dataset')
+        addFilter('has_visualization', 'True')
         if (!_config) return
 
         _config['searchQuery']['includeFilters'] = _config['searchQuery']['includeFilters'] || []
@@ -32,11 +34,7 @@ function ViewCompare() {
             'field': 'entity_type.keyword',
             'values': ['Dataset']
         })
-        // _config['searchQuery']['includeFilters'].push({
-        //     'type': 'term',
-        //     'field': 'has_visualization.keyword',
-        //     'values': ['True']
-        // })
+
     }
 
     const fetchData = async (uuid, stateFn, cb) => {
