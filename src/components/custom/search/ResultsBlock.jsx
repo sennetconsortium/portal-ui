@@ -47,7 +47,7 @@ function ResultsBlock({getTableColumns, disableRowClick, tableClassName = '', ex
             <div className='sui-layout-main-header'>
                 <div className='sui-layout-main-header__inner'>
 
-                    <SearchActions exportKind={exportKind} selectedRows={selectedRows} filters={filters} data={getTableData()} raw={raw} hiddenColumns={hiddenColumns} columns={currentColumns.current} />
+                    <SearchActions inModal={inModal} exportKind={exportKind} selectedRows={selectedRows} filters={filters} data={getTableData()} raw={raw} hiddenColumns={hiddenColumns} columns={currentColumns.current} />
                     {rows.length > 0 && <ColumnsDropdown searchContext={searchContext} filters={filters} defaultHiddenColumns={defaultHiddenColumns} getTableColumns={getTableColumns} setHiddenColumns={setHiddenColumns}
                                       currentColumns={currentColumns.current} />}
                     <ResultsPerPage updateTablePagination={updateTablePagination}
@@ -87,7 +87,7 @@ function ResultsBlock({getTableColumns, disableRowClick, tableClassName = '', ex
                         progressPending={isSearching}
                         progressComponent={<Spinner />}
                         selectableRowSelected={rowSelectCriteria}
-                        selectableRows
+                        selectableRows={!inModal}
                         onSelectedRowsChange={handleRowSelected}
                         selectableRowsVisibleOnly={true}
                 />}

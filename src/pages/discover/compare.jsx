@@ -21,11 +21,28 @@ function ViewCompare() {
     const [q3, setQ3] = useState(null)
     const [q4, setQ4] = useState(null)
     const [loadSortable, setLoadSortable] = useState(false)
+    const [datasetType, setDatasetType] = useState(null)
 
 
-    const resultsFilterCallback = (_config, addFilter) => {
+    const resultsFilterCallback = (_config, {addFilter, setStateProps}) => {
         addFilter('entity_type', 'Dataset')
         addFilter('has_visualization', 'True')
+        let typeDisabled = false
+        if (datasetType) {
+            addFilter('dataset_type', datasetType)
+            typeDisabled = true
+        }
+        setStateProps({
+            'entity_type.keyword': {'disabled': true},
+            'has_visualization.keyword': {'disabled': true},
+            'dataset_type_hierarchy.first_level.keyword': {'disabled': typeDisabled},
+            'dataset_type_hierarchy.second_level.keyword': {'disabled': typeDisabled},
+        })
+
+        setTimeout(()=> {
+            $('.sui-facet__HasVisualization input').attr('disabled', true)
+        }, 2000)
+
         if (!_config) return
 
         _config['searchQuery']['includeFilters'] = _config['searchQuery']['includeFilters'] || []
@@ -57,8 +74,10 @@ function ViewCompare() {
                 if (hasViz) {
                     Object.assign(_data, ancestry)
                     stateFn(_data)
+                    setDatasetType(_data.dataset_type)
                 }
                 if (cb) {
+                    // a callback to load sortable or close modal
                     cb(_data)
                 }
             })
@@ -111,6 +130,15 @@ function ViewCompare() {
         }
     }, [loadSortable])
 
+    const clearSelections = () => {
+        const states = [setQ1, setQ2, setQ3, setQ4]
+        for (let s of states) {
+            s(null)
+        }
+        setDatasetType(null)
+        //window.history.pushState(null, null, '?clear=true');
+    }
+
     if (isAuthorizing()) {
         return <Spinner/>
     } else {
@@ -125,6 +153,11 @@ function ViewCompare() {
 
                 <AppNavbar hidden={isRegisterHidden}/>
                 <div className="mb-5 container-fluid">
+                    <div className={'mx-3 mt-4'}>
+                        <h3>Datasets Comparison {datasetType && <span className={'badge badge-secondary'}>{datasetType}</span>}</h3>
+                        {(q1 || q2 || q3 || q4) && <button onClick={clearSelections} className='btn btn-outline-primary rounded-0'>Reset selections &nbsp;<i
+                            className="bi bi-x-circle"></i></button>}
+                    </div>
                     {/*<DataTable  columns={} data={} />*/}
                     <div id="sortable" className={'c-compare row m-0'}>
                         {getQuadrants()}

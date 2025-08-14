@@ -19,7 +19,7 @@ import {Form} from 'react-bootstrap';
 
 function BodyContent({ handleChangeAncestor, data, resultsFilterCallback }) {
     const {hasAuthenticationCookie, isUnauthorized } = useContext(AppContext)
-    const { wasSearched, filters, addFilter } = useSearchUIContext();
+    const { wasSearched, filters, addFilter, setStateProps } = useSearchUIContext();
     const includedExclude = useRef(false)
 
     valid_dataset_ancestor_config['searchQuery']['conditionalFacets']['rui_location'] = ({filters}) => {
@@ -39,7 +39,7 @@ function BodyContent({ handleChangeAncestor, data, resultsFilterCallback }) {
             })
         }
         if (resultsFilterCallback) {
-            resultsFilterCallback(valid_dataset_ancestor_config, addFilter)
+            resultsFilterCallback(valid_dataset_ancestor_config, {addFilter, setStateProps})
         }
     }, [])
 

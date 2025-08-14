@@ -63,7 +63,7 @@ const StyledMenu = styled((props) => (
     },
 }));
 
-function SearchActions({selectedRows, data = [], raw, columns, filters, exportKind, hiddenColumns, context = 'entities'}) {
+function SearchActions({selectedRows, data = [], raw, columns, filters, exportKind, hiddenColumns, inModal, context = 'entities'}) {
     const [anchorEl, setAnchorEl] = useState(null)
     const [totalSelected, setTotalSelected] = useState(selectedRows.current?.length)
     const [showTutorial, setShowTutorial] = useState(false)
@@ -366,7 +366,7 @@ function SearchActions({selectedRows, data = [], raw, columns, filters, exportKi
                     {getMenuItems()}
                 </MenuItem>}
 
-                <div>
+                {!inModal && <div>
 
                     <ListSubheader>
                         <InsightsIcon className={'mx-2'} />
@@ -377,7 +377,7 @@ function SearchActions({selectedRows, data = [], raw, columns, filters, exportKi
                     <MenuItem className={`dropdown-item ${hasSelectedDatasets() ? '' : 'disabled text-disabled'}`} key={`export-all`} onClick={hasSelectedDatasets() ? goCompare : undefined}>
                         Compare Datasets
                     </MenuItem>
-                </div>
+                </div>}
 
 
             </StyledMenu>
