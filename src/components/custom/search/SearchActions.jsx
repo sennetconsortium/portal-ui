@@ -283,15 +283,19 @@ function SearchActions({selectedRows, data = [], raw, columns, filters, exportKi
 
     const hasDatasetFilter = ()=> {
         let has = false
+        let types = new Set()
         if (filters) {
             for (let f of filters) {
                 if (_isDatasetFilter(f)) {
                     has = true
-                    break;
+                    break
                 }
             }
         }
-        return has
+        for (let e of selectedRows.current) {
+            types.add(e.dataset_type.raw)
+        }
+        return has && (types.size === 1)
     }
 
     const hasSelectedDatasets = () => hasSelectedRows() && hasDatasetFilter()
@@ -362,14 +366,18 @@ function SearchActions({selectedRows, data = [], raw, columns, filters, exportKi
                     {getMenuItems()}
                 </MenuItem>}
 
-                {hasSelectedDatasets() &&<div>
+                <div>
 
                     <ListSubheader>
                         <InsightsIcon className={'mx-2'} />
-                        Visualize</ListSubheader>
-                    <MenuItem className={'dropdown-item'} key={`export-all`} onClick={goCompare}>Compare Datasets
+                        <SenNetPopover text={<span>Select up to 4 datasets of the same dataset type to compare the visualizations.</span>}>
+                        <span>Visualize</span>
+                        </SenNetPopover>
+                        </ListSubheader>
+                    <MenuItem className={`dropdown-item ${hasSelectedDatasets() ? '' : 'disabled text-disabled'}`} key={`export-all`} onClick={hasSelectedDatasets() ? goCompare : undefined}>
+                        Compare Datasets
                     </MenuItem>
-                </div>}
+                </div>
 
 
             </StyledMenu>

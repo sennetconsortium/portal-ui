@@ -364,8 +364,13 @@
     left: 35px;
 }
 
-
 .sui-paging-info {
   text-transform: none;
   color: white;
+}
+
+#sui-tbl-checkbox-actions {
+  .MuiListSubheader-root {
+    line-height: 34px;
+  }
 }
