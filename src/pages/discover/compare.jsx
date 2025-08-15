@@ -78,7 +78,7 @@ function ViewCompare() {
                 }
                 if (cb) {
                     // a callback to load sortable or close modal
-                    cb(_data)
+                    cb({current: _data, q1, q2, q3, q4})
                 }
             })
         }
@@ -106,7 +106,7 @@ function ViewCompare() {
                 <div key={`q-${i}`} className={'c-compare__quadrant col col-6'}>
                     <div className={'c-compare__sortableHead'}></div>
                     {q && <DerivedProvider><VitessceQuadrant resultsFilterCallback={resultsFilterCallback} setQ={states[i]} data={q} fetchData={fetchData} /></DerivedProvider>}
-                    {!q && <AddQuadrant resultsFilterCallback={resultsFilterCallback} setQ={states[i]} fetchData={fetchData} />}
+                    {!q && <AddQuadrant resultsFilterCallback={resultsFilterCallback} qId={i} setQ={states[i]} fetchData={fetchData} />}
                 </div>
             )
             i++
@@ -136,7 +136,9 @@ function ViewCompare() {
             s(null)
         }
         setDatasetType(null)
-        //window.history.pushState(null, null, '?clear=true');
+        const query = '?clear=true'
+        window.history.pushState(null, null, query)
+        router.replace(location.href + query, { scroll: false })
     }
 
     if (isAuthorizing()) {

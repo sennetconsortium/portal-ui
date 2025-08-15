@@ -4,7 +4,7 @@ import {Button, Form, InputGroup, Col} from 'react-bootstrap'
 import Stack from "@mui/material/Stack";
 import AncestorsModal from "@/components/custom/edit/dataset/AncestorsModal";
 
-function AddQuadrant({setQ, fetchData, resultsFilterCallback}) {
+function AddQuadrant({setQ, qId, fetchData, resultsFilterCallback}) {
     const [showHideModal, setShowHideModal] = useState(false)
     const [searchValue, setSearchValue] = useState("")
 
@@ -13,15 +13,28 @@ function AddQuadrant({setQ, fetchData, resultsFilterCallback}) {
     }
 
     const changeAncestor = async (e, ancestorId) => {
-        fetchData(ancestorId, setQ, hideModal)
+        fetchData(ancestorId, setQ, updateUI)
+    }
+
+    const updateUI = (data) => {
+        let uuids = []
+        let uuid
+        for (let i = 1; i < 5; i++) {
+            uuid = data[`q${i}`]?.uuid
+            if (uuid && data.current.uuid !== uuid ) {
+                uuids.push(uuid)
+            }
+            if ((i - 1) === qId) {
+                uuids.push(data.current.uuid)
+            }
+        }
+        window.history.pushState(null, null, `?uuids=${uuids.join(',')}`)
+        hideModal()
     }
 
     const hideModal = () => {
         setShowHideModal(false)
     }
-
-    useEffect(() => {
-    }, [])
 
     return (
         <Stack className={'c-compare__addQuadrant'} spacing={2}>
