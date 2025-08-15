@@ -176,7 +176,7 @@ export const SEARCH_FILES = {
                 isFacetVisible: doesAggregationHaveBuckets('is_data_product')
             },
             'is_qa_qc': {
-                label: 'Is QA',
+                label: 'Is QA QC',
                 type: 'exists',
                 field: 'is_qa_qc.keyword',
                 isExpanded: false,
