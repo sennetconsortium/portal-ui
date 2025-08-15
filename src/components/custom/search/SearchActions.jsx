@@ -16,6 +16,7 @@ import SenNetPopover from "@/components/SenNetPopover";
 import AppTutorial from "@/components/custom/layout/AppTutorial";
 import {getCheckboxes} from "@/hooks/useSelectedRows";
 import {APP_ROUTES} from "@/config/constants";
+import {Divider} from "@mui/material";
 
 const StyledMenu = styled((props) => (
     <Menu
@@ -63,7 +64,7 @@ const StyledMenu = styled((props) => (
     },
 }));
 
-function SearchActions({selectedRows, data = [], raw, columns, filters, exportKind, hiddenColumns, inModal, context = 'entities'}) {
+function SearchActions({selectedRows, data = [], raw, columns, filters, exportKind, hiddenColumns, inModal, setRefresh, context = 'entities'}) {
     const [anchorEl, setAnchorEl] = useState(null)
     const [totalSelected, setTotalSelected] = useState(selectedRows.current?.length)
     const [showTutorial, setShowTutorial] = useState(false)
@@ -293,7 +294,9 @@ function SearchActions({selectedRows, data = [], raw, columns, filters, exportKi
             }
         }
         for (let e of selectedRows.current) {
-            types.add(e.dataset_type.raw)
+            if (e.dataset_type) {
+                types.add(e.dataset_type?.raw)
+            }
         }
         return has && (types.size === 1)
     }
@@ -325,6 +328,11 @@ function SearchActions({selectedRows, data = [], raw, columns, filters, exportKi
     const goCompare = () => {
         const uuids = selectedRows.current.map((e) => e.id)
         window.location = APP_ROUTES.discover + '/compare?uuids=' + uuids.join(',')
+    }
+
+    const clearSelections = () => {
+        selectedRows.current = []
+        setRefresh(new Date().getMilliseconds())
     }
 
     return (
@@ -378,6 +386,11 @@ function SearchActions({selectedRows, data = [], raw, columns, filters, exportKi
                         Compare Datasets
                     </MenuItem>
                 </div>}
+                <Divider />
+                {hasSelectedRows() &&
+                    <MenuItem className={'dropdown-item'} onClick={clearSelections}><i
+                        className="bi bi-x-circle"></i> &nbsp; Clear row selections ({selectedRows.current.length})
+                    </MenuItem>}
 
 
             </StyledMenu>

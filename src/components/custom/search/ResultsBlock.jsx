@@ -41,13 +41,14 @@ function ResultsBlock({getTableColumns, disableRowClick, tableClassName = '', ex
 
     const [hiddenColumns, setHiddenColumns] = useState(null)
     const {selectedRows,handleRowSelected, rowSelectCriteria  } = useSelectedRows({pageNumber, pageSize})
+    const [_, setRefresh] = useState(new Date().getMilliseconds())
 
     return (
         <>
             <div className='sui-layout-main-header'>
                 <div className='sui-layout-main-header__inner'>
 
-                    <SearchActions inModal={inModal} exportKind={exportKind} selectedRows={selectedRows} filters={filters} data={getTableData()} raw={raw} hiddenColumns={hiddenColumns} columns={currentColumns.current} />
+                    <SearchActions setRefresh={setRefresh} inModal={inModal} exportKind={exportKind} selectedRows={selectedRows} filters={filters} data={getTableData()} raw={raw} hiddenColumns={hiddenColumns} columns={currentColumns.current} />
                     {rows.length > 0 && <ColumnsDropdown searchContext={searchContext} filters={filters} defaultHiddenColumns={defaultHiddenColumns} getTableColumns={getTableColumns} setHiddenColumns={setHiddenColumns}
                                       currentColumns={currentColumns.current} />}
                     <ResultsPerPage updateTablePagination={updateTablePagination}
