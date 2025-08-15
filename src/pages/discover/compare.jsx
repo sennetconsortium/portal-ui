@@ -114,9 +114,19 @@ function ViewCompare() {
         return res
     }
 
+    const clearQuadrants = () => {
+        const states = [setQ1, setQ2, setQ3, setQ4]
+        for (let s of states) {
+            s(null)
+        }
+        setDatasetType(null)
+    }
+
     useEffect(() => {
-        if (!router.isReady) return
-        let uuids = router.query.uuids?.split(',') || []
+        const query = new URLSearchParams(window.location.search)
+        let uuids = query.get('uuids')?.split(',')
+        clearQuadrants()
+        uuids = uuids || []
         const n = uuids.length
         const states = [setQ1, setQ2, setQ3, setQ4]
         for (let i = 0; i < n; i++) {
@@ -131,11 +141,7 @@ function ViewCompare() {
     }, [loadSortable])
 
     const clearSelections = () => {
-        const states = [setQ1, setQ2, setQ3, setQ4]
-        for (let s of states) {
-            s(null)
-        }
-        setDatasetType(null)
+        clearQuadrants()
         const query = '?clear=true'
         window.history.pushState(null, null, query)
         router.replace(location.href + query, { scroll: false })

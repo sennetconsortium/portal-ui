@@ -28,7 +28,7 @@ function AddQuadrant({setQ, qId, fetchData, resultsFilterCallback}) {
                 uuids.push(data.current.uuid)
             }
         }
-        window.history.pushState(null, null, `?uuids=${uuids.join(',')}`)
+        window.history.replaceState(null, null, `?uuids=${uuids.join(',')}`)
         hideModal()
     }
 
