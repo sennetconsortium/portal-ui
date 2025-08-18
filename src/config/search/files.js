@@ -122,16 +122,7 @@ export const SEARCH_FILES = {
             }
         ],
         facets: {
-            file_extension: {
-                label: 'File Type',
-                type: 'value',
-                field: 'file_extension.keyword',
-                filterType: 'any',
-                isFilterable: false,
-                facetType: 'term',
-                isAggregationActive: true,
-                isFacetVisible: doesAggregationHaveBuckets('file_extension')
-            },
+
             'sources.source_type': {
                 label: 'Source',
                 type: 'value',
@@ -184,6 +175,16 @@ export const SEARCH_FILES = {
                 isFilterable: false,
                 facetType: 'term',
                 isFacetVisible: doesAggregationHaveBuckets('is_qa_qc')
+            },
+            file_extension: {
+                label: 'File Extension',
+                type: 'value',
+                field: 'file_extension.keyword',
+                filterType: 'any',
+                isFilterable: false,
+                facetType: 'term',
+                isAggregationActive: true,
+                isFacetVisible: doesAggregationHaveBuckets('file_extension')
             }
         },
         disjunctiveFacets: [],
