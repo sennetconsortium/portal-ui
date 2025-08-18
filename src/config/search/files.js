@@ -109,7 +109,8 @@ const sourceItems = [
     'rel_path',
     'sources.source_type',
     'is_data_product',
-    'is_qa_qc'
+    'is_qa_qc',
+    'data_access_level'
 ]
 
 export const SEARCH_FILES = {
