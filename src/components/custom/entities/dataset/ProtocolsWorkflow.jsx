@@ -25,13 +25,14 @@ function ProtocolsWorkflow({data}) {
 
     const parsePipelineVal = (r) => {
         if (r.name && eq(r.name, 'pipeline.cwl')) {
-
+            `https://view.commonwl.org/workflows${r.origin.replace('https:/', '').replace('.git', '')}/blob/${r.hash}/pipeline.cwl`
         }
         return null
-
     }
 
-    parsePipelineVal
+    const hasInputParams = (r) => {
+        return !(r.input_parameters !== undefined && r.input_parameters.length > 0)
+    }
 
     const transformData = () => {
         let ingestDetails
@@ -53,10 +54,10 @@ function ProtocolsWorkflow({data}) {
             let i = 1;
             for (let r of ingestDetails.dag_provenance_list) {
                 _data.push({
+                    ...r,
                     step: i,
                     tool: parseToolVal(r),
                     origin_link: r.origin,
-                    hash: r.hash,
                     git_commit: parseCommitVal(r),
                     cwl_pipeline: parsePipelineVal(r)
                 })
@@ -138,6 +139,22 @@ function ProtocolsWorkflow({data}) {
         }
     }, [data, data?.descendants])
 
+    const ExpandedComponent = ({ data }) => {
+        if (!data.input_parameters) return <></>
+        let res = []
+        let i = 0;
+
+        for (let c of data?.input_parameters) {
+            res.push(<li key={`ip-${i}`}><code>{c.parameter_name} {c.value}</code></li>)
+            i++
+        }
+
+        return <>
+            <h3>Input Parameters</h3>
+            {res}</>
+    }
+
+
     return (
         <SenNetSuspense showChildren={rawTableData}
                         id="Protocols-Workflow-Details" title="Protocols & Workflow Details"
@@ -153,6 +170,9 @@ function ProtocolsWorkflow({data}) {
                 <DataTable
                     columns={columns()}
                     data={tableData}
+                    expandableRows
+                    expandableRowDisabled={hasInputParams}
+                    expandableRowsComponent={ExpandedComponent}
                 />
             </SenNetAccordion>
         </SenNetSuspense>
