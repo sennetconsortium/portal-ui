@@ -29,6 +29,7 @@ import BulkDataTransfer from "@/components/custom/entities/dataset/BulkDataTrans
 import {toast} from "react-toastify";
 import SenNetSuspense from "@/components/SenNetSuspense";
 import {ShimmerText, ShimmerThumbnail} from "react-shimmer-effects";
+import ProtocolsWorkflow from "@/components/custom/entities/dataset/ProtocolsWorkflow";
 
 
 const AppFooter = dynamic(() => import("@/components/custom/layout/AppFooter"))
@@ -56,6 +57,7 @@ function ViewDataset() {
     const [primaryDatasetData, setPrimaryDatasetInfo] = useState(null)
     const [showFilesSection, setShowFilesSection] = useState(null)
     const [hasViz, setHasViz] = useState(false)
+    const [showProtocolsWorkflow, setShowProtocolsWorkflow] = useState(false)
     const {
         showVitessce,
         initVitessceConfig,
@@ -115,6 +117,8 @@ function ViewDataset() {
             setData(_data)
             let hasViz = eq(_data.has_visualization, 'true')
             setHasViz(hasViz)
+
+            setShowProtocolsWorkflow(!datasetIs.component(_data.creation_action))
 
             // fetch ancestry data
             getAncestryData(_data.uuid).then(ancestry => {
@@ -260,6 +264,11 @@ function ViewDataset() {
                                                    data-bs-parent="#sidebar">Visualization</a>
                                             </li>
                                         }
+                                        {showProtocolsWorkflow && <li className="nav-item">
+                                            <a href="#Protocols-Workflow-Details"
+                                               className="nav-link"
+                                               data-bs-parent="#sidebar">Protocols & Workflow Details</a>
+                                        </li>}
                                         <li className="nav-item">
                                             <a href="#Provenance"
                                                className="nav-link"
@@ -345,6 +354,8 @@ function ViewDataset() {
                                                         style={{ height:'800px' }}>
                                             <SennetVitessce data={data}/>
                                         </SenNetSuspense>}
+
+                                        {showProtocolsWorkflow && <ProtocolsWorkflow data={data} />}
 
                                         {/*Provenance*/}
                                         <Provenance data={data} hasAncestry={hasAncestry}/>
