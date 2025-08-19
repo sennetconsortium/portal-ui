@@ -379,7 +379,8 @@ function SearchActions({selectedRows, data = [], raw, columns, filters, exportKi
                     <ListSubheader>
                         <InsightsIcon className={'mx-2'} />
                         <SenNetPopover text={<span>Select up to 4 datasets of the same dataset type to compare the visualizations.</span>}>
-                        <span>Visualize</span>
+                        <span>Visualize <i
+                            className="bi bi-question-circle-fill"></i></span>
                         </SenNetPopover>
                         </ListSubheader>
                     <MenuItem className={`dropdown-item ${hasSelectedDatasets() ? '' : 'disabled text-disabled'}`} key={`export-all`} onClick={hasSelectedDatasets() ? goCompare : undefined}>
