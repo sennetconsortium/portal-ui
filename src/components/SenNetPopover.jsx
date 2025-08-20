@@ -22,16 +22,24 @@ export const SenPopoverOptions = {
 }
 
 
-function SenNetPopover({children, text, placement = SenPopoverOptions.placement.top, className = 'sen-popover', trigger = SenPopoverOptions.triggers.hover, show}) {
+function SenNetPopover({children, text, placement = SenPopoverOptions.placement.top, className = 'sen-popover',
+                           trigger = SenPopoverOptions.triggers.hover, show, onTooltipToggle}) {
 
     const [showTooltip, setShowTooltip] = useState(false)
     const triggerClassName = `${className}-pc`
 
     const handleTooltipClose = () => {
         setShowTooltip(false)
+        if (onTooltipToggle) {
+            onTooltipToggle(false)
+        }
     };
 
-    const handleTooltipOpen = () => {
+    const handleTooltipOpen = (e) => {
+        e.stopPropagation()
+        if (onTooltipToggle) {
+            onTooltipToggle(true)
+        }
         setShowTooltip(true)
         setTimeout(()=>{
             setShowTooltip(false)
@@ -50,7 +58,7 @@ function SenNetPopover({children, text, placement = SenPopoverOptions.placement.
                                   disableTouchListener={disableHover}
                                   placement={placement} title={text}
                                   arrow slots={{transition: Zoom}}>
-            <span onClick={isClickTrigger ? handleTooltipOpen : undefined} className={triggerClassName} style={{display: 'inline-block'}}>
+            <span onClick={isClickTrigger ? (e) => handleTooltipOpen(e) : undefined} className={triggerClassName} style={{display: 'inline-block'}}>
                 {children}
             </span>
     </Tooltip>
