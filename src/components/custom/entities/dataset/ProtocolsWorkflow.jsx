@@ -2,9 +2,9 @@ import React, {useContext, useEffect, useState} from 'react'
 import PropTypes from 'prop-types'
 import SenNetSuspense from "@/components/SenNetSuspense";
 import SenNetAccordion from "@/components/custom/layout/SenNetAccordion";
-import {datasetIs, eq, getDatasetTypeDisplay} from "@/components/custom/js/functions";
+import {datasetIs, eq} from "@/components/custom/js/functions";
 import DataTable from "react-data-table-component";
-import {ShimmerTable, ShimmerText, ShimmerThumbnail} from "react-shimmer-effects";
+import {ShimmerTable, ShimmerText} from "react-shimmer-effects";
 import LnkIc from "@/components/custom/layout/LnkIc";
 import useAutoHideColumns from "@/hooks/useAutoHideColumns";
 import ClipboardCopy from "@/components/ClipboardCopy";
@@ -12,7 +12,7 @@ import ClipboardCopy from "@/components/ClipboardCopy";
 function ProtocolsWorkflow({data}) {
     const [rawTableData, setRawTableData] = useState([])
     const [workflow, setWorkflow] = useState({})
-    const {columnVisibility, tableData, updateCount} = useAutoHideColumns( {data: rawTableData})
+    const {columnVisibility, tableData, updateCount, setTriggerUpdate} = useAutoHideColumns( {data: rawTableData})
 
 
     const parseToolVal = (r) => {
@@ -63,9 +63,10 @@ function ProtocolsWorkflow({data}) {
                     cwl_pipeline: parsePipelineVal(r)
                 })
                 i++
-
             }
+
             setRawTableData(_data)
+            setTriggerUpdate(true)
         }
     }
 
@@ -105,27 +106,27 @@ function ProtocolsWorkflow({data}) {
             },
             {
                 name: 'Documentation',
-                id: 'documentation',
-                selector: row => {
-                    updateCount('documentation', row.documentation)
-                    return row.documentation || ''
-                },
-                omit: columnVisibility.documentation,
+                id: 'documentation_url',
+                selector: row => row.documentation_url || '',
+                omit: columnVisibility.documentation_url,
                 sortable: true,
                 reorder: true,
-                format: row => <span data-field='documentation'>{row.documentation && <LnkIc title={row.documentation} href={row.documentation} />} </span>,
+                format: row => {
+                    updateCount('documentation_url', (row.documentation_url != null && row.documentation_url?.length > 0))
+                    return <span data-field='documentation_url'>{row.documentation_url && <LnkIc title={row.documentation_url} href={row.documentation_url} />} </span>
+                },
             },
             {
                 name: 'CWL Pipeline',
                 id: 'cwl_pipeline',
-                selector: row => {
-                    updateCount('cwl_pipeline', row.cwl_pipeline)
-                    return row.cwl_pipeline || ''
-                },
+                selector: row => row.cwl_pipeline,
                 omit: columnVisibility.cwl_pipeline,
                 sortable: true,
                 reorder: true,
-                format: row => <span data-field='cwl_pipeline'>{row.cwl_pipeline &&  <LnkIc title={row.cwl_pipeline} href={row.cwl_pipeline} />} </span>,
+                format: row => {
+                    updateCount('cwl_pipeline', row.cwl_pipeline)
+                    return <span data-field='cwl_pipeline'>{row.cwl_pipeline &&  <LnkIc title={row.cwl_pipeline} href={row.cwl_pipeline} />} </span>
+                },
             }
         ]
 
