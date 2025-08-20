@@ -5,7 +5,7 @@ import Link from "next/link";
 import DerivedContext from "@/context/DerivedContext";
 import {FILE_KEY_SEPARATOR, getAssetsEndpoint, getAuth} from "@/config/config";
 import SenNetPopover, {SenPopoverOptions} from "../../../SenNetPopover";
-import {formatByteSize, getDatasetTypeDisplay, urlify} from "../../js/functions";
+import {formatByteSize, getDatasetTypeDisplay, urlify} from "@/components/custom/js/functions";
 import {Button, Row} from 'react-bootstrap';
 import Col from 'react-bootstrap/Col';
 import ToggleButton from 'react-bootstrap/ToggleButton';
@@ -30,6 +30,7 @@ export const FileTreeView = ({data, selection = {}, keys = {files: 'files', uuid
     const [dataProductChecked, setDataProductChecked] = useState(false)
     const [hasData, setHasData] = useState(false)
     const [filterBy, setFilterBy] = useState(filterByValues.default)
+    const [selectionMode, setSelectionMode] = useState(selection.mode)
 
     const formRef = useRef(null)
 
@@ -154,6 +155,14 @@ export const FileTreeView = ({data, selection = {}, keys = {files: 'files', uuid
         </>
     }
 
+    const onTooltipToggle = (isOpen) => {
+        if (isOpen) {
+            setSelectionMode(null)
+        } else {
+            setSelectionMode(selection.mode)
+        }
+    }
+
     const nodeTemplate = (node, options) => {
         /* This node instance can do many things. See the API reference. */
         return (
@@ -166,7 +175,7 @@ export const FileTreeView = ({data, selection = {}, keys = {files: 'files', uuid
                                href={`${getAssetsURL(node.data.uuid, node.data.rel_path)}`}><span
                                className="me-1">{node.label}</span>
                             </a>
-                            {!includeDescription && node.data.description && <SenNetPopover className={`file-${self.crypto.randomUUID()}`}
+                            {!includeDescription && node.data.description && <SenNetPopover onTooltipToggle={onTooltipToggle} trigger={SenPopoverOptions.triggers.click} className={`file-${self.crypto.randomUUID()}`}
 
                                            text={<div dangerouslySetInnerHTML={{__html: urlify(node.data.description)}}></div>}><i role={'presentation'} className="bi bi-info-circle-fill cursor-pointer"></i>
                             </SenNetPopover>}
@@ -346,7 +355,7 @@ export const FileTreeView = ({data, selection = {}, keys = {files: 'files', uuid
     const treeView = (
         <Tree
             className={`c-treeView__main ${className}`}
-            selectionMode={selection.mode}
+            selectionMode={selectionMode}
             selectionKeys={selection.value}
             onSelectionChange={selection.setValue ? (e) => selection.setValue(e, selection.args) : undefined}
             value={treeData}
