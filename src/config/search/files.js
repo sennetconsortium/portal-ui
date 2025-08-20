@@ -125,7 +125,7 @@ export const SEARCH_FILES = {
         facets: {
 
             'sources.source_type': {
-                label: 'Source',
+                label: 'Source Type',
                 type: 'value',
                 field: 'sources.source_type.keyword',
                 isExpanded: false,
@@ -168,7 +168,7 @@ export const SEARCH_FILES = {
                 isFacetVisible: doesAggregationHaveBuckets('is_data_product')
             },
             'is_qa_qc': {
-                label: 'Is QA QC',
+                label: 'Is Quality Assurance/Control',
                 type: 'exists',
                 field: 'is_qa_qc.keyword',
                 isExpanded: false,
