@@ -7,6 +7,7 @@ import DataTable from "react-data-table-component";
 import {ShimmerTable, ShimmerText, ShimmerThumbnail} from "react-shimmer-effects";
 import LnkIc from "@/components/custom/layout/LnkIc";
 import useAutoHideColumns from "@/hooks/useAutoHideColumns";
+import ClipboardCopy from "@/components/ClipboardCopy";
 
 function ProtocolsWorkflow({data}) {
     const [rawTableData, setRawTableData] = useState([])
@@ -141,16 +142,20 @@ function ProtocolsWorkflow({data}) {
 
     const ExpandedComponent = ({ data }) => {
         if (!data.input_parameters) return <></>
+        let copyText = ''
         let res = []
         let i = 0;
+        let curr = ''
 
         for (let c of data?.input_parameters) {
-            res.push(<li key={`ip-${i}`}><code>{c.parameter_name} {c.value}</code></li>)
+            curr = `${c.parameter_name} ${c.value}`
+            copyText += curr
+            res.push(<li key={`ip-${i}`}><small><code>{curr}</code> <ClipboardCopy title={'Copy this input snippet'} text={curr} /></small></li>)
             i++
         }
 
         return <>
-            <h3>Input Parameters</h3>
+            <h3 className={'fs-6 mt-3'}>Input Parameters {data?.input_parameters.length > 1 && <ClipboardCopy title={'Copy all input parameters'} text={copyText} />}</h3>
             {res}</>
     }
 
@@ -165,7 +170,7 @@ function ProtocolsWorkflow({data}) {
                         </>}
         >
             <SenNetAccordion id="Protocols-Workflow-Details" title="Protocols & Workflow Details">
-                <h2>Workflow {workflow?.workflow_version}</h2>
+                <h2 className={'fs-6'}>Workflow {workflow?.workflow_version}</h2>
                 <p>{workflow?.workflow_description}</p>
                 <DataTable
                     columns={columns()}
