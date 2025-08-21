@@ -2,17 +2,19 @@ import React, {useContext, useEffect, useState} from 'react'
 import PropTypes from 'prop-types'
 import SenNetSuspense from "@/components/SenNetSuspense";
 import SenNetAccordion from "@/components/custom/layout/SenNetAccordion";
-import {datasetIs, eq} from "@/components/custom/js/functions";
+import {datasetIs, eq, getDatasetTypeDisplay, getEntityViewUrl} from "@/components/custom/js/functions";
 import DataTable from "react-data-table-component";
 import {ShimmerTable, ShimmerText} from "react-shimmer-effects";
 import LnkIc from "@/components/custom/layout/LnkIc";
 import useAutoHideColumns from "@/hooks/useAutoHideColumns";
 import ClipboardCopy from "@/components/ClipboardCopy";
+import {getUUIDEndpoint} from "@/config/config";
 
 function ProtocolsWorkflow({data}) {
     const [rawTableData, setRawTableData] = useState([])
     const [workflow, setWorkflow] = useState({})
     const {columnVisibility, tableData, updateCount, setTriggerUpdate} = useAutoHideColumns( {data: rawTableData})
+    const [descendant, setDescendant] = useState(null)
 
 
     const parseToolVal = (r) => {
@@ -39,12 +41,13 @@ function ProtocolsWorkflow({data}) {
         let ingestDetails
         if (datasetIs.processed(data.creation_action)) {
             ingestDetails = data.ingest_metadata
-            setWorkflow(data.ingest_metadata)
+            setWorkflow(ingestDetails)
         } else if (datasetIs.primary(data.creation_action)) {
             for (let d of data.descendants) {
                 if (datasetIs.processed(d.creation_action)) {
                     ingestDetails = d.ingest_metadata
-                    setWorkflow(d.ingest_metadata)
+                    setWorkflow(ingestDetails)
+                    setDescendant(d)
                     break;
                 }
             }
@@ -75,7 +78,7 @@ function ProtocolsWorkflow({data}) {
             {
                 name: 'Step',
                 id: 'step',
-                width: '5%',
+                width: '100px',
                 selector: row => row.step,
                 sortable: true,
                 reorder: true,
@@ -172,7 +175,8 @@ function ProtocolsWorkflow({data}) {
                         </>}
         >
             <SenNetAccordion id="Protocols-Workflow-Details" title="Protocols & Workflow Details">
-                <h2 className={'fs-6'}>Workflow {workflow?.workflow_version}</h2>
+                {descendant && <p>Workflow from descendant <a href={getEntityViewUrl('dataset', descendant.uuid, {}, {})}>{descendant.sennet_id} {getDatasetTypeDisplay(descendant)}</a></p>}
+                {workflow?.workflow_version && <h2 className={'fs-6'}>Workflow {workflow?.workflow_version}</h2>}
                 <p>{workflow?.workflow_description}</p>
                 <DataTable
                     columns={columns()}
