@@ -121,7 +121,6 @@ function ProtocolsWorkflow({data}) {
                 id: 'cwl_pipeline',
                 selector: row => row.cwl_pipeline,
                 omit: columnVisibility.cwl_pipeline,
-                sortable: true,
                 reorder: true,
                 format: row => {
                     updateCount('cwl_pipeline', row.cwl_pipeline)
