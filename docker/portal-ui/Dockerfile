@@ -11,7 +11,8 @@ WORKDIR /usr/src/app
 # Update the package list and install git
 RUN apt-get update -y && \
     apt-get dist-upgrade -y && \
-    apt-get install git -y
+    apt-get install git -y && \
+    apt-get install curl -y
 
 # Create the non-root codcc user
 RUN groupadd -g $HOST_GID codcc && \
