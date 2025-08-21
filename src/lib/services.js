@@ -724,7 +724,8 @@ export const filterProperties = {
             "lab_tissue_sample_id",
             "lab_dataset_id",
             "origin_samples",
-            "creation_action"
+            "creation_action",
+            "ingest_metadata",
         ],
         is_include: true
     },
@@ -735,6 +736,7 @@ export const filterProperties = {
             "lab_dataset_id",
             "origin_samples",
             "creation_action",
+             "ingest_metadata",
              "files"
         ],
         is_include: true
