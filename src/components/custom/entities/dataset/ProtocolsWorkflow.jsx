@@ -125,7 +125,7 @@ function ProtocolsWorkflow({data}) {
                 reorder: true,
                 format: row => {
                     updateCount('cwl_pipeline', row.cwl_pipeline)
-                    return <span data-field='cwl_pipeline'>{row.cwl_pipeline &&  <LnkIc title={row.cwl_pipeline} href={row.cwl_pipeline} />} </span>
+                    return <span data-field='cwl_pipeline'>{row.cwl_pipeline && <LnkIc className={'btn btn-outline-primary btn-sm'} aria-label={`Open CWL Viewer Step ${row.step}`} title={'Open CWL Viewer'} href={row.cwl_pipeline} />} </span>
                 },
             }
         ]
