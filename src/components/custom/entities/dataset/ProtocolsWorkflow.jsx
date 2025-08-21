@@ -75,6 +75,7 @@ function ProtocolsWorkflow({data}) {
             {
                 name: 'Step',
                 id: 'step',
+                width: '5%',
                 selector: row => row.step,
                 sortable: true,
                 reorder: true,
