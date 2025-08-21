@@ -28,7 +28,7 @@ function ProtocolsWorkflow({data}) {
 
     const parsePipelineVal = (r) => {
         if (r.name && eq(r.name, 'pipeline.cwl')) {
-            `https://view.commonwl.org/workflows${r.origin.replace('https:/', '').replace('.git', '')}/blob/${r.hash}/pipeline.cwl`
+            return `https://view.commonwl.org/workflows${r.origin.replace('https:/', '').replace('.git', '')}/blob/${r.hash}/pipeline.cwl`
         }
         return null
     }
@@ -88,6 +88,7 @@ function ProtocolsWorkflow({data}) {
                 name: 'Tool',
                 id: 'tool',
                 selector: row => row.tool,
+                width: '250px',
                 sortable: true,
                 reorder: true,
                 format: row => <span data-field='tool'>{row.tool}</span>,
@@ -104,6 +105,7 @@ function ProtocolsWorkflow({data}) {
                 name: 'Git Commit',
                 id: 'git_commit',
                 selector: row => row.git_commit,
+                width: '150px',
                 sortable: true,
                 reorder: true,
                 format: row => <span data-field='git_commit'><LnkIc title={row.hash} href={row.git_commit} /> </span>,
@@ -161,7 +163,10 @@ function ProtocolsWorkflow({data}) {
 
         return <>
             <h3 className={'fs-6 mt-3'}>Input Parameters {data?.input_parameters.length > 1 && <ClipboardCopy title={'Copy all input parameters'} text={copyText} />}</h3>
-            {res}</>
+            <div className={'mb-2'}>
+                {res}
+            </div>
+        </>
     }
 
 
