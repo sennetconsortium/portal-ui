@@ -10,6 +10,7 @@ import LnkIc from "@/components/custom/layout/LnkIc";
 import {goIntent, goToSearch} from "@/components/custom/js/functions";
 import SenNetStats from "@/components/SenNetStats";
 import Sankey from "@/components/custom/Sankey";
+import SenNetBanner from "@/components/SenNetBanner";
 
 const Header = dynamic(() => import("@/components/custom/layout/Header"))
 
@@ -39,6 +40,8 @@ function ViewHome({children}) {
             <Header title={`Homepage | SenNet`}></Header>
             <AppNavbar hidden={isRegisterHidden} signoutHidden={false}/>
             <div role='main' className='sui-layout snLanding'>
+                <SenNetBanner name={'homepage'}/>
+
                 <section aria-label='About SenNet' className='sui-layout-body__inner'>
                     <Card className='mt-4 p-3'>
                         <Card.Title><h1>The Cellular Senescence Network (SenNet) Data Portal</h1></Card.Title>
@@ -125,7 +128,7 @@ function ViewHome({children}) {
                 </section>
 
                 <section aria-label='Data Sankey' className='sui-layout-body__inner'>
-                    <Sankey maxHeight={600} showExpandButton={true} />
+                    <Sankey maxHeight={600} showExpandButton={true}/>
                 </section>
 
                 <SenNetStats/>
