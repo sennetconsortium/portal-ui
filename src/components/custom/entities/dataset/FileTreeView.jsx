@@ -5,7 +5,7 @@ import Link from "next/link";
 import DerivedContext from "@/context/DerivedContext";
 import {FILE_KEY_SEPARATOR, getAssetsEndpoint, getAuth} from "@/config/config";
 import SenNetPopover, {SenPopoverOptions} from "../../../SenNetPopover";
-import {formatByteSize, getDatasetTypeDisplay, urlify} from "../../js/functions";
+import {formatByteSize, getDatasetTypeDisplay, urlify} from "@/components/custom/js/functions";
 import {Button, Row} from 'react-bootstrap';
 import Col from 'react-bootstrap/Col';
 import ToggleButton from 'react-bootstrap/ToggleButton';
@@ -15,10 +15,12 @@ import {Tree} from 'primereact/tree';
 import 'primeicons/primeicons.css';
 
 
-export const FileTreeView = ({data, selection = {}, keys = {files: 'files', uuid: 'uuid'},
+export const FileTreeView = ({
+                                 data, selection = {}, keys = {files: 'files', uuid: 'uuid'},
                                  loadDerived = true, treeViewOnly = false, className = '', filesClassName = '',
-                                 showQAButton = true, showDataProductButton = true, includeDescription= false,
-                                 showDownloadAllButton = false, withoutAccordion = false, onStateUpdateCallback}) => {
+                                 showQAButton = true, showDataProductButton = true, includeDescription = false,
+                                 showDownloadAllButton = false, withoutAccordion = false, onStateUpdateCallback
+                             }) => {
     const filterByValues = {
         default: "label",
         qa: "data.is_qa_qc",
@@ -30,6 +32,7 @@ export const FileTreeView = ({data, selection = {}, keys = {files: 'files', uuid
     const [dataProductChecked, setDataProductChecked] = useState(false)
     const [hasData, setHasData] = useState(false)
     const [filterBy, setFilterBy] = useState(filterByValues.default)
+    const [selectionMode, setSelectionMode] = useState(selection.mode)
 
     const formRef = useRef(null)
 
@@ -43,7 +46,7 @@ export const FileTreeView = ({data, selection = {}, keys = {files: 'files', uuid
         return Array.isArray(obj) ? obj.length : Object.keys(obj).length
     }
 
-    const _onStateUpdateCallback = (states)=> {
+    const _onStateUpdateCallback = (states) => {
         if (onStateUpdateCallback) {
             onStateUpdateCallback(states)
         }
@@ -54,7 +57,7 @@ export const FileTreeView = ({data, selection = {}, keys = {files: 'files', uuid
         _onStateUpdateCallback({hasData: has})
     }
 
-    useEffect( () => {
+    useEffect(() => {
         //Default to use files, otherwise wait until derivedDataset is populated
         if (data[keys.files] && getLength(data[keys.files])) {
             _hasFiles(true)
@@ -154,6 +157,14 @@ export const FileTreeView = ({data, selection = {}, keys = {files: 'files', uuid
         </>
     }
 
+    const onTooltipToggle = (isOpen) => {
+        if (isOpen) {
+            setSelectionMode(null)
+        } else {
+            setSelectionMode(selection.mode)
+        }
+    }
+
     const nodeTemplate = (node, options) => {
         /* This node instance can do many things. See the API reference. */
         return (
@@ -164,12 +175,17 @@ export const FileTreeView = ({data, selection = {}, keys = {files: 'files', uuid
                             <a target="_blank"
                                className={"icon-inline js-file"}
                                href={`${getAssetsURL(node.data.uuid, node.data.rel_path)}`}><span
-                               className="me-1">{node.label}</span>
+                                className="me-1">{node.label}</span>
                             </a>
-                            {!includeDescription && node.data.description && <SenNetPopover className={`file-${self.crypto.randomUUID()}`}
+                            {!includeDescription && node.data.description &&
+                                <SenNetPopover onTooltipToggle={onTooltipToggle}
+                                               trigger={SenPopoverOptions.triggers.click}
+                                               className={`file-${self.crypto.randomUUID()}`}
 
-                                           text={<div dangerouslySetInnerHTML={{__html: urlify(node.data.description)}}></div>}><i role={'presentation'} className="bi bi-info-circle-fill cursor-pointer"></i>
-                            </SenNetPopover>}
+                                               text={<div
+                                                   dangerouslySetInnerHTML={{__html: urlify(node.data.description)}}></div>}><i
+                                    role={'presentation'} className="bi bi-info-circle-fill cursor-pointer"></i>
+                                </SenNetPopover>}
                         </Col>
                         <Col md={2} sm={2} className={"text-end"}>
                             {getBadgeViews(node)}
@@ -178,7 +194,16 @@ export const FileTreeView = ({data, selection = {}, keys = {files: 'files', uuid
                             {formatByteSize(node.data.size)}
                         </Col>
                         {includeDescription && node.data.description && <span>{node.data.description}</span>}
-                    </Row>) : (<>{node.label}</>)}
+                    </Row>) : (
+                    <Row className={`w-100 ${filesClassName}`}>
+                        <Col md={8} sm={8}>
+                            {node.label}
+                        </Col>
+                        <Col md={2} sm={2} className={"text-end"}>
+                            {formatByteSize(node.data.size)}
+                        </Col>
+                    </Row>)
+                }
             </Fragment>
         );
     }
@@ -227,7 +252,7 @@ export const FileTreeView = ({data, selection = {}, keys = {files: 'files', uuid
                         >
                             Show QA files only
                         </ToggleButton>
-                    </Form.Group> }
+                    </Form.Group>}
 
                     {showDataProductButton && <Form.Group as={Col} xl={3} lg={6} className="mt-xl-0 mt-md-2">
                         <ToggleButton
@@ -241,7 +266,7 @@ export const FileTreeView = ({data, selection = {}, keys = {files: 'files', uuid
                         >
                             Show Data Product files only
                         </ToggleButton>
-                    </Form.Group> }
+                    </Form.Group>}
 
                     {showDownloadAllButton && <Form.Group as={Col} xl={3} lg={6} className="mt-xl-0 mt-md-2">
                         <Button
@@ -254,7 +279,7 @@ export const FileTreeView = ({data, selection = {}, keys = {files: 'files', uuid
                             Download All <i
                             className="bi bi-download"></i>
                         </Button>
-                    </Form.Group> }
+                    </Form.Group>}
                 </Row>
             </Form>
         )
@@ -284,6 +309,7 @@ export const FileTreeView = ({data, selection = {}, keys = {files: 'files', uuid
         if (data.length > 0 && data.filter(e => e.label === directory_name).length > 0) {
             let alter_data = data.filter(e => e.label === directory_name)[0]
             if (alter_data.hasOwnProperty("children")) {
+                alter_data.data.size += sub_directory.data.size
                 let new_child = buildSubDirectory(uuid, file, alter_data.children, directories, directories[0], id)
                 // new_child will be `undefined` if children is modified, no need to push
                 if (new_child) {
@@ -292,7 +318,9 @@ export const FileTreeView = ({data, selection = {}, keys = {files: 'files', uuid
                 return
             } else {
                 if (directories.length > 0) {
-                    alter_data.children = (buildSubDirectory(uuid, file, data, directories, directories[0], id))
+                    let new_child = buildSubDirectory(uuid, file, data, directories, directories[0], id)
+                    alter_data.data.size += new_child.data.size
+                    alter_data.children = new_child
                     return
                 }
             }
@@ -337,6 +365,7 @@ export const FileTreeView = ({data, selection = {}, keys = {files: 'files', uuid
                     }
                 }
             });
+            console.log(data)
             setTreeData(data)
         } catch (e) {
             console.error(e)
@@ -346,7 +375,7 @@ export const FileTreeView = ({data, selection = {}, keys = {files: 'files', uuid
     const treeView = (
         <Tree
             className={`c-treeView__main ${className}`}
-            selectionMode={selection.mode}
+            selectionMode={selectionMode}
             selectionKeys={selection.value}
             onSelectionChange={selection.setValue ? (e) => selection.setValue(e, selection.args) : undefined}
             value={treeData}
@@ -370,7 +399,8 @@ export const FileTreeView = ({data, selection = {}, keys = {files: 'files', uuid
                     <span className={'fw-light fs-6 mb-2'}>
                                 Files from descendant
                         <Link target="_blank" href={{pathname: '/dataset', query: {uuid: derivedDataset.uuid}}}>
-                                    <span className={'ms-2 me-2 icon-inline'}>{`${getDatasetTypeDisplay(derivedDataset)} ${derivedDataset.sennet_id}`}</span>
+                                    <span
+                                        className={'ms-2 me-2 icon-inline'}>{`${getDatasetTypeDisplay(derivedDataset)} ${derivedDataset.sennet_id}`}</span>
                                 </Link>
                             </span>
                 }

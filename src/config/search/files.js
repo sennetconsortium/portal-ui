@@ -1,6 +1,6 @@
 import SearchAPIConnector from 'search-ui/packages/search-api-connector';
 import {
-    doesAggregationHaveBuckets,
+    doesAggregationHaveBuckets, doesTermFilterContainValues,
     getAuth,
     getFilesIndex,
     getSearchEndPoint,
@@ -107,7 +107,10 @@ const sourceItems = [
     'organs',
     'size',
     'rel_path',
-    'sources.source_type'
+    'sources.source_type',
+    'is_data_product',
+    'is_qa_qc',
+    'data_access_level'
 ]
 
 export const SEARCH_FILES = {
@@ -120,18 +123,9 @@ export const SEARCH_FILES = {
             }
         ],
         facets: {
-            file_extension: {
-                label: 'File Type',
-                type: 'value',
-                field: 'file_extension.keyword',
-                filterType: 'any',
-                isFilterable: false,
-                facetType: 'term',
-                isAggregationActive: true,
-                isFacetVisible: doesAggregationHaveBuckets('file_extension')
-            },
+
             'sources.source_type': {
-                label: 'Source',
+                label: 'Source Type',
                 type: 'value',
                 field: 'sources.source_type.keyword',
                 isExpanded: false,
@@ -162,6 +156,36 @@ export const SEARCH_FILES = {
                 facetType: 'term',
                 isAggregationActive: true,
                 isFacetVisible: doesAggregationHaveBuckets('dataset_type')
+            },
+            'is_data_product': {
+                label: 'Is Data Product',
+                type: 'exists',
+                field: 'is_data_product.keyword',
+                isExpanded: false,
+                filterType: 'any',
+                isFilterable: false,
+                facetType: 'term',
+                isFacetVisible: doesAggregationHaveBuckets('is_data_product')
+            },
+            'is_qa_qc': {
+                label: 'Is Quality Assurance/Control',
+                type: 'exists',
+                field: 'is_qa_qc.keyword',
+                isExpanded: false,
+                filterType: 'any',
+                isFilterable: false,
+                facetType: 'term',
+                isFacetVisible: doesAggregationHaveBuckets('is_qa_qc')
+            },
+            file_extension: {
+                label: 'File Extension',
+                type: 'value',
+                field: 'file_extension.keyword',
+                filterType: 'any',
+                isFilterable: false,
+                facetType: 'term',
+                isAggregationActive: true,
+                isFacetVisible: doesAggregationHaveBuckets('file_extension')
             }
         },
         disjunctiveFacets: [],

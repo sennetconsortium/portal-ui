@@ -12,7 +12,7 @@ import { Helmet, HelmetProvider } from 'react-helmet-async'
  */
 const CCFOrganInfo = ({ organ }) => {
     // See https://github.com/hubmapconsortium/hra-ui/blob/47490b8b5977def6cbaed047ebda6beb9e90fb97/EMBEDDING.md?plain=1#L412
-    log.debug('https://apps.humanatlas.io/api/ds-graph/sennet?token=')
+    log.debug('https://apps.humanatlas.io/api/ds-graph/sennet?primary=true&token=')
     log.debug(getCookie('groups_token'))
 
     // This overrides some styles in the ccf-organ-info. Allows the organ view to expand to the full width of the parent.
@@ -42,7 +42,7 @@ const CCFOrganInfo = ({ organ }) => {
             </Helmet>
             <ccf-organ-info
                 organ-iri={organ.url}
-                data-sources={`["https://apps.humanatlas.io/api/ds-graph/sennet?token=${getCookie('groups_token') ? getCookie('groups_token') : ''}"]`}
+                data-sources={`["https://apps.humanatlas.io/api/ds-graph/sennet?primary=true&token=${getCookie('groups_token') ? getCookie('groups_token') : ''}"]`}
                 eui-url='https://data.sennetconsortium.org/ccf-eui'
                 rui-url='https://apps.humanatlas.io/rui/'
                 asctb-url='https://hubmapconsortium.github.io/ccf-asct-reporter/'
