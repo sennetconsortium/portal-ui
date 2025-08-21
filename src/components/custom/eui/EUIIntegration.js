@@ -15,7 +15,7 @@ const EUIIntegration = () => {
             </Helmet>
             <ccf-eui
                 theme="sennet"
-                data-sources={`["https://apps.humanatlas.io/api/ds-graph/sennet?token=${getCookie('groups_token') ? getCookie('groups_token') : ''}"]`}
+                data-sources={`["https://apps.humanatlas.io/api/ds-graph/sennet?primary=true&token=${getCookie('groups_token') ? getCookie('groups_token') : ''}"]`}
                 base-href="https://cdn.humanatlas.io/ui/ccf-eui/"
                 logo-tooltip="SenNet Data Sharing Portal"
                 login-disabled="true"
