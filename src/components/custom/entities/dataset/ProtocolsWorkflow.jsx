@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import PropTypes from 'prop-types'
 import SenNetSuspense from "@/components/SenNetSuspense";
 import SenNetAccordion from "@/components/custom/layout/SenNetAccordion";
@@ -8,7 +8,6 @@ import {ShimmerTable, ShimmerText} from "react-shimmer-effects";
 import LnkIc from "@/components/custom/layout/LnkIc";
 import useAutoHideColumns from "@/hooks/useAutoHideColumns";
 import ClipboardCopy from "@/components/ClipboardCopy";
-import {getUUIDEndpoint} from "@/config/config";
 
 function ProtocolsWorkflow({data}) {
     const [rawTableData, setRawTableData] = useState([])
@@ -80,7 +79,6 @@ function ProtocolsWorkflow({data}) {
                 id: 'step',
                 width: '100px',
                 selector: row => row.step,
-                sortable: true,
                 reorder: true,
                 format: row => <span data-field='step'>{row.step}</span>,
             },
@@ -89,7 +87,6 @@ function ProtocolsWorkflow({data}) {
                 id: 'tool',
                 selector: row => row.tool,
                 width: '250px',
-                sortable: true,
                 reorder: true,
                 format: row => <span data-field='tool'>{row.tool}</span>,
             },
@@ -97,7 +94,6 @@ function ProtocolsWorkflow({data}) {
                 name: 'Origin Link',
                 id: 'origin_link',
                 selector: row => row.origin_link,
-                sortable: true,
                 reorder: true,
                 format: row => <span data-field='origin_link'><LnkIc title={row.origin_link} href={row.origin_link} /> </span>,
             },
@@ -106,7 +102,6 @@ function ProtocolsWorkflow({data}) {
                 id: 'git_commit',
                 selector: row => row.git_commit,
                 width: '150px',
-                sortable: true,
                 reorder: true,
                 format: row => <span data-field='git_commit'><LnkIc title={row.hash} href={row.git_commit} /> </span>,
             },
@@ -115,7 +110,6 @@ function ProtocolsWorkflow({data}) {
                 id: 'documentation_url',
                 selector: row => row.documentation_url || '',
                 omit: columnVisibility.documentation_url,
-                sortable: true,
                 reorder: true,
                 format: row => {
                     updateCount('documentation_url', (row.documentation_url != null && row.documentation_url?.length > 0))
