@@ -5,8 +5,8 @@ import {
     getSampleCategories,
     getSourceTypes,
     getOrgans
-} from '../lib/ontology'
-import {flipObj} from "../components/custom/js/functions";
+} from '@/lib/ontology'
+import {flipObj} from "@/components/custom/js/functions";
 
 function useCache() {
 
