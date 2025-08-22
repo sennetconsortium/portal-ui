@@ -14,7 +14,7 @@ import SenNetPopover from "@/components/SenNetPopover";
 import DataUsageModal from "@/components/custom/entities/dataset/DataUsageModal";
 
 
-function BulkDataTransfer({data, entityType}) {
+function BulkDataTransfer({data, entityType, currentEntity}) {
     const {isLoggedIn} = useContext(AppContext)
 
     const [tabData, setTabData] = useState([])
@@ -35,8 +35,14 @@ function BulkDataTransfer({data, entityType}) {
         } else {
             for (let k of keys) {
                 if (data[k].length) {
-                    data[k][0].shape = icons[k]
-                    list.push(data[k][0])
+                    let indexOfCurrentEntity = data[k].findIndex(dataset => dataset.uuid === currentEntity.uuid)
+                    if (indexOfCurrentEntity !== -1) {
+                        data[k][indexOfCurrentEntity].shape = icons[k]
+                        list.push(data[k][indexOfCurrentEntity])
+                    } else {
+                        data[k][0].shape = icons[k]
+                        list.push(data[k][0])
+                    }
 
                     if (k === 'component' && data[k].length > 1) {
                         data[k][1].shape = icons[k]
