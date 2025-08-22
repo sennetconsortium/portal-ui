@@ -114,10 +114,10 @@ export const TableResultsProvider = ({ columnsRef, children, getHotLink, rows, f
         // no value prop is exposed. We can either use our own custom Pagination component or
         // if we want to keep the one from react-data-table-component need to add a dynamic key prop to the DataTable component
         // and manually apply these css classes to indicate sorting
-        $('[role="columnheader"]').removeClass('is-activeSort')
-        setTimeout(() => {
-            $(`[data-column-id="${field}"][role="columnheader"]`).addClass(`is-activeSort`).attr('data-sort-direction', direction)
-        }, 500)
+        // $('[role="columnheader"]').removeClass('is-activeSort')
+        // setTimeout(() => {
+        //     $(`[data-column-id="${field}"][role="columnheader"]`).addClass(`is-activeSort`).attr('data-sort-direction', direction)
+        // }, 500)
     }
 
     const handlePageChange = (page, totalRows) => {

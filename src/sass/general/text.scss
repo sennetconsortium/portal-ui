@@ -9,3 +9,7 @@
 .text-codePink {
   color: var(--bs-code-color);
 }
+
+.text-disabled {
+  color: var(--bs-gray-400) !important;
+}
