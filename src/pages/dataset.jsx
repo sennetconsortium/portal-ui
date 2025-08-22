@@ -365,7 +365,7 @@ function ViewDataset() {
                                         }
 
                                         { datasetCategories &&
-                                            <BulkDataTransfer data={datasetCategories}  />
+                                            <BulkDataTransfer data={datasetCategories} currentEntity={data} />
                                         }
 
                                         {/*Contributors*/}
