@@ -172,11 +172,13 @@ export const FileTreeView = ({
                 {node.icon.includes("file") ? (
                     <Row className={`w-100 ${filesClassName}`}>
                         <Col md={8} sm={8}>
-                            <a target="_blank"
-                               className={"icon-inline js-file"}
-                               href={`${getAssetsURL(node.data.uuid, node.data.rel_path)}`}><span
+                            {Object.values(selection).length <= 0 && <a target="_blank"
+                                                                        className={"icon-inline js-file"}
+                                                                        href={`${getAssetsURL(node.data.uuid, node.data.rel_path)}`}><span
                                 className="me-1">{node.label}</span>
-                            </a>
+                            </a>}
+                            {Object.values(selection).length > 0 && <span
+                                className="me-1">{node.label}</span>}
                             {!includeDescription && node.data.description &&
                                 <SenNetPopover onTooltipToggle={onTooltipToggle}
                                                trigger={SenPopoverOptions.triggers.click}
