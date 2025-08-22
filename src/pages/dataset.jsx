@@ -117,8 +117,7 @@ function ViewDataset() {
             setData(_data)
             let hasViz = eq(_data.has_visualization, 'true')
             setHasViz(hasViz)
-
-            setShowProtocolsWorkflow(!datasetIs.component(_data.creation_action))
+            let _showProtocolsWorkflow = !datasetIs.component(_data.creation_action)
 
             // fetch ancestry data
             getAncestryData(_data.uuid).then(ancestry => {
@@ -134,9 +133,21 @@ function ViewDataset() {
                     }
                 }
 
+                if (_showProtocolsWorkflow) {
+                    let ingestMetadata = _data.ingest_metadata
+                    if (datasetIs.primary(_data.creation_action)) {
+                        ingestMetadata = null
+                        for (const descendant of ancestry.descendants) {
+                            ingestMetadata = descendant.ingest_metadata
+                        }
+                    }
+                    _showProtocolsWorkflow = !(!ingestMetadata || !Object.values(ingestMetadata).length || !ingestMetadata.dag_provenance_list)
+                }
+
                 Object.assign(_data, ancestry)
                 setData(_data)
                 setHasAncestry(true)
+                setShowProtocolsWorkflow(_showProtocolsWorkflow)
 
                 for (const ancestor of ancestry.ancestors) {
                     if ((ancestor.metadata && Object.keys(ancestor.metadata).length)) {
