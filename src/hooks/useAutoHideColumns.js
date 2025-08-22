@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import {useEffect, useState, useRef} from "react";
 
 /**
  * Automatically hides empty columns
@@ -9,9 +9,10 @@ import {useEffect, useState} from "react";
 function useAutoHideColumns({data}) {
 
     const [columnVisibility, setColumnVisibility] = useState({})
-    const counter = {}
+    const counter = useRef({})
     const [tableData, setTableData] = useState(data)
     const [tableReady, setTableReady] = useState(false)
+    const [triggerUpdate, setTriggerUpdate] = useState(false)
 
     /**
      * Counts rows under a given id/field with true condition. Used later to check for 0 values which indicates an empty column.
@@ -20,16 +21,16 @@ function useAutoHideColumns({data}) {
      * @param cond The condition to evaluate that if true, will update counter under specified id
      */
     const updateCount = (id, cond) => {
-        if (!counter[id]) {
-            counter[id] = 0
+        if (!counter.current[id]) {
+            counter.current[id] = 0
         }
         if (cond) {
-            counter[id]++
+            counter.current[id]++
         }
     }
 
     useEffect(() => {
-        if (data && data.length > 0 && !tableReady) {
+        if (data && data.length > 0 && (!tableReady || triggerUpdate)) {
             setTableData(data)
             setTableReady(true)
             // This will run after the table is initially rendered with data
@@ -41,7 +42,7 @@ function useAutoHideColumns({data}) {
         if (data && data.length !== tableData.length && tableReady) {
             setTableReady(false)
         }
-    }, [data, tableReady])
+    }, [data, tableReady, triggerUpdate])
 
     /**
      * Checks counts. 0 count values indicate empty columns.
@@ -49,8 +50,8 @@ function useAutoHideColumns({data}) {
     const afterTableBuild = () => {
 
         const columnsToOmit = {}
-        for (let c in counter) {
-            if (!counter[c]) {
+        for (let c in counter.current) {
+            if (!counter.current[c]) {
                 columnsToOmit[c] = true
             }
         }
@@ -58,7 +59,7 @@ function useAutoHideColumns({data}) {
     }
 
 
-    return {columnVisibility, tableData, updateCount}
+    return {columnVisibility, tableData, updateCount, setTriggerUpdate}
 }
 
 
