@@ -6,6 +6,7 @@ import AppContext from '../../../context/AppContext'
 import {eq} from "../js/functions";
 import {getCookie} from "cookies-next";
 import Swal from 'sweetalert2'
+import SenNetPopover, {SenPopoverOptions} from "@/components/SenNetPopover";
 
 const AppNavbar = ({hidden, signoutHidden, innerRef}) => {
     const {
@@ -45,6 +46,13 @@ const AppNavbar = ({hidden, signoutHidden, innerRef}) => {
             }
         }).catch(error => {
         })
+
+    }
+
+    const copyToken = (e) => {
+        e.preventDefault()
+        const token = getCookie('groups_token')
+        navigator.clipboard.writeText(token)
 
     }
 
@@ -209,12 +217,13 @@ const AppNavbar = ({hidden, signoutHidden, innerRef}) => {
                                              variant={'primary'}
                                              title={userEmail}
                                              id="nav-dropdown--user">
-                                    {location.pathname.contains('/search') && <NavDropdown.Item id={`dd-user-tutorial`} key={`dd-user-tutorial`}
-                                                      hidden={!getShowTutorialLink()}
-                                                      href='#'
-                                                      onClick={(e) => deleteTutorialCookies(e)}>
-                                        {_t('Show Tutorial')}
-                                    </NavDropdown.Item>}
+                                    {location.pathname.contains('/search') &&
+                                        <NavDropdown.Item id={`dd-user-tutorial`} key={`dd-user-tutorial`}
+                                                          hidden={!getShowTutorialLink()}
+                                                          href='#'
+                                                          onClick={(e) => deleteTutorialCookies(e)}>
+                                            {_t('Show Tutorial')}
+                                        </NavDropdown.Item>}
                                     <NavDropdown.Item key={`dd-user-jobs`}
                                                       hidden={signoutHidden}
                                                       href='/user/jobs'>
@@ -226,6 +235,15 @@ const AppNavbar = ({hidden, signoutHidden, innerRef}) => {
                                                       onClick={(e) => clearBrowsing(e)}>
                                         {_t('Clear Browsing Data')}
                                     </NavDropdown.Item>
+                                    <SenNetPopover text={'Copied!'} trigger={SenPopoverOptions.triggers.click}
+                                                   hidden={signoutHidden}>
+                                        <span role={'button'}
+                                              key={`dd-copy-token`}
+                                              className={'dropdown-item'}
+                                              onClick={(e) => copyToken(e)}>
+                                            Copy Globus Token
+                                        </span>
+                                    </SenNetPopover>
                                     <NavDropdown.Item key={`dd-user-logout`}
                                                       hidden={signoutHidden}
                                                       href='#'

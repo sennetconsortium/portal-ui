@@ -79,7 +79,7 @@ function AdminIndex() {
         let results = []
         for (let item of adminItems) {
             results.push(
-                <Grid item xs={2} sm={4} md={3} key={item.title}>
+                <Grid item size={4} key={item.title}>
                     <Card className={'px-2 py-2 tooly'} style={{width: '18rem'}}>
                         <Card.Img variant="top" src={item.img}/>
                         <Card.Body className={'mt-2 mb-2'}>
@@ -103,14 +103,14 @@ function AdminIndex() {
     return (
         <div>
             <Header title={APP_TITLE}/>
-            <AppNavbar hidden={true}/>
+            <AppNavbar hidden={false}/>
             <Container>
                 <Row md={12} className={'mt-3 mb-3'}>
                     <h4>{_t(`Administrative`)}</h4>
                 </Row>
 
                 <Row>
-                    <Grid container spacing={{xs: 2, md: 3}} columns={{xs: 4, sm: 8, md: 12}}>
+                    <Grid container spacing={2}>
                         {getCards()}
                     </Grid>
                 </Row>
