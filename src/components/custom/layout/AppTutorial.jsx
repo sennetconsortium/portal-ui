@@ -8,13 +8,15 @@ import {Alert} from 'react-bootstrap'
 import {TUTORIAL_THEME} from "@/config/constants";
 import { useRouter } from 'next/router'
 
-function AppTutorial() {
+function AppTutorial({ name = "app", autoStart = false, lastButtonLabel = 'Finish Tutorial', showProgress= true }) {
     const router = useRouter()
     const {isLoggedIn, tutorialTrigger, setTutorialTrigger} = useContext(AppContext)
     const [steps, setSteps] = useState([])
     const [runTutorial, setRunTutorial] = useState(false)
     const [showAlert, setShowAlert] = useState(false)
-    const cookieKey = `tutorialCompleted_${isLoggedIn()}`
+    const cookieKey = `tutorialCompleted_${name}_${isLoggedIn()}`
+
+    const isAppTutorial = () => eq(name, "app")
 
     useEffect(() => {
         if (!router.isReady) return
@@ -26,8 +28,12 @@ function AppTutorial() {
     useEffect(() => {
         const tutorialCompleted = eq(getCookie(cookieKey), 'true')
         if (!tutorialCompleted) {
-            setShowAlert(true)
-            setSteps(TutorialSteps(isLoggedIn()))
+            if (isAppTutorial()) {
+                setShowAlert(true)
+            }
+            setRunTutorial(autoStart)
+
+            setSteps(TutorialSteps(isLoggedIn(), name))
         }
     }, [tutorialTrigger])
 
@@ -48,11 +54,11 @@ function AppTutorial() {
     }
     return (
         <>
-            <Alert variant="info" show={showAlert} onClose={() => {seenTutorial(); setShowAlert(false)}} dismissible className='text-center alert-hlf mb-4'>
+            {isAppTutorial() && <Alert variant="info" show={showAlert} onClose={() => {seenTutorial(); setShowAlert(false)}} dismissible className='text-center alert-hlf mb-4'>
                 <Alert.Heading><i className="bi bi-binoculars"></i>Getting Started</Alert.Heading>
                 <p>Welcome to the SenNet Data Portal. Get a quick tour of different sections of the application.</p>
                 <a className='btn btn-primary' onClick={() => handleTutorial()}>Begin Tutorial Tour</a>
-            </Alert>
+            </Alert>}
             {steps.length > 0 && <Joyride
                 steps={steps}
                 scrollOffset={80}
@@ -63,9 +69,9 @@ function AppTutorial() {
                     }
                 }
                 run={runTutorial}
-                showProgress={true}
+                showProgress={showProgress}
                 showSkipButton={true}
-                locale={{last: 'Finish Tutorial'}}
+                locale={{last: lastButtonLabel}}
                 continuous
                 styles={TUTORIAL_THEME}
             />}

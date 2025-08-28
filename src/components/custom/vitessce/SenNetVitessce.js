@@ -10,7 +10,22 @@ import MultiProfileSelector from "./MultiProfileSelector";
 import SuspendVitessce from "./SuspendVitessce";
 import {getDatasetTypeDisplay} from "@/components/custom/js/functions";
 
-export const SennetVitessce = ({ title, id, expanded = true, className = '' }) => {
+export const DescendantInfo = ({isPrimaryDataset, derivedDataset, wrapClassNames = 'col m-2'}) => {
+    return (<div className={'row'}>
+        <div className={wrapClassNames}>
+            {isPrimaryDataset && derivedDataset &&
+                <span className={'fw-light'}>
+                    Visualization from descendant
+                    <Link target="_blank" href={{pathname: '/dataset', query: {uuid: derivedDataset.uuid}}}>
+                        <span className={'ms-2 me-2 icon-inline'}>{`${getDatasetTypeDisplay(derivedDataset)} ${derivedDataset.sennet_id}`}</span>
+                    </Link>
+                </span>
+            }
+        </div>
+    </div>)
+}
+
+export const SenNetVitessce = ({ title, id, expanded = true, showPoweredInfo = true, showDescendantInfo = true, afterButton, className = '' }) => {
     const {
         vitessceTheme,
         setVitessceTheme,
@@ -33,17 +48,17 @@ export const SennetVitessce = ({ title, id, expanded = true, className = '' }) =
     } = useContext(DerivedContext)
 
     return (
-        <SenNetAccordion title={title || 'Visualization'} id={id || 'Vitessce'} expanded={expanded} className={`accordion--vitessce ${className}`}>
+        <SenNetAccordion title={title || 'Visualization'} id={id || 'Vitessce'} expanded={expanded} className={`accordion--vitessce ${className}`} afterButton={afterButton}>
             <div className={'row'}>
-                <div className={'col m-2'}>
-                    <span className={'fw-light fs-6'}>Powered by
+                {showPoweredInfo &&<div className={'col m-2'}>
+                     <span className={'fw-light fs-6'}>Powered by
                         <a className={'ms-2'} target="_blank" href="http://vitessce.io/" rel="noopener noreferrer"
                            title={'Vitessce.io'}>
                             Vitessce V3.5.7
                         </a>
                     </span>
-                </div>
-                <div className={'col text-end m-2'}>
+                </div>}
+                <div className={`col text-end ${showPoweredInfo ? 'm-2' : ''}`}>
                     <OverlayTrigger
                         placement={'top'}
                         overlay={
@@ -109,18 +124,7 @@ export const SennetVitessce = ({ title, id, expanded = true, className = '' }) =
 
             </div>
 
-            <div className={'row'}>
-                <div className={'col m-2'}>
-                    {isPrimaryDataset && derivedDataset &&
-                        <span className={'fw-light'}>
-                            Visualization from descendant
-                            <Link target="_blank" href={{pathname: '/dataset', query: {uuid: derivedDataset.uuid}}}>
-                                <span className={'ms-2 me-2 icon-inline'}>{`${getDatasetTypeDisplay(derivedDataset)} ${derivedDataset.sennet_id}`}</span>
-                            </Link>
-                        </span>
-                    }
-                </div>
-            </div>
+            {showDescendantInfo && <DescendantInfo isPrimaryDataset={isPrimaryDataset} derivedDataset={derivedDataset} />}
             <Snackbar open={showExitFullscreenMessage} autoHideDuration={8000}
                       anchorOrigin={{vertical: 'top', horizontal: 'center'}}
                       onClose={() => setShowExitFullscreenMessage(false)}>
@@ -141,4 +145,4 @@ export const SennetVitessce = ({ title, id, expanded = true, className = '' }) =
     )
 }
 
-export default SennetVitessce
+export default SenNetVitessce
