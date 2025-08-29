@@ -110,7 +110,8 @@ const sourceItems = [
     'sources.source_type',
     'is_data_product',
     'is_qa_qc',
-    'data_access_level'
+    'data_access_level',
+    'metadata.analyte_class'
 ]
 
 export const SEARCH_FILES = {
@@ -156,6 +157,17 @@ export const SEARCH_FILES = {
                 facetType: 'term',
                 isAggregationActive: true,
                 isFacetVisible: doesAggregationHaveBuckets('dataset_type')
+            },
+            'metadata.analyte_class': {
+                label: 'Analyte Class',
+                type: 'value',
+                field: 'metadata.analyte_class.keyword',
+                isExpanded: false,
+                filterType: 'any',
+                isFilterable: false,
+                facetType: 'term',
+                isAggregationActive: true,
+                isFacetVisible: doesAggregationHaveBuckets('metadata.analyte_class')
             },
             'is_data_product': {
                 label: 'Is Data Product',
