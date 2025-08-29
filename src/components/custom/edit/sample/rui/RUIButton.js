@@ -55,7 +55,7 @@ const RuiButton = ({showRegisterLocationButton, ruiLocation, setShowRui, ruiSex,
                             <Button variant={'outline-primary'}
                                     className={'rounded-0 mb-2'}
                                     onClick={handleRegisterLocationClick}>
-                                Register location
+                                {ruiLocation ? "Edit" : "Register"} Location
                             </Button>
                         ) : (
                             <>
