@@ -102,6 +102,7 @@ const sourceItems = [
     'sha256_checksum',
     'dataset_uuid',
     'dataset_type',
+    'dataset_type_hierarchy',
     'file_extension',
     'file_uuid',
     'organs',
@@ -150,11 +151,12 @@ export const SEARCH_FILES = {
             dataset_type: {
                 label: 'Dataset Type',
                 type: 'value',
-                field: 'dataset_type.keyword',
+                field: 'dataset_type_hierarchy.second_level.keyword',
                 isExpanded: false,
                 filterType: 'any',
                 isFilterable: false,
-                facetType: 'term',
+                facetType: 'hierarchy',
+                groupByField: 'dataset_type_hierarchy.first_level.keyword',
                 isAggregationActive: true,
                 isFacetVisible: doesAggregationHaveBuckets('dataset_type')
             },
