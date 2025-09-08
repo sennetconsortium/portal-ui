@@ -160,16 +160,16 @@ export const SEARCH_FILES = {
                 isAggregationActive: true,
                 isFacetVisible: doesAggregationHaveBuckets('dataset_type')
             },
-            'metadata.analyte_class': {
+            'analyte_class': {
                 label: 'Analyte Class',
                 type: 'value',
-                field: 'metadata.analyte_class.keyword',
+                field: 'analyte_class.keyword',
                 isExpanded: false,
                 filterType: 'any',
                 isFilterable: false,
                 facetType: 'term',
                 isAggregationActive: true,
-                isFacetVisible: doesAggregationHaveBuckets('metadata.analyte_class')
+                isFacetVisible: doesAggregationHaveBuckets('analyte_class')
             },
             'is_data_product': {
                 label: 'Is Data Product',
