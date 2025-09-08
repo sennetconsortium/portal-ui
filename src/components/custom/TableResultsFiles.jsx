@@ -89,16 +89,18 @@ function TableResultsFiles({children, filters, forData = false, rowFn, inModal =
                         })
                     }
                 }
+                const row = list[0]
                 results[uuid] = {
-                    dataset_type: list[0].dataset_type,
-                    dataset_sennet_id: list[0].dataset_sennet_id,
-                    dataset_uuid: list[0].dataset_uuid,
-                    description: list[0].description,
-                    donors: list[0].donors,
-                    id: list[0].dataset_uuid,
-                    organs: list[0].organs,
-                    samples: list[0].samples,
-                    sources: list[0].sources,
+                    dataset_type: row.dataset_type,
+                    dataset_sennet_id: row.dataset_sennet_id,
+                    dataset_uuid: row.dataset_uuid,
+                    description: row.description,
+                    data_access_level: row.data_access_level,
+                    donors: row.donors,
+                    id: row.dataset_uuid,
+                    organs: row.organs,
+                    samples: row.samples,
+                    sources: row.sources,
                     entity_type: 'Dataset',
                     list: list,
                     meta: meta,
@@ -121,10 +123,16 @@ function TableResultsFiles({children, filters, forData = false, rowFn, inModal =
 
     const downloadManifest = () => {
         let manifestData  = ''
-
         for (let key in selectedFilesModal.current[currentDatasetUuid.current].selected){
             let keys = key.split(FILE_KEY_SEPARATOR)
-            manifestData += `${keys[0]} /${keys[keys.length - 1]}\n`
+            let file = keys[keys.length - 1]
+            if (file.contains('.')) {
+                let uuid = keys[0]
+                // remove the first two due to formatting of tree component, aren't needed
+                keys.shift()
+                keys.shift()
+                manifestData += `${uuid} /${keys.join('/')}\n`
+            }
         }
 
         autoBlobDownloader([manifestData], 'text/plain', `data-manifest.txt`)
@@ -151,7 +159,6 @@ function TableResultsFiles({children, filters, forData = false, rowFn, inModal =
         e.originalEvent.stopPropagation()
 
         let _dict = JSON.parse(JSON.stringify(e.value))
-
         selectedFilesModal.current[row.dataset_uuid] = {row, selected: _dict}
 
         const show = Object.values(selectedFilesModal.current[row.dataset_uuid].selected).length > 0
