@@ -102,6 +102,7 @@ const sourceItems = [
     'sha256_checksum',
     'dataset_uuid',
     'dataset_type',
+    'dataset_type_hierarchy',
     'file_extension',
     'file_uuid',
     'organs',
@@ -110,7 +111,8 @@ const sourceItems = [
     'sources.source_type',
     'is_data_product',
     'is_qa_qc',
-    'data_access_level'
+    'data_access_level',
+    'metadata.analyte_class'
 ]
 
 export const SEARCH_FILES = {
@@ -149,13 +151,25 @@ export const SEARCH_FILES = {
             dataset_type: {
                 label: 'Dataset Type',
                 type: 'value',
-                field: 'dataset_type.keyword',
+                field: 'dataset_type_hierarchy.second_level.keyword',
+                isExpanded: false,
+                filterType: 'any',
+                isFilterable: false,
+                facetType: 'hierarchy',
+                groupByField: 'dataset_type_hierarchy.first_level.keyword',
+                isAggregationActive: true,
+                isFacetVisible: doesAggregationHaveBuckets('dataset_type')
+            },
+            'analyte_class': {
+                label: 'Analyte Class',
+                type: 'value',
+                field: 'analyte_class.keyword',
                 isExpanded: false,
                 filterType: 'any',
                 isFilterable: false,
                 facetType: 'term',
                 isAggregationActive: true,
-                isFacetVisible: doesAggregationHaveBuckets('dataset_type')
+                isFacetVisible: doesAggregationHaveBuckets('analyte_class')
             },
             'is_data_product': {
                 label: 'Is Data Product',
