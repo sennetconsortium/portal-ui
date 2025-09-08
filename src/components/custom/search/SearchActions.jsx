@@ -119,7 +119,7 @@ function SearchActions({selectedRows, data = [], raw, columns, filters, exportKi
     const hasFileFilter = ()=> {
         if (filters.length) {
             for (let f of filters) {
-                if (eq(f.field, 'file_extension')) {
+                if (eq(f.field, 'file_extension') || eq(f.field, 'is_data_product') || eq(f.field, 'is_qa_qc')) {
                     return true
                 }
             }
@@ -283,13 +283,17 @@ function SearchActions({selectedRows, data = [], raw, columns, filters, exportKi
     }
 
     const hasDatasetFilter = ()=> {
-        let has = false
+        let hasDataet = false
+        let hasViz = false
         let types = new Set()
         if (filters) {
             for (let f of filters) {
                 if (_isDatasetFilter(f)) {
-                    has = true
-                    break
+                    hasDataet = true
+                }
+
+                if (eq(f.field, 'has_visualization') && f.values.contains('true')) {
+                    hasViz = true
                 }
             }
         }
@@ -298,7 +302,7 @@ function SearchActions({selectedRows, data = [], raw, columns, filters, exportKi
                 types.add(e.dataset_type?.raw)
             }
         }
-        return has && (types.size === 1)
+        return hasDataet && hasViz && (types.size === 1)
     }
 
     const hasSelectedDatasets = () => hasSelectedRows() && hasDatasetFilter()
@@ -336,7 +340,7 @@ function SearchActions({selectedRows, data = [], raw, columns, filters, exportKi
     }
 
     return (
-        <div>
+        <div className='c-searchActions'>
             <Button
                 id="sui-search-actions-btn"
                 aria-controls={open ? 'sui-search-actions-menu' : undefined}
