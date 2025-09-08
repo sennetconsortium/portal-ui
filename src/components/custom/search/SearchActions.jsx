@@ -340,7 +340,7 @@ function SearchActions({selectedRows, data = [], raw, columns, filters, exportKi
     }
 
     return (
-        <div>
+        <div className='c-searchActions'>
             <Button
                 id="sui-search-actions-btn"
                 aria-controls={open ? 'sui-search-actions-menu' : undefined}
