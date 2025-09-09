@@ -72,15 +72,12 @@
 }
 
 .snStatRow {
-  width: 97vw;
   @include mixins.md-mx {
     text-align: center;
   }
 }
 
 .snLanding {
-  width: 100vw;
-
   &.sui-layout {
     .sui-layout-body__inner {
       width: 100%;
@@ -89,5 +86,9 @@
         width: 100%;
       }
     }
+  }
+
+  .sui-layout-body::after {
+    content: none !important;
   }
 }
