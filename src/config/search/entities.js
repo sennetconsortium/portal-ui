@@ -106,6 +106,17 @@ export const SEARCH_ENTITIES = {
                 isAggregationActive: true,
                 isFacetVisible: doesAggregationHaveBuckets('dataset_type')
             },
+            'metadata.analyte_class': {
+                label: 'Analyte Class',
+                type: 'value',
+                field: 'metadata.analyte_class.keyword',
+                isExpanded: false,
+                filterType: 'any',
+                isFilterable: false,
+                facetType: 'term',
+                isAggregationActive: doesTermFilterContainValues('entity_type', ['Dataset']),
+                isFacetVisible: doesAggregationHaveBuckets('metadata.analyte_class')
+            },
             has_qa_published_derived_dataset: {
                 label: 'Has QA Derived Datasets',
                 type: 'value',
@@ -342,7 +353,8 @@ export const SEARCH_ENTITIES = {
             'dataset_type_hierarchy',
             'has_all_published_datasets',
             'primary_dataset_uuid',
-            'dataset_category'
+            'dataset_category',
+            'metadata.analyte_class'
         ],
         // Moving this configuration into `searchQuery` so the config inside search-tools can read this
         trackTotalHits: true,
