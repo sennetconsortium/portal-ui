@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import React, {useContext, useEffect, useState} from 'react'
 import PropTypes from 'prop-types'
 import SenNetSuspense from "@/components/SenNetSuspense";
 import SenNetAccordion from "@/components/custom/layout/SenNetAccordion";
@@ -8,12 +8,17 @@ import {ShimmerTable, ShimmerText} from "react-shimmer-effects";
 import LnkIc from "@/components/custom/layout/LnkIc";
 import useAutoHideColumns from "@/hooks/useAutoHideColumns";
 import ClipboardCopy from "@/components/ClipboardCopy";
+import DerivedContext from "@/context/DerivedContext";
+import Link from "next/link";
 
 function ProtocolsWorkflow({data}) {
     const [rawTableData, setRawTableData] = useState([])
     const [workflow, setWorkflow] = useState({})
     const {columnVisibility, tableData, updateCount, setTriggerUpdate} = useAutoHideColumns( {data: rawTableData})
-    const [descendant, setDescendant] = useState(null)
+        const {
+        isPrimaryDataset,
+        derivedDataset
+    } = useContext(DerivedContext)
 
 
     const parseToolVal = (r) => {
@@ -38,18 +43,12 @@ function ProtocolsWorkflow({data}) {
 
     const transformData = () => {
         let ingestDetails
-        if (datasetIs.processed(data.creation_action)) {
-            ingestDetails = data.ingest_metadata
+        if(isPrimaryDataset && derivedDataset) {
+            ingestDetails = derivedDataset.ingest_metadata
             setWorkflow(ingestDetails)
-        } else if (datasetIs.primary(data.creation_action)) {
-            for (let d of data.descendants) {
-                if (datasetIs.processed(d.creation_action)) {
-                    ingestDetails = d.ingest_metadata
-                    setWorkflow(ingestDetails)
-                    setDescendant(d)
-                    break;
-                }
-            }
+        } else {
+            ingestDetails = data.ingest_metadata
+             setWorkflow(ingestDetails)
         }
 
         if (ingestDetails) {
@@ -133,12 +132,10 @@ function ProtocolsWorkflow({data}) {
 
 
     useEffect(() => {
-        if (data && ( datasetIs.processed(data.creation_action)
-            || (datasetIs.primary(data.creation_action) && data.descendants))) {
-
+        if (data) {
             transformData()
         }
-    }, [data, data?.descendants])
+    }, [data])
 
     const ExpandedComponent = ({ data }) => {
         if (!data.input_parameters) return <></>
@@ -173,7 +170,14 @@ function ProtocolsWorkflow({data}) {
                         </>}
         >
             <SenNetAccordion id="Protocols-Workflow-Details" title="Protocols & Workflow Details">
-                {descendant && <p>Workflow from descendant <a href={getEntityViewUrl('dataset', descendant.uuid, {}, {})}>{descendant.sennet_id} {getDatasetTypeDisplay(descendant)}</a></p>}
+                {isPrimaryDataset && derivedDataset &&
+                     <span className={'fw-light'}>
+                            Workflow from descendant
+                            <Link target="_blank" href={{pathname: '/dataset', query: {uuid: derivedDataset.uuid}}}>
+                                <span className={'ms-2 me-2 icon-inline'}>{`${getDatasetTypeDisplay(derivedDataset)} ${derivedDataset.sennet_id}`}</span>
+                            </Link>
+                        </span>
+                }
                 {workflow?.workflow_version && <h2 className={'fs-6'}>Workflow {workflow?.workflow_version}</h2>}
                 <p>{workflow?.workflow_description}</p>
                 <DataTable
