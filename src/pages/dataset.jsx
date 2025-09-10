@@ -57,12 +57,13 @@ function ViewDataset() {
     const [primaryDatasetData, setPrimaryDatasetInfo] = useState(null)
     const [showFilesSection, setShowFilesSection] = useState(null)
     const [hasViz, setHasViz] = useState(false)
-    const [showProtocolsWorkflow, setShowProtocolsWorkflow] = useState(false)
     const {
         showVitessce,
         initVitessceConfig,
         getAssaySplitData,
-        fetchDataProducts, dataProducts
+        fetchDataProducts, dataProducts,
+        fetchProtocolsWorkflow, showProtocolsWorkflow,
+        isDerivedContextInitialized
     } = useContext(DerivedContext)
     const [datasetCategories, setDatasetCategories] = useState(null)
 
@@ -88,9 +89,8 @@ function ViewDataset() {
     useEffect(() => {
         if (data && data.ancestors) {
             fetchDataProducts(data)
-            if (hasViz) {
-                initVitessceConfig(data)
-            }
+            initVitessceConfig(data)
+
             if (datasetIs.primary(data.creation_action)) {
                 setDatasetCategories(getAssaySplitData(data))
             } else {
@@ -98,6 +98,12 @@ function ViewDataset() {
             }
         }
     }, [data?.ancestors])
+
+    useEffect(() => {
+        if(isDerivedContextInitialized) {
+           fetchProtocolsWorkflow(data)
+        }
+    }, [data, isDerivedContextInitialized])
 
     useEffect(() => {
         const fetchData = async (uuid) => {
@@ -117,7 +123,6 @@ function ViewDataset() {
             setData(_data)
             let hasViz = eq(_data.has_visualization, 'true')
             setHasViz(hasViz)
-            let _showProtocolsWorkflow = !datasetIs.component(_data.creation_action)
 
             // fetch ancestry data
             getAncestryData(_data.uuid).then(ancestry => {
@@ -131,17 +136,6 @@ function ViewDataset() {
                             break;
                         }
                     }
-                }
-
-                if (_showProtocolsWorkflow) {
-                    let ingestMetadata = _data.ingest_metadata
-                    if (datasetIs.primary(_data.creation_action)) {
-                        ingestMetadata = null
-                        for (const descendant of ancestry.descendants) {
-                            ingestMetadata = descendant.ingest_metadata
-                        }
-                    }
-                    _showProtocolsWorkflow = !(!ingestMetadata || !Object.values(ingestMetadata).length || !ingestMetadata.dag_provenance_list)
                 }
 
                 Object.assign(_data, ancestry)

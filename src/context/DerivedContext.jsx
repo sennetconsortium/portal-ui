@@ -2,7 +2,7 @@ import {createContext, useCallback, useRef, useState} from "react";
 import $ from "jquery";
 import log from "loglevel";
 import {datasetIs, fetchEntity, getDatasetTypeDisplay} from "@/components/custom/js/functions";
-import {fetchVitessceConfiguration, getProvInfo, getEntityData} from "@/lib/services";
+import {fetchVitessceConfiguration, getEntityData, getProvInfo} from "@/lib/services";
 import useVitessceEncoder from "@/hooks/useVitessceEncoder";
 
 const DerivedContext = createContext({})
@@ -22,12 +22,15 @@ export const DerivedProvider = ({children, showVitessceList, setShowVitessceList
     const {vitessceConfigFromUrl, encodeConfigToUrl, getUrlByLengthMaximums} = useVitessceEncoder({})
     const vitessceParams = useRef(null)
     const [dataProducts, setDataProducts] = useState(null)
+    const [showProtocolsWorkflow, setShowProtocolsWorkflow] = useState(false)
+    const [workflow, setWorkflow] = useState({})
+    const [isDerivedContextInitialized, setIsDerivedContextInitialized] = useState(null)
 
     // Load the correct Vitessce view config
     const set_vitessce_config = async (data, dataset_id, dataset_type) => {
         fetchVitessceConfiguration(dataset_id).then(config => {
             // If the /vitessce endpoint returns anything but a 200 and an actual configuration, hide the visualization  section
-            if (JSON.stringify(config) === '{}' ) {
+            if (JSON.stringify(config) === '{}') {
                 setShowVitessce(false)
                 if (setShowVitessceList && showVitessceList === 1) {
                     setShowVitessceList(false)
@@ -59,6 +62,7 @@ export const DerivedProvider = ({children, showVitessceList, setShowVitessceList
             // Add a check if this is a component dataset
             if (!is_primary_dataset) {
                 await set_vitessce_config(data, data.uuid, dataset_type)
+                setIsDerivedContextInitialized(true)
             } else {
                 // Call `/prov-info` and check if processed datasets are returned
                 const prov_info = await getProvInfo(data.uuid)
@@ -74,6 +78,7 @@ export const DerivedProvider = ({children, showVitessceList, setShowVitessceList
                                 let processed_dataset_type = processed_dataset.dataset_type?.replace(/\s+([\[]).*?([\]])/g, "")
                                 setDerivedDataset(processed_dataset)
                                 set_vitessce_config(processed_dataset, processed_dataset.uuid, processed_dataset_type)
+                                setIsDerivedContextInitialized(true)
                             })
                             break;
                         }
@@ -137,11 +142,35 @@ export const DerivedProvider = ({children, showVitessceList, setShowVitessceList
         let _files = []
         for (let file of allFiles) {
             if (file?.is_data_product) {
-                _files.push({...file, display_subtype: getDatasetTypeDisplay(parent), uuid: parent.uuid, sennet_id: parent.sennet_id})
+                _files.push({
+                    ...file,
+                    display_subtype: getDatasetTypeDisplay(parent),
+                    uuid: parent.uuid,
+                    sennet_id: parent.sennet_id
+                })
             }
         }
         return _files
     }
+
+    // Assumes initVitessceConfig has completed and isPrimary and derivedDataset potentially have values
+    const fetchProtocolsWorkflow = useCallback(async (data) => {
+        let ingestDetails = null
+
+        if (isPrimaryDataset) {
+            if (derivedDataset) {
+                ingestDetails = derivedDataset.ingest_metadata
+                setWorkflow(ingestDetails)
+            }
+        } else {
+            ingestDetails = data.ingest_metadata
+            setWorkflow(ingestDetails)
+        }
+
+        if (ingestDetails) {
+            setShowProtocolsWorkflow(true)
+        }
+    })
 
     const fetchDataProducts = useCallback(async (data) => {
         let files = []
@@ -201,7 +230,11 @@ export const DerivedProvider = ({children, showVitessceList, setShowVitessceList
         getUrlByLengthMaximums,
         encodeConfigToUrl,
         fetchDataProducts,
-        dataProducts
+        dataProducts,
+        fetchProtocolsWorkflow,
+        showProtocolsWorkflow,
+        workflow,
+        isDerivedContextInitialized
     }}>
         {children}
     </DerivedContext.Provider>
