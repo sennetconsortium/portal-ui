@@ -141,7 +141,6 @@ function ViewDataset() {
                 Object.assign(_data, ancestry)
                 setData(_data)
                 setHasAncestry(true)
-                setShowProtocolsWorkflow(_showProtocolsWorkflow)
 
                 for (const ancestor of ancestry.ancestors) {
                     if ((ancestor.metadata && Object.keys(ancestor.metadata).length)) {
