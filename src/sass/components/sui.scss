@@ -236,8 +236,10 @@
 }
 
 #sui-tbl-checkbox-actions {
-  position: absolute;
-  right: 0;
+
+  .MuiMenuItem-root {
+    font-size: 12px;
+  }
 
   code {
     color: var(--bs-code-color);
@@ -314,6 +316,19 @@
   }
 }
 
+@include mixins.md-xlg-mx  {
+  .sui-layout-main-header__inner {
+    display: block;
+  }
+  .sui-tools-right {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+    .sui-columns-toggle {
+      margin-right: 20px;
+    }
+  }
+}
 
 .sui-columns-toggle {
   z-index: 900; //must be lower than navbar but above fixed header in DataTable
@@ -356,8 +371,19 @@
   display: none;
 }
 
-.sui-check-all {
-  span {
+.sui-selected-count{
     font-size: 11px;
+    position: absolute;
+    left: 35px;
+}
+
+.sui-paging-info {
+  text-transform: none;
+  color: white;
+}
+
+#sui-tbl-checkbox-actions {
+  .MuiListSubheader-root {
+    line-height: 34px;
   }
 }

@@ -1,6 +1,24 @@
 import React from "react";
+import {eq} from "@/components/custom/js/functions";
 
-function TutorialSteps(loggedIn) {
+function TutorialSteps(loggedIn, name = "app") {
+    const downloadText = <span>Clicking on the checkboxes <input type={'checkbox'} role='presentation' disabled/> on the left side of the search results table allows selecting distinct entities for export. Clicking on the download icon <i
+        className="bi bi-download text-primary fs-5"></i> at the top of the search results table allows for exporting either only the selected entities or all entities in the table to a <code>JSON</code> or <code>TSV</code> format.</span>
+    if (eq(name, "searchActions")) {
+        return [
+            {
+                target: '#sui-search-actions-btn',
+                disableBeacon: true,
+                title: <span>Download Search Results (1/2)</span>,
+                content: downloadText
+            },
+            {
+                target: '#sui-search-actions-btn',
+                title: <span>Compare Dataset Visualizations (2/2)</span>,
+                content: 'You may select up to four primary datasets by clicking on the checkboxes on the left side of the search results table. Clicking on "Compare Datasets" will allow you to compare the visualizations for each dataset side by side. '
+            },
+        ]
+    }
     const stepsCount = loggedIn ? 8 : 6
     let _steps = [
         {
@@ -37,8 +55,7 @@ function TutorialSteps(loggedIn) {
         {
             target: '#sui-tbl-checkbox-actions',
             title: <span>Download Search Results (6/{stepsCount})</span>,
-            content: <span>Clicking on the checkboxes <input type={'checkbox'} role='presentation' disabled/> on the left side of the search results table allows selecting distinct entities for export. Clicking on the download icon <i
-                className="bi bi-download text-primary fs-5"></i> at the top of the search results table allows for exporting either only the selected entities or all entities in the table to a <code>JSON</code> or <code>TSV</code> format.</span>
+            content: downloadText
         }
     ]
     if (loggedIn) {

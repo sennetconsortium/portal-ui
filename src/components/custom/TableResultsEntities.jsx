@@ -9,7 +9,6 @@ import {
 import AppContext from "@/context/AppContext"
 import log from 'loglevel'
 import ClipboardCopy from "../ClipboardCopy";
-import BulkExport, {handleCheckbox} from "./BulkExport";
 import {getOptions} from "./search/ResultsPerPage";
 import ResultsBlock from "./search/ResultsBlock";
 import {TableResultsProvider} from "@/context/TableResultsContext";
@@ -55,18 +54,7 @@ function TableResultsEntities({children, filters, onRowClicked, currentColumns =
 
     const defaultColumns = ({hasMultipleEntityTypes = true, columns = [], includeGroupCol = true}) => {
         let cols = []
-        if (!inModal) {
-            cols.push({
-                id: 'bulkExport',
-                ignoreRowClick: true,
-                name: <BulkExport filters={filters} data={children} raw={raw} hiddenColumns={hiddenColumns} columns={currentColumns} />,
-                width: '100px',
-                className: 'text-center',
-                selector: row => raw(row.sennet_id),
-                sortable: false,
-                format: column => <input type={'checkbox'} onClick={(e) => handleCheckbox(e)} value={getId(column)} name={`check-${getId(column)}`}/>
-            })
-        }
+
 
         cols.push(
             {
