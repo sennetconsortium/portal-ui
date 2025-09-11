@@ -78,13 +78,18 @@ function ViewHome({children}) {
                                     </div>}
                                                  body={<p>Investigate SenNet data by entity type or through its metadata
                                                      library.</p>}>
-                                        <Row className="smcHolder__footer text-center">
+                                        <Row className="smcHolder__footer text-center mb-xl-2">
                                             <Col><Button variant="outline-primary fs-7" className={'w-100'}
                                                          href={'/search'}>Search Data</Button>
                                             </Col>
+                                        </Row>
+                                        <Row className="smcHolder__footer text-center">
                                             <Col>
                                                 <Button variant="outline-primary fs-7" className={'w-100'}
                                                         href={'/discover/metadata'}>Discover Metadata</Button></Col>
+                                            <Col>
+                                                <Button variant="outline-primary fs-7" className={'w-100'}
+                                                        href={'/search/files'}>Search Files</Button></Col>
                                         </Row>
                                     </SiteMapCard>
                                 </Col>

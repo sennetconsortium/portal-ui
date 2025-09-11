@@ -53,7 +53,7 @@ function Metadata() {
                             <div className="bd-highlight">
                                 <button className="btn btn-outline-primary rounded-0 clear-filter-button"
                                         onClick={handleBrowseAllMetadataClicked}>
-                                    Search all metadata
+                                    Search All Metadata
                                 </button>
                             </div>
                         </div>

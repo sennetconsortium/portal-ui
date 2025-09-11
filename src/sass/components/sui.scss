@@ -100,6 +100,11 @@
   margin-right: auto;
   display: flex;
   padding: 0 24px;
+
+  .sui-layout-main {
+    width: 80%;
+    padding: 0;
+  }
 }
 
 .sui-layout-main-header__inner {
@@ -200,6 +205,13 @@
   .sui-layout-main {
     padding: 0 !important;
   }
+
+
+.sui-layout-body__inner {
+  .sui-layout-main {
+    width: 100%;
+  }
+}
 
   .modal-content .sui-layout-sidebar {
     z-index: 1021;
