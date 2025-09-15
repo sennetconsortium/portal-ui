@@ -53,7 +53,7 @@ function TutorialSteps(loggedIn, name = "app") {
             content: 'Columns can be hidden from the results table by clicking on the dropdown menu and selecting which columns to hide. To add these columns back to the results table, click on the ‘x’ next to the column name.'
         },
         {
-            target: '#sui-tbl-checkbox-actions',
+            target: '.c-searchActions',
             title: <span>Download Search Results (6/{stepsCount})</span>,
             content: downloadText
         }

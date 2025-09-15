@@ -49,7 +49,7 @@ function ResultsBlock({getTableColumns, disableRowClick, tableClassName = '', ex
                 <div className='sui-layout-main-header__inner'>
 
                     <SearchActions setRefresh={setRefresh} inModal={inModal} exportKind={exportKind} selectedRows={selectedRows} filters={filters} data={getTableData()} raw={raw} hiddenColumns={hiddenColumns} columns={currentColumns.current} />
-                    <div class='sui-tools-right'>
+                    <div className='sui-tools-right'>
                         {rows.length > 0 && <ColumnsDropdown searchContext={searchContext} filters={filters} defaultHiddenColumns={defaultHiddenColumns} getTableColumns={getTableColumns} setHiddenColumns={setHiddenColumns}
                                         currentColumns={currentColumns.current} />}
                         <ResultsPerPage updateTablePagination={updateTablePagination}
