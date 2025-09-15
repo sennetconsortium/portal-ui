@@ -138,10 +138,11 @@ export const AppProvider = ({ cache, banners, children }) => {
     }
 
     const deleteTutorialCookies = () => {
-        deleteCookie(`${tutorialCookieKey}_app_true`)
-        deleteCookie(`${tutorialCookieKey}_app_false`)
-        deleteCookie(`${tutorialCookieKey}_searchActions_true`)
-        deleteCookie(`${tutorialCookieKey}_searchActions_false`)
+        console.log(tutorialCookieKey)
+        deleteCookie(`${tutorialCookieKey}app_true`)
+        deleteCookie(`${tutorialCookieKey}app_false`)
+        deleteCookie(`${tutorialCookieKey}searchActions_true`)
+        deleteCookie(`${tutorialCookieKey}searchActions_false`)
         setTutorialTrigger(tutorialTrigger + 1)
     }
 

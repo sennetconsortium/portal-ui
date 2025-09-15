@@ -88,7 +88,7 @@ const AppNavbar = ({hidden, signoutHidden, innerRef}) => {
     }
 
     const getShowTutorialLink = () => {
-        return eq(getCookie(`${tutorialCookieKey}${isLoggedIn()}`), 'true')
+        return eq(getCookie(`${tutorialCookieKey}app_${isLoggedIn()}`), 'true')
     }
 
     return (

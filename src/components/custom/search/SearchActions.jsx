@@ -1,6 +1,6 @@
 import React, {useEffect, useRef, useState} from 'react'
 import PropTypes from 'prop-types'
-import { styled, alpha } from '@mui/material/styles';
+import {alpha, styled} from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
@@ -8,9 +8,7 @@ import InsightsIcon from '@mui/icons-material/Insights';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import ListSubheader from '@mui/material/ListSubheader';
 
-import {
-    PagingInfo
-} from "@elastic/react-search-ui";
+import {PagingInfo} from "@elastic/react-search-ui";
 import {autoBlobDownloader, eq} from "@/components/custom/js/functions";
 import SenNetPopover from "@/components/SenNetPopover";
 import AppTutorial from "@/components/custom/layout/AppTutorial";
@@ -31,7 +29,7 @@ const StyledMenu = styled((props) => (
         }}
         {...props}
     />
-))(({ theme }) => ({
+))(({theme}) => ({
     '& .MuiPaper-root': {
         borderRadius: 6,
         marginTop: theme.spacing(1),
@@ -64,7 +62,18 @@ const StyledMenu = styled((props) => (
     },
 }));
 
-function SearchActions({selectedRows, data = [], raw, columns, filters, exportKind, hiddenColumns, inModal, setRefresh, context = 'entities'}) {
+function SearchActions({
+                           selectedRows,
+                           data = [],
+                           raw,
+                           columns,
+                           filters,
+                           exportKind,
+                           hiddenColumns,
+                           inModal,
+                           setRefresh,
+                           context = 'entities'
+                       }) {
     const [anchorEl, setAnchorEl] = useState(null)
     const [totalSelected, setTotalSelected] = useState(selectedRows.current?.length)
     const [showTutorial, setShowTutorial] = useState(false)
@@ -116,7 +125,7 @@ function SearchActions({selectedRows, data = [], raw, columns, filters, exportKi
         return tableDataTSV
     }
 
-    const hasFileFilter = ()=> {
+    const hasFileFilter = () => {
         if (filters.length) {
             for (let f of filters) {
                 if (eq(f.field, 'file_extension') || eq(f.field, 'is_data_product') || eq(f.field, 'is_qa_qc')) {
@@ -128,7 +137,7 @@ function SearchActions({selectedRows, data = [], raw, columns, filters, exportKi
     }
 
     const generateManifestData = (selected, isAll) => {
-        let manifestData  = ''
+        let manifestData = ''
         try {
             if (!Array.isArray(data)) {
                 data = Object.values(data)
@@ -155,7 +164,7 @@ function SearchActions({selectedRows, data = [], raw, columns, filters, exportKi
     }
 
     const atIndex = (index) => {
-        return (data[index].props)  ? data[index].props.result : data[index]
+        return (data[index].props) ? data[index].props.result : data[index]
     }
 
     const downloadData = (e, fileType, isAll) => {
@@ -191,7 +200,7 @@ function SearchActions({selectedRows, data = [], raw, columns, filters, exportKi
 
         let type = 'text/tab-separated-values'
         let blob
-        switch(fileType) {
+        switch (fileType) {
             case 'json':
                 type = 'application/json'
                 blob = [JSON.stringify(results, null, 2)]
@@ -248,12 +257,16 @@ function SearchActions({selectedRows, data = [], raw, columns, filters, exportKi
             return <>Exports search result table information for selected entities in tab-separated values format.</>
         } else {
             return <>Exports to SenNet CLT manifest format.
-                <br />
-                <small className={'text-muted'}>Note: In order to download the files that are included in the manifest file,&nbsp;
+                <br/>
+                <small className={'text-muted'}>Note: In order to download the files that are included in the manifest
+                    file,&nbsp;
                     <a href="https://github.com/x-atlas-consortia/clt" target='_blank' className={'lnk--ic'}>install <i
-                        className="bi bi-box-arrow-up-right"></i></a> the CLT and <a target='_blank' className={'lnk--ic'}
-                                                                                     href="https://docs.sennetconsortium.org/libraries/clt/">follow the instructions<i
-                        className="bi bi-box-arrow-up-right"></i></a> for how to use it with the manifest file.</small>
+                        className="bi bi-box-arrow-up-right"></i></a> the CLT and <a target='_blank'
+                                                                                     className={'lnk--ic'}
+                                                                                     href="https://docs.sennetconsortium.org/libraries/clt/">follow
+                        the instructions<i
+                            className="bi bi-box-arrow-up-right"></i></a> for how to use it with the manifest
+                    file.</small>
             </>
         }
     }
@@ -282,7 +295,7 @@ function SearchActions({selectedRows, data = [], raw, columns, filters, exportKi
         return totalSelected > 0
     }
 
-    const hasDatasetFilter = ()=> {
+    const hasDatasetFilter = () => {
         let hasDataet = false
         let hasViz = false
         let types = new Set()
@@ -321,7 +334,7 @@ function SearchActions({selectedRows, data = [], raw, columns, filters, exportKi
     useEffect(() => {
         if (hasDatasetFilter() && !hasListened.current) {
             hasListened.current = true
-            getCheckboxes().on('click', (e)=>{
+            getCheckboxes().on('click', (e) => {
                 setShowTutorial(hasDatasetFilter())
             })
         }
@@ -349,7 +362,7 @@ function SearchActions({selectedRows, data = [], raw, columns, filters, exportKi
                 variant="contained"
                 disableElevation
                 onClick={handleClick}
-                endIcon={<KeyboardArrowDownIcon />}
+                endIcon={<KeyboardArrowDownIcon/>}
             >
                 <i className="bi bi-download fs-6 me-2"></i>
                 <PagingInfo/>
@@ -368,30 +381,32 @@ function SearchActions({selectedRows, data = [], raw, columns, filters, exportKi
                 <ListSubheader>
                     <i className="bi bi-download fs-6 mx-2"></i>
                     <SenNetPopover text={<>Click a format below to download the file to your local device.</>}>
-                    <span>Export</span>
+                        <span>Export</span>
                     </SenNetPopover>
                 </ListSubheader>
                 <MenuItem className={'dropdown-item'} key={`export-all`}>All to&nbsp;
                     {getMenuItems('all')}
                 </MenuItem>
-                {hasSelectedRows() && <MenuItem className={'dropdown-item'}  key={`export-selected`} >Selected to&nbsp;
+                {hasSelectedRows() && <MenuItem className={'dropdown-item'} key={`export-selected`}>Selected to&nbsp;
                     {getMenuItems()}
                 </MenuItem>}
 
                 {!inModal && <div>
 
                     <ListSubheader>
-                        <InsightsIcon className={'mx-2'} />
-                        <SenNetPopover text={<span>Select up to 4 datasets of the same dataset type to compare the visualizations.</span>}>
+                        <InsightsIcon className={'mx-2'}/>
+                        <SenNetPopover
+                            text={<span>Select up to 4 datasets of the same <code>Dataset Type</code> to compare the visualizations. You must have <code>Dataset</code> from the Entity Type facet and <code>True</code> from Has Spatial Information facet selected to enable this option.</span>}>
                         <span>Visualize <i
                             className="bi bi-question-circle-fill"></i></span>
                         </SenNetPopover>
-                        </ListSubheader>
-                    <MenuItem className={`dropdown-item ${hasSelectedDatasets() ? '' : 'disabled text-disabled'}`} key={`export-all`} onClick={hasSelectedDatasets() ? goCompare : undefined}>
+                    </ListSubheader>
+                    <MenuItem className={`dropdown-item ${hasSelectedDatasets() ? '' : 'disabled text-disabled'}`}
+                              key={`export-all`} onClick={hasSelectedDatasets() ? goCompare : undefined}>
                         Compare Datasets
                     </MenuItem>
                 </div>}
-                <Divider />
+                <Divider/>
                 {hasSelectedRows() &&
                     <MenuItem className={'dropdown-item'} onClick={clearSelections}><i
                         className="bi bi-x-circle"></i> &nbsp; Clear row selections ({selectedRows.current.length})
@@ -399,7 +414,7 @@ function SearchActions({selectedRows, data = [], raw, columns, filters, exportKi
 
 
             </StyledMenu>
-            {showTutorial && <AppTutorial name={'searchActions'} autoStart={true} /> }
+            {showTutorial && <AppTutorial name={'searchActions'} autoStart={true}/>}
         </div>
     );
 }
