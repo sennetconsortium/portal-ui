@@ -329,10 +329,7 @@ export const SEARCH_ENTITIES = {
                 filterType: 'any',
                 isFilterable: false,
                 facetType: 'term',
-                isAggregationActive: [
-                    doesTermFilterContainValues('sources.source_type', ['Human']),
-                    doesTermFilterContainValues('entity_type', ['Sample', 'Dataset']),
-                ],
+                isAggregationActive: doesTermFilterContainValues('source.source_type', ['Human']),
                 isFacetVisible: doesAggregationHaveBuckets('sources.mapped_metadata.sex.value')
             },
             'sources.mapped_metadata.age.value': {
@@ -344,10 +341,7 @@ export const SEARCH_ENTITIES = {
                 isFilterable: false,
                 facetType: 'histogram',
                 aggregationInterval: 1,
-                isAggregationActive: [
-                    doesTermFilterContainValues('sources.source_type', ['Human']),
-                    doesTermFilterContainValues('entity_type', ['Sample', 'Dataset']),
-                ],
+                isAggregationActive: doesTermFilterContainValues('source.source_type', ['Human']),
                 isFacetVisible: doesAggregationHaveBuckets('sources.mapped_metadata.age.value')
             },
             'sources.mapped_metadata.race.value': {
@@ -358,10 +352,7 @@ export const SEARCH_ENTITIES = {
                 filterType: 'any',
                 isFilterable: false,
                 facetType: 'term',
-                isAggregationActive: [
-                    doesTermFilterContainValues('sources.source_type', ['Human']),
-                    doesTermFilterContainValues('entity_type', ['Sample', 'Dataset']),
-                ],
+                isAggregationActive: doesTermFilterContainValues('source.source_type', ['Human']),
                 isFacetVisible: doesAggregationHaveBuckets('sources.mapped_metadata.race.value')
             },
             'sources.mapped_metadata.body_mass_index.value': {
@@ -373,10 +364,7 @@ export const SEARCH_ENTITIES = {
                 isFilterable: false,
                 facetType: 'histogram',
                 aggregationInterval: 1,
-                isAggregationActive: [
-                    doesTermFilterContainValues('sources.source_type', ['Human']),
-                    doesTermFilterContainValues('entity_type', ['Sample', 'Dataset']),
-                ],
+                isAggregationActive: doesTermFilterContainValues('source.source_type', ['Human']),
                 isFacetVisible: doesAggregationHaveBuckets('sources.mapped_metadata.body_mass_index.value')
             },
 
