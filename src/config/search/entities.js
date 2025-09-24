@@ -197,47 +197,27 @@ export const SEARCH_ENTITIES = {
                 isAggregationActive: doesTermFilterContainValues('entity_type', ['Sample']),
                 isFacetVisible: doesAggregationHaveBuckets('source.source_type')
             },
-            contains_data: {
-                label: 'Contains Data',
-                type: 'value',
-                field: 'contains_data.keyword',
-                isExpanded: false,
-                filterType: 'any',
-                isFilterable: false,
-                facetType: 'term',
-                isAggregationActive: doesTermFilterContainValues('entity_type', ['Sample']),
-                isFacetVisible: doesAggregationHaveBuckets('contains_data')
-            },
-            created_timestamp: {
-                label: 'Creation Date',
-                type: 'range',
-                field: 'created_timestamp',
-                isExpanded: false,
-                filterType: 'any',
-                isFilterable: true,
-                facetType: 'daterange',
-                isFacetVisible: isDateFacetVisible
-            },
-            last_modified_timestamp: {
-                label: 'Modification Date',
-                type: 'range',
-                field: 'last_modified_timestamp',
-                isExpanded: false,
-                filterType: 'any',
-                isFilterable: true,
-                facetType: 'daterange',
-                isFacetVisible: isDateFacetVisible
-            },
 
-            // Dataset processing group
-            dataset_processing_group: {
-                label: 'Dataset Processing',
+            // Data processing group
+            data_processing_group: {
+                label: 'Data Processing',
                 facetType: 'group',
                 isExpanded: false,
                 isFacetVisible: (filters, aggregations, auth, visibleChildren) => {
                     return visibleChildren.length > 0
                 },
                 facets: {
+                    contains_data: {
+                        label: 'Contains Data',
+                        type: 'value',
+                        field: 'contains_data.keyword',
+                        isExpanded: false,
+                        filterType: 'any',
+                        isFilterable: false,
+                        facetType: 'term',
+                        isAggregationActive: doesTermFilterContainValues('entity_type', ['Sample']),
+                        isFacetVisible: doesAggregationHaveBuckets('contains_data')
+                    },
                     has_rui_information: {
                         label: 'Has Spatial Information',
                         type: 'value',
@@ -494,6 +474,26 @@ export const SEARCH_ENTITIES = {
                         isAggregationActive: true,
                         isFacetVisible: doesAggregationHaveBuckets('created_by_user_displayname')
                     },
+                    created_timestamp: {
+                        label: 'Creation Date',
+                        type: 'range',
+                        field: 'created_timestamp',
+                        isExpanded: false,
+                        filterType: 'any',
+                        isFilterable: true,
+                        facetType: 'daterange',
+                        isFacetVisible: isDateFacetVisible
+                    },
+                    last_modified_timestamp: {
+                        label: 'Modification Date',
+                        type: 'range',
+                        field: 'last_modified_timestamp',
+                        isExpanded: false,
+                        filterType: 'any',
+                        isFilterable: true,
+                        facetType: 'daterange',
+                        isFacetVisible: isDateFacetVisible
+                    }
                 }
             },
         },
