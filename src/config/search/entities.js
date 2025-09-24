@@ -325,7 +325,9 @@ export const SEARCH_ENTITIES = {
                 label: 'Source Metadata',
                 facetType: 'group',
                 isExpanded: false,
-                isFacetVisible: true,
+                isFacetVisible: (filters, aggregations, auth, visibleChildren) => {
+                    return visibleChildren.length > 0
+                },
                 facets: {
                     'sources.mapped_metadata.sex.value': {
                         label: 'Source Sex',
