@@ -45,7 +45,13 @@ export const JobQueueProvider = ({ children }) => {
 
     function getDefaultModalTableCols(entityType) {
         let {typeCol, labIdCol} = getColNames(entityType)
-        return [{
+        return [
+            {
+                name: 'uuid',
+                selector: row => row.uuid,
+                omit: true
+            }
+            ,{
                 name: 'lab_id',
                 selector: row => row[labIdCol],
                 sortable: true,
