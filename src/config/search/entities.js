@@ -208,97 +208,6 @@ export const SEARCH_ENTITIES = {
                 isAggregationActive: doesTermFilterContainValues('entity_type', ['Sample']),
                 isFacetVisible: doesAggregationHaveBuckets('contains_data')
             },
-            has_rui_information: {
-                label: 'Has Spatial Information',
-                type: 'value',
-                field: 'has_rui_information.keyword',
-                isExpanded: false,
-                tooltipText: `Any entity that either is a tissue block containing spatial registration information or any
-                              tissue Sample or Dataset derived from a block containing spatial registration information
-                              is considered to have spatial information associated with it.`,
-                filterType: 'any',
-                isFilterable: false,
-                facetType: 'term',
-                isAggregationActive: true,
-                isFacetVisible: doesAggregationHaveBuckets('has_rui_information')
-            },
-            'rui_location_anatomical_locations.label': {
-                label: 'Anatomical Locations',
-                type: 'value',
-                field: 'rui_location_anatomical_locations.label.keyword',
-                isExpanded: false,
-                filterType: 'any',
-                isFilterable: false,
-                facetType: 'term',
-                isAggregationActive: doesTermFilterContainValues('entity_type', ['Sample']),
-                isFacetVisible: doesAggregationHaveBuckets('rui_location_anatomical_locations.label')
-            },
-            'has_metadata': {
-                label: 'Has Metadata',
-                type: 'exists',
-                field: 'has_metadata.keyword',
-                isExpanded: false,
-                filterType: 'any',
-                isFilterable: false,
-                facetType: 'term',
-                isAggregationActive: [
-                    doesTermFilterContainValues('entity_type', ['Source', 'Dataset', 'Collection', 'Publication']),
-                    doesTermFilterContainValues('sample_category', ['Block', 'Section', 'Suspension'])
-                ],
-                isFacetVisible: doesAggregationHaveBuckets('has_metadata')
-            },
-            'has_visualization': {
-                label: 'Has Visualization',
-                type: 'exists',
-                field: 'has_visualization.keyword',
-                isExpanded: false,
-                filterType: 'any',
-                isFilterable: false,
-                facetType: 'term',
-                isAggregationActive: [
-                    doesTermFilterContainValues('entity_type', ['Dataset']),
-                ],
-                isFacetVisible: doesAggregationHaveBuckets('has_visualization')
-            },
-            has_all_published_datasets: {
-                label: 'Has All Primary Published',
-                type: 'value',
-                field: 'has_all_published_datasets.keyword',
-                isExpanded: false,
-                filterType: 'any',
-                isFilterable: false,
-                facetType: 'term',
-                isAggregationActive: (filters, authState) => {
-                    if (authState.isAdmin) {
-                        const isActiveFunc = doesTermFilterContainValues('entity_type', ['Upload'])
-                        return isActiveFunc(filters)
-                    }
-                    return false
-                },
-                isFacetVisible: doesAggregationHaveBuckets('has_all_published_datasets')
-            },
-            group_name: {
-                label: 'Data Provider Group',
-                type: 'value',
-                field: 'group_name.keyword',
-                isExpanded: false,
-                filterType: 'any',
-                isFilterable: false,
-                facetType: 'term',
-                isAggregationActive: true,
-                isFacetVisible: doesAggregationHaveBuckets('group_name')
-            },
-            created_by_user_displayname: {
-                label: 'Registered By',
-                type: 'value',
-                field: 'created_by_user_displayname.keyword',
-                isExpanded: false,
-                filterType: 'any',
-                isFilterable: false,
-                facetType: 'term',
-                isAggregationActive: true,
-                isFacetVisible: doesAggregationHaveBuckets('created_by_user_displayname')
-            },
             created_timestamp: {
                 label: 'Creation Date',
                 type: 'range',
@@ -318,6 +227,87 @@ export const SEARCH_ENTITIES = {
                 isFilterable: true,
                 facetType: 'daterange',
                 isFacetVisible: isDateFacetVisible
+            },
+
+            // Dataset processing group
+            dataset_processing_group: {
+                label: 'Dataset Processing',
+                facetType: 'group',
+                isExpanded: false,
+                isFacetVisible: (filters, aggregations, auth, visibleChildren) => {
+                    return visibleChildren.length > 0
+                },
+                facets: {
+                    has_rui_information: {
+                        label: 'Has Spatial Information',
+                        type: 'value',
+                        field: 'has_rui_information.keyword',
+                        isExpanded: false,
+                        tooltipText: `Any entity that either is a tissue block containing spatial registration information or any
+                                    tissue Sample or Dataset derived from a block containing spatial registration information
+                                    is considered to have spatial information associated with it.`,
+                        filterType: 'any',
+                        isFilterable: false,
+                        facetType: 'term',
+                        isAggregationActive: true,
+                        isFacetVisible: doesAggregationHaveBuckets('has_rui_information')
+                    },
+                    'rui_location_anatomical_locations.label': {
+                        label: 'Anatomical Locations',
+                        type: 'value',
+                        field: 'rui_location_anatomical_locations.label.keyword',
+                        isExpanded: false,
+                        filterType: 'any',
+                        isFilterable: false,
+                        facetType: 'term',
+                        isAggregationActive: doesTermFilterContainValues('entity_type', ['Sample']),
+                        isFacetVisible: doesAggregationHaveBuckets('rui_location_anatomical_locations.label')
+                    },
+                    has_metadata: {
+                        label: 'Has Metadata',
+                        type: 'exists',
+                        field: 'has_metadata.keyword',
+                        isExpanded: false,
+                        filterType: 'any',
+                        isFilterable: false,
+                        facetType: 'term',
+                        isAggregationActive: [
+                            doesTermFilterContainValues('entity_type', ['Source', 'Dataset', 'Collection', 'Publication']),
+                            doesTermFilterContainValues('sample_category', ['Block', 'Section', 'Suspension'])
+                        ],
+                        isFacetVisible: doesAggregationHaveBuckets('has_metadata')
+                    },
+                    has_visualization: {
+                        label: 'Has Visualization',
+                        type: 'exists',
+                        field: 'has_visualization.keyword',
+                        isExpanded: false,
+                        filterType: 'any',
+                        isFilterable: false,
+                        facetType: 'term',
+                        isAggregationActive: [
+                            doesTermFilterContainValues('entity_type', ['Dataset']),
+                        ],
+                        isFacetVisible: doesAggregationHaveBuckets('has_visualization')
+                    },
+                    has_all_published_datasets: {
+                        label: 'Has All Primary Published',
+                        type: 'value',
+                        field: 'has_all_published_datasets.keyword',
+                        isExpanded: false,
+                        filterType: 'any',
+                        isFilterable: false,
+                        facetType: 'term',
+                        isAggregationActive: (filters, authState) => {
+                            if (authState.isAdmin) {
+                                const isActiveFunc = doesTermFilterContainValues('entity_type', ['Upload'])
+                                return isActiveFunc(filters)
+                            }
+                            return false
+                        },
+                        isFacetVisible: doesAggregationHaveBuckets('has_all_published_datasets')
+                    },
+                }
             },
 
             // Source metadata for Datasets
@@ -471,7 +461,41 @@ export const SEARCH_ENTITIES = {
                         isFacetVisible: doesAggregationHaveBuckets('source_mapped_metadata.body_mass_index.value')
                     }
                 }
-            }
+            },
+
+            // Dataset processing group
+            affiliation_group: {
+                label: 'Affiliation',
+                facetType: 'group',
+                isExpanded: false,
+                isFacetVisible: (filters, aggregations, auth, visibleChildren) => {
+                    return visibleChildren.length > 0
+                },
+                facets: {
+                    group_name: {
+                        label: 'Data Provider Group',
+                        type: 'value',
+                        field: 'group_name.keyword',
+                        isExpanded: false,
+                        filterType: 'any',
+                        isFilterable: false,
+                        facetType: 'term',
+                        isAggregationActive: true,
+                        isFacetVisible: doesAggregationHaveBuckets('group_name')
+                    },
+                    created_by_user_displayname: {
+                        label: 'Registered By',
+                        type: 'value',
+                        field: 'created_by_user_displayname.keyword',
+                        isExpanded: false,
+                        filterType: 'any',
+                        isFilterable: false,
+                        facetType: 'term',
+                        isAggregationActive: true,
+                        isFacetVisible: doesAggregationHaveBuckets('created_by_user_displayname')
+                    },
+                }
+            },
         },
         disjunctiveFacets: [],
         conditionalFacets: {},
