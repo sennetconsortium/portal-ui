@@ -36,7 +36,7 @@ const CCFOrganInfo = ({ organ }) => {
                 />
                 <script
                     src='https://cdn.humanatlas.io/ui/ccf-organ-info/wc.js'
-                    defer
+                    type="module"
                 ></script>
                 <style>{customStyles}</style>
             </Helmet>
