@@ -59,7 +59,7 @@ export const SEARCH_METADATA = {
                 filterType: 'any',
                 isFilterable: false,
                 facetType: 'term',
-                isAggregationActive: doesTermFilterContainValues('entity_type', ['Source']),
+                isAggregationActive: doesTermFilterContainValues('entity_type', ['Source', 'Sample', 'Dataset']),
                 isFacetVisible: doesAggregationHaveBuckets('source_type')
             },
             sample_category: {
@@ -85,7 +85,65 @@ export const SEARCH_METADATA = {
                 isFacetVisible: doesAggregationHaveBuckets('dataset_type')
             },
 
-
+            // Source Human
+            'source_mapped_metadata.age.value': {
+                label: 'Age',
+                type: 'range',
+                field: 'source_mapped_metadata.age.value',
+                isExpanded: false,
+                filterType: 'any',
+                isFilterable: false,
+                facetType: 'histogram',
+                aggregationInterval: 1,
+                isAggregationActive: (filters) => {
+                    // Needs to check if entity_type:Source AND source_type:Human is selected
+                    return true
+                },
+                isFacetVisible: doesAggregationHaveBuckets('source_mapped_metadata.age.value')
+            },
+            'source_mapped_metadata.body_mass_index.value': {
+                label: 'Body Mass Index',
+                type: 'range',
+                field: 'source_mapped_metadata.body_mass_index.value',
+                isExpanded: false,
+                filterType: 'any',
+                isFilterable: false,
+                facetType: 'histogram',
+                aggregationInterval: 1,
+                isAggregationActive: (filters) => {
+                    // Needs to check if entity_type:Source AND source_type:Human is selected
+                    return true
+                },
+                isFacetVisible: doesAggregationHaveBuckets('source_mapped_metadata.body_mass_index.value')
+            },
+            'source_mapped_metadata.race.value': {
+                label: 'Race',
+                type: 'value',
+                field: 'source_mapped_metadata.race.value.keyword',
+                isExpanded: false,
+                filterType: 'any',
+                isFilterable: false,
+                facetType: 'term',
+                isAggregationActive: (filters) => {
+                    // Needs to check if entity_type:Source AND source_type:Human is selected
+                    return true
+                },
+                isFacetVisible: doesAggregationHaveBuckets('source_mapped_metadata.race.value')
+            },
+            'source_mapped_metadata.sex.value': {
+                label: 'Sex',
+                type: 'value',
+                field: 'source_mapped_metadata.sex.value.keyword',
+                isExpanded: false,
+                filterType: 'any',
+                isFilterable: false,
+                facetType: 'term',
+                isAggregationActive: (filters) => {
+                    // Needs to check if entity_type:Source AND source_type:Human is selected
+                    return true
+                },
+                isFacetVisible: doesAggregationHaveBuckets('source_mapped_metadata.sex.value')
+            },
 
             // Source Mouse
             'metadata.euthanization_method': {
@@ -457,7 +515,7 @@ export const SEARCH_METADATA = {
                 },
                 facets: {
                     // Source Human
-                    'source_mapped_metadata.age.value': {
+                    'grouped_source_mapped_metadata.age.value': {
                         label: 'Age',
                         type: 'range',
                         field: 'source_mapped_metadata.age.value',
@@ -470,9 +528,9 @@ export const SEARCH_METADATA = {
                             doesTermFilterContainValues('source_type', ['Human']),
                             doesTermFilterContainValues('entity_type', ['Sample', 'Dataset']),
                         ],
-                        isFacetVisible: doesAggregationHaveBuckets('source_mapped_metadata.age.value')
+                        isFacetVisible: doesAggregationHaveBuckets('grouped_source_mapped_metadata.age.value')
                     },
-                    'source_mapped_metadata.body_mass_index.value': {
+                    'grouped_source_mapped_metadata.body_mass_index.value': {
                         label: 'Body Mass Index',
                         type: 'range',
                         field: 'source_mapped_metadata.body_mass_index.value',
@@ -485,9 +543,9 @@ export const SEARCH_METADATA = {
                             doesTermFilterContainValues('source_type', ['Human']),
                             doesTermFilterContainValues('entity_type', ['Sample', 'Dataset']),
                         ],
-                        isFacetVisible: doesAggregationHaveBuckets('source_mapped_metadata.body_mass_index.value')
+                        isFacetVisible: doesAggregationHaveBuckets('grouped_source_mapped_metadata.body_mass_index.value')
                     },
-                    'source_mapped_metadata.race.value': {
+                    'grouped_source_mapped_metadata.race.value': {
                         label: 'Race',
                         type: 'value',
                         field: 'source_mapped_metadata.race.value.keyword',
@@ -499,9 +557,9 @@ export const SEARCH_METADATA = {
                             doesTermFilterContainValues('source_type', ['Human']),
                             doesTermFilterContainValues('entity_type', ['Sample', 'Dataset']),
                         ],
-                        isFacetVisible: doesAggregationHaveBuckets('source_mapped_metadata.race.value')
+                        isFacetVisible: doesAggregationHaveBuckets('grouped_source_mapped_metadata.race.value')
                     },
-                    'source_mapped_metadata.sex.value': {
+                    'grouped_source_mapped_metadata.sex.value': {
                         label: 'Sex',
                         type: 'value',
                         field: 'source_mapped_metadata.sex.value.keyword',
@@ -513,7 +571,7 @@ export const SEARCH_METADATA = {
                             doesTermFilterContainValues('source_type', ['Human']),
                             doesTermFilterContainValues('entity_type', ['Sample', 'Dataset']),
                         ],
-                        isFacetVisible: doesAggregationHaveBuckets('source_mapped_metadata.sex.value')
+                        isFacetVisible: doesAggregationHaveBuckets('grouped_source_mapped_metadata.sex.value')
                     },
                 }
             },
