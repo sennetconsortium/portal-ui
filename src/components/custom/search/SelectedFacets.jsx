@@ -3,7 +3,7 @@ import { getUBKGFullName } from '../js/functions'
 import { useSearchUIContext } from "search-ui/components/core/SearchUIContext";
 
 function SelectedFacets() {
-    const { facetConfig, filters, setFilter, removeFilter } = useSearchUIContext()
+    const { facetConfig, filters, setFilter, removeFilter, findFacet } = useSearchUIContext()
 
     const getSelector = (pre, label, value) => {
         return `sui-${pre}--${formatVal(label)}-${formatVal(value)}`
@@ -105,9 +105,9 @@ function SelectedFacets() {
     return (
         <div className={`c-SelectedFacets`}>
             {filters.reduce((acc, filter) => {
-                const facet = facetConfig[filter.field]
+                const facet = findFacet(filter.field)
                 for (const value of filter.values) {
-                    switch (facet.facetType) {
+                    switch (facet?.facetType) {
                     case 'daterange':
                     case 'histogram':
                         acc.push(...buildRangeFacetChip(filter, facet, value))
