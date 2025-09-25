@@ -291,7 +291,7 @@ export const SEARCH_ENTITIES = {
             },
 
             // Source metadata for Datasets
-            metadata_group: {
+            source_metadata_group: {
                 label: 'Source Metadata',
                 facetType: 'group',
                 isExpanded: false,
