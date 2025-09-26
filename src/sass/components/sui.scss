@@ -111,8 +111,12 @@
   @include mixins.sm-mx {
     display: initial;
 
-    .sui-columns-toggle {
-      margin: 1em 0;
+    .sui-tools-right {
+      display: unset;
+      margin: 20px;
+    }
+    .sui-react-select {
+      margin-top: 20px
     }
   }
 }
@@ -141,7 +145,7 @@
 }
 
 .sui-layout-sidebar-dropdown {
-   margin-bottom: 1.5rem; 
+  margin-bottom: 1.5rem;
 }
 
 // Handle sidebar on smaller screens
@@ -207,11 +211,11 @@
   }
 
 
-.sui-layout-body__inner {
-  .sui-layout-main {
-    width: 100%;
+  .sui-layout-body__inner {
+    .sui-layout-main {
+      width: 100%;
+    }
   }
-}
 
   .modal-content .sui-layout-sidebar {
     z-index: 1021;
@@ -256,6 +260,7 @@
   code {
     color: var(--bs-code-color);
     word-wrap: break-word;
+
     &:hover {
       text-decoration: underline;
       cursor: pointer;
@@ -266,13 +271,16 @@
     * {
       font-size: 0.8rem;
     }
+
     &-menu {
       z-index: 10 !important;
       min-width: 180px;
+
       &.menu--lg {
         min-width: 290px;
       }
     }
+
     &-item {
       &:active {
         background-color: transparent;
@@ -282,17 +290,19 @@
   }
 
 
- .btn {
-   border: none !important;
- }
+  .btn {
+    border: none !important;
+  }
 }
 
 .sui-filters-summary {
   background: swatch.$col-entity-grey;
   padding: 0 24px;
+
   .MuiChip-root {
     color: swatch.$col-secondary-txt;
   }
+
   .chip-title {
     text-transform: uppercase;
     font-size: 12px;
@@ -308,9 +318,11 @@
     align-items: center;
     flex: inherit;
   }
+
   &__option-count {
     color: swatch.$col-secondary-txt;
   }
+
   &__checkbox,
   &__input-text {
     display: table-cell;
@@ -328,37 +340,38 @@
   }
 }
 
-@include mixins.md-xlg-mx  {
+.sui-tools-right {
+  display: flex;
+  justify-content: flex-end;
+}
+
+@include mixins.md-xlg-mx {
   .sui-layout-main-header__inner {
     display: block;
   }
+
   .sui-tools-right {
-    display: flex;
-    justify-content: flex-end;
-    margin-top: 20px;
-    .sui-columns-toggle {
-      margin-right: 20px;
-    }
+    display: unset;
+    margin: 20px;
+  }
+  .sui-react-select {
+    margin-top: 20px
   }
 }
 
-.sui-columns-toggle {
-  z-index: 900; //must be lower than navbar but above fixed header in DataTable
-  @include mixins.lg {
-    position: absolute !important;
-    right: 120px;
-  }
-}
-
-.sui-react-select {
-  position: relative;
-  z-index: 900; //must be lower than navbar but above fixed header in DataTable
-}
+//.sui-columns-toggle {
+//  z-index: 900; //must be lower than navbar but above fixed header in DataTable
+//  @include mixins.lg {
+//    position: absolute !important;
+//    right: 120px;
+//  }
+//}
 
 .sui-filterableComponent {
   .form-control {
     border-radius: 0;
   }
+
   &.has-extraPadding {
     .form-control {
       padding: 10px;
@@ -366,12 +379,12 @@
   }
 }
 
-.sui-stack {
-  .sui-columns-toggle {
-    position: relative !important;
-    right: initial;
-  }
-}
+//.sui-stack {
+//  .sui-columns-toggle {
+//    position: relative !important;
+//    right: initial;
+//  }
+//}
 
 .sui-jobs-dashboard header {
   padding-left: 16px;
@@ -383,10 +396,10 @@
   display: none;
 }
 
-.sui-selected-count{
-    font-size: 11px;
-    position: absolute;
-    left: 35px;
+.sui-selected-count {
+  font-size: 11px;
+  position: absolute;
+  left: 35px;
 }
 
 .sui-paging-info {
