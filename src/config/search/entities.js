@@ -117,23 +117,6 @@ export const SEARCH_ENTITIES = {
                 isAggregationActive: doesTermFilterContainValues('entity_type', ['Dataset']),
                 isFacetVisible: doesAggregationHaveBuckets('metadata.analyte_class')
             },
-            has_qa_published_derived_dataset: {
-                label: 'Has QA Derived Datasets',
-                type: 'value',
-                field: 'has_qa_published_derived_dataset.keyword',
-                isExpanded: false,
-                filterType: 'any',
-                isFilterable: false,
-                facetType: 'term',
-                isAggregationActive: (filters, authState) => {
-                    if (authState.isAdmin) {
-                        const isActiveFunc = doesTermFilterContainValues('entity_type', ['Dataset'])
-                        return isActiveFunc(filters)
-                    }
-                    return false
-                },
-                isFacetVisible: doesAggregationHaveBuckets('has_qa_published_derived_dataset')
-            },
             'sources.source_type': {
                 label: 'Source Type',
                 type: 'value',
@@ -207,17 +190,6 @@ export const SEARCH_ENTITIES = {
                     return visibleChildren.length > 0
                 },
                 facets: {
-                    contains_data: {
-                        label: 'Contains Data',
-                        type: 'value',
-                        field: 'contains_data.keyword',
-                        isExpanded: false,
-                        filterType: 'any',
-                        isFilterable: false,
-                        facetType: 'term',
-                        isAggregationActive: doesTermFilterContainValues('entity_type', ['Sample']),
-                        isFacetVisible: doesAggregationHaveBuckets('contains_data')
-                    },
                     has_rui_information: {
                         label: 'Has Spatial Information',
                         type: 'value',
@@ -237,6 +209,7 @@ export const SEARCH_ENTITIES = {
                         type: 'value',
                         field: 'rui_location_anatomical_locations.label.keyword',
                         isExpanded: false,
+                        tooltipText: `Any tissue block containing spatial registration information will have an anatomical location associated with it.`,
                         filterType: 'any',
                         isFilterable: false,
                         facetType: 'term',
@@ -248,13 +221,11 @@ export const SEARCH_ENTITIES = {
                         type: 'exists',
                         field: 'has_metadata.keyword',
                         isExpanded: false,
+                        tooltipText: `Any entity that has metadata associated with it`,
                         filterType: 'any',
                         isFilterable: false,
                         facetType: 'term',
-                        isAggregationActive: [
-                            doesTermFilterContainValues('entity_type', ['Source', 'Dataset', 'Collection', 'Publication']),
-                            doesTermFilterContainValues('sample_category', ['Block', 'Section', 'Suspension'])
-                        ],
+                        isAggregationActive: doesTermFilterContainValues('entity_type', ['Source', 'Sample', 'Dataset', 'Collection', 'Publication']),
                         isFacetVisible: doesAggregationHaveBuckets('has_metadata')
                     },
                     has_visualization: {
@@ -262,6 +233,7 @@ export const SEARCH_ENTITIES = {
                         type: 'exists',
                         field: 'has_visualization.keyword',
                         isExpanded: false,
+                        tooltipText: `Any Dataset that has a Vitessce visualization associated with it.`,
                         filterType: 'any',
                         isFilterable: false,
                         facetType: 'term',
@@ -270,11 +242,42 @@ export const SEARCH_ENTITIES = {
                         ],
                         isFacetVisible: doesAggregationHaveBuckets('has_visualization')
                     },
+                    contains_data: {
+                        label: 'Contains Data',
+                        type: 'value',
+                        field: 'contains_data.keyword',
+                        isExpanded: false,
+                        tooltipText: `Any Sample that has a Dataset in its ancestry is considered to contain data.`,
+                        filterType: 'any',
+                        isFilterable: false,
+                        facetType: 'term',
+                        isAggregationActive: doesTermFilterContainValues('entity_type', ['Sample']),
+                        isFacetVisible: doesAggregationHaveBuckets('contains_data')
+                    },
+                    has_qa_published_derived_dataset: {
+                        label: 'Has QA Derived Datasets',
+                        type: 'value',
+                        field: 'has_qa_published_derived_dataset.keyword',
+                        isExpanded: false,
+                        tooltipText: `Any primary Dataset that has a derived dataset that either has the status of QA or Published.`,
+                        filterType: 'any',
+                        isFilterable: false,
+                        facetType: 'term',
+                        isAggregationActive: (filters, authState) => {
+                            if (authState.isAdmin) {
+                                const isActiveFunc = doesTermFilterContainValues('entity_type', ['Dataset'])
+                                return isActiveFunc(filters)
+                            }
+                            return false
+                        },
+                        isFacetVisible: doesAggregationHaveBuckets('has_qa_published_derived_dataset')
+                    },
                     has_all_published_datasets: {
                         label: 'Has All Primary Published',
                         type: 'value',
                         field: 'has_all_published_datasets.keyword',
                         isExpanded: false,
+                        tooltipText: `Any Upload that has all Datasets associated with it that have the status of Published.`,
                         filterType: 'any',
                         isFilterable: false,
                         facetType: 'term',
