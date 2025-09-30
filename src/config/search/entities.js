@@ -221,7 +221,7 @@ export const SEARCH_ENTITIES = {
                         type: 'exists',
                         field: 'has_metadata.keyword',
                         isExpanded: false,
-                        tooltipText: `Any entity that has metadata associated with it`,
+                        tooltipText: `Any entity that has metadata associated with it.`,
                         filterType: 'any',
                         isFilterable: false,
                         facetType: 'term',
