@@ -165,7 +165,7 @@ export default function EditPublication() {
         const response = await fetch(url, requestOptions)
         let submitResult = await response.text()
         toggleBusyOverlay(false)
-        setSubmissionModal(submitResult, !response.ok)
+        setSubmissionModal(submitResult, !response.ok, 'publication')
     
     }
 
