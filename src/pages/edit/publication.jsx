@@ -81,6 +81,7 @@ export default function EditPublication() {
 
             // Set state with default values that will be PUT to Entity API to update
             setValues(prevState => ({
+                'status': _data.status,
                 'lab_dataset_id': _data.lab_dataset_id || _data.title,
                 'dataset_type': _data.dataset_type,
                 'description': _data.description,
@@ -210,6 +211,9 @@ export default function EditPublication() {
                 let json = cleanJson(values);
                 let uuid = data.uuid
 
+                // Remove 'status' from values. Not a field to pass to Entity API for a normal update of Publication
+                delete json['status']
+
                 await updateCreateDataset(uuid, json, editMode, 'publications')
                     .then((response) => {
                         modalResponse(response)
@@ -250,7 +254,7 @@ export default function EditPublication() {
                     <div className="no_sidebar">
                         <Layout
                             bodyHeader={
-                                <EntityHeader entity={cache.entities.publication} isEditMode={isEditMode()} data={data} showGroup={false}/>
+                                <EntityHeader entity={cache.entities.publication} isEditMode={isEditMode()} data={data} values={values} showGroup={false}/>
                             }
                             bodyContent={
                                 <Form noValidate validated={validated}>
