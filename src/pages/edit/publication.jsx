@@ -8,13 +8,14 @@ import Form from 'react-bootstrap/Form';
 import {Layout} from '@elastic/react-search-ui-views'
 import '@elastic/react-search-ui-views/lib/styles/styles.css'
 import log from 'loglevel'
-import {getAncestryData, getEntityData, updateCreateDataset} from '@/lib/services'
-import {cleanJson, eq, fetchEntity} from '@/components/custom/js/functions'
+import {getAncestryData, getEntityData, updateCreateDataset, getAuthJsonHeaders} from '@/lib/services'
+import {cleanJson, eq, fetchEntity, getStatusColor,} from '@/components/custom/js/functions'
 import AppContext from '@/context/AppContext'
 import EntityContext, {EntityProvider} from '@/context/EntityContext'
 import $ from 'jquery'
 import GroupSelect from "@/components/custom/edit/GroupSelect";
-import {valid_dataset_ancestor_config} from "@/config/config";
+import {valid_dataset_ancestor_config, getIngestEndPoint} from "@/config/config";
+import DatasetSubmissionButton from "@/components/custom/edit/dataset/DatasetSubmissionButton";
 
 const AncestorIds = dynamic(() => import('@/components/custom/edit/dataset/AncestorIds'))
 const AppFooter = dynamic(() => import("@/components/custom/layout/AppFooter"))
@@ -27,7 +28,7 @@ const SenNetPopover = dynamic(() => import("@/components/SenNetPopover"))
 
 export default function EditPublication() {
     const {
-        isPreview, getModal, setModalDetails,
+        isPreview, getModal, setModalDetails, setModalProps, setSubmissionModal,
         data, setData,
         error, setError,
         values, setValues,
@@ -389,7 +390,7 @@ export default function EditPublication() {
                                             If a user is a data admin and the status is either 'New' or 'Submitted' allow this Dataset to be
                                             processed via the pipeline.
                                             */}
-                                        {!['Processing', 'Published'].contains(data['status'])  && adminGroup && isEditMode() && (eq(data['status'], 'New') || eq(data['status'], 'Submitted')) &&
+                                        {!['Processing', 'Published'].contains(data['status'])  && adminGroup && isEditMode() &&
                                             <SenNetPopover
                                                 text={<>Process this <code>Publication</code> via the Ingest Pipeline.</>}
                                                 className={'initiate-dataset-processing'}>
