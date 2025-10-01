@@ -253,44 +253,8 @@ export const SEARCH_ENTITIES = {
                         facetType: 'term',
                         isAggregationActive: doesTermFilterContainValues('entity_type', ['Sample']),
                         isFacetVisible: doesAggregationHaveBuckets('contains_data')
-                    },
-                    has_qa_published_derived_dataset: {
-                        label: 'Has QA Derived Datasets',
-                        type: 'value',
-                        field: 'has_qa_published_derived_dataset.keyword',
-                        isExpanded: false,
-                        tooltipText: `Any primary Dataset that has a derived dataset that either has the status of QA or Published.`,
-                        filterType: 'any',
-                        isFilterable: false,
-                        facetType: 'term',
-                        isAggregationActive: (filters, authState) => {
-                            if (authState.isAdmin) {
-                                const isActiveFunc = doesTermFilterContainValues('entity_type', ['Dataset'])
-                                return isActiveFunc(filters)
-                            }
-                            return false
-                        },
-                        isFacetVisible: doesAggregationHaveBuckets('has_qa_published_derived_dataset')
-                    },
-                    has_all_published_datasets: {
-                        label: 'Has All Primary Published',
-                        type: 'value',
-                        field: 'has_all_published_datasets.keyword',
-                        isExpanded: false,
-                        tooltipText: `Any bulk data Upload where all associated Datasets are  Published.`,
-                        filterType: 'any',
-                        isFilterable: false,
-                        facetType: 'term',
-                        isAggregationActive: (filters, authState) => {
-                            if (authState.isAdmin) {
-                                const isActiveFunc = doesTermFilterContainValues('entity_type', ['Upload'])
-                                return isActiveFunc(filters)
-                            }
-                            return false
-                        },
-                        isFacetVisible: doesAggregationHaveBuckets('has_all_published_datasets')
-                    },
-                }
+                    }
+                },
             },
 
             // Source metadata for Datasets
