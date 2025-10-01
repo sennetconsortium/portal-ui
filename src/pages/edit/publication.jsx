@@ -35,11 +35,11 @@ export default function EditPublication() {
         validated, setValidated,
         userWriteGroups, onChange,
         editMode, setEditMode, isEditMode,
-        showModal,
+        showModal, setShowModal,
         selectedUserWriteGroupUuid,
         disableSubmit, setDisableSubmit, getCancelBtn
     } = useContext(EntityContext)
-    const {_t, cache, getPreviewView, toggleBusyOverlay} = useContext(AppContext)
+    const {_t, cache, adminGroup, getPreviewView, toggleBusyOverlay} = useContext(AppContext)
     const router = useRouter()
     const [ancestors, setAncestors] = useState(null)
     const [publicationStatus, setPublicationStatus] = useState(null)
@@ -149,6 +149,23 @@ export default function EditPublication() {
             typeHeader: _t('Title'),
             response
         })
+    }
+
+    const handleProcessing = async () => {
+        setModalProps({})
+        const requestOptions = {
+            method: 'PUT',
+            headers: getAuthJsonHeaders(),
+            body: JSON.stringify(values)
+        }
+        const url = getIngestEndPoint() + 'publications/' + data['uuid'] + '/submit'
+        setShowModal(false)
+        toggleBusyOverlay(true, <><code>Process</code> the <code>Publication</code></>)
+        const response = await fetch(url, requestOptions)
+        let submitResult = await response.text()
+        toggleBusyOverlay(false)
+        setSubmissionModal(submitResult, !response.ok)
+    
     }
 
     const handleSave = async (event) => {
@@ -367,6 +384,26 @@ export default function EditPublication() {
                                     <div className={'d-flex flex-row-reverse'}>
 
                                         {getCancelBtn('publication')}
+
+                                        {/*
+                                            If a user is a data admin and the status is either 'New' or 'Submitted' allow this Dataset to be
+                                            processed via the pipeline.
+                                            */}
+                                        {!['Processing', 'Published'].contains(data['status'])  && adminGroup && isEditMode() && (eq(data['status'], 'New') || eq(data['status'], 'Submitted')) &&
+                                            <SenNetPopover
+                                                text={<>Process this <code>Publication</code> via the Ingest Pipeline.</>}
+                                                className={'initiate-dataset-processing'}>
+                                                <DatasetSubmissionButton
+                                                    actionBtnClassName={'js-btn--process'}
+                                                    btnLabel={"Process"}
+                                                    modalBody={<div><p>By clicking "Process"
+                                                        this <code>Publication</code> will
+                                                        be processed via the Ingest Pipeline and its status set
+                                                        to <span className={`${getStatusColor('QA')} badge`}>QA</span>.
+                                                    </p></div>}
+                                                    onClick={handleProcessing} disableSubmit={disableSubmit}/>
+                                            </SenNetPopover>
+                                        }
 
                                         { data['status'] !== 'Processing' &&
                                             <SenNetPopover text={'Save changes to this publication'} className={'save-button'}>
