@@ -11,6 +11,7 @@ import Row from "react-bootstrap/Row"
 import Col from "react-bootstrap/Col"
 import Button from "react-bootstrap/Button"
 import {Sui} from "search-ui/lib/search-tools"
+import SenNetAlert from "@/components/SenNetAlert";
 
 const AppNavbar = dynamic(() => import("../../components/custom/layout/AppNavbar"))
 const Header = dynamic(() => import("../../components/custom/layout/Header"))
@@ -47,6 +48,13 @@ function Metadata() {
                 <Header title={APP_TITLE}/>
                 <AppNavbar hidden={isRegisterHidden}/>
                 <Container className="mb-5 d-block">
+                    <br></br>
+                    <SenNetAlert variant={'warning'} className="clt-alert"
+                                 text=<>To conduct a comprehensive search across all metadata fields, please utilize our
+                        Search API’s <code>param-search</code> endpoint. For detailed instructions on how to utilize this
+                        feature, please refer to the provided <a target={"_blank"}
+                        href="https://docs.sennetconsortium.org/param-search/">documentation</a>.
+                    </> />
                     <Row>
                         <div className="py-4 d-flex bd-highlight align-items-center">
                             <h2 className="m-0 flex-grow-1 bd-highlight">Browse by Popular Searches</h2>

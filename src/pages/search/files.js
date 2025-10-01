@@ -12,6 +12,7 @@ import InputGroup from 'react-bootstrap/InputGroup';
 import AppContext from "@/context/AppContext";
 import SelectedFilters from "@/components/custom/layout/SelectedFilters";
 import {getUBKGFullName} from "@/components/custom/js/functions";
+import SenNetAlert from "@/components/SenNetAlert";
 
 const AppFooter = dynamic(() => import("@/components/custom/layout/AppFooter"))
 const AppNavbar = dynamic(() => import("@/components/custom/layout/AppNavbar"))
@@ -22,6 +23,7 @@ const InvalidToken = dynamic(() => import("@/components/custom/layout/InvalidTok
 const SearchTypeButton = dynamic(() => import("@/components/custom/search/SearchTypeButton"))
 const SearchUIContainer = dynamic(() => import("@/search-ui/components/core/SearchUIContainer"))
 const SelectedFacets = dynamic(() => import("@/components/custom/search/SelectedFacets"))
+const SenNetBanner = dynamic(() => import("@/components/SenNetBanner"))
 const Spinner = dynamic(() => import("@/components/custom/Spinner"))
 
 
@@ -67,11 +69,30 @@ function SearchFiles() {
 
                 <SearchUIContainer config={SEARCH_FILES} name='files' authState={authState}>
                     <AppNavbar hidden={isRegisterHidden}/>
-                    <ErrorBoundary className={'js-app--searchErrorBoundary'} data-components={getStringifiedComponents()}>
+                    <ErrorBoundary className={'js-app--searchErrorBoundary'}
+                                   data-components={getStringifiedComponents()}>
                         <Layout
                             header={
                                 <>
                                     <div className="search-box-header js-gtm--search">
+                                        <SenNetBanner name={'default'}/>
+                                        <SenNetAlert variant={'warning'} className="clt-alert"
+                                                     text=<>In order to download the files that are included in the
+                                            manifest file,&nbsp;
+                                        <a href="https://github.com/x-atlas-consortia/clt" target='_blank'
+                                           className={'lnk--ic'}>install <i
+                                            className="bi bi-box-arrow-up-right"></i></a> the CLT and <a
+                                            href="https://docs.sennetconsortium.org/libraries/clt/">follow the
+                                            instructions</a> for how to use it with the manifest file.
+                                        <br/><small className={'text-muted'}>Note: For transferring data to the local
+                                            machine, the <a
+                                                href={'https://www.globus.org/globus-connect-personal'} target='_blank'
+                                                className={'lnk--ic'}>Globus
+                                                Connect Personal (GCP)<i
+                                                    className="bi bi-box-arrow-up-right"></i></a> endpoint must also be
+                                            up and
+                                            running.</small>
+                                        </> />
                                         <SearchBox
                                             view={({onChange, value, onSubmit}) => (
                                                 <Form onSubmit={e => handleSearchFormSubmit(e, onSubmit)}>
@@ -94,25 +115,25 @@ function SearchFiles() {
                                         />
                                     </div>
                                     <div className='sui-filters-summary'>
-                                        <SelectedFacets />
+                                        <SelectedFacets/>
                                     </div>
                                 </>
                             }
                             sideContent={
                                 <div data-js-ada='facets'>
-                                    <CustomClearSearchBox />
+                                    <CustomClearSearchBox/>
 
-                                    <SearchTypeButton title='Files' />
+                                    <SearchTypeButton title='Files'/>
 
 
-                                    <SelectedFilters />
+                                    <SelectedFilters/>
 
                                     <FacetsContent transformFunction={getUBKGFullName}/>
                                 </div>
 
                             }
                             bodyContent={
-                                <BodyContent view={TableResultsFiles} />
+                                <BodyContent view={TableResultsFiles}/>
                             }
                         />
                     </ErrorBoundary>

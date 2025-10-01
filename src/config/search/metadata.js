@@ -515,6 +515,17 @@ export const SEARCH_METADATA = {
                 isAggregationActive: doesTermFilterContainValues('entity_type', ['Dataset']),
                 isFacetVisible: doesAggregationHaveBuckets('metadata.assay_category')
             },
+            'metadata.assay_input_entity': {
+                label: 'Assay Input Entity',
+                type: 'value',
+                field: 'metadata.assay_input_entity.keyword',
+                isExpanded: false,
+                filterType: 'any',
+                isFilterable: false,
+                facetType: 'term',
+                isAggregationActive: doesTermFilterContainValues('entity_type', ['Dataset']),
+                isFacetVisible: doesAggregationHaveBuckets('metadata.assay_input_entity')
+            },
             'metadata.operator': {
                 label: 'Operator',
                 type: 'value',
