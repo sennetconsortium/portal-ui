@@ -181,6 +181,48 @@ export const SEARCH_ENTITIES = {
                 isFacetVisible: doesAggregationHaveBuckets('source.source_type')
             },
 
+            has_rui_information: {
+                label: 'Has Spatial Information',
+                type: 'value',
+                field: 'has_rui_information.keyword',
+                isExpanded: false,
+                tooltipText: `Any entity that either is a tissue block containing spatial registration information or any
+                                    tissue Sample or Dataset derived from a block containing spatial registration information
+                                    is considered to have spatial information associated with it.`,
+                filterType: 'any',
+                isFilterable: false,
+                facetType: 'term',
+                isAggregationActive: true,
+                isFacetVisible: doesAggregationHaveBuckets('has_rui_information')
+            },
+            'rui_location_anatomical_locations.label': {
+                label: 'Anatomical Locations',
+                type: 'value',
+                field: 'rui_location_anatomical_locations.label.keyword',
+                isExpanded: false,
+                tooltipText: `Any tissue block containing spatial registration information that has an anatomical location associated with it.`,
+                filterType: 'any',
+                isFilterable: false,
+                facetType: 'term',
+                isAggregationActive: doesTermFilterContainValues('entity_type', ['Sample']),
+                isFacetVisible: doesAggregationHaveBuckets('rui_location_anatomical_locations.label')
+            },
+
+            has_visualization: {
+                label: 'Has Visualization',
+                type: 'exists',
+                field: 'has_visualization.keyword',
+                isExpanded: false,
+                tooltipText: `Any Dataset that has a Vitessce visualization associated with it.`,
+                filterType: 'any',
+                isFilterable: false,
+                facetType: 'term',
+                isAggregationActive: [
+                    doesTermFilterContainValues('entity_type', ['Dataset']),
+                ],
+                isFacetVisible: doesAggregationHaveBuckets('has_visualization')
+            },
+
             // Data processing group
             data_processing_group: {
                 label: 'Data Processing',
@@ -190,57 +232,17 @@ export const SEARCH_ENTITIES = {
                     return visibleChildren.length > 0
                 },
                 facets: {
-                    has_rui_information: {
-                        label: 'Has Spatial Information',
-                        type: 'value',
-                        field: 'has_rui_information.keyword',
-                        isExpanded: false,
-                        tooltipText: `Any entity that either is a tissue block containing spatial registration information or any
-                                    tissue Sample or Dataset derived from a block containing spatial registration information
-                                    is considered to have spatial information associated with it.`,
-                        filterType: 'any',
-                        isFilterable: false,
-                        facetType: 'term',
-                        isAggregationActive: true,
-                        isFacetVisible: doesAggregationHaveBuckets('has_rui_information')
-                    },
-                    'rui_location_anatomical_locations.label': {
-                        label: 'Anatomical Locations',
-                        type: 'value',
-                        field: 'rui_location_anatomical_locations.label.keyword',
-                        isExpanded: false,
-                        tooltipText: `Any tissue block containing spatial registration information will have an anatomical location associated with it.`,
-                        filterType: 'any',
-                        isFilterable: false,
-                        facetType: 'term',
-                        isAggregationActive: doesTermFilterContainValues('entity_type', ['Sample']),
-                        isFacetVisible: doesAggregationHaveBuckets('rui_location_anatomical_locations.label')
-                    },
                     has_metadata: {
                         label: 'Has Metadata',
                         type: 'exists',
                         field: 'has_metadata.keyword',
                         isExpanded: false,
-                        tooltipText: `Any entity that has metadata associated with it`,
+                        tooltipText: `Any entity that has metadata associated with it.`,
                         filterType: 'any',
                         isFilterable: false,
                         facetType: 'term',
                         isAggregationActive: doesTermFilterContainValues('entity_type', ['Source', 'Sample', 'Dataset', 'Collection', 'Publication']),
                         isFacetVisible: doesAggregationHaveBuckets('has_metadata')
-                    },
-                    has_visualization: {
-                        label: 'Has Visualization',
-                        type: 'exists',
-                        field: 'has_visualization.keyword',
-                        isExpanded: false,
-                        tooltipText: `Any Dataset that has a Vitessce visualization associated with it.`,
-                        filterType: 'any',
-                        isFilterable: false,
-                        facetType: 'term',
-                        isAggregationActive: [
-                            doesTermFilterContainValues('entity_type', ['Dataset']),
-                        ],
-                        isFacetVisible: doesAggregationHaveBuckets('has_visualization')
                     },
                     contains_data: {
                         label: 'Contains Data',
@@ -253,44 +255,8 @@ export const SEARCH_ENTITIES = {
                         facetType: 'term',
                         isAggregationActive: doesTermFilterContainValues('entity_type', ['Sample']),
                         isFacetVisible: doesAggregationHaveBuckets('contains_data')
-                    },
-                    has_qa_published_derived_dataset: {
-                        label: 'Has QA Derived Datasets',
-                        type: 'value',
-                        field: 'has_qa_published_derived_dataset.keyword',
-                        isExpanded: false,
-                        tooltipText: `Any primary Dataset that has a derived dataset that either has the status of QA or Published.`,
-                        filterType: 'any',
-                        isFilterable: false,
-                        facetType: 'term',
-                        isAggregationActive: (filters, authState) => {
-                            if (authState.isAdmin) {
-                                const isActiveFunc = doesTermFilterContainValues('entity_type', ['Dataset'])
-                                return isActiveFunc(filters)
-                            }
-                            return false
-                        },
-                        isFacetVisible: doesAggregationHaveBuckets('has_qa_published_derived_dataset')
-                    },
-                    has_all_published_datasets: {
-                        label: 'Has All Primary Published',
-                        type: 'value',
-                        field: 'has_all_published_datasets.keyword',
-                        isExpanded: false,
-                        tooltipText: `Any Upload that has all Datasets associated with it that have the status of Published.`,
-                        filterType: 'any',
-                        isFilterable: false,
-                        facetType: 'term',
-                        isAggregationActive: (filters, authState) => {
-                            if (authState.isAdmin) {
-                                const isActiveFunc = doesTermFilterContainValues('entity_type', ['Upload'])
-                                return isActiveFunc(filters)
-                            }
-                            return false
-                        },
-                        isFacetVisible: doesAggregationHaveBuckets('has_all_published_datasets')
-                    },
-                }
+                    }
+                },
             },
 
             // Source metadata for Datasets
