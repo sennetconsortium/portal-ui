@@ -1,6 +1,7 @@
 import {useEffect, useState} from 'react'
 import {getJsonHeader} from "../lib/services";
 import log from 'loglevel'
+import {getRootURL} from "@/config/config";
 
 function useContent() {
 
@@ -9,7 +10,7 @@ function useContent() {
     const loadBanners = async () => {
         try {
             let res = await fetch(
-                `content/banners/index.json`,
+                `${getRootURL()}content/banners/index.json`,
                 getJsonHeader()
             )
             if (res.ok) {

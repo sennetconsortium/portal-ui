@@ -73,7 +73,7 @@ function SearchEntities() {
                             header={
                                 <>
                                     <div className="search-box-header js-gtm--search">
-                                        <SenNetBanner name={'searchEntities'}/>
+                                        <SenNetBanner name={'default'}/>
                                         <AppTutorial/>
                                         <SearchBox
                                             view={({onChange, value, onSubmit}) => (
