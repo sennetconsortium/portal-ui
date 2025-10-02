@@ -298,12 +298,12 @@ export const EntityProvider = ({ children }) => {
         setModalBody(body)
     }
     
-    const setSubmissionModal = (body, hasError) => {
+    const setSubmissionModal = (body, hasError, entityType = 'dataset') => {
         const icon = hasError ? errIcon() : successIcon()
         setHasSubmissionError(hasError)
         setShowModal(true)
         setDisableSubmit(false)
-        setModalTitle(<span>{icon}<span className={'title-text'} >Submitted dataset for processing</span></span>)
+        setModalTitle(<span>{icon}<span className={'title-text'} >Submitted {entityType} for processing</span></span>)
         setModalBody(body)
     }
 
