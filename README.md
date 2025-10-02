@@ -122,7 +122,7 @@ The `Register location` button will display on the edit sample page and launch t
 ## Content Management
 ### Banner
 Currently, two locations offer adding a banner via adding/updating `public/content/banners/index.json` file without having to rebuild the image. To specify that both locations use the same banner,
-use the key `default` as property name. To use different banners per location, specify the property name `login` and/or `searchEntities`.
+use the key `default` as property name. To use different banners per location, specify the property name `login` and/or `homepage`.
 #### `login` Located before the Login section
 ```
 {
@@ -132,10 +132,10 @@ use the key `default` as property name. To use different banners per location, s
 }
 ```
 
-#### `searchEntities` Located right before the main search results area
+#### `homepage` Located on the homepage
 ```
 {
-  "searchEntities": {
+  "homepage": {
     "content": "..."
   }
 }

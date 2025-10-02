@@ -12,6 +12,7 @@ import AppContext from "@/context/AppContext";
 import SelectedFilters from "@/components/custom/layout/SelectedFilters";
 import {getUBKGFullName} from "@/components/custom/js/functions";
 import {TableResultsEntities} from "@/components/custom/TableResultsEntities";
+import SenNetAlert from "@/components/SenNetAlert";
 
 const AppFooter = dynamic(() => import("@/components/custom/layout/AppFooter"))
 const AppNavbar = dynamic(() => import("@/components/custom/layout/AppNavbar"))
@@ -23,6 +24,7 @@ const SearchTypeButton = dynamic(() => import("@/components/custom/search/Search
 const SearchUIContainer = dynamic(() => import("@/search-ui/components/core/SearchUIContainer"))
 const SelectedFacets = dynamic(() => import("@/components/custom/search/SelectedFacets"))
 const Spinner = dynamic(() => import("@/components/custom/Spinner"))
+const SenNetBanner = dynamic(() => import("@/components/SenNetBanner"))
 
 
 function SearchMetadata() {
@@ -72,11 +74,22 @@ function SearchMetadata() {
 
                 <SearchUIContainer config={SEARCH_METADATA} name='metadata' authState={authState}>
                     <AppNavbar hidden={isRegisterHidden}/>
-                    <ErrorBoundary className={'js-app--searchErrorBoundary'} data-components={getStringifiedComponents()}>
+                    <ErrorBoundary className={'js-app--searchErrorBoundary'}
+                                   data-components={getStringifiedComponents()}>
                         <Layout
                             header={
                                 <>
                                     <div className="search-box-header js-gtm--search">
+                                        <SenNetBanner name={'default'}/>
+                                        <SenNetAlert variant={'warning'} className="clt-alert"
+                                                     text=<>To conduct a comprehensive search across all metadata
+                                            fields, please utilize our
+                                            Search API’s <code>param-search</code> endpoint. For detailed instructions
+                                            on how to utilize this
+                                            feature, please refer to the provided <a target={"_blank"}
+                                                                                     href="https://docs.sennetconsortium.org/param-search/">documentation</a>.
+                                        </> />
+
                                         <SearchBox
                                             view={({onChange, value, onSubmit}) => (
                                                 <Form onSubmit={e => handleSearchFormSubmit(e, onSubmit)}>

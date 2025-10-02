@@ -136,6 +136,10 @@
   padding: 0 0 32px 32px;
 }
 
+.sui-facet__title {
+  outline: None !important;
+}
+
 .sui-facet__title--FileType + .sui-facet {
   text-transform: uppercase;
 }
