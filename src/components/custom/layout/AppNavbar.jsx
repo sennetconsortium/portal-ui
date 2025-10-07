@@ -152,13 +152,13 @@ const AppNavbar = ({hidden, signoutHidden, innerRef}) => {
                                               href='https://docs.sennetconsortium.org/libraries/ingest-validation-tools/upload-guidelines/getting-started/'>
                                 <span>Getting started</span>
                             </NavDropdown.Item>
-                            <NavDropdown.Item key={`dd-search-md-schema`}
-                                              href='https://docs.sennetconsortium.org/libraries/ingest-validation-tools/'>
-                                <span>Metadata schemas & upload guidelines</span>
+                            <NavDropdown.Item key={`dd-registration`}
+                                              href='https://docs.sennetconsortium.org/registration/'>
+                                <span>Entity Registration & Metadata Schemas</span>
                             </NavDropdown.Item>
                             <NavDropdown.Item key={`dd-prov-ui`}
-                                              href='https://docs.sennetconsortium.org/libraries/provenance-ui/'>
-                                <span>Provenance UI</span>
+                                              href='https://docs.sennetconsortium.org/provenance/'>
+                                <span>Provenance Graph</span>
                             </NavDropdown.Item>
                             <NavDropdown.Item key={`dd-apis`} href='https://docs.sennetconsortium.org/apis/'>
                                 <span>APIs</span>
