@@ -260,7 +260,8 @@ function TableResultsEntities({children, filters, onRowClicked, currentColumns =
             selector: row => raw(row.title),
             sortable: true,
             reorder: true,
-        }
+        },
+        reusableColumns.Status
     ]
 
     const getTableColumns = (columnsToHide) => {
