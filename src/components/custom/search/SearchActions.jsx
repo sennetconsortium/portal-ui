@@ -363,6 +363,7 @@ function SearchActions({
                 disableElevation
                 onClick={handleClick}
                 endIcon={<KeyboardArrowDownIcon/>}
+                className='bg-primary'
             >
                 <i className="bi bi-download fs-6 me-2"></i>
                 <PagingInfo/>
