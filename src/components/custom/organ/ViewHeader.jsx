@@ -7,9 +7,9 @@
  * @returns {JSX.Element} The JSX code for the OrganViewHeader component.
  */
 const OrganViewHeader = ({ organ }) => {
-    const labelLink = (o, colSize = '2') => {
-        return (<div key={o.subLabel} className={`col-md-${colSize} col-sm-12 entity-subtitle icon-inline`}>
-                    <h3 className='me-2'>{o.label}</h3>
+    const labelLink = (o, colSize = 3) => {
+        return (<div key={o.subLabel} className={`col-lg-${colSize} col-sm-12 entity-subtitle icon-inline`}>
+                    <h4 className='me-2'>{o.label}</h4>
                     <span className='fs-5 title-badge'>
                         <span className='badge bg-secondary'>
                             <a
@@ -45,14 +45,14 @@ const OrganViewHeader = ({ organ }) => {
     }
 
     return (
-        <div style={{ width: '100%' }}>
+        <div className='viewHeader--organ' style={{ width: '100%' }}>
             {/* Title */}
             <h4>Organ</h4>
             
 
             {/* Badges */}
             <div className='row mb-2' style={{ minHeight: '38px' }}>
-                {labelLink(organ, '3')}
+                {labelLink(organ, 4)}
                 {getList()}
             </div>
         </div>
