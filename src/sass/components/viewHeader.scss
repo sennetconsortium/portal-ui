@@ -1,0 +1,12 @@
+@use "../general/mixins";
+
+.viewHeader {
+    &--organ {
+        .col-lg-3 {
+            width: 27%;
+            @include mixins.md-mx {
+                width: 100%;
+            }
+        }
+    }
+}

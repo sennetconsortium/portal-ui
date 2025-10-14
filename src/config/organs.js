@@ -126,6 +126,14 @@ export const organs = [
     },
     {
         codes: ['UBERON:0004538', 'UBERON:0004539'],
+         meta: {
+            'UBERON:0004538': {
+                label: 'Left'
+            },
+            'UBERON:0004539': {
+                label: 'Right'
+            }
+        },
         hraSupported: true,
         icon: `${BASE_ICON_URL}/organs/organ-icon-kidneys.svg`,
         label: 'Kidney',
@@ -153,6 +161,14 @@ export const organs = [
     },
     {
         codes: ['UBERON:0002168', 'UBERON:0002167'],
+        meta: {
+            'UBERON:0002168': {
+                label: 'Left'
+            },
+            'UBERON:0002167': {
+                label: 'Right'
+            }
+        },
         hraSupported: true,
         icon: `${BASE_ICON_URL}/organs/organ-icon-lungs.svg`,
         label: 'Lung',
@@ -171,6 +187,14 @@ export const organs = [
     },
     {
         codes: ['FMA:57991', 'FMA:57987'],
+        meta: {
+            'FMA:57991': {
+                label: 'Left'
+            },
+            'FMA:57987': {
+                label: 'Right'
+            }
+        },
         hraSupported: true,
         icon: `${BASE_ICON_URL}/organs/organ-icon-breast.svg`,
         label: 'Mammary Gland',
@@ -189,6 +213,14 @@ export const organs = [
     },
     {
         codes: ['UBERON:0002119', 'UBERON:0002118'],
+        meta: {
+            'UBERON:0002119': {
+                label: 'Left'
+            },
+            'UBERON:0002118': {
+                label: 'Right'
+            }
+        },
         hraSupported: true,
         icon: `${BASE_ICON_URL}/organs/organ-icon-ovaries.svg`,
         label: 'Ovary',
@@ -252,6 +284,14 @@ export const organs = [
     },
     {
         codes: ['FMA:54974', 'FMA:54973'],
+        meta: {
+            'FMA:54974': {
+                label: 'Left'
+            },
+            'FMA:54973': {
+                label: 'Right'
+            }
+        },
         hraSupported: true,
         icon: `${BASE_ICON_URL}/organs/organ-icon-palatine-tonsil.svg`,
         label: 'Tonsil',
