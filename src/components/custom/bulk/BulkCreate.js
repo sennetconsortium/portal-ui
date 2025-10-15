@@ -468,7 +468,7 @@ export default function BulkCreate({
 
     const getDocsUrl = () => {
         const url = new URL(getDocsRootURL());
-        url.pathname = isMetadata ? 'libraries/ingest-validation-tools/schemas' : 'registration/bulk-registration'
+        url.pathname = isMetadata ? 'registration/schemas' : 'registration/bulk-registration'
         const _subType = isMouse() ? 'murine' : subType
         url.pathname += isMetadata ? `/` : `/${entityType.toLowerCase()}`
         return url.href
