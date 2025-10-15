@@ -6,6 +6,7 @@ import AppContext from '@/context/AppContext';
 import {eq, getOrganMeta, getProtocolId, getUBKGFullName} from '@/components/custom/js/functions';
 import SenNetPopover, {SenPopoverOptions} from '@/components/SenNetPopover';
 import {APP_ROUTES} from '@/config/constants';
+import {getOrganByCode, organIcons} from "@/config/organs";
 
 export default function Description({data, citationData, labId, primaryDateTitle, primaryDate, secondaryDateTitle, secondaryDate, title, showAuthors=false, showDatasetTypes=false, showOrgans=false}) {
 
@@ -44,7 +45,11 @@ export default function Description({data, citationData, labId, primaryDateTitle
         }
         let res = []
         organs.forEach(organ => {
-            res.push(<li key={organ}>{organ}</li>)
+            const code = cache.organTypesCodes[organ]
+            const organCode = getOrganByCode(code)
+            const path = `${APP_ROUTES.organs}/${organCode?.path}`
+            const icon = organIcons[code] || organIcons.OT
+            res.push(<li key={organ}><span><a href={path}>{organ}</a> <img alt={name} src={icon} width={'24px'} /></span></li>)
         })
         return res
     }
