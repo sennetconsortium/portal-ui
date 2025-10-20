@@ -110,7 +110,7 @@ function ViewCollection({collectionType='Collection', entitiesLabel='Entities'})
                                                    className="nav-link "
                                                    data-bs-parent="#sidebar">Summary</a>
                                             </li>
-                                            {data.associated_publication && <li className="nav-item">
+                                            {data.associated_publication && Object.values(data.associated_publication).length > 0 && <li className="nav-item">
                                                 <a href="#AssociatedEntity--Publication"
                                                    className="nav-link"
                                                    data-bs-parent="#sidebar">Associated Publication</a>
@@ -153,7 +153,7 @@ function ViewCollection({collectionType='Collection', entitiesLabel='Entities'})
                                                 secondaryDate={data.last_modified_timestamp}
                                             />
 
-                                            {data.associated_publication && <AssociatedEntity currentEntity={data.entity_type} data={data.associated_publication} grammar={'contains'} />}
+                                            {data.associated_publication && Object.values(data.associated_publication).length > 0 && <AssociatedEntity currentEntity={data.entity_type} data={data.associated_publication} grammar={'contains'} />}
 
                                             {/*Entities*/}
                                             {isEntitiesLoading ? (

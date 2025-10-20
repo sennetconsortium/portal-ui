@@ -137,7 +137,7 @@ function ViewPublication() {
                                                    data-bs-parent="#sidebar">Summary</a>
                                             </li>
 
-                                            {data.associated_collection && <li className="nav-item">
+                                            {data.associated_collection && Object.values(data.associated_collection).length > 0 && <li className="nav-item">
                                                 <a href="#AssociatedEntity--Collection"
                                                    className="nav-link"
                                                    data-bs-parent="#sidebar">Associated Collection</a>
@@ -201,7 +201,7 @@ function ViewPublication() {
                                                          showOrgans={true}
                                             />
 
-                                            {data.associated_collection && <AssociatedEntity currentEntity={'Publication'} data={data.associated_collection} />}
+                                            {data.associated_collection && Object.values(data.associated_collection).length > 0 && <AssociatedEntity currentEntity={'Publication'} data={data.associated_collection} />}
 
                                             {/* Visualizations */}
                                             {data.ancestors &&
