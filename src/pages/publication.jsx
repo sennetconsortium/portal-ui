@@ -217,7 +217,7 @@ function ViewPublication() {
                                             <BulkDataTransfer data={data} entityType={data.entity_type} />
 
                                              {!!(data.contacts && Object.keys(data.contacts).length) &&
-                                                <ContributorsContacts title={'Authors'} data={data.contacts}/>
+                                                <ContributorsContacts title={'Authors'} data={data.contributors}/>
                                             }
 
                                             {/*Attribution*/}
