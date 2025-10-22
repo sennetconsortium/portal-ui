@@ -8,13 +8,14 @@ import Form from 'react-bootstrap/Form';
 import {Layout} from '@elastic/react-search-ui-views'
 import '@elastic/react-search-ui-views/lib/styles/styles.css'
 import log from 'loglevel'
-import {getAncestryData, getEntityData, updateCreateDataset} from '@/lib/services'
-import {cleanJson, eq, fetchEntity} from '@/components/custom/js/functions'
+import {getAncestryData, getEntityData, updateCreateDataset, getAuthJsonHeaders} from '@/lib/services'
+import {cleanJson, eq, fetchEntity, getStatusColor,} from '@/components/custom/js/functions'
 import AppContext from '@/context/AppContext'
 import EntityContext, {EntityProvider} from '@/context/EntityContext'
 import $ from 'jquery'
 import GroupSelect from "@/components/custom/edit/GroupSelect";
-import {valid_dataset_ancestor_config} from "@/config/config";
+import {valid_dataset_ancestor_config, getIngestEndPoint} from "@/config/config";
+import DatasetSubmissionButton from "@/components/custom/edit/dataset/DatasetSubmissionButton";
 
 const AncestorIds = dynamic(() => import('@/components/custom/edit/dataset/AncestorIds'))
 const AppFooter = dynamic(() => import("@/components/custom/layout/AppFooter"))
@@ -27,7 +28,7 @@ const SenNetPopover = dynamic(() => import("@/components/SenNetPopover"))
 
 export default function EditPublication() {
     const {
-        isPreview, getModal, setModalDetails,
+        isPreview, getModal, setModalDetails, setModalProps, setSubmissionModal,
         data, setData,
         error, setError,
         values, setValues,
@@ -35,11 +36,11 @@ export default function EditPublication() {
         validated, setValidated,
         userWriteGroups, onChange,
         editMode, setEditMode, isEditMode,
-        showModal,
+        showModal, setShowModal,
         selectedUserWriteGroupUuid,
         disableSubmit, setDisableSubmit, getCancelBtn
     } = useContext(EntityContext)
-    const {_t, cache, getPreviewView, toggleBusyOverlay} = useContext(AppContext)
+    const {_t, cache, adminGroup, getPreviewView, toggleBusyOverlay} = useContext(AppContext)
     const router = useRouter()
     const [ancestors, setAncestors] = useState(null)
     const [publicationStatus, setPublicationStatus] = useState(null)
@@ -80,6 +81,7 @@ export default function EditPublication() {
 
             // Set state with default values that will be PUT to Entity API to update
             setValues(prevState => ({
+                'status': _data.status,
                 'lab_dataset_id': _data.lab_dataset_id || _data.title,
                 'dataset_type': _data.dataset_type,
                 'description': _data.description,
@@ -151,6 +153,23 @@ export default function EditPublication() {
         })
     }
 
+    const handleProcessing = async () => {
+        setModalProps({})
+        const requestOptions = {
+            method: 'PUT',
+            headers: getAuthJsonHeaders(),
+            body: JSON.stringify(values)
+        }
+        const url = getIngestEndPoint() + 'publications/' + data['uuid'] + '/submit'
+        setShowModal(false)
+        toggleBusyOverlay(true, <><code>Process</code> the <code>Publication</code></>)
+        const response = await fetch(url, requestOptions)
+        let submitResult = await response.text()
+        toggleBusyOverlay(false)
+        setSubmissionModal(submitResult, !response.ok, 'publication')
+    
+    }
+
     const handleSave = async (event) => {
         setDisableSubmit(true);
 
@@ -192,6 +211,9 @@ export default function EditPublication() {
                 let json = cleanJson(values);
                 let uuid = data.uuid
 
+                // Remove 'status' from values. Not a field to pass to Entity API for a normal update of Publication
+                delete json['status']
+
                 await updateCreateDataset(uuid, json, editMode, 'publications')
                     .then((response) => {
                         modalResponse(response)
@@ -232,7 +254,7 @@ export default function EditPublication() {
                     <div className="no_sidebar">
                         <Layout
                             bodyHeader={
-                                <EntityHeader entity={cache.entities.publication} isEditMode={isEditMode()} data={data} showGroup={false}/>
+                                <EntityHeader entity={cache.entities.publication} isEditMode={isEditMode()} data={data} values={values} showGroup={false}/>
                             }
                             bodyContent={
                                 <Form noValidate validated={validated}>
@@ -367,6 +389,26 @@ export default function EditPublication() {
                                     <div className={'d-flex flex-row-reverse'}>
 
                                         {getCancelBtn('publication')}
+
+                                        {/*
+                                            If a user is a data admin and the status is either 'New' or 'Submitted' allow this Dataset to be
+                                            processed via the pipeline.
+                                            */}
+                                        {!['Processing', 'Published'].contains(data['status'])  && adminGroup && isEditMode() &&
+                                            <SenNetPopover
+                                                text={<>Process this <code>Publication</code> via the Ingest Pipeline.</>}
+                                                className={'initiate-dataset-processing'}>
+                                                <DatasetSubmissionButton
+                                                    actionBtnClassName={'js-btn--process'}
+                                                    btnLabel={"Process"}
+                                                    modalBody={<div><p>By clicking "Process"
+                                                        this <code>Publication</code> will
+                                                        be processed via the Ingest Pipeline and its status set
+                                                        to <span className={`${getStatusColor('QA')} badge`}>QA</span>.
+                                                    </p></div>}
+                                                    onClick={handleProcessing} disableSubmit={disableSubmit}/>
+                                            </SenNetPopover>
+                                        }
 
                                         { data['status'] !== 'Processing' &&
                                             <SenNetPopover text={'Save changes to this publication'} className={'save-button'}>
