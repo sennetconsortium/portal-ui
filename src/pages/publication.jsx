@@ -12,6 +12,7 @@ import AppNavbar from "@/components/custom/layout/AppNavbar"
 import Description from "@/components/custom/entities/sample/Description";
 import VignetteList from "@/components/custom/vitessce/VignetteList";
 import BulkDataTransfer from "@/components/custom/entities/dataset/BulkDataTransfer";
+import AssociatedEntity from "@/components/custom/entities/AssociatedEntity";
 
 const AppFooter = dynamic(() => import("@/components/custom/layout/AppFooter"))
 const Attribution = dynamic(() => import("@/components/custom/entities/sample/Attribution"))
@@ -136,6 +137,12 @@ function ViewPublication() {
                                                    data-bs-parent="#sidebar">Summary</a>
                                             </li>
 
+                                            {data.associated_collection && Object.values(data.associated_collection).length > 0 && <li className="nav-item">
+                                                <a href="#AssociatedEntity--Collection"
+                                                   className="nav-link"
+                                                   data-bs-parent="#sidebar">Associated Collection</a>
+                                            </li>}
+
                                             <li className="nav-item">
                                                 <a href="#Visualizations"
                                                    className="nav-link"
@@ -193,6 +200,8 @@ function ViewPublication() {
                                                          showDatasetTypes={true}
                                                          showOrgans={true}
                                             />
+
+                                            {data.associated_collection && Object.values(data.associated_collection).length > 0 && <AssociatedEntity currentEntity={'Publication'} data={data.associated_collection} />}
 
                                             {/* Visualizations */}
                                             {data.ancestors &&
