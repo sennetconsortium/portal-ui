@@ -53,7 +53,7 @@ function ViewDataset() {
     const [error, setError] = useState(false)
     const [errorMessage, setErrorMessage] = useState(null)
     const [hasWritePrivilege, setHasWritePrivilege] = useState(false)
-    const {router, isRegisterHidden, _t, cache, isPreview, getPreviewView, isLoggedIn} = useContext(AppContext)
+    const {router, isRegisterHidden, _t, cache, isPreview, getPreviewView, isLoggedIn, sidebarVisible} = useContext(AppContext)
     const [primaryDatasetData, setPrimaryDatasetInfo] = useState(null)
     const [showFilesSection, setShowFilesSection] = useState(null)
     const [hasViz, setHasViz] = useState(false)
@@ -229,7 +229,7 @@ function ViewDataset() {
                             </Alert>
                         }
 
-                        <div className="row flex-nowrap entity-body">
+                        <div className={`row flex-nowrap entity-body ${sidebarVisible ? 'has-sidebarOpened' : ''}`}>
                             <div className="col-auto p-0">
                                 <div id="sidebar"
                                      className="collapse collapse-horizontal sticky-top custom-sticky">
