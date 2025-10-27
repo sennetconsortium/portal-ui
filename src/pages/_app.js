@@ -14,6 +14,7 @@ import useCache from "@/hooks/useCache";
 import Spinner from "@/components/custom/Spinner";
 import useContent from "@/hooks/useContent";
 import IdleTimerPopup from "@/components/IdleTimerPopup";
+import useScrollToAnchor from "@/hooks/useScrollToAnchor";
 
 function MyApp({Component, pageProps}) {
     const router = useRouter()
@@ -29,6 +30,7 @@ function MyApp({Component, pageProps}) {
             addons('init', {data: {user}, router, entities: response.cache.entities})
             setCache(response.cache)
         }).catch((error) => console.error(error))
+        useScrollToAnchor()
     }, [])
 
     log.setLevel(getLogLevel())
