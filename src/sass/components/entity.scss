@@ -1,4 +1,5 @@
 @use "../general/mixins";
+@use "../config/swatch";
 
 .title-badge {
   margin-top: 0;
@@ -30,7 +31,16 @@
 }
 
 .entity-body {
-  background: #FCFCFC;
+  background: swatch.$col-entity-grey;
+  max-width: 100%;
+  &.has-sidebarOpened {
+    .entity-details {
+      max-width: 82%;
+    }
+  }
+  .rdt_Table {
+    width: 100%;
+  }
 }
 
 @media screen and (min-width: 768px) {
