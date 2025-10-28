@@ -34,7 +34,7 @@
     "react-shimmer-effects": "^1.0.4",
     "react-toastify": "^9.1.1",
     "search-ui": "file:search-ui",
-    "vitessce": "^3.5.7",
+    "vitessce": "^3.8.5",
     "xac-sankey": "github:x-atlas-consortia/data-sankey#1.0.15"
   },
   "devDependencies": {
