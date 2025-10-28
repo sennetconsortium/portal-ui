@@ -1,13 +1,13 @@
-const path = require('path')
+import { resolve } from 'path'
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     reactStrictMode: false, // Don't render components twice
     webpack: (config, options) => {
         // Set the @ alias for the src directory
-        config.resolve.alias['@'] = path.resolve(__dirname)
+        config.resolve.alias['@'] = resolve()
         return config
     }
 }
 
-module.exports = nextConfig
+export default nextConfig
