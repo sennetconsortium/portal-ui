@@ -20,7 +20,6 @@ import DataTable from "react-data-table-component";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import Tooltip from '@mui/material/Tooltip';
 import Zoom from "@mui/material/Zoom"
-import {CloseIcon} from "next/dist/client/components/react-dev-overlay/internal/icons/CloseIcon";
 import {CheckIcon} from "primereact/icons/check";
 import {SpinnerEl} from "@/components/custom/Spinner";
 
@@ -441,7 +440,7 @@ export default function EditCollection({collectionType='Collection', entitiesTab
                                                                         className='tooltip-close'
                                                                         onClick={() => {
                                                                             setBulkPopover(false)
-                                                                        }}><CloseIcon/>
+                                                                        }}><i class="bi bi-x"></i>
                                                     </span>
                                                              <div
                                                                  className={'tooltip-content tooltip-bulk-add-id'}>{bulkErrorMessage}</div>
