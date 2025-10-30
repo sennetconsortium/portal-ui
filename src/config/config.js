@@ -1,5 +1,5 @@
 import { getCookie } from 'cookies-next';
-import _ from 'lodash';
+import { cloneDeep } from 'lodash';
 import { APP_ROUTES } from './constants';
 import { SEARCH_ENTITIES } from "./search/entities";
 
@@ -142,12 +142,12 @@ export function getCookieDomain() {
 export const RESULTS_PER_PAGE = [10, 20, 30, 50, 100, 250, 500]
 
 //Config options to exclude datasets from results
-export let ancestor_config = _.cloneDeep(SEARCH_ENTITIES)
+export let ancestor_config = cloneDeep(SEARCH_ENTITIES)
 ancestor_config['trackUrlState'] = false;
 
-export let valid_dataset_ancestor_config = _.cloneDeep(ancestor_config)
+export let valid_dataset_ancestor_config = cloneDeep(ancestor_config)
 
-export let exclude_dataset_config = _.cloneDeep(ancestor_config);
+export let exclude_dataset_config = cloneDeep(ancestor_config);
 exclude_dataset_config['searchQuery']['excludeFilters'].push(
     {
         type: 'term',
