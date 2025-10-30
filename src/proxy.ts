@@ -60,7 +60,7 @@ async function afterLoginRewrites(request: NextRequest) {
     return NextResponse.rewrite(request.url)
 }
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
 
     // Match view and edit entity pages and grab the correct entity type
     if (request.nextUrl.pathname.match(/((?:source|sample|dataset|upload|collection|epicollection|publication).*)/)
