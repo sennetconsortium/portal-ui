@@ -25,7 +25,7 @@ async function entityRewrites(request: NextRequest) {
             let updated_url = request.url.replace(/(source|sample|dataset|upload|collection|epicollection|publication)/, entity_type)
             if (!updated_url.includes('_next')) {
                 updated_url = decodeURIComponent(updated_url)
-                updated_url = updated_url[updated_url.length - 1] === '/' ? updated_url : updated_url + '/'
+                updated_url = updated_url[updated_url.length - 1] === '/' ? updated_url : updated_url
             }
             const response = NextResponse.redirect(updated_url)
             response.cookies.set("redirect", "true")
