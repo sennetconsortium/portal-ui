@@ -25,7 +25,7 @@
     "next": "16.0.0",
     "primeicons": "^7.0.0",
     "primereact": "^9.6.0",
-    "provenance-ui": "github:sennetconsortium/provenance-ui#v2.6.8-beta",
+    "provenance-ui": "github:sennetconsortium/provenance-ui#v2.6.9-beta",
     "react": "^18.3.1",
     "react-bootstrap": "^2.10.10",
     "react-data-table-component": "^7.6.2",
@@ -37,7 +37,7 @@
     "react-shimmer-effects": "^1.0.4",
     "react-toastify": "^9.1.1",
     "search-ui": "file:search-ui",
-    "xac-sankey": "github:x-atlas-consortia/data-sankey#1.0.15"
+    "xac-sankey": "github:x-atlas-consortia/data-sankey#1.0.16"
   },
   "devDependencies": {
     "@babel/cli": "^7.24.6",
