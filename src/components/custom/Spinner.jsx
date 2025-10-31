@@ -1,5 +1,4 @@
 import PropTypes from 'prop-types'
-import 'bootstrap/dist/css/bootstrap.css'
 
 export function SpinnerEl({className = '', variant = 'ic'}) {
     return (<span className={`spinner spinner-border ${variant} alert alert-info ${className}`}></span>)
