@@ -29,7 +29,8 @@ import TaskAltIcon from "@mui/icons-material/TaskAlt";
 import WarningAmberIcon from "@mui/icons-material/WarningAmber";
 import Stack from '@mui/material/Stack';
 import JobQueueContext, {JobQueueProvider} from "../../context/JobQueueContext";
-import Joyride, {STATUS} from "react-joyride";
+import {driver} from "driver.js";
+import "driver.js/dist/driver.css";
 import {SWAL_DEL_CONFIG, TUTORIAL_THEME} from "@/config/constants";
 import JobDashboardTutorialSteps from "../../components/custom/layout/JobDashboardTutorialSteps";
 import Spinner, {SpinnerEl} from "../../components/custom/Spinner";
@@ -62,7 +63,9 @@ function ViewJobs({isAdmin = false}) {
     const [modalBody, setModalBody] = useState(null)
     const [modalTitle, setModalTitle] = useState(null)
     const [modalSize, setModalSize] = useState('lg')
-    const [tutorial, setTutorial] = useState({run: false, step: 0, steps: []})
+    const [steps, setSteps] = useState([])
+    const [driverObj, setDriverObj] = useState(null)
+
 
     const currentRow = useRef(null)
     const hasLoaded = useRef(false)
@@ -647,8 +650,21 @@ function ViewJobs({isAdmin = false}) {
     }, [])
 
     useEffect(() => {
-        setTutorial({...tutorial, steps: JobDashboardTutorialSteps({getVariant, data: filteredItems})})
+        setSteps(JobDashboardTutorialSteps({getVariant, data: filteredItems}))
     }, [data])
+
+    useEffect(() => {
+        if (steps.length > 0) {
+            console.log('steps', steps)
+            setDriverObj(driver({
+                popoverClass: 'driverjs-theme',
+                animate: false,
+                showProgress: true,
+                showButtons: ['next', 'previous', 'close'],
+                steps: steps
+            }))
+        }
+    }, [steps])
 
     getOptions(filteredItems.length)
 
@@ -680,7 +696,7 @@ function ViewJobs({isAdmin = false}) {
     ];
 
     const handleTutorial = () => {
-        setTutorial({...tutorial, run: true})
+        driverObj.drive();
     }
 
     const handleFinishTutorial = (data) => {
@@ -713,18 +729,6 @@ function ViewJobs({isAdmin = false}) {
                     <Row>
 
                         <div className='container'>
-                            {tutorial.steps.length > 0 && <Joyride
-                                steps={tutorial.steps}
-                                scrollOffset={80}
-                                run={tutorial.run}
-                                showProgress={true}
-                                showSkipButton={true}
-                                callback={handleFinishTutorial}
-                                locale={{last: 'Finish Tutorial'}}
-                                continuous
-                                styles={TUTORIAL_THEME}
-                            />}
-
                             <Alert variant={'info'}>
                                 <div>
                                     <p>This dashboard provides an overview of the job queue and is used to track queued,
