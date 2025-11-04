@@ -17,7 +17,7 @@
   }
 }
 
-@include mixins.md-mx {
+@media (max-width: 1340px) {
   .c-legend--flex {
 
     .c-legend__item--Help {
@@ -27,6 +27,7 @@
     ul {
       display: inherit !important;
       height: inherit !important;
+      min-width: 100%;
     }
 
     li {
