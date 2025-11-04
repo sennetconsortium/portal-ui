@@ -1,6 +1,7 @@
 import {getCookie} from 'cookies-next'
 import log from 'loglevel'
-import {preinitModule} from "react-dom";
+import Script from "next/script";
+import React from "react";
 
 /**
  * CCFOrganInfo is a wrapper component for the CCF Organ Info.
@@ -14,7 +15,6 @@ const CCFOrganInfo = ({organ}) => {
     // See https://github.com/hubmapconsortium/hra-ui/blob/47490b8b5977def6cbaed047ebda6beb9e90fb97/EMBEDDING.md?plain=1#L412
     log.debug('https://apps.humanatlas.io/api/ds-graph/sennet?primary=true&token=')
     log.debug(getCookie('groups_token'))
-    preinitModule("https://cdn.humanatlas.io/ui/ccf-organ-info/wc.js", {as: "script"})
     // This overrides some styles in the ccf-organ-info. Allows the organ view to expand to the full width of the parent.
     const customStyles =
         '.btn {line-height: inherit !important;} .container {max-width: 100% !important;}'
@@ -32,6 +32,11 @@ const CCFOrganInfo = ({organ}) => {
             <link
                 href='https://cdn.humanatlas.io/ui/ccf-organ-info/styles.css'
                 rel='stylesheet'
+            />
+
+            <Script
+                type="module"
+                src="https://cdn.humanatlas.io/ui/ccf-organ-info/wc.js"
             />
 
             <style>{customStyles}</style>
