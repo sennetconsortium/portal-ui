@@ -97,6 +97,7 @@ function Sankey({maxHeight, showExpandButton = false}) {
 
             const observer = new MutationObserver(callback)
             observer.observe(targetNode, config)
+            callback(null, observer)
         })
 
         if (!maxHeight) {
