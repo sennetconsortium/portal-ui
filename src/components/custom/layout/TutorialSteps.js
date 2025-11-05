@@ -1,7 +1,7 @@
 import {eq} from "@/components/custom/js/functions";
 
 function TutorialSteps(loggedIn, name = "app") {
-    const downloadText = "<span>Clicking on the checkboxes <input type={'checkbox'} role='presentation' disabled/> on the left side of the search results table allows selecting distinct entities for export. Clicking on the download icon <i class='bi bi-download text-primary fs-5'></i> at the top of the search results table allows for exporting either only the selected entities or all entities in the table to a <code>JSON</code> or <code>TSV</code> format.</span>"
+    const downloadText = "<span>Clicking on the checkboxes <input type='checkbox' class='form-check-input' role='presentation' disabled/> on the left side of the search results table allows selecting distinct entities for export. Clicking on the download icon <i class='bi bi-download text-primary fs-5'></i> at the top of the search results table allows for exporting either only the selected entities or all entities in the table to a <code>JSON</code> or <code>TSV</code> format.</span>"
     if (eq(name, "searchActions")) {
         return [
             {
