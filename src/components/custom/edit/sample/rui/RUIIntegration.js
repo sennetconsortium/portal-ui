@@ -1,10 +1,9 @@
 import AppModal from "@/components/AppModal";
 import Spinner from "@/components/custom/Spinner";
-import { parseJson } from "@/lib/services";
+import {parseJson} from "@/lib/services";
 import Script from "next/script";
-import React, { Component } from "react";
-import { Button, Modal } from "react-bootstrap";
-import { Helmet, HelmetProvider } from "react-helmet-async";
+import React, {Component} from "react";
+import {Button, Modal} from "react-bootstrap";
 
 class RUIIntegration extends Component {
     constructor(props) {
@@ -90,7 +89,6 @@ class RUIIntegration extends Component {
         const self = this;
 
         const rui = this.ruiRef.current;
-        console.log(this.props.user)
         rui.baseHref = "https://cdn.humanatlas.io/ui/ccf-rui/"
         rui.user = {
             firstName: firstName || "",
@@ -132,14 +130,13 @@ class RUIIntegration extends Component {
 
     render() {
         return (
-            <HelmetProvider>
-                <Helmet>
-                    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&amp;display=swap"
-                          rel="stylesheet"/>
-                    <link href="https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Outlined"
-                          rel="stylesheet"/>
-                    <link href="https://cdn.humanatlas.io/ui/ccf-rui/styles.css" rel="stylesheet"/>
-                </Helmet>
+            <>
+                <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&amp;display=swap"
+                      rel="stylesheet"/>
+                <link href="https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Outlined"
+                      rel="stylesheet"/>
+                <link href="https://cdn.humanatlas.io/ui/ccf-rui/styles.css" rel="stylesheet"/>
+
                 <div className="webgl-content mat-typography rui">
                     <div
                         id="unityContainer"
@@ -168,8 +165,8 @@ class RUIIntegration extends Component {
                             modalSize="md"
                             showModal={this.state.showCancelModal}
                             handleSecondaryBtn={
-() =>
-                                this.setState({showCancelModal: false})
+                                () =>
+                                    this.setState({showCancelModal: false})
                             }
                             showPrimaryBtn={true}
                             primaryBtnLabel={"Cancel Registration"}
@@ -200,7 +197,7 @@ class RUIIntegration extends Component {
                         </Button>
                     </Modal.Footer>
                 </div>
-            </HelmetProvider>
+            </>
         );
     }
 }

@@ -25,7 +25,7 @@ COPY --chmod=755 ./entrypoint.sh /usr/local/bin/entrypoint.sh
 # Update npm, install dependencies, and build the project
 ENV NODE_ENV=production
 RUN npm install -g npm@latest && \
-    npm install && \
+    npm install --include=dev --no-audit --no-fund && \
     npm run sass-build && \
     npm run build && \
     npm prune --production

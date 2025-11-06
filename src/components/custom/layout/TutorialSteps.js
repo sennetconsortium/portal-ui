@@ -1,75 +1,91 @@
-import React from "react";
 import {eq} from "@/components/custom/js/functions";
 
 function TutorialSteps(loggedIn, name = "app") {
-    const downloadText = <span>Clicking on the checkboxes <input type={'checkbox'} role='presentation' disabled/> on the left side of the search results table allows selecting distinct entities for export. Clicking on the download icon <i
-        className="bi bi-download text-primary fs-5"></i> at the top of the search results table allows for exporting either only the selected entities or all entities in the table to a <code>JSON</code> or <code>TSV</code> format.</span>
+    const downloadText = "<span>Clicking on the checkboxes <input type='checkbox' class='form-check-input' role='presentation' disabled/> on the left side of the search results table allows selecting distinct entities for export. Clicking on the download icon <i class='bi bi-download text-primary fs-5'></i> at the top of the search results table allows for exporting either only the selected entities or all entities in the table to a <code>JSON</code> or <code>TSV</code> format.</span>"
     if (eq(name, "searchActions")) {
         return [
             {
-                target: '#sui-search-actions-btn',
-                disableBeacon: true,
-                title: <span>Download Search Results (1/2)</span>,
-                content: downloadText
+                element: '#sui-search-actions-btn',
+                popover: {
+                    title: `Download Search Results (1/2)`,
+                    description: downloadText
+                }
             },
             {
-                target: '#sui-search-actions-btn',
-                title: <span>Compare Dataset Visualizations (2/2)</span>,
-                content: 'You may select up to four primary datasets by clicking on the checkboxes on the left side of the search results table. Clicking on "Compare Datasets" will allow you to compare the visualizations for each dataset side by side. '
+                element: '#sui-search-actions-btn',
+                popover: {
+                    title: `Compare Dataset Visualizations (2/2)`,
+                    description: 'You may select up to four primary datasets by clicking on the checkboxes on the left side of the search results table. Clicking on "Compare Datasets" will allow you to compare the visualizations for each dataset side by side. '
+                }
             },
         ]
     }
-    const stepsCount = loggedIn ? 8 : 6
     let _steps = [
         {
-            target: '#search',
-            disableBeacon: true,
-            title: <span>Search Entities by Free Text (1/{stepsCount})</span>,
-            content: 'To further narrow the relevant entities, type search terms or phrases into the Search bar. Entities containing any of the search terms will be returned.'
+            element: '#search',
+            popover: {
+                title: `Search Entities by Free Text`,
+                description: 'To further narrow the relevant entities, type search terms or phrases into the Search bar. Entities containing any of the search terms will be returned.'
+
+            }
         },
         // {
-        //     target: '#searchDropdown',
-        //     title: <span>Search Entities or Metadata (2/{stepsCount})</span>,
-        //     content: 'The default option to search by entities allows you to filter results based on the core properties of various entity types. You can also search and filter the metadata that has been submitted to registered entities.',
+        //     element: '#searchDropdown',
+        //     title: `Search Entities or Metadata (2/${stepsCount})`,
+        //     description: 'The default option to search by entities allows you to filter results based on the core properties of various entity types. You can also search and filter the metadata that has been submitted to registered entities.',
         // },
         {
-            target: '.sui-facet',
-            title: <span>Filter Your Browsing (2/{stepsCount})</span>,
-            content: 'The faceted search options on the left side allows filtering entities by any combination of categories. Search results update automatically as you edit the selection of filters.',
+            element: '.sui-facet',
+            popover: {
+                title: `Filter Your Browsing`,
+                description: 'The faceted search options on the left side allows filtering entities by any combination of categories. Search results update automatically as you edit the selection of filters.',
+            }
         },
         {
-            target: '[data-column-id="sennet_id"].rdt_TableCol',
-            title: <span>Sort Search Results (3/{stepsCount})</span>,
-            content: 'Clicking the header of any column will sort search results. A bolded arrow indicates the current sorting selection. Clicking again will reverse the order.'
+            element: '[data-column-id="sennet_id"].rdt_TableCol',
+            popover: {
+                title: `Sort Search Results`,
+                description: 'Clicking the header of any column will sort search results. A bolded arrow indicates the current sorting selection. Clicking again will reverse the order.'
+            }
         },
         {
-            target: '[data-column-id="sennet_id"].rdt_TableCol',
-            title: <span>Reorder Columns (4/{stepsCount})</span>,
-            content: <span>Column headers can be reorganized by clicking and dragging. When exporting the results table, the <code>TSV</code> that is generated will mirror the column order.</span>
+            element: '[data-column-id="sennet_id"].rdt_TableCol',
+            popover: {
+                title: `Reorder Columns`,
+                description: "<span>Column headers can be reorganized by clicking and dragging. When exporting the results table, the <code>TSV</code> that is generated will mirror the column order.</span>"
+            }
         },
         {
-            target: '.sui-columns-toggle',
-            title: <span>Show/Hide Columns In Table (5/{stepsCount})</span>,
-            content: 'Columns can be hidden from the results table by clicking on the dropdown menu and selecting which columns to hide. To add these columns back to the results table, click on the ‘x’ next to the column name.'
+            element: '.sui-columns-toggle',
+            popover: {
+                title: `Show/Hide Columns In Table`,
+                description: 'Columns can be hidden from the results table by clicking on the dropdown menu and selecting which columns to hide. To add these columns back to the results table, click on the ‘x’ next to the column name.'
+            }
         },
         {
-            target: '.c-searchActions',
-            title: <span>Download Search Results (6/{stepsCount})</span>,
-            content: downloadText
+            element: '.c-searchActions',
+            popover: {
+                title: `Download Search Results`,
+                description: downloadText
+            }
         }
     ]
     if (loggedIn) {
         _steps.push({
-            target: '#nav-dropdown',
-            title: <span>Registering entities (7/{stepsCount})</span>,
-            content:
-                <span>You may register individual and bulk entities by clicking on this menu. Then selecting under <i>Single</i> for single registration or under <i>Bulk</i> for bulk registration.</span>
+            element: '#nav-dropdown',
+            popover: {
+                title: `Registering entities`,
+                description:
+                    "<span>You may register individual and bulk entities by clicking on this menu. Then selecting under <i>Single</i> for single registration or under <i>Bulk</i> for bulk registration.</span>"
+            }
         })
 
         _steps.push({
-            target: '#nav-dropdown--upload-metadata',
-            title: <span>Bulk uploading metadata (8/{stepsCount})</span>,
-            content: <span>Select this menu to bulk upload metadata. <br/> <small className='text-muted'>Note: You may also upload metadata for a single entity during registration. See previous step for details.</small></span>
+            element: '#nav-dropdown--upload-metadata',
+            popover: {
+                title: `Bulk uploading metadata`,
+                description: "<span>Select this menu to bulk upload metadata. <br/> <small class='text-muted'>Note: You may also upload metadata for a single entity during registration. See previous step for details.</small>"
+            }
         })
     }
     return _steps
