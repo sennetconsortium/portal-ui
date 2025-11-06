@@ -32,6 +32,7 @@ function Sankey({maxHeight, showExpandButton = false}) {
             const adapter = new SenNetAdapter(el)
             el.setOptions({
                 ...options,
+                startUpOnOptions: true,
                 loading: {
                     callback: handleLoading
                 },
@@ -62,8 +63,9 @@ function Sankey({maxHeight, showExpandButton = false}) {
         if (!router.isReady) return
         setFilters(router.query)
         setOptions({
+            startUpOnOptions: false,
             useShadow: true,
-            styleSheetPath: 'https://rawcdn.githack.com/x-atlas-consortia/data-sankey/1.0.15/src/lib/xac-sankey.css',
+            styleSheetPath: 'https://rawcdn.githack.com/x-atlas-consortia/data-sankey/1.0.16/src/lib/xac-sankey.css',
             api: {
                 token: getCookie('groups_token')
             },
@@ -95,6 +97,7 @@ function Sankey({maxHeight, showExpandButton = false}) {
 
             const observer = new MutationObserver(callback)
             observer.observe(targetNode, config)
+            callback(null, observer)
         })
 
         if (!maxHeight) {
