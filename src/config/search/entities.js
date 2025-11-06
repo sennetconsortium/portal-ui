@@ -181,6 +181,19 @@ export const SEARCH_ENTITIES = {
                 isFacetVisible: doesAggregationHaveBuckets('source.source_type')
             },
 
+            benchmarking_project: {
+                label: 'Benchmarking Project',
+                type: 'value',
+                field: 'benchmarking_project.keyword',
+                isExpanded: false,
+                tooltipText: `Any entity associated with the Benchmarking Project which aims to analyze cellular senescence along multiple modalities.`,
+                filterType: 'any',
+                isFilterable: false,
+                facetType: 'term',
+                isAggregationActive: true,
+                isFacetVisible: doesAggregationHaveBuckets('benchmarking_project')
+            },
+
             has_rui_information: {
                 label: 'Has Spatial Information',
                 type: 'value',
