@@ -21,37 +21,38 @@ function BulkDataTransfer({data, entityType, currentEntity}) {
     const [isBusy, setIsBusy] = useState(true)
 
     const getData = async () => {
-        let list = []
+        let list = {}
         let keys = ['primary', 'component', 'processed']
         const icons = {
             primary: 'circle',
             component: 'triangle',
             processed: 'blob'
         }
-        console.log(entityType)
+       
         if (eq(entityType, "Upload") || eq(entityType, "Publication")) {
             data['shape'] = icons['primary']
-            list.push(data)
+            list[data.sennet_id] = data
         } else {
             for (let k of keys) {
                 if (data[k].length) {
                     let indexOfCurrentEntity = data[k].findIndex(dataset => dataset.uuid === currentEntity.uuid)
                     if (indexOfCurrentEntity !== -1) {
                         data[k][indexOfCurrentEntity].shape = icons[k]
-                        list.push(data[k][indexOfCurrentEntity])
+                        list[data[k][indexOfCurrentEntity].sennet_id] = data[k][indexOfCurrentEntity]
                     } else {
                         data[k][0].shape = icons[k]
-                        list.push(data[k][0])
+                        list[data[k][0].sennet_id] = data[k][0]
                     }
 
                     if (k === 'component' && data[k].length > 1) {
                         data[k][1].shape = icons[k]
-                        list.push(data[k][1])
+                        list[data[k][1].sennet_id] = data[k][1]
                     }
                 }
 
             }
         }
+        list = Object.values(list)
         for (let d of list) {
             const gData = await fetchGlobusFilepath(d.uuid);
             if (gData.status && gData.status === 200) {
