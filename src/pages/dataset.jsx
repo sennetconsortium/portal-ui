@@ -229,7 +229,7 @@ function ViewDataset() {
                             </Alert>
                         }
 
-                        <div className={`row flex-nowrap entity-body ${sidebarVisible ? 'has-sidebarOpened' : ''}`}>
+                        <div className={`row flex-nowrap entity-body g-0 ${sidebarVisible ? 'has-sidebarOpened' : ''}`}>
                             <div className="col-auto p-0">
                                 <div id="sidebar"
                                      className="collapse collapse-horizontal sticky-top custom-sticky">

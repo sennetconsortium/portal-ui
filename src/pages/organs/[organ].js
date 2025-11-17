@@ -28,7 +28,7 @@ const Organ = () => {
         <>
             <AppNavbar hidden={isRegisterHidden} signoutHidden={false} />
             <div className='container-fluid'>
-                <div className='row flex-nowrap entity-body'>
+                <div className='row flex-nowrap entity-body g-0'>
                     {/* Sidebar */}
                     <div className='col-auto p-0'>
                         <div
