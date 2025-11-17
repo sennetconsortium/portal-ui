@@ -98,7 +98,7 @@ function ViewSource() {
                 {data && !error &&
                     <>
                         <div className="container-fluid">
-                            <div className="row flex-nowrap entity-body">
+                            <div className="row flex-nowrap entity-body g-0">
                                 <div className="col-auto p-0">
                                     <div id="sidebar"
                                          className="collapse collapse-horizontal sticky-top custom-sticky">
