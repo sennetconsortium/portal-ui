@@ -241,6 +241,18 @@ export const SEARCH_ENTITIES = {
                     return visibleChildren.length > 0
                 },
                 facets: {
+                    has_metadata: {
+                        label: 'Has Metadata',
+                        type: 'exists',
+                        field: 'has_metadata.keyword',
+                        isExpanded: false,
+                        tooltipText: `Any entity that has metadata associated with it.`,
+                        filterType: 'any',
+                        isFilterable: false,
+                        facetType: 'term',
+                        isAggregationActive: doesTermFilterContainValues('entity_type', ['Source', 'Sample', 'Dataset', 'Collection', 'Publication']),
+                        isFacetVisible: doesAggregationHaveBuckets('has_metadata')
+                    },
                     has_visualization: {
                         label: 'Has Visualization',
                         type: 'exists',
@@ -254,18 +266,6 @@ export const SEARCH_ENTITIES = {
                             doesTermFilterContainValues('entity_type', ['Dataset']),
                         ],
                         isFacetVisible: doesAggregationHaveBuckets('has_visualization')
-                    },
-                    has_metadata: {
-                        label: 'Has Metadata',
-                        type: 'exists',
-                        field: 'has_metadata.keyword',
-                        isExpanded: false,
-                        tooltipText: `Any entity that has metadata associated with it.`,
-                        filterType: 'any',
-                        isFilterable: false,
-                        facetType: 'term',
-                        isAggregationActive: doesTermFilterContainValues('entity_type', ['Source', 'Sample', 'Dataset', 'Collection', 'Publication']),
-                        isFacetVisible: doesAggregationHaveBuckets('has_metadata')
                     },
                     contains_data: {
                         label: 'Contains Data',
