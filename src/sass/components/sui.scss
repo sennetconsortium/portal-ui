@@ -416,3 +416,9 @@
     line-height: 34px;
   }
 }
+
+.sui-facets--entities {
+  .sui-facet__AssayInputEntity .sui-multi-checkbox-facet__input-text:first-letter {
+    text-transform: uppercase;
+  }
+}
