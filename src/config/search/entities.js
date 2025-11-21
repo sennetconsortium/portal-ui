@@ -106,6 +106,17 @@ export const SEARCH_ENTITIES = {
                 isAggregationActive: true,
                 isFacetVisible: doesAggregationHaveBuckets('dataset_type')
             },
+            'metadata.assay_input_entity': {
+                label: 'Assay Input Entity',
+                type: 'value',
+                field: 'metadata.assay_input_entity.keyword',
+                isExpanded: true,
+                filterType: 'any',
+                isFilterable: false,
+                facetType: 'term',
+                isAggregationActive: doesTermFilterContainValues('entity_type', ['Dataset']),
+                isFacetVisible: doesAggregationHaveBuckets('metadata.assay_input_entity')
+            },
             'metadata.analyte_class': {
                 label: 'Analyte Class',
                 type: 'value',
@@ -221,21 +232,6 @@ export const SEARCH_ENTITIES = {
                 isFacetVisible: doesAggregationHaveBuckets('rui_location_anatomical_locations.label')
             },
 
-            has_visualization: {
-                label: 'Has Visualization',
-                type: 'exists',
-                field: 'has_visualization.keyword',
-                isExpanded: false,
-                tooltipText: `Any Dataset that has a Vitessce visualization associated with it.`,
-                filterType: 'any',
-                isFilterable: false,
-                facetType: 'term',
-                isAggregationActive: [
-                    doesTermFilterContainValues('entity_type', ['Dataset']),
-                ],
-                isFacetVisible: doesAggregationHaveBuckets('has_visualization')
-            },
-
             // Data processing group
             data_processing_group: {
                 label: 'Data Processing',
@@ -256,6 +252,20 @@ export const SEARCH_ENTITIES = {
                         facetType: 'term',
                         isAggregationActive: doesTermFilterContainValues('entity_type', ['Source', 'Sample', 'Dataset', 'Collection', 'Publication']),
                         isFacetVisible: doesAggregationHaveBuckets('has_metadata')
+                    },
+                    has_visualization: {
+                        label: 'Has Visualization',
+                        type: 'exists',
+                        field: 'has_visualization.keyword',
+                        isExpanded: false,
+                        tooltipText: `Any Dataset that has a Vitessce visualization associated with it.`,
+                        filterType: 'any',
+                        isFilterable: false,
+                        facetType: 'term',
+                        isAggregationActive: [
+                            doesTermFilterContainValues('entity_type', ['Dataset']),
+                        ],
+                        isFacetVisible: doesAggregationHaveBuckets('has_visualization')
                     },
                     contains_data: {
                         label: 'Contains Data',

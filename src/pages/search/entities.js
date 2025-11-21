@@ -105,7 +105,7 @@ function SearchEntities() {
                                 </>
                             }
                             sideContent={
-                                <div data-js-ada='facets'>
+                                <div data-js-ada='facets' className="sui-facets--entities">
                                     <CustomClearSearchBox/>
 
                                     <SearchTypeButton title='Entities'/>
