@@ -685,7 +685,7 @@ export const getSamplesByOrgan = async (organCodes) => {
                 'sennet_id',
                 'lab_tissue_sample_id',
                 'group_name',
-                'last_touch'
+                'source',
             ]
         }
     }
@@ -699,7 +699,7 @@ export const getSamplesByOrgan = async (organCodes) => {
             sennetId: hit._source.sennet_id,
             labId: hit._source.lab_tissue_sample_id,
             groupName: hit._source.group_name,
-            lastTouch: hit._source.last_touch,
+            sourceType: hit._source.source.source_type,
         }
     });
 }

@@ -3,11 +3,12 @@ import useLocalSettings from '@/hooks/useLocalSettings'
 import { getSamplesByOrgan } from '@/lib/services'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useContext } from 'react'
 import DataTable from 'react-data-table-component'
 import ClipboardCopy from '../../ClipboardCopy'
 import { searchUIQueryString } from '../js/functions'
 import SenNetAccordion from '../layout/SenNetAccordion'
+import AppContext from '@/context/AppContext'
 
 /**
  * Samples component displays the samples for a given organ in a SenNetAccordion.
@@ -21,6 +22,7 @@ const Samples = ({ id, organ }) => {
     const router = useRouter()
     const { setLocalSettings } = useLocalSettings()
     const [samples, setSamples] = useState(null)
+    const {authorized} = useContext(AppContext)
 
     useEffect(() => {
         const getSamples = async () => {
@@ -50,20 +52,20 @@ const Samples = ({ id, organ }) => {
                 )
             }
         },
+         {
+            name: 'Source Type',
+            selector: (row) => row.sourceType,
+            sortable: true
+        },
         {
             name: 'Lab ID',
             selector: (row) => row.labId,
+            omit: !authorized,
             sortable: true
         },
         {
             name: 'Group',
             selector: (row) => row.groupName,
-            sortable: true
-        },
-        {
-            name: 'Last Touch',
-            selector: (row) =>
-                new Date(row.lastTouch).toLocaleDateString('en-US'),
             sortable: true
         }
     ]
