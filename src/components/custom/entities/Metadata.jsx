@@ -13,6 +13,7 @@ import $ from 'jquery'
 import {ViewHeaderBadges} from "../layout/entity/ViewHeaderBadges";
 import log from 'loglevel';
 import { getProvenanceMetadata } from "@/lib/services";
+import {datasetIs, objIsNotEmpty} from "@/components/custom/js/functions";
 
 /**
  * Component that displays metadata information.
@@ -47,7 +48,28 @@ function Metadata({data, metadata, mappedMetadata, groups}) {
         // Check if any of the ancestors have metadata property
         const hasProvMetadata = data.ancestors.some(a => a.metadata !== undefined) ?? false
         setHasProvMetadata(hasProvMetadata)
-    }, [data.ancestors])
+    }, [data.ancestors, data.descendants])
+
+    const getOrderedTabList = () => {
+        let list = []
+        let sources = 0
+        for (let e of data?.ancestors) {
+            if (eq(e.entity_type, cache.entities.source)) {
+                list.unshift(e)
+                sources++
+            } else if (eq(e.entity_type, cache.entities.sample)) {
+                list.splice(sources, 0, e)
+            } else if (eq(e.entity_type, cache.entities.dataset)) {
+                list.push(e)
+            }
+        }
+        for (let e of data?.descendants) {
+            if (eq(e.entity_type, cache.entities.dataset) && datasetIs.component(e.creation_action || '')) {
+                list.push(e)
+            }
+        }
+        return list
+    }
 
     const handleProvMetadataDownload = async () => {
         if (!downloadRef.current) {
@@ -143,27 +165,27 @@ function Metadata({data, metadata, mappedMetadata, groups}) {
 
                             {/*Create metadata table for ancestors*/}
                             {/*We want to reverse the ordering of this array so that the furthest ancestor is on the left*/}
-                            {data.ancestors?.reverse().map((ancestor, index) => {
+                            {getOrderedTabList().map((entity, index) => {
                                 // The source nav link
-                                if (eq(ancestor.entity_type, cache.entities.source)) {
-                                    if ((ancestor.source_mapped_metadata && Object.keys(ancestor.source_mapped_metadata).length) ||
-                                        (ancestor.metadata && Object.keys(ancestor.metadata).length)) {
+                                if (eq(entity.entity_type, cache.entities.source)) {
+                                    if ((entity.source_mapped_metadata && Object.keys(entity.source_mapped_metadata).length) ||
+                                        (objIsNotEmpty(entity.metadata))) {
                                         return (
-                                            popoverCommon(index, 'source', ancestor)
+                                            popoverCommon(index, 'source', entity)
                                         )
                                     }
                                     // The sample nav link
-                                } else if (eq(ancestor.entity_type, cache.entities.sample)) {
-                                    if (ancestor.metadata && Object.keys(ancestor.metadata).length > 0) {
+                                } else if (eq(entity.entity_type, cache.entities.sample)) {
+                                    if (objIsNotEmpty(entity.metadata)) {
                                         return (
-                                            popoverCommon(index, 'sample', ancestor)
+                                            popoverCommon(index, 'sample', entity)
                                         )
                                     }
                                     // The dataset nav link
-                                } else if (eq(ancestor.entity_type, cache.entities.dataset)) {
-                                        if (ancestor.metadata && Object.keys(ancestor.metadata).length > 0) {
+                                } else if (eq(entity.entity_type, cache.entities.dataset)) {
+                                        if (objIsNotEmpty(entity.metadata)) {
                                         return (
-                                            popoverCommon(index, 'dataset', ancestor)
+                                            popoverCommon(index, 'dataset', entity)
                                         )
                                     }
                                 }
@@ -198,19 +220,19 @@ function Metadata({data, metadata, mappedMetadata, groups}) {
                                     setHeaderBadges={setHeaderBadges}/>
                             </Tab.Pane>
                         }
-                        {data.ancestors?.reverse().map((ancestor, index) => {
+                        {getOrderedTabList().map((entity, index) => {
                             // Handle human source table
                             // Human sources have their metadata inside "source_mapped_metadata"
-                            if (eq(ancestor.entity_type, cache.entities.source) && eq(ancestor.source_type, cache.sourceTypes.Human)) {
-                                if (ancestor.source_mapped_metadata && Object.keys(ancestor.source_mapped_metadata).length) {
-                                    const {groups, metadata} = extractSourceMappedMetadataInfo(ancestor.source_mapped_metadata)
+                            if (eq(entity.entity_type, cache.entities.source) && eq(entity.source_type, cache.sourceTypes.Human)) {
+                                if (entity.source_mapped_metadata && Object.keys(entity.source_mapped_metadata).length) {
+                                    const {groups, metadata} = extractSourceMappedMetadataInfo(entity.source_mapped_metadata)
                                     return (
-                                        tabPaneCommon('0', index, ancestor, metadata, undefined, groups)
+                                        tabPaneCommon('0', index, entity, metadata, undefined, groups)
                                     )
                                 }
-                            } else if ( ancestor.metadata && Object.keys(ancestor.metadata).length > 0) {
+                            } else if ( objIsNotEmpty(entity.metadata)) {
                                 return (
-                                    tabPaneCommon('1', index, ancestor, ancestor.metadata, ancestor.cedar_mapped_metadata)
+                                    tabPaneCommon('1', index, entity, entity.metadata, entity.cedar_mapped_metadata)
                                 )
                             }
                         })}
