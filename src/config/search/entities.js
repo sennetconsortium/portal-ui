@@ -1,3 +1,4 @@
+import { getCreationActionRelationName, getUBKGFullName } from '@/components/custom/js/functions';
 import SearchAPIConnector from 'search-ui/packages/search-api-connector';
 import {
     doesAggregationHaveBuckets,
@@ -5,17 +6,15 @@ import {
     getAuth,
     getEntitiesIndex,
     getSearchEndPoint,
-    isDateFacetVisible
+    isDateFacetVisible,
+    lateralOrgans
 } from '../config';
-import {getCreationActionRelationName, getUBKGFullName} from '@/components/custom/js/functions';
 
 const connector = new SearchAPIConnector({
     indexName: getEntitiesIndex(),
     indexUrl: getSearchEndPoint(),
     accessToken: getAuth(),
 })
-
-const lateralOrgans = ['Breast', 'Kidney', 'Lung', 'Mammary Gland', 'Ovary', 'Tonsil']
 
 export const SEARCH_ENTITIES = {
     alwaysSearchOnInitialLoad: true,
