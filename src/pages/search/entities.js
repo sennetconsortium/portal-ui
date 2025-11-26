@@ -45,6 +45,10 @@ function SearchEntities() {
         onSubmit(event)
     }
 
+    const transformFunction = (facet, value) => {
+        return getUBKGFullName(value)
+    }
+
     if (validatingToken() || isAuthorizing()) {
         return <Spinner/>
     } else if (hasInvalidToken()) {
@@ -113,7 +117,7 @@ function SearchEntities() {
 
                                     <SelectedFilters/>
 
-                                    <FacetsContent transformFunction={getUBKGFullName}/>
+                                    <FacetsContent transformFunction={transformFunction}/>
                                 </div>
                             }
                             bodyContent={
