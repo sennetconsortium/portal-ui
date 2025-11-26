@@ -144,7 +144,8 @@ export const SEARCH_FILES = {
                 isExpanded: false,
                 filterType: 'any',
                 isFilterable: false,
-                facetType: 'term',
+                facetType: 'hierarchy',
+                groupByField: 'organs.hierarchy.keyword',
                 isAggregationActive: true,
                 isFacetVisible: doesAggregationHaveBuckets('organs.label')
             },
