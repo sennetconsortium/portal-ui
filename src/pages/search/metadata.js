@@ -46,7 +46,7 @@ function SearchMetadata() {
         onSubmit(event)
     }
 
-    const getFacetName = (facet, term) => {
+    const getFacetName = (term) => {
         return term.length ? getUBKGFullName(term) : 'None'
     }
 
