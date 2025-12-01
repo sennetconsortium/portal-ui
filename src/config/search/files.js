@@ -125,7 +125,6 @@ export const SEARCH_FILES = {
             }
         ],
         facets: {
-
             'sources.source_type': {
                 label: 'Source Type',
                 type: 'value',
@@ -148,6 +147,17 @@ export const SEARCH_FILES = {
                 groupByField: 'organs.hierarchy.keyword',
                 isAggregationActive: true,
                 isFacetVisible: doesAggregationHaveBuckets('organs.label')
+            },
+            dataset_status: {
+                label: 'Dataset Status',
+                type: 'value',
+                field: 'dataset_status.keyword',
+                isExpanded: false,
+                filterType: 'any',
+                isFilterable: false,
+                facetType: 'term',
+                isAggregationActive: true,
+                isFacetVisible: doesAggregationHaveBuckets('dataset_status')
             },
             dataset_type: {
                 label: 'Dataset Type',

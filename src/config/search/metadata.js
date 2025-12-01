@@ -490,6 +490,17 @@ export const SEARCH_METADATA = {
                 isFacetVisible: doesAggregationHaveBuckets('data_class'),
                 transformFunction: getCreationActionRelationName
             },
+            status: {
+                label: 'Status',
+                type: 'value',
+                field: 'status.keyword',
+                isExpanded: false,
+                filterType: 'any',
+                isFilterable: false,
+                facetType: 'term',
+                isAggregationActive: doesTermFilterContainValues('entity_type', ['Dataset']),
+                isFacetVisible: doesAggregationHaveBuckets('status')
+            },
             'origin_samples.organ': {
                 label: 'Organ',
                 type: 'value',
