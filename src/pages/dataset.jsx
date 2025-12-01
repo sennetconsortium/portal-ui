@@ -125,7 +125,7 @@ function ViewDataset() {
             setHasViz(hasViz)
 
             // fetch ancestry data
-            getAncestryData(_data.uuid).then(ancestry => {
+            getAncestryData(_data.uuid, {}, cache.entities.dataset).then(ancestry => {
                 if (!hasViz) {
                     // Primary gets processed and updated to QA but the derived dataset is still processed.
                     // This could lead to a scenario where the primary has the property has_visualization: false but the processed is true.
@@ -364,15 +364,15 @@ function ViewDataset() {
                                         {/*Provenance*/}
                                         <Provenance data={data} hasAncestry={hasAncestry}/>
 
-                                            {/*Metadata*/}
-                                            {/*Datasets have their metadata inside "metadata.metadata"*/}
-                                            {!!((data.metadata && Object.keys(data.metadata).length) || ancestorHasMetadata) &&
-                                                <Metadata
-                                                    data={data}
-                                                    metadata={data?.metadata}
-                                                    mappedMetadata={data?.cedar_mapped_metadata}
-                                                />
-                                            }
+                                        {/*Metadata*/}
+                                        {/*Datasets have their metadata inside "metadata.metadata"*/}
+                                        {!!((data.metadata && Object.keys(data.metadata).length) || ancestorHasMetadata) &&
+                                            <Metadata
+                                                data={data}
+                                                metadata={data?.metadata}
+                                                mappedMetadata={data?.cedar_mapped_metadata}
+                                            />
+                                        }
 
                                         {/*Data Products*/}
                                         { data &&
