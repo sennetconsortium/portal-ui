@@ -171,6 +171,19 @@ export const SEARCH_FILES = {
                 isAggregationActive: true,
                 isFacetVisible: doesAggregationHaveBuckets('dataset_type')
             },
+            data_class: {
+                label: 'Data Class',
+                type: 'value',
+                field: 'data_class.keyword',
+                isExpanded: false,
+                filterType: 'any',
+                isFilterable: false,
+                facetType: 'term',
+                tooltipText: `Primaries are data registered and uploaded by SenNet data providers, this data must have a direct parent entity in the provenance graph of type Sample.
+                Components are separate datasets that represent the components that make up a Multi-Assay Primary Data dataset.`,
+                isAggregationActive: true,
+                isFacetVisible: doesAggregationHaveBuckets('data_class')
+            },
             'analyte_class': {
                 label: 'Analyte Class',
                 type: 'value',
