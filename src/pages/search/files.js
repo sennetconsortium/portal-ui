@@ -46,6 +46,11 @@ function SearchFiles() {
         onSubmit(event)
     }
 
+
+    const transformFunction = (facet, value) => {
+        return getUBKGFullName(value)
+    }
+
     if (validatingToken() || isAuthorizing()) {
         return <Spinner/>
     } else if (hasInvalidToken()) {
@@ -128,7 +133,7 @@ function SearchFiles() {
 
                                     <SelectedFilters/>
 
-                                    <FacetsContent transformFunction={getUBKGFullName}/>
+                                    <FacetsContent transformFunction={transformFunction}/>
                                 </div>
 
                             }
