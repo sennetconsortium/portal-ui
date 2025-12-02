@@ -16,16 +16,18 @@ import PropTypes from "prop-types"
  * @param {boolean} showPrimaryBtn Whether to show the primary (right), blue colored button
  * @param {string} primaryBtnClassName An additional css class name to apply to the primary (right), blue colored button; Default is ''
  * @param {string} primaryBtnLabel The text of the primary (right), blue colored button; Default is 'Home page'
+ * @param {object} primaryBtnProps Additional props for the primary button
  * @param {function} handleSecondaryBtn A callback on click of the secondary (left), grey colored button
  * @param {boolean} showSecondaryBtn Whether to show the secondary (left), grey colored button
  * @param {string} secondaryBtnClassName An additional css class name to apply to the secondary (left), grey colored button; Default is ''
  * @param {string} secondaryBtnLabel The text of the secondary (left), grey colored button; Default is 'Close'
+ * @param {object} secondaryBtnProps Additional props for the secondary button
  * @returns {JSX.Element}
  * @constructor
  */
 const AppModal = ({ children, showModal = false, modalTitle, modalBody, modalSize, id = 'js-modal', className,
-                      handlePrimaryBtn, showPrimaryBtn = true, primaryBtnClassName = '', primaryBtnLabel = 'Home page',
-                      handleSecondaryBtn,  showSecondaryBtn = true, secondaryBtnClassName = '', secondaryBtnLabel = 'Close'}) => {
+                      handlePrimaryBtn, showPrimaryBtn = true, primaryBtnClassName = '', primaryBtnLabel = 'Home page', primaryBtnProps = {},
+                      handleSecondaryBtn,  showSecondaryBtn = true, secondaryBtnClassName = '', secondaryBtnLabel = 'Close', secondaryBtnProps = {} }) => {
     const [size, setSize] = useState(modalSize)
     const {_t} = useContext(AppContext)
     return (
@@ -45,12 +47,12 @@ const AppModal = ({ children, showModal = false, modalTitle, modalBody, modalSiz
                 </Modal.Body>
                 {(showSecondaryBtn || showPrimaryBtn) && <Modal.Footer>
                     {showSecondaryBtn &&
-                        <Button variant="outline-secondary rounded-0" className={secondaryBtnClassName}  onClick={handleSecondaryBtn}>
+                        <Button {...secondaryBtnProps} variant="outline-secondary rounded-0" className={secondaryBtnClassName}  onClick={handleSecondaryBtn}>
                             {_t(secondaryBtnLabel)}
                         </Button>
                     }
                     {showPrimaryBtn &&
-                        <Button variant="outline-primary rounded-0" className={primaryBtnClassName} onClick={handlePrimaryBtn}>
+                        <Button {...primaryBtnProps} variant="outline-primary rounded-0" className={primaryBtnClassName} onClick={handlePrimaryBtn}>
                             {_t(primaryBtnLabel)}
                         </Button>
                     }
