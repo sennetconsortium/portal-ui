@@ -12,6 +12,7 @@ import BlockIcon from '@mui/icons-material/Block';
 import GppGoodIcon from '@mui/icons-material/GppGood';
 import SenNetPopover from "@/components/SenNetPopover";
 import DataUsageModal from "@/components/custom/entities/dataset/DataUsageModal";
+import CLTModal from './CLTModal';
 
 
 function BulkDataTransfer({data, entityType, currentEntity}) {
@@ -19,6 +20,8 @@ function BulkDataTransfer({data, entityType, currentEntity}) {
 
     const [tabData, setTabData] = useState([])
     const [isBusy, setIsBusy] = useState(true)
+    const [showCLTModal, setShowCltModal] = useState(false)
+    
 
     const getData = async () => {
         let list = {}
@@ -45,7 +48,6 @@ function BulkDataTransfer({data, entityType, currentEntity}) {
                         list[data[k][l].sennet_id] = data[k][l]
                     }
                 }
-
             }
         }
         list = Object.values(list)
@@ -157,6 +159,8 @@ function BulkDataTransfer({data, entityType, currentEntity}) {
                     data directory.</p>
                 }
 
+                {!isBusy && <span role='button' className='btn btn-outline-primary mb-4 lnk--ic' onClick={()=> setShowCltModal(true)}>Download Files with SenNet CLT <i className={'bi bi-download'}></i></span>}
+
                 {!isBusy && <Tabs
                     defaultActiveKey={tabData[0].sennet_id}
                     className="mb-3"
@@ -165,6 +169,7 @@ function BulkDataTransfer({data, entityType, currentEntity}) {
                     {getTabs()}
                 </Tabs>}
                 {isBusy && <Spinner/>}
+                <CLTModal data={data} setShowModal={setShowCltModal} showModal={showCLTModal} />
             </SenNetAccordion>
         </>
     )
