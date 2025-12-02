@@ -180,7 +180,7 @@ export const SEARCH_FILES = {
                 isFilterable: false,
                 facetType: 'term',
                 tooltipText: `Primaries are data registered and uploaded by SenNet data providers, this data must have a direct parent entity in the provenance graph of type Sample.
-                Components are separate datasets that represent the components that make up a Multi-Assay Primary Data dataset.`,
+                Processed datasets consist of data derived from analysis of primary data.`,
                 isAggregationActive: true,
                 isFacetVisible: doesAggregationHaveBuckets('data_class')
             },
