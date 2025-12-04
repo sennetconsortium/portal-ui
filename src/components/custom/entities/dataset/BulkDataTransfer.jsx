@@ -146,7 +146,7 @@ function BulkDataTransfer({data, entityType, currentEntity}) {
 
     }
 
-    const hasCLTFilesForDownload = data.primary.length > 0 || data.processed.length > 0
+    const hasCLTFilesForDownload = data.primary?.length > 0 || data.processed?.length > 0
 
     return (
         <>
