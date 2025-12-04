@@ -531,6 +531,9 @@ Object.assign(Array.prototype, {
     }
 })
 
+export const objIsNotEmpty = (obj) => {
+    return obj && Object.keys(obj).length > 0
+}
 
 export const flipObj = (obj) => {
     return Object.keys(obj).reduce((ret, key) => {

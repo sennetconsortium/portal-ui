@@ -736,8 +736,10 @@ export const filterProperties = {
             "lab_dataset_id",
             "origin_samples",
             "creation_action",
-             "ingest_metadata",
-             "files"
+            "ingest_metadata",
+            "metadata",
+            "cedar_mapped_metadata",
+            "files"
         ],
         is_include: true
     },
