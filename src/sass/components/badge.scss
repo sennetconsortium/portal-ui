@@ -1,3 +1,9 @@
+@use "../config/swatch";
+
+.badge {
+  border: solid 1px transparent;
+}
+
 .badge-info,
 .btn-info {
   color: #000;
@@ -41,4 +47,10 @@
   padding: 6px;
   border-radius: 2px;
   min-width: 122px;
+}
+
+.badge-organ {
+  color: black;
+  border: solid 1px #ccc;
+  background-color: swatch.$col-xlight-pink;
 }

@@ -12,7 +12,8 @@ import {
     eq,
     getStatusColor,
     getStatusDefinition,
-    getUBKGFullName
+    getUBKGFullName,
+    getOrganMeta
 } from "../../js/functions";
 
 function ViewHeaderBadges({data, uniqueHeader, uniqueHeaderUrl, isMetadataHeader, hasWritePrivilege}) {
@@ -87,14 +88,17 @@ function ViewHeaderBadges({data, uniqueHeader, uniqueHeaderUrl, isMetadataHeader
                                 {getOrganRoute(organ) ? (
                                     <a href={getOrganRoute(organ)}>
                                         <h5 className={"title-badge"}>
-                                        <span className="badge bg-secondary me-2">
+                                        <span className="badge badge-organ me-2">
                                             {displayBodyHeader(getUBKGFullName(organ))}
+                                            &nbsp;<img alt={''}
+                                                                                 src={getOrganMeta(organ).icon}
+                                                                                 width={'16px'}/>
                                         </span>
                                         </h5>
                                     </a>
                                 ) : (
                                     <h5 className={"title-badge"}>
-                                    <span className="badge bg-secondary me-2">
+                                    <span className="badge badge-organ me-2">
                                         {displayBodyHeader(getUBKGFullName(organ))}
                                     </span>
                                     </h5>
