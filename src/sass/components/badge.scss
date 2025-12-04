@@ -1,5 +1,9 @@
 @use "../config/swatch";
 
+.badge {
+  border: solid 1px transparent;
+}
+
 .badge-info,
 .btn-info {
   color: #000;

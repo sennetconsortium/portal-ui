@@ -146,6 +146,8 @@ function BulkDataTransfer({data, entityType, currentEntity}) {
 
     }
 
+    const hasCLTFilesForDownload = data.primary.length > 0 || data.processed.length > 0
+
     return (
         <>
             <SenNetAccordion title={'Bulk Data Transfer'} id={'bulk-data-transfer'}>
@@ -159,7 +161,7 @@ function BulkDataTransfer({data, entityType, currentEntity}) {
                     data directory.</p>
                 }
 
-                {!isBusy && <span role='button' className='btn btn-outline-primary mb-4 lnk--ic' onClick={()=> setShowCltModal(true)}>Download Files with SenNet CLT <i className={'bi bi-download'}></i></span>}
+                {!isBusy && hasCLTFilesForDownload && <span role='button' className='btn btn-outline-primary mb-4 lnk--ic' onClick={()=> setShowCltModal(true)}>Download Files with SenNet CLT <i className={'bi bi-download'}></i></span>}
 
                 {!isBusy && <Tabs
                     defaultActiveKey={tabData[0].sennet_id}
@@ -169,7 +171,7 @@ function BulkDataTransfer({data, entityType, currentEntity}) {
                     {getTabs()}
                 </Tabs>}
                 {isBusy && <Spinner/>}
-                <CLTModal data={data} setShowModal={setShowCltModal} showModal={showCLTModal} />
+                {hasCLTFilesForDownload && <CLTModal data={data} setShowModal={setShowCltModal} showModal={showCLTModal} />}
             </SenNetAccordion>
         </>
     )
