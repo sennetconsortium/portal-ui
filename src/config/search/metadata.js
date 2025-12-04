@@ -1,4 +1,4 @@
-import { searchUIQueryString } from '@/components/custom/js/functions';
+import { getCreationActionRelationName, getUBKGFullName, searchUIQueryString } from '@/components/custom/js/functions';
 import SearchAPIConnector from 'search-ui/packages/search-api-connector';
 import {
     doFiltersContainField,
@@ -7,6 +7,7 @@ import {
     getAuth,
     getEntitiesIndex,
     getSearchEndPoint,
+    lateralOrgans,
 } from '../config';
 
 const connector = new SearchAPIConnector({
@@ -76,11 +77,12 @@ export const SEARCH_METADATA = {
             dataset_type: {
                 label: 'Dataset Type',
                 type: 'value',
-                field: 'dataset_type.keyword',
+                field: 'dataset_type_hierarchy.second_level.keyword',
                 isExpanded: false,
                 filterType: 'any',
                 isFilterable: false,
-                facetType: 'term',
+                facetType: 'hierarchy',
+                groupByField: 'dataset_type_hierarchy.first_level.keyword',
                 isAggregationActive: true,
                 isFacetVisible: doesAggregationHaveBuckets('dataset_type')
             },
@@ -471,6 +473,58 @@ export const SEARCH_METADATA = {
             },
 
             // Dataset
+            data_class: {
+                label: 'Data Class',
+                type: 'value',
+                field: 'creation_action.keyword',
+                isExpanded: false,
+                filterType: 'any',
+                isFilterable: false,
+                facetType: 'term',
+                tooltipText: `Primaries are data registered and uploaded by SenNet data providers, this data must have a direct parent entity in the provenance graph of type Sample.
+                Components are separate datasets that represent the components that make up a Multi-Assay Primary Data dataset.`,
+                isAggregationActive: (filters) => {
+                    const isActiveFunc = doesTermFilterContainValues('entity_type', ['Dataset'])
+                    return isActiveFunc(filters)
+                },
+                isFacetVisible: doesAggregationHaveBuckets('data_class'),
+                transformFunction: getCreationActionRelationName
+            },
+            status: {
+                label: 'Status',
+                type: 'value',
+                field: 'status.keyword',
+                isExpanded: false,
+                filterType: 'any',
+                isFilterable: false,
+                facetType: 'term',
+                isAggregationActive: doesTermFilterContainValues('entity_type', ['Dataset']),
+                isFacetVisible: doesAggregationHaveBuckets('status')
+            },
+            'origin_samples.organ': {
+                label: 'Organ',
+                type: 'value',
+                field: 'origin_samples.organ.keyword',
+                isExpanded: false,
+                filterType: 'any',
+                isFilterable: false,
+                facetType: 'hierarchy',
+                groupByField: 'origin_samples.organ_hierarchy.keyword',
+                isHierarchyOption: (option) => {
+                    return lateralOrgans.includes(option)
+                },
+                filterSubValues: (value, subValues) => {
+                    return subValues.filter((subValue) => {
+                        const ubkgName = getUBKGFullName(subValue.key)
+                        return ubkgName.startsWith(value)
+                    })
+                },
+                isAggregationActive: [
+                    doesTermFilterContainValues('entity_type', ['Dataset']),
+                    doesTermFilterContainValues('sample_category', ['Block', 'Section', 'Suspension'])
+                ],
+                isFacetVisible: doesAggregationHaveBuckets('origin_samples.organ')
+            },
             'metadata.acquisition_instrument_model': {
                 label: 'Acquisition Instrument Model',
                 type: 'value',

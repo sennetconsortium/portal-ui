@@ -125,7 +125,6 @@ export const SEARCH_FILES = {
             }
         ],
         facets: {
-
             'sources.source_type': {
                 label: 'Source Type',
                 type: 'value',
@@ -144,9 +143,21 @@ export const SEARCH_FILES = {
                 isExpanded: false,
                 filterType: 'any',
                 isFilterable: false,
-                facetType: 'term',
+                facetType: 'hierarchy',
+                groupByField: 'organs.hierarchy.keyword',
                 isAggregationActive: true,
                 isFacetVisible: doesAggregationHaveBuckets('organs.label')
+            },
+            dataset_status: {
+                label: 'Dataset Status',
+                type: 'value',
+                field: 'dataset_status.keyword',
+                isExpanded: false,
+                filterType: 'any',
+                isFilterable: false,
+                facetType: 'term',
+                isAggregationActive: true,
+                isFacetVisible: doesAggregationHaveBuckets('dataset_status')
             },
             dataset_type: {
                 label: 'Dataset Type',
@@ -159,6 +170,19 @@ export const SEARCH_FILES = {
                 groupByField: 'dataset_type_hierarchy.first_level.keyword',
                 isAggregationActive: true,
                 isFacetVisible: doesAggregationHaveBuckets('dataset_type')
+            },
+            data_class: {
+                label: 'Data Class',
+                type: 'value',
+                field: 'data_class.keyword',
+                isExpanded: false,
+                filterType: 'any',
+                isFilterable: false,
+                facetType: 'term',
+                tooltipText: `Primaries are data registered and uploaded by SenNet data providers, this data must have a direct parent entity in the provenance graph of type Sample.
+                Processed datasets consist of data derived from analysis of primary data.`,
+                isAggregationActive: true,
+                isFacetVisible: doesAggregationHaveBuckets('data_class')
             },
             'analyte_class': {
                 label: 'Analyte Class',

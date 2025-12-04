@@ -24,6 +24,8 @@ export function getAuth() {
 
 export const supportedRuiSources = ['Human', 'Human Organoid']
 
+export const lateralOrgans = ['Breast', 'Kidney', 'Lung', 'Mammary Gland', 'Ovary', 'Tonsil']
+
 // Organs not supported by the CCF-RUI Tool are:
 // Adipose, Blood, Bone Marrow, Breast, Muscle, and Other
 export function supportedRuiOrgans() {
