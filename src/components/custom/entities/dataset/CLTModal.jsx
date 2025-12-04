@@ -132,11 +132,11 @@ function IndeterminateCheckbox({data, checked, setChecked}) {
     const children = (
         <Box sx={{display: 'flex', flexDirection: 'column', ml: 3}}>
             {data.primary.length > 0 && <FormControlLabel
-                label={`Select all raw files. (${data.primary.length} Relevant Datasets)`}
+                label={`Select all raw files. (${data.primary.length} Relevant Dataset(s))`}
                 control={<Checkbox checked={checked[0]} onChange={handlePrimary}/>}
             />}
             {data.processed.length > 0 && <FormControlLabel
-                label={`Select all SenNet centrally processed files. (${data.processed.length} Relevant Datasets)`}
+                label={`Select all SenNet centrally processed files. (${data.processed.length} Relevant Dataset(s))`}
                 control={<Checkbox checked={checked[1]} onChange={handleProcessed}/>}
             />}
         </Box>
