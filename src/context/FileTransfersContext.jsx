@@ -1,7 +1,8 @@
 import {createContext, useContext, useEffect, useState, useRef} from "react";
 import AppContext from "@/context/AppContext";
-import { getTransferAuthJsonHeaders } from "@/lib/services";
+import { getTransferAuthJsonHeaders, parseJson } from "@/lib/services";
 import { getIngestEndPoint } from "@/config/config";
+import {APP_ROUTES} from "@/config/constants";
 
 const FileTransfersContext = createContext()
 
@@ -12,7 +13,7 @@ export const FileTransfersProvider = ({ children }) => {
     const [globusCollections, setGlobusCollections] = useState(null)
 
     const { _t, authorized, isUnauthorized, router} = useContext(AppContext)
-    const tableData = useRef([])
+    const [tableData, setTableData] = useState([])
 
     const getTransferEndpointsUrl = () => {
         return `${getIngestEndPoint()}transfers/endpoints`
@@ -42,7 +43,7 @@ export const FileTransfersProvider = ({ children }) => {
         setIsLoading(true)
         const body = { 
             ...formData,
-            manifest: tableData.current
+            manifest: tableData
          }
         const requestOptions = {
             method: 'POST',
@@ -57,10 +58,26 @@ export const FileTransfersProvider = ({ children }) => {
     }
 
     useEffect(() => {
-        tableData.current = sessionStorage.getItem('transferFiles')
-        getGlobusCollections().then(()=> {
+        const _entities = parseJson(sessionStorage.getItem('transferFiles'))
+        if (Array.isArray(_entities)) {
+            let list = []
+            for (let e of _entities) {
+                list.push({
+                    dataset: e.dataset,
+                    dataset_type: e.dataset_type,
+                    file_path: e.file_path || '/'
+                })
+            }
+            setTableData(list)
+            getGlobusCollections().then(()=> {
+                setIsLoading(false)
+            })
+        } else {
             setIsLoading(false)
-        })
+            setError(<span>Please first select files for transfer from the <a href={APP_ROUTES.search + '/files'}>Files</a> search page.</span>)
+        }
+        
+        
       }, [])
 
     return (
@@ -68,8 +85,8 @@ export const FileTransfersProvider = ({ children }) => {
             value={{
               isLoading, setIsLoading, transferFiles,
               globusCollections, setGlobusCollections,
-              error, setError
- 
+              error, setError,
+              tableData,
             }}
         >
         {children}

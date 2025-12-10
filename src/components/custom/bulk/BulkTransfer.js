@@ -4,10 +4,8 @@ import { styled } from '@mui/material/styles';
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
-import VerifiedIcon from '@mui/icons-material/Verified';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
 import DoneOutlineIcon from '@mui/icons-material/DoneOutline';
-import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import DriveFileMoveIcon from '@mui/icons-material/DriveFileMove';
 import StepConnector, { stepConnectorClasses } from '@mui/material/StepConnector';
 import Typography from "@mui/material/Typography";
@@ -16,14 +14,13 @@ import { Button } from "react-bootstrap";
 import { Alert, Container, Grid } from "@mui/material";
 import Spinner, { SpinnerEl } from "../Spinner";
 import AppModal from "../../AppModal";
-import { eq, getHeaders, } from "../js/functions";
-import AppContext from "@/context/AppContext";
-import { getAuthJsonHeaders, getAuthHeader } from "@/lib/services";
+import { eq } from "../js/functions";
 import SenNetAlert from "@/components/SenNetAlert";
 import FileTransfersContext from "@/context/FileTransfersContext";
 import OptionsSelect from "../layout/entity/OptionsSelect";
 import log from 'loglevel'
 import SenNetPopover from "@/components/SenNetPopover";
+import DataTable from "react-data-table-component";
 
 const EntityFormGroup = dynamic(() => import('@/components/custom/layout/entity/FormGroup')) 
 
@@ -44,7 +41,7 @@ export default function BulkTransfer({
   const [jobData, setJobData] = useState(null)
 
   const _formData = useRef({})
-  const { isLoading, error, setError, transferFiles, globusCollections } = useContext(FileTransfersContext)
+  const { isLoading, error, setError, transferFiles, globusCollection, tableData } = useContext(FileTransfersContext)
 
   const ColorlibConnector = styled(StepConnector)(({ theme }) => ({
     [`&.${stepConnectorClasses.alternativeLabel}`]: {
@@ -107,8 +104,8 @@ export default function BulkTransfer({
   }
 
   useEffect(() => {
-
-  }, [userWriteGroups])
+    setIsNextButtonDisabled(error != null)
+  }, [error])
 
 
   function getStepsLength() {
@@ -176,6 +173,23 @@ export default function BulkTransfer({
      return 'Transfer Files'
   }
 
+  const getColumns = () => {
+    return ([
+      {
+          name: 'SenNet ID',
+          id: 'dataset',
+          selector: row => row.dataset,
+          
+      },
+      {
+          name: 'File',
+          id: 'file_path',
+          selector: row => row.file_path,
+          
+      },
+    ])
+  }
+
   const canContinue = () => {
     if (_formData.current.destination_collection_id?.length && _formData.current.destination_file_path?.length) {
       setIsNextButtonDisabled(false)
@@ -231,7 +245,7 @@ export default function BulkTransfer({
               {activeStep === 0 &&
                 <>
                   <p>The following files for the associated Datasets will be downloaded:</p>
-                  <>Do table</>
+                  <div className="w-75 mx-auto"><DataTable columns={getColumns()} data={tableData} /></div>
                 </>
               }
 
@@ -269,9 +283,7 @@ export default function BulkTransfer({
 
           {error &&
             <Alert severity="error" sx={{ m: 2 }}>
-              <div>An unexpected error occurred. Please try again, or contact the <a
-                href={"mailto:help@sennetconsortium.org"} className='lnk--ic'>SenNet Help Desk<i
-                  className="bi bi-envelope-fill"></i></a> if the issue persists.</div>
+              {error}
             </Alert>}
 
     
