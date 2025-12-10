@@ -3,13 +3,12 @@ import PropTypes from 'prop-types'
 import {
     autoBlobDownloader,
     checkFilterType,
-    checkMultipleFilterType, formatByteSize, getEntityViewUrl,
+    checkMultipleFilterType, getEntityViewUrl,
     getUBKGFullName, matchArrayOrder,
 } from './js/functions'
 import {getOptions} from "./search/ResultsPerPage";
 import ResultsBlock from "./search/ResultsBlock";
 import {TableResultsProvider} from "@/context/TableResultsContext";
-import SenNetAlert from "../SenNetAlert";
 import ClipboardCopy from "../ClipboardCopy";
 import 'primeicons/primeicons.css';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
