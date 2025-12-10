@@ -41,7 +41,7 @@ export default function BulkTransfer({
   const [jobData, setJobData] = useState(null)
 
   const _formData = useRef({})
-  const { isLoading, error, setError, transferFiles, globusCollection, tableData } = useContext(FileTransfersContext)
+  const { isLoading, error, setError, transferFiles, globusCollections, tableData } = useContext(FileTransfersContext)
 
   const ColorlibConnector = styled(StepConnector)(({ theme }) => ({
     [`&.${stepConnectorClasses.alternativeLabel}`]: {

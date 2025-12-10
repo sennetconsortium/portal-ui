@@ -70,6 +70,7 @@ export const FileTransfersProvider = ({ children }) => {
             }
             setTableData(list)
             getGlobusCollections().then(()=> {
+                
                 setIsLoading(false)
             })
         } else {
