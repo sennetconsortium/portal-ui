@@ -1,3 +1,4 @@
+import dynamic from "next/dynamic";
 import React, { useEffect, useRef, useState, useContext } from 'react';
 import { styled } from '@mui/material/styles';
 import Stepper from '@mui/material/Stepper';
@@ -22,6 +23,9 @@ import SenNetAlert from "@/components/SenNetAlert";
 import FileTransfersContext from "@/context/FileTransfersContext";
 import OptionsSelect from "../layout/entity/OptionsSelect";
 import log from 'loglevel'
+import SenNetPopover from "@/components/SenNetPopover";
+
+const EntityFormGroup = dynamic(() => import('@/components/custom/layout/entity/FormGroup')) 
 
 export default function BulkTransfer({
   userWriteGroups,
@@ -30,17 +34,17 @@ export default function BulkTransfer({
   const buttonVariant = "btn btn-outline-primary rounded-0"
 
   const [activeStep, setActiveStep] = useState(0)
-  const [isNextButtonDisabled, setIsNextButtonDisabled] = useState(true)
-  const [error, setError] = useState(null)
+  const [isNextButtonDisabled, setIsNextButtonDisabled] = useState(false)
+
 
   const stepLabels = ['Verify Dataset Files', 'Specify Filepath', 'Complete']
   const [steps, setSteps] = useState(stepLabels)
   const [showModal, setShowModal] = useState(true)
-  const { cache, supportedMetadata: getUserGlobusCollection } = useContext(AppContext)
+ 
   const [jobData, setJobData] = useState(null)
 
-  const response = useRef(null)
-  const { isLoading, setIsLoading, transferFiles } = useContext(FileTransfersContext)
+  const _formData = useRef({})
+  const { isLoading, error, setError, transferFiles, globusCollections } = useContext(FileTransfersContext)
 
   const ColorlibConnector = styled(StepConnector)(({ theme }) => ({
     [`&.${stepConnectorClasses.alternativeLabel}`]: {
@@ -116,7 +120,7 @@ export default function BulkTransfer({
     setIsNextButtonDisabled(true)
 
     if (activeStep === 1) {
-    
+      transferFiles(_formData.current)
     } else if (activeStep === 2) {
       handleReset()
       return
@@ -160,25 +164,41 @@ export default function BulkTransfer({
   }
 
   function getModalBody() {
-    return ''
+    // TODO build body to redirect users
+    return error || 'The files for transfer initiated...'
   }
 
   const isAtLastStep = () => {
     return (activeStep === 2 && getStepsLength() === 3 || activeStep === 3 && getStepsLength() === 4)
   }
 
-
   const getTitle = () => {
      return 'Transfer Files'
   }
 
-  const onChangeGlobusCollection = (e, id, value) => {
-    
-    if (value && value.length) {
+  const canContinue = () => {
+    if (_formData.current.destination_collection_id?.length && _formData.current.destination_file_path?.length) {
       setIsNextButtonDisabled(false)
     } else {
       setIsNextButtonDisabled(true)
     }
+  }
+
+  const onChangeGlobusCollection = (e, id, value) => {
+    _onChange({value}, 'destination_collection_id')
+  }
+
+  const onCheckedChange = (e) => {
+    _onChange({value: e.target.checked}, e.target.name)
+  }
+
+  const onPathChange = (e, field) => {
+    _onChange({value: e.target.value}, field)
+  }
+
+  const _onChange = (e, field) => {
+    _formData.current = {..._formData.current, [field]: e.value}
+    canContinue()
   }
 
   return (
@@ -270,16 +290,41 @@ export default function BulkTransfer({
           
           {
             activeStep === 1 &&
-            <Grid container className={'text-center mt-5'}>
-              <Grid item xs></Grid>
+            <Grid container className={'form--transfer w-75 mx-auto mt-5'}>
+           
               <Grid item xs>
                 <OptionsSelect
-                  propVal={'categories'}
-                  popover={<>Select type of metadata being uploaded.</>} controlId={'transferPath'}
-                  isRequired={true} label={'Globus Collection'} onChange={onChangeGlobusCollection} data={getUserGlobusCollection()} />
+                  propLabel='display_name'
+                  propVal={'id'}
+                  className={'form__flexGroup'}
+                  popover={<>Select the collection to which to make transfers to </>} controlId={'destination_collection_id'}
+                  isRequired={true} label={'Globus Collection'} onChange={onChangeGlobusCollection} data={globusCollections} />
+
+                <EntityFormGroup label='Destination File Path' controlId='destination_file_path'
+                    className={'form__flexGroup'}
+                    onChange={onPathChange}
+                    isRequired={true} 
+                    popoverHelpText="The path is relative to the selected collection's home directory (~)"/>
+
+                <div className={"form__flexGroup"}>
+                    <label for='from_protected_space' className="form__labelWithCheck">
+                        <span>Transfer protected access files <span className="required">* </span></span>
+                        <SenNetPopover text={'Transfer protected files'} trigger={'hover'} className={`popover-from_protected_space`}>
+                                            <i className="bi bi-question-circle-fill"></i>
+                                        </SenNetPopover>
+                    
+                    </label>
+                    <input
+                            name="from_protected_space"
+                            id='from_protected_space'
+                            className={"form-check-input"}
+                            type='checkbox'
+                            onChange={onCheckedChange}
+                        />
+                </div>
                
               </Grid>
-              <Grid item xs></Grid>
+              
             </Grid>
           }
           <Grid container spacing={3} className={'text-center mt-3'}>

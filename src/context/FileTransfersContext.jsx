@@ -1,40 +1,66 @@
-import {createContext, useContext, useEffect, useState} from "react";
+import {createContext, useContext, useEffect, useState, useRef} from "react";
 import AppContext from "@/context/AppContext";
-import { getAuthJsonHeaders, getAuthHeader } from "@/lib/services";
+import { getTransferAuthJsonHeaders } from "@/lib/services";
 import { getIngestEndPoint } from "@/config/config";
 
 const FileTransfersContext = createContext()
 
 export const FileTransfersProvider = ({ children }) => {
     const [isLoading, setIsLoading] = useState(null)
-    const [formData, setFormData] = useState({})
+    const [error, setError] = useState(null)
+
     const [globusCollections, setGlobusCollections] = useState(null)
 
     const { _t, authorized, isUnauthorized, router} = useContext(AppContext)
+    const tableData = useRef([])
 
     const getTransferEndpointsUrl = () => {
         return `${getIngestEndPoint()}transfers/endpoints`
     }
 
     const getTransfersUrl = () => {
-        return `${getIngestEndPoint()}transfers/`
+        return `${getIngestEndPoint()}transfers`
+    }
+
+    async function getGlobusCollections() {
+        setIsLoading(true)
+        let data
+        const requestOptions = {
+            method: 'GET',
+            headers: getTransferAuthJsonHeaders(),
+        }
+        const response = await fetch(getTransferEndpointsUrl(), requestOptions)
+        if (response.ok) {
+            data = await response.json()
+            setGlobusCollections(data)
+        }
+        return data
     }
 
 
-    async function transferFiles() {
+    async function transferFiles(formData) {
         setIsLoading(true)
-        const body = {  }
+        const body = { 
+            ...formData,
+            manifest: tableData.current
+         }
         const requestOptions = {
-        method: 'POST',
-        headers: getAuthJsonHeaders(),
-        body: JSON.stringify(body)
+            method: 'POST',
+            headers: getTransferAuthJsonHeaders(),
+            body: JSON.stringify(body)
         }
-        response.current = await fetch(getTransfersUrl(), requestOptions)
-        const data = await response.current.json()
+        const response = await fetch(getTransfersUrl(), requestOptions)
+        if (!response.ok) {
+            setError(await response.json())
+        }
+        setIsLoading(false)
     }
 
     useEffect(() => {
-    
+        tableData.current = sessionStorage.getItem('transferFiles')
+        getGlobusCollections().then(()=> {
+            setIsLoading(false)
+        })
       }, [])
 
     return (
@@ -42,7 +68,8 @@ export const FileTransfersProvider = ({ children }) => {
             value={{
               isLoading, setIsLoading, transferFiles,
               globusCollections, setGlobusCollections,
-              formData, setFormData
+              error, setError
+ 
             }}
         >
         {children}
