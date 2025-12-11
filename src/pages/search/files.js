@@ -77,7 +77,7 @@ function SearchFiles() {
                                     <div className="search-box-header js-gtm--search">
                                         <SenNetBanner name={'default'}/>
                                         <SenNetAlert variant={'warning'} className="clt-alert"
-                                                     text=<>In order to download the files that are included in the
+                                                     text={<>In order to download the files that are included in the
                                             manifest file,&nbsp;
                                         <a href="https://github.com/x-atlas-consortia/clt" target='_blank'
                                            className={'lnk--ic'}>install <i
@@ -92,7 +92,7 @@ function SearchFiles() {
                                                     className="bi bi-box-arrow-up-right"></i></a> endpoint must also be
                                             up and
                                             running.</small>
-                                        </> />
+                                        </>} />
                                         <SearchBox
                                             view={({onChange, value, onSubmit}) => (
                                                 <Form onSubmit={e => handleSearchFormSubmit(e, onSubmit)}>

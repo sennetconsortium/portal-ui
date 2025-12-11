@@ -38,6 +38,11 @@ export const AppProvider = ({ cache, banners, children }) => {
 
     const [tutorialTrigger, setTutorialTrigger] = useState(0)
 
+    const setTokenCookies = (auth) => {
+        setCookie('groups_token', auth.groups_token, {sameSite: "Lax"})
+        setCookie('transfer_token', auth.transfer_token, {sameSite: "Lax"})
+    }
+
     useEffect(() => {
         // Should only include: '/', '/logout', '/login', '/404'
         const noRedirectTo = Object.values(APP_ROUTES_NO_REDIRECT)
@@ -48,7 +53,7 @@ export const AppProvider = ({ cache, banners, children }) => {
             info = atob(info)
             const userInfo = JSON.parse(info)
             groupsToken = userInfo.groups_token
-            setCookie('groups_token', groupsToken, {sameSite: "Lax"})
+            setTokenCookies(userInfo)
             getReadWritePrivileges()
                 .then((read_write_privileges) => {
                     if (read_write_privileges?.read_privs === true) {
@@ -152,11 +157,7 @@ export const AppProvider = ({ cache, banners, children }) => {
         if (info) {
             info = atob(info)
             loginJson = JSON.parse(info)
-            setCookie(
-                'groups_token',
-                loginJson.groups_token,
-                {sameSite: "Lax"},
-            )
+            setTokenCookies(loginJson)
         }
         getReadWritePrivileges()
             .then((read_write_privileges) => {

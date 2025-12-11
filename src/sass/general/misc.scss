@@ -102,3 +102,10 @@ code {
 .cursor-pointer {
   cursor: pointer;
 }
+
+.dropdown-itemSubHeader {
+  .MuiListSubheader-root {
+    padding: 0;
+    background: none;
+  }
+}

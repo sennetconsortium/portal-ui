@@ -72,6 +72,7 @@ function SearchActions({
                            hiddenColumns,
                            inModal,
                            setRefresh,
+                           getModalSelectedFiles,
                            context = 'entities'
                        }) {
     const [anchorEl, setAnchorEl] = useState(null)
@@ -294,10 +295,13 @@ function SearchActions({
     const hasSelectedRows = () => {
         return totalSelected > 0
     }
+    const isFilesSearch = () => {
+        return eq(context, 'files')
+    }
 
-    const hasDatasetFilter = () => {
+    const hasDatasetFilter = (ops = {}) => {
         let hasDataet = false
-        let hasViz = false
+        let hasViz = ops.excludeHasViz || false
         let types = new Set()
         if (filters) {
             for (let f of filters) {
@@ -305,9 +309,12 @@ function SearchActions({
                     hasDataet = true
                 }
 
-                if (eq(f.field, 'has_visualization') && f.values.contains('true')) {
-                    hasViz = true
+                if (!ops.excludeHasViz) {
+                    if (eq(f.field, 'has_visualization') && f.values.contains('true')) {
+                        hasViz = true
+                    } 
                 }
+                
             }
         }
         for (let e of selectedRows.current) {
@@ -315,10 +322,12 @@ function SearchActions({
                 types.add(e.dataset_type?.raw)
             }
         }
-        return hasDataet && hasViz && (types.size === 1)
+        return hasDataet && hasViz && (types.size === 1 || ops.excludeTypes)
     }
 
-    const hasSelectedDatasets = () => hasSelectedRows() && hasDatasetFilter()
+    const hasSelectedDatasetsWithViz = () => hasSelectedRows() && hasDatasetFilter()
+
+    const hasSelectedDatasets = () => hasSelectedRows() && (hasDatasetFilter({excludeHasViz: true, excludeTypes: true}) || eq(context, 'files'))
 
     useEffect(() => {
         document.addEventListener(
@@ -338,13 +347,31 @@ function SearchActions({
                 setShowTutorial(hasDatasetFilter())
             })
         }
-
-
     }, [filters]);
 
     const goCompare = () => {
         const uuids = selectedRows.current.map((e) => e.id)
         window.location = APP_ROUTES.discover + '/compare?uuids=' + uuids.join(',')
+    }
+
+    const goTransferFiles = () => {
+        let _list = []
+        for (let e of selectedRows.current) {
+            _list.push({
+                dataset: isFilesSearch() ? raw(e.dataset_sennet_id) : raw(e.sennet_id),
+                file_path: isFilesSearch() ? '/' : '/'
+            })
+        }
+        if (getModalSelectedFiles) {
+            for (let l of getModalSelectedFiles()) {
+                _list.push({
+                    dataset: l.uuid, 
+                    file_path: l.path
+                })
+            }
+        }
+        sessionStorage.setItem('transferFiles', JSON.stringify(_list))
+        window.location = '/transfers'
     }
 
     const clearSelections = () => {
@@ -394,7 +421,21 @@ function SearchActions({
 
                 {!inModal && <div>
 
-                    <ListSubheader>
+                    <MenuItem className={`dropdown-itemSubHeader dropdown-item ${hasSelectedDatasets() ? '' : 'disabled text-disabled'}`}
+                              key={`export-all`} onClick={hasSelectedDatasets() ? goTransferFiles : undefined}>
+                                 
+                        <ListSubheader>
+                        <SenNetPopover text={'Clt Transfer'}>
+                            <i className="bi bi-arrow-right-square fs-6 mx-2"></i>
+                            <span>Transfer Files &nbsp; <i className="bi bi-question-circle-fill"></i>
+                        </span>
+                    </SenNetPopover>
+                    </ListSubheader>
+                   
+                    </MenuItem>
+
+                    {eq(context, 'entities') && <>
+                        <ListSubheader>
                         <InsightsIcon className={'mx-2'}/>
                         <SenNetPopover
                             text={<span>Select up to 4 datasets of the same <code>Dataset Type</code> to compare the visualizations. You must have <code>Dataset</code> from the Entity Type facet and <code>True</code> from Has Spatial Information facet selected to enable this option.</span>}>
@@ -402,10 +443,12 @@ function SearchActions({
                             className="bi bi-question-circle-fill"></i></span>
                         </SenNetPopover>
                     </ListSubheader>
-                    <MenuItem className={`dropdown-item ${hasSelectedDatasets() ? '' : 'disabled text-disabled'}`}
-                              key={`export-all`} onClick={hasSelectedDatasets() ? goCompare : undefined}>
+                    <MenuItem className={`dropdown-item ${hasSelectedDatasetsWithViz() ? '' : 'disabled text-disabled'}`}
+                              key={`export-all`} onClick={hasSelectedDatasetsWithViz() ? goCompare : undefined}>
                         Compare Datasets
                     </MenuItem>
+                    </>}
+
                 </div>}
                 <Divider/>
                 {hasSelectedRows() &&

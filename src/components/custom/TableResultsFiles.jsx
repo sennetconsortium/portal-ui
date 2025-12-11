@@ -3,13 +3,12 @@ import PropTypes from 'prop-types'
 import {
     autoBlobDownloader,
     checkFilterType,
-    checkMultipleFilterType, formatByteSize, getEntityViewUrl,
+    checkMultipleFilterType, getEntityViewUrl,
     getUBKGFullName, matchArrayOrder,
 } from './js/functions'
 import {getOptions} from "./search/ResultsPerPage";
 import ResultsBlock from "./search/ResultsBlock";
 import {TableResultsProvider} from "@/context/TableResultsContext";
-import SenNetAlert from "../SenNetAlert";
 import ClipboardCopy from "../ClipboardCopy";
 import 'primeicons/primeicons.css';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
@@ -121,8 +120,8 @@ function TableResultsFiles({children, filters, forData = false, rowFn, inModal =
         setShowModal(false)
     }
 
-    const downloadManifest = () => {
-        let manifestData  = ''
+    const getModalSelectedFiles = () => {
+        let list = []
         for (let key in selectedFilesModal.current[currentDatasetUuid.current].selected){
             let keys = key.split(FILE_KEY_SEPARATOR)
             let file = keys[keys.length - 1]
@@ -131,8 +130,21 @@ function TableResultsFiles({children, filters, forData = false, rowFn, inModal =
                 // remove the first two due to formatting of tree component, aren't needed
                 keys.shift()
                 keys.shift()
-                manifestData += `${uuid} /${keys.join('/')}\n`
+                list.push({
+                    uuid, 
+                    path: `/${keys.join('/')}`
+                })
+              
             }
+        }
+
+        return list
+    }
+
+    const downloadManifest = () => {
+        let list = getModalSelectedFiles()
+        for (let l of list){
+            manifestData += `${l.uuid} ${l.path}\n`
         }
 
         autoBlobDownloader([manifestData], 'text/plain', `data-manifest.txt`)
@@ -350,6 +362,7 @@ function TableResultsFiles({children, filters, forData = false, rowFn, inModal =
             <TableResultsProvider columnsRef={currentColumns} getId={getId} rows={results} filters={filters} forData={forData} raw={raw} inModal={inModal}>
                 <ResultsBlock
                     exportKind={'manifest'}
+                    getModalSelectedFiles={getModalSelectedFiles}
                     index={'files'}
                     isBusy={isBusy}
                     searchContext={getSearchContext}

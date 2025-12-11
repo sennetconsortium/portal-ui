@@ -31,7 +31,7 @@ export function getJsonHeader(headers) {
 export function getAuthHeader(ops = {}) {
     const headers = new Headers();
     try {
-        let auth = getAuth()
+        let auth = ops.authToken || getAuth()
         auth = (!auth || !auth.length) ? getCookie('groups_token', ops) : auth
         if (auth)
             headers.append("Authorization", "Bearer " + auth)
@@ -49,6 +49,11 @@ export function getXSenNetHeader(headers) {
 
 export function getAuthJsonHeaders() {
     const headers = getAuthHeader();
+    return getJsonHeader(headers);
+}
+
+export function getTransferAuthJsonHeaders() {
+    const headers = getAuthHeader({authToken: getCookie('transfer_token')});
     return getJsonHeader(headers);
 }
 

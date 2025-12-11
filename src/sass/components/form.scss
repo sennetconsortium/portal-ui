@@ -1,3 +1,6 @@
+@use "../general/mixins";
+
+
 .form {
   &-group {
     position: relative;
@@ -23,6 +26,31 @@
         position: absolute;
         top: 36px;
         right: 10px;
+      }
+    }
+  }
+
+  &--transfer {
+    .form {
+      &__flexGroup {
+        text-align: left;
+        @include mixins.lg { 
+          display: flex;
+          label {
+            width: 40%;
+            &.form__labelWithCheck {
+              width: 35%;
+            }
+          }
+        }
+
+        @include mixins.md-mx { 
+          label {
+            &.form__labelWithCheck {
+              margin-right: 10px;
+            }
+          }
+        }
       }
     }
   }
