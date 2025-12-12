@@ -122,19 +122,21 @@ function TableResultsFiles({children, filters, forData = false, rowFn, inModal =
 
     const getModalSelectedFiles = () => {
         let list = []
-        for (let key in selectedFilesModal.current[currentDatasetUuid.current].selected){
-            let keys = key.split(FILE_KEY_SEPARATOR)
-            let file = keys[keys.length - 1]
-            if (file.contains('.')) {
-                let uuid = keys[0]
-                // remove the first two due to formatting of tree component, aren't needed
-                keys.shift()
-                keys.shift()
-                list.push({
-                    uuid, 
-                    path: `/${keys.join('/')}`
-                })
-              
+        if (Object.keys(selectedFilesModal.current).length > 0) {
+            for (let key in selectedFilesModal.current[currentDatasetUuid.current].selected) {
+                let keys = key.split(FILE_KEY_SEPARATOR)
+                let file = keys[keys.length - 1]
+                if (file.contains('.')) {
+                    let uuid = keys[0]
+                    // remove the first two due to formatting of tree component, aren't needed
+                    keys.shift()
+                    keys.shift()
+                    list.push({
+                        uuid,
+                        path: `/${keys.join('/')}`
+                    })
+
+                }
             }
         }
 
@@ -142,6 +144,7 @@ function TableResultsFiles({children, filters, forData = false, rowFn, inModal =
     }
 
     const downloadManifest = () => {
+        let manifestData = ''
         let list = getModalSelectedFiles()
         for (let l of list){
             manifestData += `${l.uuid} ${l.path}\n`

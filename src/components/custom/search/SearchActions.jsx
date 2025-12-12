@@ -421,11 +421,12 @@ function SearchActions({
 
                 {!inModal && <div>
 
-                    <MenuItem className={`dropdown-itemSubHeader dropdown-item ${hasSelectedDatasets() ? '' : 'disabled text-disabled'}`}
-                              key={`export-all`} onClick={hasSelectedDatasets() ? goTransferFiles : undefined}>
+                    <MenuItem className={'dropdown-itemSubHeader dropdown-item'}
+                              key={`export-all`}
+                              onClick={hasSelectedDatasets() || (getModalSelectedFiles && getModalSelectedFiles().length > 0) ? goTransferFiles : undefined}>
                                  
-                        <ListSubheader>
-                        <SenNetPopover text={'Clt Transfer'}>
+                        <ListSubheader className={`${hasSelectedDatasets() || (getModalSelectedFiles && getModalSelectedFiles().length > 0) ? '' : 'disabled text-disabled'}`}>
+                            <SenNetPopover text={<span>Transfer <code>Dataset</code> files via Globus.</span>}>
                             <i className="bi bi-arrow-right-square fs-6 mx-2"></i>
                             <span>Transfer Files &nbsp; <i className="bi bi-question-circle-fill"></i>
                         </span>
