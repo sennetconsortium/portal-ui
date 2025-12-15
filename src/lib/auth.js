@@ -6,6 +6,7 @@ import {deleteFromLocalStorage} from "@/components/custom/js/functions";
 export function deleteCookies() {
     setCookie('isAuthenticated', false, {sameSite: "Lax"})
     deleteCookie('groups_token')
+    deleteCookie('transfer_token')
     deleteCookie('info', {path: '/', domain: getCookieDomain(), sameSite: "Lax"})
     deleteCookie('user')
     deleteCookie('adminUIAuthorized')
