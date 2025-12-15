@@ -1,18 +1,19 @@
-import {createContext, useContext, useEffect, useState, useRef} from "react";
+import {createContext, useContext, useEffect, useState} from "react";
 import AppContext from "@/context/AppContext";
-import { getTransferAuthJsonHeaders, parseJson } from "@/lib/services";
-import { getIngestEndPoint } from "@/config/config";
+import {getTransferAuthJsonHeaders, parseJson} from "@/lib/services";
+import {getIngestEndPoint} from "@/config/config";
 import {APP_ROUTES} from "@/config/constants";
 
 const FileTransfersContext = createContext()
 
-export const FileTransfersProvider = ({ children }) => {
+export const FileTransfersProvider = ({children}) => {
     const [isLoading, setIsLoading] = useState(null)
     const [error, setError] = useState(null)
 
     const [globusCollections, setGlobusCollections] = useState(null)
+    const [globusRunURLs, setGlobusRunURLs] = useState(null)
 
-    const { _t, authorized, isUnauthorized, router} = useContext(AppContext)
+    const {_t, authorized, isUnauthorized, router} = useContext(AppContext)
     const [tableData, setTableData] = useState([])
 
     const getTransferEndpointsUrl = () => {
@@ -41,20 +42,30 @@ export const FileTransfersProvider = ({ children }) => {
 
     async function transferFiles(formData) {
         setIsLoading(true)
-        const body = { 
+        const body = {
             ...formData,
             manifest: tableData
-         }
+        }
         const requestOptions = {
             method: 'POST',
             headers: getTransferAuthJsonHeaders(),
             body: JSON.stringify(body)
         }
         const response = await fetch(getTransfersUrl(), requestOptions)
-        if (!response.ok) {
-            setError(await response.json())
+        if (response.ok) {
+            //     We expect a list of Globus run IDs in a valid response
+            let jsonResponse = await response.json()
+            let globusRunURLs = []
+            jsonResponse['task_ids'].forEach((runId) => {
+                globusRunURLs.push("https://app.globus.org/activity?taskId=" + runId)
+            })
+            setGlobusRunURLs(globusRunURLs)
+            setIsLoading(false)
+        } else {
+            let jsonResponse = await response.json()
+            setError(jsonResponse.error)
+            setIsLoading(false)
         }
-        setIsLoading(false)
     }
 
     useEffect(() => {
@@ -69,29 +80,31 @@ export const FileTransfersProvider = ({ children }) => {
                 })
             }
             setTableData(list)
-            getGlobusCollections().then(()=> {
-                
+            getGlobusCollections().then(() => {
+
                 setIsLoading(false)
             })
         } else {
             setIsLoading(false)
-            setError(<span>Please first select files for transfer from the <a href={APP_ROUTES.search + '/files'}>Files</a> search page.</span>)
+            setError(<span>Please first select files for transfer from the <a
+                href={APP_ROUTES.search + '/files'}>Files</a> search page.</span>)
         }
-        
-        
-      }, [])
+
+
+    }, [])
 
     return (
         <FileTransfersContext.Provider
             value={{
-              isLoading, setIsLoading, transferFiles,
-              globusCollections, setGlobusCollections,
-              error, setError,
-              tableData,
+                isLoading, setIsLoading, transferFiles,
+                globusCollections, setGlobusCollections,
+                globusRunURLs,
+                error, setError,
+                tableData,
             }}
         >
-        {children}
-    </FileTransfersContext.Provider>
+            {children}
+        </FileTransfersContext.Provider>
     )
 }
 
