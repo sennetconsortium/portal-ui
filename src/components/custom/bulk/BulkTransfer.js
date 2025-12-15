@@ -40,7 +40,15 @@ export default function BulkTransfer({
     const [jobData, setJobData] = useState(null)
 
     const _formData = useRef({})
-    const {isLoading, error, setError, transferFiles, globusCollections, tableData} = useContext(FileTransfersContext)
+    const {
+        isLoading,
+        error,
+        setError,
+        transferFiles,
+        globusCollections,
+        globusRunURLs,
+        tableData
+    } = useContext(FileTransfersContext)
 
     const ColorlibConnector = styled(StepConnector)(({theme}) => ({
         [`&.${stepConnectorClasses.alternativeLabel}`]: {
@@ -172,8 +180,22 @@ export default function BulkTransfer({
     }
 
     function getModalBody() {
-        // TODO build body to redirect users
-        return error || 'The files for transfer initiated...'
+        if (!isLoading) {
+            return error || (
+                <>
+                    <span>You can monitor the process of the file transfer via the following link(s):</span>
+                    <ul>
+                        {globusRunURLs.map((url, index) => (
+                            <li key={index}><a href={url} target='_blank'>{url} <i
+                                className="bi bi-box-arrow-up-right"></i></a></li>
+                        ))}
+                    </ul>
+                </>)
+        } else {
+            return (
+                <Spinner/>
+            )
+        }
     }
 
     const isAtLastStep = () => {
