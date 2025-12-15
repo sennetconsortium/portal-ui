@@ -1,7 +1,7 @@
 import {eq} from "@/components/custom/js/functions";
 
 function TutorialSteps(loggedIn, name = "app") {
-    const downloadText = "<span>Clicking on the checkboxes <input type='checkbox' class='form-check-input' role='presentation' disabled/> on the left side of the search results table allows selecting distinct entities for export. Clicking on the download icon <i class='bi bi-download text-primary fs-5'></i> at the top of the search results table allows for exporting either only the selected entities or all entities in the table to a <code>JSON</code> or <code>TSV</code> format.</span>"
+    const downloadText = "<span>Clicking on the checkboxes <input type='checkbox' class='form-check-input' role='presentation' disabled/> on the left side of the search results table allows selecting distinct entities for export in either <code>JSON</code> or <code>TSV</code> format. <code>Datasets</code> can additionally be exported as a <code>TXT</code> manifest file to be used with the SenNet Command Line Transfer (CLT) tool or transferred directly via Globus with the <code>Transfer Files</code> option.</span>"
     if (eq(name, "searchActions")) {
         return [
             {
