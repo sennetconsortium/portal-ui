@@ -9,13 +9,35 @@ import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import {autoBlobDownloader} from '../../js/functions';
 import LnkIc from '../../layout/LnkIc';
-
+import Button from "react-bootstrap/Button";
 
 function CLTModal({data, showModal, setShowModal}) {
 
     const closeModal = () => setShowModal(false)
     const [checked, setChecked] = useState([true, false])
     const [downloadBtnProps, setDownloadBtnProps] = useState({})
+
+    const transferManifest = () => {
+        let manifest = []
+        const buildManifest = (list) => {
+            for (let e of list) {
+                manifest.push({
+                    dataset: e.sennet_id,
+                    file_path: '/'
+                })
+            }
+        }
+        if (checked[0]) {
+            buildManifest(data.primary)
+        }
+        if (checked[1]) {
+            buildManifest(data.processed)
+        }
+        if (manifest.length) {
+            sessionStorage.setItem('transferFiles', JSON.stringify(manifest))
+            window.location = '/transfers'
+        }
+    }
 
     const downloadManifest = () => {
         let manifest = ''
@@ -50,8 +72,8 @@ function CLTModal({data, showModal, setShowModal}) {
             modalSize='xl'
             showModal={showModal}
             primaryBtnProps={downloadBtnProps}
-            primaryBtnLabel={'Generate Download Manifest'}
-            handlePrimaryBtn={downloadManifest}
+            primaryBtnLabel={'Transfer Files'}
+            handlePrimaryBtn={transferManifest}
             handleSecondaryBtn={closeModal}>
             <div>
 
@@ -87,10 +109,13 @@ function CLTModal({data, showModal, setShowModal}) {
                         aria-controls="panel3-content"
                         id="panel3-header"
                     >
-                        <h3 className='fs-4'>Download Options</h3>
+                        <h3 className='fs-4'>Transfer/Download Options</h3>
                     </AccordionSummary>
                     <AccordionDetails>
-                        <p>Select raw and/or processed files to download.</p>
+                        <p>Select raw and/or processed files to download. Clicking "Transfer Files" will allow you to
+                            initiate a transfer via the portal without the need for the SenNet CLT (Globus Connect
+                            Personal must still be installed for local file transfer). Clicking "Generate Download
+                            Manifest" will output a a file that can be used with the SenNet CLT.</p>
                         <h5>Raw Data</h5>
                         <p>Raw data consists of files as originally submitted by the data submitters and are associated
                             with <code>Primary Datasets</code>.</p>
@@ -109,6 +134,10 @@ function CLTModal({data, showModal, setShowModal}) {
 
                     </AccordionDetails>
                 </Accordion>
+                <div className={'d-flex'}>
+                    <Button className={'ms-auto'} variant="outline-primary rounded-0"
+                            onClick={downloadManifest}>Generate Download Manifest Files</Button>
+                </div>
             </div>
         </AppModal>
     )

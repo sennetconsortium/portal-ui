@@ -10,7 +10,7 @@ import Spinner from '../Spinner';
 import SearchActions from "@/components/custom/search/SearchActions";
 import useSelectedRows from "@/hooks/useSelectedRows";
 
-function ResultsBlock({getTableColumns, disableRowClick, tableClassName = '', exportKind, defaultHiddenColumns = [], searchContext, totalRows, isBusy}) {
+function ResultsBlock({getTableColumns, disableRowClick, tableClassName = '', exportKind, defaultHiddenColumns = [], searchContext, totalRows, isBusy, index, getModalSelectedFiles}) {
 
     const {
         getTableData,
@@ -48,7 +48,7 @@ function ResultsBlock({getTableColumns, disableRowClick, tableClassName = '', ex
             <div className='sui-layout-main-header'>
                 <div className='sui-layout-main-header__inner'>
 
-                    <SearchActions setRefresh={setRefresh} inModal={inModal} exportKind={exportKind} selectedRows={selectedRows} filters={filters} data={getTableData()} raw={raw} hiddenColumns={hiddenColumns} columns={currentColumns.current} />
+                    <SearchActions getModalSelectedFiles={getModalSelectedFiles} context={index} setRefresh={setRefresh} inModal={inModal} exportKind={exportKind} selectedRows={selectedRows} filters={filters} data={getTableData()} raw={raw} hiddenColumns={hiddenColumns} columns={currentColumns.current} />
                     <div className='sui-tools-right'>
                         {rows.length > 0 && <ColumnsDropdown searchContext={searchContext} filters={filters} defaultHiddenColumns={defaultHiddenColumns} getTableColumns={getTableColumns} setHiddenColumns={setHiddenColumns}
                                         currentColumns={currentColumns.current} />}
