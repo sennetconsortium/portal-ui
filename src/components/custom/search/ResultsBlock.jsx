@@ -48,7 +48,7 @@ function ResultsBlock({getTableColumns, disableRowClick, tableClassName = '', ex
             <div className='sui-layout-main-header'>
                 <div className='sui-layout-main-header__inner'>
 
-                    <SearchActions getModalSelectedFiles={getModalSelectedFiles} context={index} setRefresh={setRefresh} inModal={inModal} exportKind={exportKind} selectedRows={selectedRows} filters={filters} data={getTableData()} raw={raw} hiddenColumns={hiddenColumns} columns={currentColumns.current} />
+                    <SearchActions handleOnRowClicked={handleOnRowClicked} getModalSelectedFiles={getModalSelectedFiles} context={index} setRefresh={setRefresh} inModal={inModal} exportKind={exportKind} selectedRows={selectedRows} filters={filters} data={getTableData()} raw={raw} hiddenColumns={hiddenColumns} columns={currentColumns.current} />
                     <div className='sui-tools-right'>
                         {rows.length > 0 && <ColumnsDropdown searchContext={searchContext} filters={filters} defaultHiddenColumns={defaultHiddenColumns} getTableColumns={getTableColumns} setHiddenColumns={setHiddenColumns}
                                         currentColumns={currentColumns.current} />}
@@ -90,7 +90,7 @@ function ResultsBlock({getTableColumns, disableRowClick, tableClassName = '', ex
                         progressPending={isSearching}
                         progressComponent={<Spinner />}
                         selectableRowSelected={rowSelectCriteria}
-                        selectableRows={!inModal}
+                        selectableRows={!inModal || eq(index, 'files')}
                         onSelectedRowsChange={handleRowSelected}
                         selectableRowsVisibleOnly={true}
                 />}

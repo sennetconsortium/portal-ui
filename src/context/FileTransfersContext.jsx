@@ -99,7 +99,7 @@ export const FileTransfersProvider = ({children}) => {
                 globusCollections, setGlobusCollections,
                 globusRunURLs,
                 error, setError,
-                tableData,
+                tableData, setTableData
             }}
         >
             {children}

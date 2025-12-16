@@ -22,7 +22,7 @@ import {useSearchUIContext} from "@/search-ui/components/core/SearchUIContext";
 import DataUsageModal from "@/components/custom/entities/dataset/DataUsageModal";
 import {ShimmerText} from "react-shimmer-effects";
 
-function TableResultsFiles({children, filters, forData = false, rowFn, inModal = false, rawResponse}) {
+function TableResultsFiles({children, onRowClicked, filters, forData = false, rowFn, inModal = false, rawResponse}) {
     const fileTypeField = 'file_extension'
     let hasMultipleFileTypes = checkMultipleFilterType(filters, fileTypeField);
     const currentColumns = useRef([])
@@ -44,7 +44,7 @@ function TableResultsFiles({children, filters, forData = false, rowFn, inModal =
     const [globusText, setGlobusText] = useState(loadingComponent)
 
     useEffect(() => {
-        const totalFileCount = rawResponse.record_count
+        const totalFileCount = rawResponse?.record_count || 0
         $('.sui-paging-info').append(` Datasets (<strong>${totalFileCount}</strong> Total Files)`)
     }, [])
 
@@ -53,7 +53,7 @@ function TableResultsFiles({children, filters, forData = false, rowFn, inModal =
         const results = transformResults(rawResponse)
         setResults(results)
         setSearchResponse(resp)
-        updatePagingInfo(resp.aggregations?.total_datasets.value, resp)
+        updatePagingInfo(resp?.aggregations?.total_datasets.value, resp)
         setIsBusy(false)
 
     }, [rawResponse, pageSize, pageSize])
@@ -62,10 +62,11 @@ function TableResultsFiles({children, filters, forData = false, rowFn, inModal =
 
     function updatePagingInfo(resultsCount, resp) {
         $('.sui-paging-info strong').eq(1).text(resultsCount)
-        $('.sui-paging-info strong').eq(2).text(resp.record_count)
+        $('.sui-paging-info strong').eq(2).text(resp?.record_count)
     }
 
     function transformResults(resp) {
+        if (!resp) return []
         const results = {}
 
         // group files by dataset_uuid
@@ -362,7 +363,7 @@ function TableResultsFiles({children, filters, forData = false, rowFn, inModal =
 
     return (
         <>
-            <TableResultsProvider columnsRef={currentColumns} getId={getId} rows={results} filters={filters} forData={forData} raw={raw} inModal={inModal}>
+            <TableResultsProvider onRowClicked={onRowClicked} columnsRef={currentColumns} getId={getId} rows={results} filters={filters} forData={forData} raw={raw} inModal={inModal}>
                 <ResultsBlock
                     exportKind={'manifest'}
                     getModalSelectedFiles={getModalSelectedFiles}
@@ -371,7 +372,7 @@ function TableResultsFiles({children, filters, forData = false, rowFn, inModal =
                     searchContext={getSearchContext}
                     tableClassName={'rdt_Results--Files'}
                     getTableColumns={getTableColumns}
-                    totalRows={searchResponse.aggregations?.total_datasets.value}
+                    totalRows={searchResponse?.aggregations?.total_datasets.value}
                 />
                 <AppModal
                     className={`modal--filesView`}
