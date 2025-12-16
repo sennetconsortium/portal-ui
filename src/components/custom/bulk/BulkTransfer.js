@@ -228,7 +228,16 @@ export default function BulkTransfer({
 
     const addDataset = async (e, _, more) => {
       let _list = Array.from(tableData)
-      _list.push(...more)
+      let _dict = {}
+      // Avoid duplicates
+      for (let i of _list) {
+        _dict[i.dataset + i.file_path] = true
+      }
+      for (let i of more) {
+        if (!_dict[i.dataset + i.file_path]) {
+          _list.push(i)
+        }
+      }
       updateSessionProp(_list)
       setTableData(_list)
       hideModal()
