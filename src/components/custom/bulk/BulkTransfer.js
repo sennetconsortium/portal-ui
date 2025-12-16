@@ -19,6 +19,7 @@ import FileTransfersContext from "@/context/FileTransfersContext";
 import OptionsSelect from "../layout/entity/OptionsSelect";
 import SenNetPopover from "@/components/SenNetPopover";
 import DataTable from "react-data-table-component";
+import LnkIc from "../layout/LnkIc";
 
 const EntityFormGroup = dynamic(() => import('@/components/custom/layout/entity/FormGroup'))
 
@@ -247,13 +248,9 @@ export default function BulkTransfer({
                     <div>
                         <SenNetAlert variant={'warning'} className="clt-alert"
                                      text={<> For transferring data to the local
-                                         machine, the <a
-                                             href={'https://www.globus.org/globus-connect-personal'} target='_blank'
-                                             className={'lnk--ic'}>Globus
-                                             Connect Personal (GCP)<i
-                                                 className="bi bi-box-arrow-up-right"></i></a> endpoint must also be
+                                         machine, the <LnkIc text={'Globus Connect Personal (GCP)'} href='https://www.globus.org/globus-connect-personal' /> endpoint must also be
                                          up and
-                                         running.
+                                         running. <br /> Visit <LnkIc text={'Globus Activity'} href="https://app.globus.org/activity" />
                                      </>}/>
 
                     </div>

@@ -1,5 +1,4 @@
-import {createContext, useContext, useEffect, useState} from "react";
-import AppContext from "@/context/AppContext";
+import {createContext,  useEffect, useState} from "react";
 import {getTransferAuthJsonHeaders, parseJson} from "@/lib/services";
 import {getIngestEndPoint} from "@/config/config";
 import {APP_ROUTES} from "@/config/constants";
@@ -13,7 +12,7 @@ export const FileTransfersProvider = ({children}) => {
     const [globusCollections, setGlobusCollections] = useState(null)
     const [globusRunURLs, setGlobusRunURLs] = useState(null)
 
-    const {_t, authorized, isUnauthorized, router} = useContext(AppContext)
+
     const [tableData, setTableData] = useState([])
 
     const getTransferEndpointsUrl = () => {
