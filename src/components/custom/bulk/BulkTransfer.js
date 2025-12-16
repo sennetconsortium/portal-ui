@@ -150,13 +150,10 @@ export default function BulkTransfer({
     }
 
     const handleBack = () => {
-
         setJobData(null)
-        setIsNextButtonDisabled(true)
         setError(null)
 
-
-        if (activeStep !== 0) {
+        if (activeStep !== 0 || activeStep !== isAtLastStep()) {
             setActiveStep(prevState => prevState - 1)
         }
     }
