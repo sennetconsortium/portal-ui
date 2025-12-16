@@ -259,7 +259,7 @@ export default function BulkTransfer({
                 selector: row => row.dataset,
                 format: row =>  {
                   return (<SenNetPopover text={row.dataset_type} trigger={'hover'}
-                                                className={`popover-${row.dataset}`}><span title={row.dataset_type}>{row.dataset}</span></SenNetPopover>)
+                                                className={`popover-${row.dataset}`}><span>{row.dataset}</span></SenNetPopover>)
                 }
 
             },
@@ -267,7 +267,7 @@ export default function BulkTransfer({
                 name: 'File',
                 id: 'file_path',
                 selector: row => row.file_path,
-                format: row => row.file_path === '/' ? 'All files' : row.file_path,
+                format: row => row.file_path === '/' ? 'All files' : (<span title={row.file_path}>{row.file_path}</span>),
             },
             {
                 name: 'Delete',
