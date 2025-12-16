@@ -248,6 +248,10 @@ export default function BulkTransfer({
                 name: 'SenNet ID',
                 id: 'dataset',
                 selector: row => row.dataset,
+                format: row =>  {
+                  return (<SenNetPopover text={row.dataset_type} trigger={'hover'}
+                                                className={`popover-${row.dataset}`}><span title={row.dataset_type}>{row.dataset}</span></SenNetPopover>)
+                }
 
             },
             {
@@ -262,7 +266,6 @@ export default function BulkTransfer({
                 width: '100px',
                 selector: row => '',
                 format: row =>  {
-                    // Disable this button when the dataset is not 'primary'
                     return (
                         <Button className="pt-0 pb-0 btn-delete-file-transfer-row"
                                 variant="link"
@@ -321,7 +324,7 @@ export default function BulkTransfer({
                                         would like to transfer.</p>
                                     <div className="w-75 mx-auto mt-5 mb-5">
                                       <DataTable columns={getColumns()} data={tableData} pagination/>
-                                      <div className="text-right"><SenNetPopover text={<span>Add more files</span>}><button aria-label="Add" className="btn" onClick={addFileRow}><i className="bi bi-plus-square"></i></button></SenNetPopover></div>
+                                      <div className="text-right"><SenNetPopover text={<span>Add more files</span>} className="popover-add-files"><button aria-label="Add" className="btn" onClick={addFileRow}><i className="bi bi-plus-square"></i></button></SenNetPopover></div>
                                       <AncestorsModal data={[]} hideModal={hideModal}
                                         changeAncestor={addDataset} showHideModal={showHideModal}
                                         searchConfig={cloneDeep(SEARCH_FILES)}

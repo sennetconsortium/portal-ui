@@ -134,7 +134,8 @@ function TableResultsFiles({children, onRowClicked, filters, forData = false, ro
                     keys.shift()
                     list.push({
                         uuid,
-                        path: `/${keys.join('/')}`
+                        path: `/${keys.join('/')}`,
+                        dataset_type: selectedFilesModal.current[currentDatasetUuid.current]?.row?.dataset_type
                     })
 
                 }
