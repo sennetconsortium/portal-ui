@@ -15,6 +15,9 @@ import {TableResultsEntities} from '@/components/custom/TableResultsEntities'
 import { useSearchUIContext } from 'search-ui/components/core/SearchUIContext';
 import {Results, SearchBox} from '@elastic/react-search-ui';
 import {Form} from 'react-bootstrap';
+import { TableResultsFiles } from '../../TableResultsFiles';
+import { SEARCH_FILES } from '@/config/search/files';
+import { cloneDeep } from 'lodash';
 
 
 function BodyContent({ handleChangeAncestor, data, resultsFilterCallback }) {
@@ -56,7 +59,31 @@ function BodyContent({ handleChangeAncestor, data, resultsFilterCallback }) {
     )
 }
 
-function AncestorsModal({data, hideModal, changeAncestor, showHideModal, handleSearchFormSubmit, resultsFilterCallback, searchValue}) {
+export function FilesBodyContent({ handleChangeAncestor, data, resultsFilterCallback }) {
+    const { wasSearched, filters, addFilter, setStateProps, rawResponse } = useSearchUIContext();
+
+    useEffect(() => {
+       
+        if (resultsFilterCallback) {
+            resultsFilterCallback(cloneDeep(SEARCH_FILES), {addFilter, setStateProps})
+        }
+    }, [])
+
+    return (
+        <div
+            data-js-ada='.rdt_TableCell'
+            data-js-tooltip='{"trigger":".rdt_TableBody [role=\"row\"]", "diffY": -81, "data":".modal-content .rdt_Table", "class": "is-error"}'
+        >
+            {wasSearched && <Results filters={filters}
+                                     inModal={true}
+                                     onRowClicked={handleChangeAncestor}
+                                     rawResponse={rawResponse}
+                                     view={TableResultsFiles} />}
+        </div>
+    )
+}
+
+function AncestorsModal({data, changeAncestor, hideModal, showHideModal, handleSearchFormSubmit, resultsFilterCallback, searchValue, searchConfig, resultsBodyContent}) {
     const hasInit = useRef(false)
     useEffect(() => {
 
@@ -91,7 +118,7 @@ function AncestorsModal({data, hideModal, changeAncestor, showHideModal, handleS
             keyboard={false}
         >
             <Modal.Body>
-                <SearchUIContainer config={valid_dataset_ancestor_config} name={undefined} authState={authState}>
+                <SearchUIContainer config={searchConfig || valid_dataset_ancestor_config} name={undefined} authState={authState}>
                     <Layout
                         header={
                             <div className="search-box-header js-gtm--search">
@@ -130,7 +157,7 @@ function AncestorsModal({data, hideModal, changeAncestor, showHideModal, handleS
                                 <FacetsContent transformFunction={getUBKGFullName} />
                             </div>
                         }
-                        bodyContent={
+                        bodyContent={ resultsBodyContent ||
                             <BodyContent handleChangeAncestor={changeAncestor} data={data} resultsFilterCallback={resultsFilterCallback} />
                         }
                     />

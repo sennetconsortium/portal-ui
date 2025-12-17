@@ -23,6 +23,7 @@ function CLTModal({data, showModal, setShowModal}) {
             for (let e of list) {
                 manifest.push({
                     dataset: e.sennet_id,
+                    dataset_type: e.dataset_type,
                     file_path: '/'
                 })
             }
