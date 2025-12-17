@@ -347,6 +347,14 @@
 .sui-tools-right {
   display: flex;
   justify-content: flex-end;
+  @include mixins.lg {
+    .sui-columns-toggle {
+      margin-right: 10px;
+    }
+    .sui-react-select {
+      margin-right: 10px;
+    }
+  }
 }
 
 @include mixins.md-xlg-mx {

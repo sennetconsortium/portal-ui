@@ -19,6 +19,10 @@ import FileTransfersContext from "@/context/FileTransfersContext";
 import OptionsSelect from "../layout/entity/OptionsSelect";
 import SenNetPopover from "@/components/SenNetPopover";
 import DataTable from "react-data-table-component";
+import LnkIc from "../layout/LnkIc";
+import AncestorsModal, { FilesBodyContent } from "../edit/dataset/AncestorsModal";
+import { SEARCH_FILES } from "@/config/search/files";
+import { cloneDeep } from 'lodash';
 
 const EntityFormGroup = dynamic(() => import('@/components/custom/layout/entity/FormGroup'))
 
@@ -31,6 +35,7 @@ export default function BulkTransfer({
     const [activeStep, setActiveStep] = useState(0)
     const [isNextButtonDisabled, setIsNextButtonDisabled] = useState(false)
     const [validated, setValidated] = useState(false)
+    const [showHideModal, setShowHideModal] = useState(false)
 
 
     const stepLabels = ['Verify Dataset Files', 'Specify Filepath', 'Complete']
@@ -47,7 +52,8 @@ export default function BulkTransfer({
         transferFiles,
         globusCollections,
         globusRunURLs,
-        tableData
+        tableData,
+        setTableData
     } = useContext(FileTransfersContext)
 
     const ColorlibConnector = styled(StepConnector)(({theme}) => ({
@@ -150,13 +156,10 @@ export default function BulkTransfer({
     }
 
     const handleBack = () => {
-
         setJobData(null)
-        setIsNextButtonDisabled(true)
         setError(null)
 
-
-        if (activeStep !== 0) {
+        if (activeStep !== 0 || activeStep !== isAtLastStep()) {
             setActiveStep(prevState => prevState - 1)
         }
     }
@@ -206,19 +209,84 @@ export default function BulkTransfer({
         return 'Transfer Files'
     }
 
+    const updateSessionProp = (list) => {
+      sessionStorage.setItem('transferFiles', JSON.stringify(list))
+    }
+
+    const deleteFileRow = (e, row) => {
+      let filtered = tableData.filter((d) => d.dataset !== row.dataset)
+      updateSessionProp(filtered)
+      setTableData(filtered)
+    }
+    const resultsFilterCallback = (_config, {addFilter, setStateProps}) => {
+     
+    }
+
+    const handleAncestorsModalSearchSumit = (event, onSubmit) => {
+        onSubmit(event)
+    }
+
+    const addDataset = async (e, _, more) => {
+      let _list = Array.from(tableData)
+      if (!_list.length) {
+        setError(null)
+      }
+      let _dict = {}
+      // Avoid duplicates
+      for (let i of _list) {
+        _dict[i.dataset + i.file_path] = true
+      }
+      for (let i of more) {
+        if (!_dict[i.dataset + i.file_path]) {
+          _list.push(i)
+        }
+      }
+      updateSessionProp(_list)
+      setTableData(_list)
+      hideModal()
+    }
+
+    const hideModal = () => {
+        setShowHideModal(false)
+    }
+
+    const addFileRow = () => {
+      setShowHideModal(true)
+    }
+
     const getColumns = () => {
         return ([
             {
                 name: 'SenNet ID',
                 id: 'dataset',
                 selector: row => row.dataset,
+                format: row =>  {
+                  return (<SenNetPopover text={row.dataset_type} trigger={'hover'}
+                                                className={`popover-${row.dataset}`}><span>{row.dataset}</span></SenNetPopover>)
+                }
 
             },
             {
                 name: 'File',
                 id: 'file_path',
                 selector: row => row.file_path,
-                format: row => row.file_path === '/' ? 'All files' : row.file_path,
+                format: row => row.file_path === '/' ? 'All files' : (<span title={row.file_path}>{row.file_path}</span>),
+            },
+            {
+                name: 'Delete',
+                id: 'delete',
+                width: '100px',
+                selector: row => '',
+                format: row =>  {
+                    return (
+                        <Button className="pt-0 pb-0 btn-delete-file-transfer-row"
+                                variant="link"
+                                onClick={(e) => deleteFileRow(e, row)}
+                              >
+                            <i className={'bi bi-trash-fill'} style={{color:"red"}}/>
+                        </Button>
+                    )
+                },
             },
         ])
     }
@@ -250,13 +318,9 @@ export default function BulkTransfer({
                     <div>
                         <SenNetAlert variant={'warning'} className="clt-alert"
                                      text={<> For transferring data to the local
-                                         machine, the <a
-                                             href={'https://www.globus.org/globus-connect-personal'} target='_blank'
-                                             className={'lnk--ic'}>Globus
-                                             Connect Personal (GCP)<i
-                                                 className="bi bi-box-arrow-up-right"></i></a> endpoint must also be
+                                         machine, the <LnkIc text={'Globus Connect Personal (GCP)'} href='https://www.globus.org/globus-connect-personal' /> endpoint must also be
                                          up and
-                                         running.
+                                         running. <br /> To monitor the status of ongoing transfers, please visit <LnkIc text={'Globus Activity'} href="https://app.globus.org/activity" />
                                      </>}/>
 
                     </div>
@@ -270,7 +334,14 @@ export default function BulkTransfer({
                                 <>
                                     <p>Verify the following files for the associated <code>Dataset(s)</code> that you
                                         would like to transfer.</p>
-                                    <div className="w-75 mx-auto"><DataTable columns={getColumns()} data={tableData}/>
+                                    <div className="w-75 mx-auto mt-5 mb-5">
+                                      <DataTable columns={getColumns()} data={tableData} pagination/>
+                                      <div className="text-right"><SenNetPopover text={<span>Add more files</span>} className="popover-add-files"><button aria-label="Add" className="btn" onClick={addFileRow}><i className="bi bi-plus-square"></i></button></SenNetPopover></div>
+                                      <AncestorsModal data={[]} hideModal={hideModal}
+                                        changeAncestor={addDataset} showHideModal={showHideModal}
+                                        searchConfig={cloneDeep(SEARCH_FILES)}
+                                        resultsBodyContent={<FilesBodyContent handleChangeAncestor={addDataset} resultsFilterCallback={resultsFilterCallback} />}
+                                        handleSearchFormSubmit={handleAncestorsModalSearchSumit} />
                                     </div>
                                 </>
                             }

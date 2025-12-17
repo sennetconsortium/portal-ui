@@ -73,6 +73,7 @@ function SearchActions({
                            inModal,
                            setRefresh,
                            getModalSelectedFiles,
+                           handleOnRowClicked,
                            context = 'entities'
                        }) {
     const [anchorEl, setAnchorEl] = useState(null)
@@ -354,11 +355,12 @@ function SearchActions({
         window.location = APP_ROUTES.discover + '/compare?uuids=' + uuids.join(',')
     }
 
-    const goTransferFiles = () => {
+    const goTransferFiles = (e) => {
         let _list = []
         for (let e of selectedRows.current) {
             _list.push({
                 dataset: isFilesSearch() ? raw(e.dataset_sennet_id) : raw(e.sennet_id),
+                dataset_type: raw(e.dataset_type),
                 file_path: isFilesSearch() ? '/' : '/'
             })
         }
@@ -366,12 +368,19 @@ function SearchActions({
             for (let l of getModalSelectedFiles()) {
                 _list.push({
                     dataset: l.uuid, 
+                    dataset_type: l.dataset_type,
                     file_path: l.path
                 })
             }
         }
-        sessionStorage.setItem('transferFiles', JSON.stringify(_list))
-        window.location = '/transfers'
+        
+        if (inModal) {
+            handleOnRowClicked(_list, e)
+        } else {
+           sessionStorage.setItem('transferFiles', JSON.stringify(_list))
+           window.location = '/transfers' 
+        }
+        
     }
 
     const clearSelections = () => {
@@ -419,7 +428,7 @@ function SearchActions({
                     {getMenuItems()}
                 </MenuItem>}
 
-                {!inModal && <div>
+                {(!inModal || isFilesSearch()) && <div>
 
                     <MenuItem className={'dropdown-itemSubHeader dropdown-item'}
                               key={`export-all`}
