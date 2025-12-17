@@ -228,6 +228,9 @@ export default function BulkTransfer({
 
     const addDataset = async (e, _, more) => {
       let _list = Array.from(tableData)
+      if (!_list.length) {
+        setError(null)
+      }
       let _dict = {}
       // Avoid duplicates
       for (let i of _list) {
