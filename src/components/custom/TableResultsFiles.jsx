@@ -42,6 +42,7 @@ function TableResultsFiles({children, onRowClicked, filters, forData = false, ro
     const globusLinks = useRef({})
     const loadingComponent = <ShimmerText line={2} gap={10} />
     const [globusText, setGlobusText] = useState(loadingComponent)
+    const selectedTableRows = useRef(null)
 
     useEffect(() => {
         const totalFileCount = rawResponse?.record_count || 0
@@ -57,6 +58,31 @@ function TableResultsFiles({children, onRowClicked, filters, forData = false, ro
         setIsBusy(false)
 
     }, [rawResponse, pageSize, pageSize])
+
+    const handleChecboxSelectionsStates = (selectedRows, updateLabel) => {
+        if (selectedRows) {
+            selectedTableRows.current = selectedRows.current;
+        }
+        
+        const selected = Object.keys(selectedFilesModal.current)
+        let _dict = {}
+        if (selectedTableRows.current) {
+            for (let e of selectedTableRows.current) {
+                _dict[e.id] = true
+            }
+        }
+        for (let uuid of selected) {
+            let $el = $(`[name="select-row-${uuid}"]`)
+            if (!_dict[uuid] && $el.length) {
+                $el?.prop("indeterminate",true) 
+            }
+        }
+    }
+
+    useEffect(()=>{
+        handleChecboxSelectionsStates()
+        
+    }, [showModal])
 
     const raw = rowFn ? rowFn : ((obj) => obj ? (obj.raw || obj) : null)
 
@@ -121,10 +147,11 @@ function TableResultsFiles({children, onRowClicked, filters, forData = false, ro
         setShowModal(false)
     }
 
-    const getModalSelectedFiles = () => {
+    const getModalSelectedFiles = (uuids) => {
         let list = []
-        if (Object.keys(selectedFilesModal.current).length > 0) {
-            for (let key in selectedFilesModal.current[currentDatasetUuid.current].selected) {
+        let _uuids = uuids || Object.keys(selectedFilesModal.current)
+        for (let uuid of _uuids) {
+            for (let key in selectedFilesModal.current[uuid]?.selected) {
                 let keys = key.split(FILE_KEY_SEPARATOR)
                 let file = keys[keys.length - 1]
                 if (file.contains('.')) {
@@ -135,9 +162,8 @@ function TableResultsFiles({children, onRowClicked, filters, forData = false, ro
                     list.push({
                         uuid,
                         path: `/${keys.join('/')}`,
-                        dataset_type: selectedFilesModal.current[currentDatasetUuid.current]?.row?.dataset_type
+                        dataset_type: selectedFilesModal.current[uuid]?.row?.dataset_type
                     })
-
                 }
             }
         }
@@ -147,7 +173,7 @@ function TableResultsFiles({children, onRowClicked, filters, forData = false, ro
 
     const downloadManifest = () => {
         let manifestData = ''
-        let list = getModalSelectedFiles()
+        let list = getModalSelectedFiles([currentDatasetUuid.current])
         for (let l of list){
             manifestData += `${l.uuid} ${l.path}\n`
         }
@@ -366,6 +392,7 @@ function TableResultsFiles({children, onRowClicked, filters, forData = false, ro
         <>
             <TableResultsProvider onRowClicked={onRowClicked} columnsRef={currentColumns} getId={getId} rows={results} filters={filters} forData={forData} raw={raw} inModal={inModal}>
                 <ResultsBlock
+                    onCheckboxChange={handleChecboxSelectionsStates}
                     exportKind={'manifest'}
                     getModalSelectedFiles={getModalSelectedFiles}
                     index={'files'}
@@ -395,8 +422,7 @@ function TableResultsFiles({children, onRowClicked, filters, forData = false, ro
                                           className={'c-treeView__main--inTable'} />
                         </>
                 }
-                    handleSecondaryBtn={
-hideModal}
+                    handleSecondaryBtn={hideModal}
                     handlePrimaryBtn={downloadManifest}
                     showPrimaryBtn={showModalDownloadBtn}
                     primaryBtnLabel={'Download Manifest'}

@@ -2,7 +2,7 @@ import {useCallback, useEffect, useRef} from 'react'
 
 export const getCheckboxes = () => $('.rdt_TableBody [type=checkbox]')
 
-function useSelectedRows({pageNumber, pageSize}) {
+function useSelectedRows({pageNumber, pageSize, onCheckboxChange}) {
 
     const selectedRows = useRef([])
     const sel = {
@@ -60,9 +60,21 @@ function useSelectedRows({pageNumber, pageSize}) {
         // thus we will only update selected rows when state contains a value
         // and use our own custom listeners to manage deletions in handleCheckboxes
         if (state.selectedCount) {
-            selectedRows.current = state.selectedRows
+            let _dict = {}
+            for (let e of selectedRows.current) {
+                _dict[e.id] = true
+            }
+            for (let e of state.selectedRows) {
+                if (!_dict[e.id]) {
+                    selectedRows.current.push(e)
+                }
+            }
         }
-        updateLabel()
+        if (onCheckboxChange) {
+            onCheckboxChange(selectedRows, updateLabel)
+        } else {
+            updateLabel()
+        }
     }, [])
 
     // DataTable uses this to determine pre-selections like on pagination
