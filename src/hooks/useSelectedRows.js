@@ -72,9 +72,8 @@ function useSelectedRows({pageNumber, pageSize, onCheckboxChange}) {
         }
         if (onCheckboxChange) {
             onCheckboxChange(selectedRows, updateLabel)
-        } else {
-            updateLabel()
         }
+        updateLabel()
     }, [])
 
     // DataTable uses this to determine pre-selections like on pagination
