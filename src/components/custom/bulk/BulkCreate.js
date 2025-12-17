@@ -445,7 +445,7 @@ export default function BulkCreate({
     const isMouse = () => eq(subType, cache.sourceTypes.Mouse)
 
     const getTitle = () => {
-        if (!entityType || activeStep === 0) {
+        if (!entityType) {
             return `${getVerb()} ${isMetadata ? 'Metadata' : ''}`
         }
 

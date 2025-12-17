@@ -23,6 +23,7 @@ import LnkIc from "../layout/LnkIc";
 import AncestorsModal, { FilesBodyContent } from "../edit/dataset/AncestorsModal";
 import { SEARCH_FILES } from "@/config/search/files";
 import { cloneDeep } from 'lodash';
+import { APP_ROUTES } from "@/config/constants";
 
 const EntityFormGroup = dynamic(() => import('@/components/custom/layout/entity/FormGroup'))
 
@@ -42,7 +43,6 @@ export default function BulkTransfer({
     const [steps, setSteps] = useState(stepLabels)
     const [showModal, setShowModal] = useState(true)
 
-    const [jobData, setJobData] = useState(null)
 
     const _formData = useRef({})
     const {
@@ -130,8 +130,7 @@ export default function BulkTransfer({
         if (activeStep === 1) {
             transferFiles(_formData.current)
         } else if (activeStep === 2) {
-            handleReset()
-            return
+            window.location = APP_ROUTES.search
         }
         setActiveStep(prevState => prevState + 1)
     }
@@ -139,12 +138,9 @@ export default function BulkTransfer({
 
     const handleNext = () => {
         if (activeStep === 1) {
-            setIsNextButtonDisabled(true)
+            setIsNextButtonDisabled(false)
             const form = document.getElementById("transfers-form")
-            if (form.checkValidity() === false) {
-                console.log("Form is invalid")
-                setIsNextButtonDisabled(false)
-            } else {
+            if (form.checkValidity() === true) {
                 onNextStep()
             }
             setValidated(true)
@@ -156,23 +152,13 @@ export default function BulkTransfer({
     }
 
     const handleBack = () => {
-        setJobData(null)
+       
         setError(null)
 
         if (activeStep !== 0 || activeStep !== isAtLastStep()) {
             setActiveStep(prevState => prevState - 1)
         }
     }
-
-    const handleReset = () => {
-
-        setActiveStep(0)
-        setError(null)
-        setIsNextButtonDisabled(true)
-        setShowModal(true)
-        setJobData(null)
-    }
-
 
     function isStepFailed(index) {
         return error !== null && error[index] !== null && error[index] === true
@@ -202,11 +188,11 @@ export default function BulkTransfer({
     }
 
     const isAtLastStep = () => {
-        return (activeStep === 2 && getStepsLength() === 3 || activeStep === 3 && getStepsLength() === 4)
+        return (activeStep === getStepsLength() - 1)
     }
 
     const getTitle = () => {
-        return 'Transfer Files'
+        return 'Initiate Globus File Transfer'
     }
 
     const updateSessionProp = (list) => {
@@ -217,9 +203,6 @@ export default function BulkTransfer({
       let filtered = tableData.filter((d) => d.dataset !== row.dataset)
       updateSessionProp(filtered)
       setTableData(filtered)
-    }
-    const resultsFilterCallback = (_config, {addFilter, setStateProps}) => {
-     
     }
 
     const handleAncestorsModalSearchSumit = (event, onSubmit) => {
@@ -320,7 +303,7 @@ export default function BulkTransfer({
                                      text={<> For transferring data to the local
                                          machine, the <LnkIc text={'Globus Connect Personal (GCP)'} href='https://www.globus.org/globus-connect-personal' /> endpoint must also be
                                          up and
-                                         running. <br /> To monitor the status of ongoing transfers, please visit <LnkIc text={'Globus Activity'} href="https://app.globus.org/activity" />
+                                         running. <br/><br/> To monitor the status of ongoing transfers, please visit <LnkIc text={'Globus Activity'} href="https://app.globus.org/activity" />
                                      </>}/>
 
                     </div>
@@ -340,7 +323,7 @@ export default function BulkTransfer({
                                       <AncestorsModal data={[]} hideModal={hideModal}
                                         changeAncestor={addDataset} showHideModal={showHideModal}
                                         searchConfig={cloneDeep(SEARCH_FILES)}
-                                        resultsBodyContent={<FilesBodyContent handleChangeAncestor={addDataset} resultsFilterCallback={resultsFilterCallback} />}
+                                        resultsBodyContent={<FilesBodyContent handleChangeAncestor={addDataset} />}
                                         handleSearchFormSubmit={handleAncestorsModalSearchSumit} />
                                     </div>
                                 </>
@@ -409,7 +392,7 @@ export default function BulkTransfer({
                                         className={'form__flexGroup'}
                                         popover={<>Select the Globus collection you wish to transfer files to. </>}
                                         controlId={'destination_collection_id'}
-                                        isRequired={true} label={'Globus Collection'}
+                                        isRequired={true} label={'Destination Globus Collection'}
                                         onChange={onChangeGlobusCollection}
                                         data={globusCollections}/>
 
@@ -461,7 +444,7 @@ export default function BulkTransfer({
                                 onClick={handleNext}
                                 disabled={isNextButtonDisabled}
                             >
-                                {activeStep === getStepsLength() - 1 ? 'Finish' : 'Next'}
+                                {isAtLastStep() ? 'Finish' : 'Next'}
                             </Button>
                         </Grid>
                     </Grid>
