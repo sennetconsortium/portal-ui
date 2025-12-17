@@ -192,7 +192,7 @@ export default function BulkTransfer({
     }
 
     const getTitle = () => {
-        return 'Transfer Files'
+        return 'Initiate Globus File Transfer'
     }
 
     const updateSessionProp = (list) => {
@@ -303,7 +303,7 @@ export default function BulkTransfer({
                                      text={<> For transferring data to the local
                                          machine, the <LnkIc text={'Globus Connect Personal (GCP)'} href='https://www.globus.org/globus-connect-personal' /> endpoint must also be
                                          up and
-                                         running. <br /> To monitor the status of ongoing transfers, please visit <LnkIc text={'Globus Activity'} href="https://app.globus.org/activity" />
+                                         running. <br/><br/> To monitor the status of ongoing transfers, please visit <LnkIc text={'Globus Activity'} href="https://app.globus.org/activity" />
                                      </>}/>
 
                     </div>
@@ -392,7 +392,7 @@ export default function BulkTransfer({
                                         className={'form__flexGroup'}
                                         popover={<>Select the Globus collection you wish to transfer files to. </>}
                                         controlId={'destination_collection_id'}
-                                        isRequired={true} label={'Globus Collection'}
+                                        isRequired={true} label={'Destination Globus Collection'}
                                         onChange={onChangeGlobusCollection}
                                         data={globusCollections}/>
 

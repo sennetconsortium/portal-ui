@@ -435,7 +435,7 @@ function SearchActions({
                               onClick={hasSelectedDatasets() || (getModalSelectedFiles && getModalSelectedFiles().length > 0) ? goTransferFiles : undefined}>
                                  
                         <ListSubheader className={`${hasSelectedDatasets() || (getModalSelectedFiles && getModalSelectedFiles().length > 0) ? '' : 'disabled text-disabled'}`}>
-                            <SenNetPopover text={<span>Transfer <code>Dataset</code> files via Globus.</span>}>
+                            <SenNetPopover text={<span>Initiate a transfer of <code>Dataset</code> files via Globus.</span>}>
                             <i className="bi bi-arrow-right-square fs-6 mx-2"></i>
                             <span>Transfer Files &nbsp; <i className="bi bi-question-circle-fill"></i>
                         </span>
