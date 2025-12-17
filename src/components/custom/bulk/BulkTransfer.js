@@ -43,7 +43,6 @@ export default function BulkTransfer({
     const [steps, setSteps] = useState(stepLabels)
     const [showModal, setShowModal] = useState(true)
 
-    const [jobData, setJobData] = useState(null)
 
     const _formData = useRef({})
     const {
@@ -153,7 +152,7 @@ export default function BulkTransfer({
     }
 
     const handleBack = () => {
-        setJobData(null)
+       
         setError(null)
 
         if (activeStep !== 0 || activeStep !== isAtLastStep()) {
