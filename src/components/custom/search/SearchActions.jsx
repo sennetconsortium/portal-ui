@@ -9,7 +9,7 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import ListSubheader from '@mui/material/ListSubheader';
 
 import {PagingInfo} from "@elastic/react-search-ui";
-import {autoBlobDownloader, eq} from "@/components/custom/js/functions";
+import {autoBlobDownloader, eq, goToTransfers} from "@/components/custom/js/functions";
 import SenNetPopover from "@/components/SenNetPopover";
 import AppTutorial from "@/components/custom/layout/AppTutorial";
 import {getCheckboxes} from "@/hooks/useSelectedRows";
@@ -83,6 +83,7 @@ function SearchActions({
     const open = Boolean(anchorEl)
     const hasListened = useRef(false)
     const {isLoggedIn} = useContext(AppContext)
+    const modalSelectedFiles = actionHandlers.getModalSelectedFiles ? actionHandlers.getModalSelectedFiles() : []
 
 
     const handleClick = (event) => setAnchorEl(event.currentTarget)
@@ -160,6 +161,12 @@ function SearchActions({
                     }
                 }
             }
+            if (!isAll) {
+                for (let f of modalSelectedFiles) {
+                    manifestData += `${f.uuid} ${f.path}\n`
+                }  
+            }
+            
         } catch (e) {
             console.error(e);
         }
@@ -379,8 +386,7 @@ function SearchActions({
         if (inModal) {
             handleOnRowClicked(_list, e)
         } else {
-           sessionStorage.setItem('transferFiles', JSON.stringify(_list))
-           window.location = '/transfers' 
+           goToTransfers(_list)
         }
         
     }
@@ -399,7 +405,9 @@ function SearchActions({
 
     const isTransfersEnabled = hasSelectedDatasets() || hasFileTreeModalSelections()
 
-    const modalSelectedFiles = actionHandlers.getModalSelectedFiles ? actionHandlers.getModalSelectedFiles() : []
+    const getModalSelectedUuids = () => {
+        return actionHandlers.getModalSelectedUuids ? actionHandlers.getModalSelectedUuids() : []
+    }
 
     return (
         <div className='c-searchActions'>
@@ -476,7 +484,7 @@ function SearchActions({
                 <Divider/>
                 {(hasSelectedRows() || isTransfersEnabled) &&
                     <MenuItem className={'dropdown-item'} onClick={clearSelections}><i
-                        className="bi bi-x-circle"></i> &nbsp; Clear row selections ({selectedRows.current.length + modalSelectedFiles.length})
+                        className="bi bi-x-circle"></i> &nbsp; Clear row selections ({selectedRows.current.length + getModalSelectedUuids().length})
                     </MenuItem>}
 
 

@@ -4,7 +4,7 @@ import {
     autoBlobDownloader,
     checkFilterType,
     checkMultipleFilterType, getEntityViewUrl,
-    getUBKGFullName, matchArrayOrder,
+    getUBKGFullName, matchArrayOrder, goToTransfers
 } from './js/functions'
 import {getOptions} from "./search/ResultsPerPage";
 import ResultsBlock from "./search/ResultsBlock";
@@ -21,6 +21,7 @@ import {fetchGlobusFilepath, parseJson} from "@/lib/services";
 import {useSearchUIContext} from "@/search-ui/components/core/SearchUIContext";
 import DataUsageModal from "@/components/custom/entities/dataset/DataUsageModal";
 import {ShimmerText} from "react-shimmer-effects";
+import {Button} from 'react-bootstrap'
 
 function TableResultsFiles({children, onRowClicked, filters, forData = false, rowFn, inModal = false, rawResponse}) {
     const fileTypeField = 'file_extension'
@@ -166,6 +167,10 @@ function TableResultsFiles({children, onRowClicked, filters, forData = false, ro
         setShowModal(false)
     }
 
+    const getModalSelectedUuids = () => {
+        return Object.keys(selectedFilesModal.current)
+    }
+
     const getModalSelectedFiles = (uuids) => {
         let list = []
         let _uuids = uuids || Object.keys(selectedFilesModal.current)
@@ -200,6 +205,15 @@ function TableResultsFiles({children, onRowClicked, filters, forData = false, ro
         autoBlobDownloader([manifestData], 'text/plain', `data-manifest.txt`)
     }
 
+    const transferModalSelectedFiles = () => {
+        let list = getModalSelectedFiles([currentDatasetUuid.current])
+        let transferList = []
+        for (let l of list){
+            transferList.push({...l, dataset: l.uuid, file_path: l.path})
+        }
+        goToTransfers(transferList)
+    }
+
     const filesModal = (row) => {
         setGlobusText(loadingComponent)
         setShowModal(true)
@@ -221,7 +235,13 @@ function TableResultsFiles({children, onRowClicked, filters, forData = false, ro
         e.originalEvent.stopPropagation()
 
         let _dict = JSON.parse(JSON.stringify(e.value))
-        selectedFilesModal.current[row.dataset_uuid] = {row, selected: _dict}
+        let filesSelectedForRow = {}
+        for (let e in _dict) {
+            if (e.startsWith(row.dataset_uuid)) {
+                filesSelectedForRow[e] = _dict[e]
+            }
+        }
+        selectedFilesModal.current[row.dataset_uuid] = {row, selected: filesSelectedForRow}
 
         const show = Object.values(selectedFilesModal.current[row.dataset_uuid].selected).length > 0
         if (!show) {
@@ -417,7 +437,7 @@ function TableResultsFiles({children, onRowClicked, filters, forData = false, ro
                 <ResultsBlock
                     onCheckboxChange={handleChecboxSelectionsStates}
                     exportKind={'manifest'}
-                    searchActtionHandlers={{getModalSelectedFiles:getModalSelectedFiles, clearCheckboxSelections: clearCheckboxSelections}}
+                    searchActtionHandlers={{getModalSelectedFiles:getModalSelectedFiles, clearCheckboxSelections: clearCheckboxSelections, getModalSelectedUuids: getModalSelectedUuids}}
                     index={'files'}
                     isBusy={isBusy}
                     searchContext={getSearchContext}
@@ -449,6 +469,11 @@ function TableResultsFiles({children, onRowClicked, filters, forData = false, ro
                     handlePrimaryBtn={downloadManifest}
                     showPrimaryBtn={showModalDownloadBtn}
                     primaryBtnLabel={'Download Manifest'}
+                    footer={<>
+                        {showModalDownloadBtn && <Button variant="outline-primary rounded-0" onClick={transferModalSelectedFiles}>
+                            Transfer Files
+                        </Button>}
+                    </>}
                 />
             </TableResultsProvider>
         </>
