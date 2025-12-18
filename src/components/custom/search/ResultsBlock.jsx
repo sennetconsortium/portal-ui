@@ -12,16 +12,16 @@ import useSelectedRows from "@/hooks/useSelectedRows";
 
 /**
  * 
- * @param {function} getTableColumns
- * @param {function} onCheckboxChange
- * @param {bool} disableRowClick
+ * @param {function} getTableColumns Returns a list of DataTable type columns
+ * @param {function} onCheckboxChange A function to run on change of DataTable checkbox
+ * @param {bool} disableRowClick Whether or not to disable row clicks
  * @param {string} tableClassName
  * @param {array} defaultHiddenColumns
  * @param {function} searchContext The current context of the table, could be based on certain selected facets
  * @param {int} totalRows Number of rows for data table, useful when dealing with query aggregations and count won't be the rawResponse.record_count
  * @param {bool} isBusy
  * @param {string} index (entities | files)
- * @param {function} getModalSelectedFiles
+ * @param {function} getModalSelectedFiles Returns a list of files selected in row level FileTree modal
  * @returns 
  */
 function ResultsBlock({getTableColumns, onCheckboxChange, disableRowClick, tableClassName = '', 
