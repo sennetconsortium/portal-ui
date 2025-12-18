@@ -211,7 +211,12 @@ function TableResultsFiles({children, onRowClicked, filters, forData = false, ro
         for (let l of list){
             transferList.push({...l, dataset: l.uuid, file_path: l.path})
         }
-        goToTransfers(transferList)
+        if (inModal && onRowClicked) {
+            onRowClicked(null, null, transferList)
+        } else {
+          goToTransfers(transferList)  
+        }
+        
     }
 
     const filesModal = (row) => {
