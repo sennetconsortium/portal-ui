@@ -42,7 +42,6 @@ function TableResultsFiles({children, onRowClicked, filters, forData = false, ro
     const globusLinks = useRef({})
     const loadingComponent = <ShimmerText line={2} gap={10} />
     const [globusText, setGlobusText] = useState(loadingComponent)
-    const selectedTableRows = useRef(null)
 
     useEffect(() => {
         const totalFileCount = rawResponse?.record_count || 0
@@ -60,29 +59,49 @@ function TableResultsFiles({children, onRowClicked, filters, forData = false, ro
     }, [rawResponse, pageSize, pageSize])
 
     const handleChecboxSelectionsStates = (selectedRows, updateLabel) => {
-        if (selectedRows) {
-            selectedTableRows.current = selectedRows.current;
-        }
-        
-        const selected = Object.keys(selectedFilesModal.current)
+        const fileTreeSelectionsUuids = Object.keys(selectedFilesModal.current)
         let _dict = {}
-        if (selectedTableRows.current) {
-            for (let e of selectedTableRows.current) {
+        let fileTreeSelections = 0
+        let $el, _fileSelections
+
+        // Store table selections in key dict for constant time access
+        if (selectedRows.current) {
+            for (let e of selectedRows.current) {
                 _dict[e.id] = true
             }
         }
-        for (let uuid of selected) {
-            let $el = $(`[name="select-row-${uuid}"]`)
+        for (let uuid of fileTreeSelectionsUuids) {
+            $el = $(`[name="select-row-${uuid}"]`)
+            
             if (!_dict[uuid] && $el.length) {
-                $el?.prop("indeterminate",true) 
+                // If the row is not already selected from the main table, 
+                // set the checkbox to be indeterminate to reflect selections in the fileTree modal
+                $el?.prop("indeterminate", true) 
+                fileTreeSelections++
+            } else {
+                _fileSelections = {}
+                // The row is already selected on the main table, 
+                // so delete any fileTree modal selections on that row
+                for (let fileKey in fileSelection) {
+                    if (!fileKey.startsWith(uuid)) {
+                        _fileSelections[fileKey] = fileSelection[fileKey]
+                    }
+                }
+                // Update references to fileTree modal selections
+                setFileSelection(_fileSelections)
+                delete selectedFilesModal.current[uuid]
             }
+        }
+
+        if (updateLabel) {
+            updateLabel(fileTreeSelections)
         }
     }
 
-    useEffect(()=>{
-        handleChecboxSelectionsStates()
-        
-    }, [showModal])
+    const clearCheckboxSelections = () => {
+        setFileSelection(null)
+        selectedFilesModal.current = []
+    }
 
     const raw = rowFn ? rowFn : ((obj) => obj ? (obj.raw || obj) : null)
 
@@ -205,6 +224,10 @@ function TableResultsFiles({children, onRowClicked, filters, forData = false, ro
         selectedFilesModal.current[row.dataset_uuid] = {row, selected: _dict}
 
         const show = Object.values(selectedFilesModal.current[row.dataset_uuid].selected).length > 0
+        if (!show) {
+            // remove reference for ui checkbox states and corect list downloads
+            delete selectedFilesModal.current[row.dataset_uuid]
+        }
         setShowModalDownloadBtn( show )
         setFileSelection(e.value)
 
@@ -394,7 +417,7 @@ function TableResultsFiles({children, onRowClicked, filters, forData = false, ro
                 <ResultsBlock
                     onCheckboxChange={handleChecboxSelectionsStates}
                     exportKind={'manifest'}
-                    getModalSelectedFiles={getModalSelectedFiles}
+                    searchActtionHandlers={{getModalSelectedFiles:getModalSelectedFiles, clearCheckboxSelections: clearCheckboxSelections}}
                     index={'files'}
                     isBusy={isBusy}
                     searchContext={getSearchContext}

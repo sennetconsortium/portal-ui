@@ -16,16 +16,16 @@ import useSelectedRows from "@/hooks/useSelectedRows";
  * @param {function} onCheckboxChange A function to run on change of DataTable checkbox
  * @param {bool} disableRowClick Whether or not to disable row clicks
  * @param {string} tableClassName
- * @param {array} defaultHiddenColumns
+ * @param {array} defaultHiddenColumns List of DataTable type column.name
  * @param {function} searchContext The current context of the table, could be based on certain selected facets
  * @param {int} totalRows Number of rows for data table, useful when dealing with query aggregations and count won't be the rawResponse.record_count
  * @param {bool} isBusy
- * @param {string} index (entities | files)
- * @param {function} getModalSelectedFiles Returns a list of files selected in row level FileTree modal
+ * @param {string} index (entities | files) The type of search index
+ * @param {object} searchActtionHandlers An object of callbacks for various search actions. getModalSelectedFiles: Returns a list of files selected in row level FileTree modal
  * @returns 
  */
 function ResultsBlock({getTableColumns, onCheckboxChange, disableRowClick, tableClassName = '', 
-    exportKind, defaultHiddenColumns = [], searchContext, totalRows, isBusy, index, getModalSelectedFiles}) {
+    exportKind, defaultHiddenColumns = [], searchContext, totalRows, isBusy, index, searchActtionHandlers}) {
 
     const {
         getTableData,
@@ -63,9 +63,9 @@ function ResultsBlock({getTableColumns, onCheckboxChange, disableRowClick, table
             <div className='sui-layout-main-header'>
                 <div className='sui-layout-main-header__inner'>
 
-                    <SearchActions handleOnRowClicked={handleOnRowClicked} getModalSelectedFiles={getModalSelectedFiles} context={index} setRefresh={setRefresh} 
+                    <SearchActions handleOnRowClicked={handleOnRowClicked}  context={index} setRefresh={setRefresh} 
                     inModal={inModal} exportKind={exportKind} selectedRows={selectedRows} filters={filters} data={getTableData()} 
-                    raw={raw} hiddenColumns={hiddenColumns} columns={currentColumns.current} />
+                    raw={raw} hiddenColumns={hiddenColumns} columns={currentColumns.current} actionHandlers={searchActtionHandlers} />
                     
                     <div className='sui-tools-right'>
                         {rows.length > 0 && <ColumnsDropdown searchContext={searchContext} filters={filters} defaultHiddenColumns={defaultHiddenColumns} getTableColumns={getTableColumns} setHiddenColumns={setHiddenColumns}
