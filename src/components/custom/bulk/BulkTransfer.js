@@ -7,6 +7,8 @@ import StepLabel from '@mui/material/StepLabel';
 import DescriptionIcon from '@mui/icons-material/Description';
 import DoneOutlineIcon from '@mui/icons-material/DoneOutline';
 import DriveFileMoveIcon from '@mui/icons-material/DriveFileMove';
+import PublicIcon from '@mui/icons-material/Public'
+import LanIcon from '@mui/icons-material/Lan'
 import StepConnector, {stepConnectorClasses} from '@mui/material/StepConnector';
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
@@ -24,6 +26,8 @@ import AncestorsModal, { FilesBodyContent } from "../edit/dataset/AncestorsModal
 import { SEARCH_FILES } from "@/config/search/files";
 import { cloneDeep } from 'lodash';
 import { APP_ROUTES } from "@/config/constants";
+import Select, { components } from "react-select";
+const { Option } = components;
 
 const EntityFormGroup = dynamic(() => import('@/components/custom/layout/entity/FormGroup'))
 
@@ -140,7 +144,12 @@ export default function BulkTransfer({
         if (activeStep === 1) {
             setIsNextButtonDisabled(false)
             const form = document.getElementById("transfers-form")
-            if (form.checkValidity() === true) {
+            let customInvalid = false
+            if (!_formData.current.destination_collection_id || !_formData.current.destination_collection_id.length) {
+                customInvalid = true
+                $('.destinationCollectionSelect__control').addClass('form-inputInvalid')
+            }
+            if (form.checkValidity() === true && !customInvalid) {
                 onNextStep()
             }
             setValidated(true)
@@ -274,8 +283,8 @@ export default function BulkTransfer({
         ])
     }
 
-    const onChangeGlobusCollection = (e, id, value) => {
-        _onChange({value}, 'destination_collection_id')
+    const onChangeGlobusCollection = (e) => {
+        _onChange({value: e.value}, 'destination_collection_id')
     }
 
     const onCheckedChange = (e) => {
@@ -288,6 +297,46 @@ export default function BulkTransfer({
 
     const _onChange = (e, field) => {
         _formData.current = {..._formData.current, [field]: e.value}
+    }
+
+    const IconOption = props => (
+        <Option {...props}>
+            <p>{props.data.icon}
+            {props.data.label}</p>
+            <p><small style={{fontSize: '10px'}}>{props.data.description}</small></p>
+        </Option>
+    );
+
+    const getDestinationOptions = () => {
+        let options = []
+        
+        const icon = (v) => {
+            return v.startsWith('GCP') ? <LanIcon fontSize="small" /> : <PublicIcon fontSize="small" />
+        }
+        options.push({
+            value: '', label: '---', icon: '', description: ''
+        })
+        let selectedIndex = 0, index = 1
+        for (let o of globusCollections) {
+            options.push({
+                value: o.id, label: o.display_name, icon: icon(o.entity_type), description: o.description
+            })
+            if (_formData.current.destination_collection_id === o.id) {
+                selectedIndex = index 
+            }
+            index++
+        }
+        
+
+        return (<Select className="form__destinationCollectionSelect"
+            classNamePrefix="destinationCollectionSelect"
+            name='destination_collection_id'
+            //menuIsOpen={true} //for debugging
+            onChange={onChangeGlobusCollection}
+            defaultValue={options[selectedIndex]}
+            options={options}
+            components={{ Option: IconOption }}
+        />)
     }
 
     return (
@@ -386,18 +435,20 @@ export default function BulkTransfer({
                         <Grid container className={'form--transfer w-75 mx-auto mt-5'}>
                             <Form className={"w-100"} noValidate validated={validated} id={"transfers-form"}>
                                 <Grid item xs>
+                                    
                                     <OptionsSelect
-                                        propLabel='display_name'
-                                        propVal={'id'}
-                                        className={'form__flexGroup'}
+                                        className={'form__flexGroup form__destinationCollection'}
                                         popover={<>Select the Globus collection you wish to transfer files to. </>}
                                         controlId={'destination_collection_id'}
                                         isRequired={true} label={'Destination Globus Collection'}
-                                        onChange={onChangeGlobusCollection}
-                                        data={globusCollections}/>
+                                        view={<>
+                                            {getDestinationOptions()}
+                                        </>}
+                                        />
 
                                     <EntityFormGroup label='Destination File Path' controlId='destination_file_path'
                                                      className={'form__flexGroup'}
+                                                     value={_formData.current.destination_file_path}
                                                      onChange={onPathChange}
                                                      isRequired={true}
                                                      otherInputProps={{pattern: '^(\\/)?([^\\/\\0]+(\\/)?)+$'}}
