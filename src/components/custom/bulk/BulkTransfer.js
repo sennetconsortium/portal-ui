@@ -303,7 +303,7 @@ export default function BulkTransfer({
                                      text={<> For transferring data to the local
                                          machine, the <LnkIc text={'Globus Connect Personal (GCP)'} href='https://www.globus.org/globus-connect-personal' /> endpoint must also be
                                          up and
-                                         running. <br/><br/> To monitor the status of ongoing transfers, please visit <LnkIc text={'Globus Activity'} href="https://app.globus.org/activity" />
+                                         running. <p className="mt-1">To monitor the status of ongoing transfers, please visit <LnkIc text={'Globus Activity'} href="https://app.globus.org/activity" /></p>
                                      </>}/>
 
                     </div>

@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react'
+import React, {useEffect, useRef, useState, useContext} from 'react'
 import PropTypes from 'prop-types'
 import {alpha, styled} from '@mui/material/styles';
 import Button from '@mui/material/Button';
@@ -9,12 +9,13 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import ListSubheader from '@mui/material/ListSubheader';
 
 import {PagingInfo} from "@elastic/react-search-ui";
-import {autoBlobDownloader, eq} from "@/components/custom/js/functions";
+import {autoBlobDownloader, eq, goToTransfers} from "@/components/custom/js/functions";
 import SenNetPopover from "@/components/SenNetPopover";
 import AppTutorial from "@/components/custom/layout/AppTutorial";
 import {getCheckboxes} from "@/hooks/useSelectedRows";
 import {APP_ROUTES} from "@/config/constants";
 import {Divider} from "@mui/material";
+import AppContext from '@/context/AppContext';
 
 const StyledMenu = styled((props) => (
     <Menu
@@ -72,7 +73,7 @@ function SearchActions({
                            hiddenColumns,
                            inModal,
                            setRefresh,
-                           getModalSelectedFiles,
+                           actionHandlers = {},
                            handleOnRowClicked,
                            context = 'entities'
                        }) {
@@ -81,6 +82,8 @@ function SearchActions({
     const [showTutorial, setShowTutorial] = useState(false)
     const open = Boolean(anchorEl)
     const hasListened = useRef(false)
+    const {isLoggedIn} = useContext(AppContext)
+    const modalSelectedFiles = actionHandlers.getModalSelectedFiles ? actionHandlers.getModalSelectedFiles() : []
 
 
     const handleClick = (event) => setAnchorEl(event.currentTarget)
@@ -158,6 +161,12 @@ function SearchActions({
                     }
                 }
             }
+            if (!isAll) {
+                for (let f of modalSelectedFiles) {
+                    manifestData += `${f.uuid} ${f.path}\n`
+                }  
+            }
+            
         } catch (e) {
             console.error(e);
         }
@@ -364,8 +373,8 @@ function SearchActions({
                 file_path: isFilesSearch() ? '/' : '/'
             })
         }
-        if (getModalSelectedFiles) {
-            for (let l of getModalSelectedFiles()) {
+        if (actionHandlers.getModalSelectedFiles) {
+            for (let l of actionHandlers.getModalSelectedFiles()) {
                 _list.push({
                     dataset: l.uuid, 
                     dataset_type: l.dataset_type,
@@ -377,15 +386,27 @@ function SearchActions({
         if (inModal) {
             handleOnRowClicked(_list, e)
         } else {
-           sessionStorage.setItem('transferFiles', JSON.stringify(_list))
-           window.location = '/transfers' 
+           goToTransfers(_list)
         }
         
     }
 
     const clearSelections = () => {
         selectedRows.current = []
+        if (actionHandlers.clearCheckboxSelections) {
+            actionHandlers.clearCheckboxSelections()
+        }
         setRefresh(new Date().getMilliseconds())
+    }
+
+    const hasFileTreeModalSelections = () => {
+        return actionHandlers.getModalSelectedFiles && actionHandlers.getModalSelectedFiles().length > 0
+    }
+
+    const isTransfersEnabled = hasSelectedDatasets() || hasFileTreeModalSelections()
+
+    const getModalSelectedUuids = () => {
+        return actionHandlers.getModalSelectedUuids ? actionHandlers.getModalSelectedUuids() : []
     }
 
     return (
@@ -428,13 +449,13 @@ function SearchActions({
                     {getMenuItems()}
                 </MenuItem>}
 
-                {(!inModal || isFilesSearch()) && <div>
+                {isLoggedIn() && (!inModal || isFilesSearch()) && <div>
 
                     <MenuItem className={'dropdown-itemSubHeader dropdown-item'}
                               key={`export-all`}
-                              onClick={hasSelectedDatasets() || (getModalSelectedFiles && getModalSelectedFiles().length > 0) ? goTransferFiles : undefined}>
+                              onClick={isTransfersEnabled ? goTransferFiles : undefined}>
                                  
-                        <ListSubheader className={`${hasSelectedDatasets() || (getModalSelectedFiles && getModalSelectedFiles().length > 0) ? '' : 'disabled text-disabled'}`}>
+                        <ListSubheader className={`${isTransfersEnabled ? '' : 'disabled text-disabled'}`}>
                             <SenNetPopover text={<span>Initiate a transfer of <code>Dataset</code> files via Globus.</span>}>
                             <i className="bi bi-arrow-right-square fs-6 mx-2"></i>
                             <span>Transfer Files &nbsp; <i className="bi bi-question-circle-fill"></i>
@@ -461,9 +482,9 @@ function SearchActions({
 
                 </div>}
                 <Divider/>
-                {hasSelectedRows() &&
+                {(hasSelectedRows() || isTransfersEnabled) &&
                     <MenuItem className={'dropdown-item'} onClick={clearSelections}><i
-                        className="bi bi-x-circle"></i> &nbsp; Clear row selections ({selectedRows.current.length})
+                        className="bi bi-x-circle"></i> &nbsp; Clear row selections ({selectedRows.current.length + getModalSelectedUuids().length})
                     </MenuItem>}
 
 

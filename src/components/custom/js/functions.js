@@ -445,6 +445,11 @@ export function goToSearch() {
     goIntent('search')
 }
 
+export function goToTransfers(list) {
+    sessionStorage.setItem('transferFiles', JSON.stringify(list))
+    goIntent('transfers')
+}
+
 export function getEntityViewUrl(entity, uuid, {isEdit = false}, {redirectedFrom = ''}) {
     const pre = isEdit ? '/edit' : ''
     const redirect = redirectedFrom !== '' ? `&redirectedFrom=${redirectedFrom}` : ''

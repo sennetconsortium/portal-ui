@@ -12,6 +12,7 @@ import PropTypes from "prop-types"
  * @param {string} modalSize A modal size to apply according to React boostrap available sizes [xl, lg, sm]
  * @param {string} id A css id name to apply to the modal container; Default is 'js-modal'
  * @param {string} className A css class name to apply to the modal container
+ * @param {node} footer Custom modal footer
  * @param {function} handlePrimaryBtn A callback on click of the primary (right), blue colored button
  * @param {boolean} showPrimaryBtn Whether to show the primary (right), blue colored button
  * @param {string} primaryBtnClassName An additional css class name to apply to the primary (right), blue colored button; Default is ''
@@ -25,7 +26,7 @@ import PropTypes from "prop-types"
  * @returns {JSX.Element}
  * @constructor
  */
-const AppModal = ({ children, showModal = false, modalTitle, modalBody, modalSize, id = 'js-modal', className,
+const AppModal = ({ children, showModal = false, modalTitle, modalBody, modalSize, id = 'js-modal', className, footer,
                       handlePrimaryBtn, showPrimaryBtn = true, primaryBtnClassName = '', primaryBtnLabel = 'Home page', primaryBtnProps = {},
                       handleSecondaryBtn,  showSecondaryBtn = true, secondaryBtnClassName = '', secondaryBtnLabel = 'Close', secondaryBtnProps = {} }) => {
     const [size, setSize] = useState(modalSize)
@@ -45,7 +46,7 @@ const AppModal = ({ children, showModal = false, modalTitle, modalBody, modalSiz
                     {modalBody && <div key="modal-body">{modalBody}</div> }
                     {children}
                 </Modal.Body>
-                {(showSecondaryBtn || showPrimaryBtn) && <Modal.Footer>
+                {(showSecondaryBtn || showPrimaryBtn || footer) && <Modal.Footer>
                     {showSecondaryBtn &&
                         <Button {...secondaryBtnProps} variant="outline-secondary rounded-0" className={secondaryBtnClassName}  onClick={handleSecondaryBtn}>
                             {_t(secondaryBtnLabel)}
@@ -56,6 +57,7 @@ const AppModal = ({ children, showModal = false, modalTitle, modalBody, modalSiz
                             {_t(primaryBtnLabel)}
                         </Button>
                     }
+                    {footer}
                 </Modal.Footer>}
             </Modal>
         </section>

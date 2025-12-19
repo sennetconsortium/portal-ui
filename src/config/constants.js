@@ -10,6 +10,7 @@ export const APP_ROUTES = {...APP_ROUTES_NO_REDIRECT,
     discover: "/discover",
     sample: "/sample",
     organs: "/organs",
+    transfers: '/transfers'
 };
 
 export const SWAL_DEL_CONFIG = {

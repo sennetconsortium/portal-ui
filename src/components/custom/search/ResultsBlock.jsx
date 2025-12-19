@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState, useCallback, useRef} from 'react'
+import React, {useContext, useEffect, useState} from 'react'
 import PropTypes from 'prop-types'
 import {opsDict, ResultsPerPage} from "./ResultsPerPage";
 import DataTable from "react-data-table-component";
@@ -10,7 +10,22 @@ import Spinner from '../Spinner';
 import SearchActions from "@/components/custom/search/SearchActions";
 import useSelectedRows from "@/hooks/useSelectedRows";
 
-function ResultsBlock({getTableColumns, disableRowClick, tableClassName = '', exportKind, defaultHiddenColumns = [], searchContext, totalRows, isBusy, index, getModalSelectedFiles}) {
+/**
+ * 
+ * @param {function} getTableColumns Returns a list of DataTable type columns
+ * @param {function} onCheckboxChange A function to run on change of DataTable checkbox
+ * @param {bool} disableRowClick Whether or not to disable row clicks
+ * @param {string} tableClassName
+ * @param {array} defaultHiddenColumns List of DataTable type column.name
+ * @param {function} searchContext The current context of the table, could be based on certain selected facets
+ * @param {int} totalRows Number of rows for data table, useful when dealing with query aggregations and count won't be the rawResponse.record_count
+ * @param {bool} isBusy
+ * @param {string} index (entities | files) The type of search index
+ * @param {object} searchActtionHandlers An object of callbacks for various search actions. getModalSelectedFiles: Returns a list of files selected in row level FileTree modal
+ * @returns 
+ */
+function ResultsBlock({getTableColumns, onCheckboxChange, disableRowClick, tableClassName = '', 
+    exportKind, defaultHiddenColumns = [], searchContext, totalRows, isBusy, index, searchActtionHandlers}) {
 
     const {
         getTableData,
@@ -40,7 +55,7 @@ function ResultsBlock({getTableColumns, disableRowClick, tableClassName = '', ex
     }, [isBusy]);
 
     const [hiddenColumns, setHiddenColumns] = useState(null)
-    const {selectedRows,handleRowSelected, rowSelectCriteria  } = useSelectedRows({pageNumber, pageSize})
+    const {selectedRows, handleRowSelected, rowSelectCriteria  } = useSelectedRows({pageNumber, pageSize, onCheckboxChange})
     const [_, setRefresh] = useState(new Date().getMilliseconds())
 
     return (
@@ -48,7 +63,10 @@ function ResultsBlock({getTableColumns, disableRowClick, tableClassName = '', ex
             <div className='sui-layout-main-header'>
                 <div className='sui-layout-main-header__inner'>
 
-                    <SearchActions handleOnRowClicked={handleOnRowClicked} getModalSelectedFiles={getModalSelectedFiles} context={index} setRefresh={setRefresh} inModal={inModal} exportKind={exportKind} selectedRows={selectedRows} filters={filters} data={getTableData()} raw={raw} hiddenColumns={hiddenColumns} columns={currentColumns.current} />
+                    <SearchActions handleOnRowClicked={handleOnRowClicked}  context={index} setRefresh={setRefresh} 
+                    inModal={inModal} exportKind={exportKind} selectedRows={selectedRows} filters={filters} data={getTableData()} 
+                    raw={raw} hiddenColumns={hiddenColumns} columns={currentColumns.current} actionHandlers={searchActtionHandlers} />
+                    
                     <div className='sui-tools-right'>
                         {rows.length > 0 && <ColumnsDropdown searchContext={searchContext} filters={filters} defaultHiddenColumns={defaultHiddenColumns} getTableColumns={getTableColumns} setHiddenColumns={setHiddenColumns}
                                         currentColumns={currentColumns.current} />}
