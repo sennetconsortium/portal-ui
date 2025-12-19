@@ -14,11 +14,12 @@ import {Form} from 'react-bootstrap'
  * @param {function} onChange A callback when the select is changed
  * @param {array} data A list od objects to build the select options
  * @param {string} value A value to select by default
+ * @param {node} view A custom view
  * @param {string} propLabel The name of the property to use as option label
  * @param {string} propVal The name of the property to use as option value
  * @param {string} className A css class name to apply to the group container
  * */
-function OptionsSelect({popover, controlId, isRequired, isDisabled, label, onChange, data, value, propLabel='label', propVal='value', className = ''}) {
+function OptionsSelect({popover, controlId, isRequired, isDisabled, label, onChange, data, value, view, propLabel='label', propVal='value', className = ''}) {
     useEffect(() => {
     }, [])
 
@@ -49,7 +50,7 @@ function OptionsSelect({popover, controlId, isRequired, isDisabled, label, onCha
 
                 </Form.Label>
 
-                <Form.Select disabled={isDisabled} required={isRequired} aria-label={controlId}
+                {!view && <Form.Select disabled={isDisabled} required={isRequired} aria-label={controlId}
                              onChange={e => onChange(e, e.target.id, e.target.value)}>
                     <option value="">----</option>
                     {!Array.isArray(data) && getGroupedList()}
@@ -61,7 +62,9 @@ function OptionsSelect({popover, controlId, isRequired, isDisabled, label, onCha
                                 </option>
                             )
                         })}
-                </Form.Select>
+                    
+                </Form.Select>}
+                {view}
             </Form.Group>
         </>
     )

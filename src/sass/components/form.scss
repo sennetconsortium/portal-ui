@@ -2,6 +2,12 @@
 
 
 .form {
+  &-inputInvalid {
+    border-color: var(--bs-form-invalid-border-color) !important;
+    * {
+      color:  var(--bs-form-invalid-border-color) !important;
+    }
+  }
   &-group {
     position: relative;
 
@@ -31,6 +37,30 @@
   }
 
   &--transfer {
+    
+    .destinationCollectionSelect {
+      &__menu {
+        p {
+          small {
+            color: grey;
+            font-size: 10px;
+          }
+          margin: 0;
+          padding: 0;
+          line-height: 15px;
+
+        }
+    } 
+       &__option--is-selected {
+        p {
+          small {
+            color: white;
+          }
+        }
+      }
+    }
+    
+
     .form {
       &__flexGroup {
         text-align: left;
@@ -49,6 +79,19 @@
             &.form__labelWithCheck {
               margin-right: 10px;
             }
+          }
+        }
+      }
+
+      &__destinationCollection {
+      
+        @include mixins.lg { 
+          label {
+            width: 34%;
+          }
+          &Select {
+            text-align: left;
+            width: 66%;
           }
         }
       }
