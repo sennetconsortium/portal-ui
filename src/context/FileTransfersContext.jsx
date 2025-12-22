@@ -41,9 +41,13 @@ export const FileTransfersProvider = ({children}) => {
 
     async function transferFiles(formData) {
         setIsLoading(true)
+        let manifest = JSON.parse(JSON.stringify(tableData))
+        manifest.forEach(obj => {
+            delete obj.id; // Removes the DataTable required id field
+        })
         const body = {
             ...formData,
-            manifest: tableData
+            manifest
         }
         const requestOptions = {
             method: 'POST',
@@ -71,12 +75,15 @@ export const FileTransfersProvider = ({children}) => {
         const _entities = parseJson(sessionStorage.getItem('transferFiles'))
         if (Array.isArray(_entities)) {
             let list = []
+            let id = 1
             for (let e of _entities) {
                 list.push({
+                    id,
                     dataset: e.dataset,
                     dataset_type: e.dataset_type,
                     file_path: e.file_path || '/'
                 })
+                id++
             }
             setTableData(list)
             getGlobusCollections().then(() => {
