@@ -123,6 +123,12 @@ export default function BulkTransfer({
     useEffect(() => {
         setIsNextButtonDisabled(error != null)
     }, [error])
+    
+
+    useEffect(() => {
+        setIsNextButtonDisabled(!tableData.length)
+
+    }, [tableData])
 
 
     function getStepsLength() {
