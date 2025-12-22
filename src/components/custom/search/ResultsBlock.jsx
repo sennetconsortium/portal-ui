@@ -21,11 +21,11 @@ import useSelectedRows from "@/hooks/useSelectedRows";
  * @param {int} totalRows Number of rows for data table, useful when dealing with query aggregations and count won't be the rawResponse.record_count
  * @param {bool} isBusy
  * @param {string} index (entities | files) The type of search index
- * @param {object} searchActtionHandlers An object of callbacks for various search actions. getModalSelectedFiles: Returns a list of files selected in row level FileTree modal
+ * @param {object} searchActionHandlers An object of callbacks for various search actions. getModalSelectedFiles: Returns a list of files selected in row level FileTree modal
  * @returns 
  */
 function ResultsBlock({getTableColumns, onCheckboxChange, disableRowClick, tableClassName = '', 
-    exportKind, defaultHiddenColumns = [], searchContext, totalRows, isBusy, index, searchActtionHandlers}) {
+    exportKind, defaultHiddenColumns = [], searchContext, totalRows, isBusy, index, searchActionHandlers}) {
 
     const {
         getTableData,
@@ -65,7 +65,7 @@ function ResultsBlock({getTableColumns, onCheckboxChange, disableRowClick, table
 
                     <SearchActions handleOnRowClicked={handleOnRowClicked}  context={index} setRefresh={setRefresh} 
                     inModal={inModal} exportKind={exportKind} selectedRows={selectedRows} filters={filters} data={getTableData()} 
-                    raw={raw} hiddenColumns={hiddenColumns} columns={currentColumns.current} actionHandlers={searchActtionHandlers} />
+                    raw={raw} hiddenColumns={hiddenColumns} columns={currentColumns.current} actionHandlers={searchActionHandlers} />
                     
                     <div className='sui-tools-right'>
                         {rows.length > 0 && <ColumnsDropdown searchContext={searchContext} filters={filters} defaultHiddenColumns={defaultHiddenColumns} getTableColumns={getTableColumns} setHiddenColumns={setHiddenColumns}
