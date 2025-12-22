@@ -68,6 +68,10 @@ function useSelectedRows({pageNumber, pageSize, onCheckboxChange}) {
         
     }
 
+    const deselectRow = (id) => {
+        selectedRows.current = selectedRows.current.filter((e) => e.id !== id)
+    }
+
     const handleRowSelected = useCallback(state => {
         // For whatever weird reason,
         // the callback is triggered on pagination changes
@@ -90,7 +94,7 @@ function useSelectedRows({pageNumber, pageSize, onCheckboxChange}) {
             }
         }
         if (onCheckboxChange) {
-            onCheckboxChange(selectedRows, updateLabel)
+            onCheckboxChange({selectedRows, updateLabel, deselectRow})
         } else {
             updateLabel()
         }

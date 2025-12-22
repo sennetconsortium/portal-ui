@@ -43,6 +43,7 @@ function TableResultsFiles({children, onRowClicked, filters, forData = false, ro
     const globusLinks = useRef({})
     const loadingComponent = <ShimmerText line={2} gap={10} />
     const [globusText, setGlobusText] = useState(loadingComponent)
+    const deselectMainTableRow = useRef(null)
 
     useEffect(() => {
         const totalFileCount = rawResponse?.record_count || 0
@@ -59,11 +60,21 @@ function TableResultsFiles({children, onRowClicked, filters, forData = false, ro
 
     }, [rawResponse, pageSize, pageSize])
 
-    const handleChecboxSelectionsStates = (selectedRows, updateLabel) => {
+    /**
+     * A callback whenever rows are selected on the main table
+     * @param {array} selectedRows Rows selected on the main table
+     * @param {function} updateLabel The method that updates the counter label
+     * @param {function} deselectRow The method to call to deselect any main table rows
+     */
+    const handleChecboxSelectionsStates = ({selectedRows, updateLabel, deselectRow}) => {
         const fileTreeSelectionsUuids = Object.keys(selectedFilesModal.current)
         let _dict = {}
         let fileTreeSelections = 0
         let $el, _fileSelections
+
+        if (deselectRow) {
+            deselectMainTableRow.current = deselectRow
+        }
 
         // Store table selections in key dict for constant time access
         if (selectedRows.current) {
@@ -250,8 +261,13 @@ function TableResultsFiles({children, onRowClicked, filters, forData = false, ro
 
         const show = Object.values(selectedFilesModal.current[row.dataset_uuid].selected).length > 0
         if (!show) {
-            // remove reference for ui checkbox states and corect list downloads
+            // remove reference for ui checkbox states and correct list downloads
             delete selectedFilesModal.current[row.dataset_uuid]
+        }
+        if (deselectMainTableRow.current) {
+            // the user selected specifically from the file tree modal, 
+            // so uncheck row from main table (if selected)
+            deselectMainTableRow.current(row.dataset_uuid)
         }
         setShowModalDownloadBtn( show )
         setFileSelection(e.value)
@@ -260,7 +276,6 @@ function TableResultsFiles({children, onRowClicked, filters, forData = false, ro
 
     const defaultColumns = ({hasMultipleFileTypes = true, columns = [], _isLoggedIn}) => {
         let cols = []
-
 
         cols.push(
             {
@@ -442,7 +457,7 @@ function TableResultsFiles({children, onRowClicked, filters, forData = false, ro
                 <ResultsBlock
                     onCheckboxChange={handleChecboxSelectionsStates}
                     exportKind={'manifest'}
-                    searchActtionHandlers={{getModalSelectedFiles:getModalSelectedFiles, clearCheckboxSelections: clearCheckboxSelections, getModalSelectedUuids: getModalSelectedUuids}}
+                    searchActionHandlers={{getModalSelectedFiles:getModalSelectedFiles, clearCheckboxSelections: clearCheckboxSelections, getModalSelectedUuids: getModalSelectedUuids}}
                     index={'files'}
                     isBusy={isBusy}
                     searchContext={getSearchContext}
