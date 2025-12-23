@@ -9,7 +9,7 @@ export const FileTransfersProvider = ({children}) => {
     const [isLoading, setIsLoading] = useState(null)
     const [error, setError] = useState(null)
 
-    const [globusCollections, setGlobusCollections] = useState(null)
+    const [globusCollections, setGlobusCollections] = useState([])
     const [globusRunURLs, setGlobusRunURLs] = useState(null)
 
 
