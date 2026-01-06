@@ -11,6 +11,9 @@
 
 
   &-body {
+    .sui-layout-main {
+      overflow-x: auto;
+    }
     .sui-layout-body__inner {
       margin-top: 20px;
     }

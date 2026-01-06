@@ -4,7 +4,7 @@ import {
     autoBlobDownloader,
     checkFilterType,
     checkMultipleFilterType, getEntityViewUrl,
-    getUBKGFullName, matchArrayOrder,
+    getUBKGFullName, matchArrayOrder, goToTransfers
 } from './js/functions'
 import {getOptions} from "./search/ResultsPerPage";
 import ResultsBlock from "./search/ResultsBlock";
@@ -21,8 +21,9 @@ import {fetchGlobusFilepath, parseJson} from "@/lib/services";
 import {useSearchUIContext} from "@/search-ui/components/core/SearchUIContext";
 import DataUsageModal from "@/components/custom/entities/dataset/DataUsageModal";
 import {ShimmerText} from "react-shimmer-effects";
+import {Button} from 'react-bootstrap'
 
-function TableResultsFiles({children, filters, forData = false, rowFn, inModal = false, rawResponse}) {
+function TableResultsFiles({children, onRowClicked, filters, forData = false, rowFn, inModal = false, rawResponse}) {
     const fileTypeField = 'file_extension'
     let hasMultipleFileTypes = checkMultipleFilterType(filters, fileTypeField);
     const currentColumns = useRef([])
@@ -42,9 +43,10 @@ function TableResultsFiles({children, filters, forData = false, rowFn, inModal =
     const globusLinks = useRef({})
     const loadingComponent = <ShimmerText line={2} gap={10} />
     const [globusText, setGlobusText] = useState(loadingComponent)
+    const deselectMainTableRow = useRef(null)
 
     useEffect(() => {
-        const totalFileCount = rawResponse.record_count
+        const totalFileCount = rawResponse?.record_count || 0
         $('.sui-paging-info').append(` Datasets (<strong>${totalFileCount}</strong> Total Files)`)
     }, [])
 
@@ -53,19 +55,75 @@ function TableResultsFiles({children, filters, forData = false, rowFn, inModal =
         const results = transformResults(rawResponse)
         setResults(results)
         setSearchResponse(resp)
-        updatePagingInfo(resp.aggregations?.total_datasets.value, resp)
+        updatePagingInfo(resp?.aggregations?.total_datasets.value, resp)
         setIsBusy(false)
 
     }, [rawResponse, pageSize, pageSize])
+
+    /**
+     * A callback whenever rows are selected on the main table
+     * @param {array} selectedRows Rows selected on the main table
+     * @param {function} updateLabel The method that updates the counter label
+     * @param {function} deselectRow The method to call to deselect any main table rows
+     */
+    const handleChecboxSelectionsStates = ({selectedRows, updateLabel, deselectRow}) => {
+        const fileTreeSelectionsUuids = Object.keys(selectedFilesModal.current)
+        let _dict = {}
+        let fileTreeSelections = 0
+        let $el, _fileSelections
+
+        if (deselectRow) {
+            deselectMainTableRow.current = deselectRow
+        }
+
+        // Store table selections in key dict for constant time access
+        if (selectedRows.current) {
+            for (let e of selectedRows.current) {
+                _dict[e.id] = true
+            }
+        }
+        for (let uuid of fileTreeSelectionsUuids) {
+            $el = $(`[name="select-row-${uuid}"]`)
+            
+            if (!_dict[uuid] && $el.length) {
+                // If the row is not already selected from the main table, 
+                // set the checkbox to be indeterminate to reflect selections in the fileTree modal
+                $el?.prop("indeterminate", true) 
+                fileTreeSelections++
+            } else {
+                _fileSelections = {}
+                // The row is already selected on the main table, 
+                // so delete any fileTree modal selections on that row
+                for (let fileKey in fileSelection) {
+                    if (!fileKey.startsWith(uuid)) {
+                        _fileSelections[fileKey] = fileSelection[fileKey]
+                    }
+                }
+                // Update references to fileTree modal selections
+                setFileSelection(_fileSelections)
+                delete selectedFilesModal.current[uuid]
+            }
+        }
+
+        if (updateLabel) {
+            updateLabel(fileTreeSelections)
+        }
+    }
+
+    const clearCheckboxSelections = () => {
+        setFileSelection(null)
+        selectedFilesModal.current = []
+    }
 
     const raw = rowFn ? rowFn : ((obj) => obj ? (obj.raw || obj) : null)
 
     function updatePagingInfo(resultsCount, resp) {
         $('.sui-paging-info strong').eq(1).text(resultsCount)
-        $('.sui-paging-info strong').eq(2).text(resp.record_count)
+        $('.sui-paging-info strong').eq(2).text(resp?.record_count)
     }
 
     function transformResults(resp) {
+        if (!resp) return []
         const results = {}
 
         // group files by dataset_uuid
@@ -120,10 +178,15 @@ function TableResultsFiles({children, filters, forData = false, rowFn, inModal =
         setShowModal(false)
     }
 
-    const getModalSelectedFiles = () => {
+    const getModalSelectedUuids = () => {
+        return Object.keys(selectedFilesModal.current)
+    }
+
+    const getModalSelectedFiles = (uuids) => {
         let list = []
-        if (Object.keys(selectedFilesModal.current).length > 0) {
-            for (let key in selectedFilesModal.current[currentDatasetUuid.current].selected) {
+        let _uuids = uuids || Object.keys(selectedFilesModal.current)
+        for (let uuid of _uuids) {
+            for (let key in selectedFilesModal.current[uuid]?.selected) {
                 let keys = key.split(FILE_KEY_SEPARATOR)
                 let file = keys[keys.length - 1]
                 if (file.contains('.')) {
@@ -133,9 +196,9 @@ function TableResultsFiles({children, filters, forData = false, rowFn, inModal =
                     keys.shift()
                     list.push({
                         uuid,
-                        path: `/${keys.join('/')}`
+                        path: `/${keys.join('/')}`,
+                        dataset_type: selectedFilesModal.current[uuid]?.row?.dataset_type
                     })
-
                 }
             }
         }
@@ -145,12 +208,26 @@ function TableResultsFiles({children, filters, forData = false, rowFn, inModal =
 
     const downloadManifest = () => {
         let manifestData = ''
-        let list = getModalSelectedFiles()
+        let list = getModalSelectedFiles([currentDatasetUuid.current])
         for (let l of list){
             manifestData += `${l.uuid} ${l.path}\n`
         }
 
         autoBlobDownloader([manifestData], 'text/plain', `data-manifest.txt`)
+    }
+
+    const transferModalSelectedFiles = () => {
+        let list = getModalSelectedFiles([currentDatasetUuid.current])
+        let transferList = []
+        for (let l of list){
+            transferList.push({...l, dataset: l.uuid, file_path: l.path})
+        }
+        if (inModal && onRowClicked) {
+            onRowClicked(null, null, transferList)
+        } else {
+          goToTransfers(transferList)  
+        }
+        
     }
 
     const filesModal = (row) => {
@@ -174,9 +251,24 @@ function TableResultsFiles({children, filters, forData = false, rowFn, inModal =
         e.originalEvent.stopPropagation()
 
         let _dict = JSON.parse(JSON.stringify(e.value))
-        selectedFilesModal.current[row.dataset_uuid] = {row, selected: _dict}
+        let filesSelectedForRow = {}
+        for (let e in _dict) {
+            if (e.startsWith(row.dataset_uuid)) {
+                filesSelectedForRow[e] = _dict[e]
+            }
+        }
+        selectedFilesModal.current[row.dataset_uuid] = {row, selected: filesSelectedForRow}
 
         const show = Object.values(selectedFilesModal.current[row.dataset_uuid].selected).length > 0
+        if (!show) {
+            // remove reference for ui checkbox states and correct list downloads
+            delete selectedFilesModal.current[row.dataset_uuid]
+        }
+        if (deselectMainTableRow.current) {
+            // the user selected specifically from the file tree modal, 
+            // so uncheck row from main table (if selected)
+            deselectMainTableRow.current(row.dataset_uuid)
+        }
         setShowModalDownloadBtn( show )
         setFileSelection(e.value)
 
@@ -184,7 +276,6 @@ function TableResultsFiles({children, filters, forData = false, rowFn, inModal =
 
     const defaultColumns = ({hasMultipleFileTypes = true, columns = [], _isLoggedIn}) => {
         let cols = []
-
 
         cols.push(
             {
@@ -362,16 +453,17 @@ function TableResultsFiles({children, filters, forData = false, rowFn, inModal =
 
     return (
         <>
-            <TableResultsProvider columnsRef={currentColumns} getId={getId} rows={results} filters={filters} forData={forData} raw={raw} inModal={inModal}>
+            <TableResultsProvider onRowClicked={onRowClicked} columnsRef={currentColumns} getId={getId} rows={results} filters={filters} forData={forData} raw={raw} inModal={inModal}>
                 <ResultsBlock
+                    onCheckboxChange={handleChecboxSelectionsStates}
                     exportKind={'manifest'}
-                    getModalSelectedFiles={getModalSelectedFiles}
+                    searchActionHandlers={{getModalSelectedFiles:getModalSelectedFiles, clearCheckboxSelections: clearCheckboxSelections, getModalSelectedUuids: getModalSelectedUuids}}
                     index={'files'}
                     isBusy={isBusy}
                     searchContext={getSearchContext}
                     tableClassName={'rdt_Results--Files'}
                     getTableColumns={getTableColumns}
-                    totalRows={searchResponse.aggregations?.total_datasets.value}
+                    totalRows={searchResponse?.aggregations?.total_datasets.value}
                 />
                 <AppModal
                     className={`modal--filesView`}
@@ -393,11 +485,15 @@ function TableResultsFiles({children, filters, forData = false, rowFn, inModal =
                                           className={'c-treeView__main--inTable'} />
                         </>
                 }
-                    handleSecondaryBtn={
-hideModal}
+                    handleSecondaryBtn={hideModal}
                     handlePrimaryBtn={downloadManifest}
                     showPrimaryBtn={showModalDownloadBtn}
                     primaryBtnLabel={'Download Manifest'}
+                    footer={<>
+                        {showModalDownloadBtn && <Button variant="outline-primary rounded-0" onClick={transferModalSelectedFiles}>
+                            Transfer Files
+                        </Button>}
+                    </>}
                 />
             </TableResultsProvider>
         </>

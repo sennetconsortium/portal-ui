@@ -7,6 +7,8 @@ import StepLabel from '@mui/material/StepLabel';
 import DescriptionIcon from '@mui/icons-material/Description';
 import DoneOutlineIcon from '@mui/icons-material/DoneOutline';
 import DriveFileMoveIcon from '@mui/icons-material/DriveFileMove';
+import PublicIcon from '@mui/icons-material/Public'
+import LanIcon from '@mui/icons-material/Lan'
 import StepConnector, {stepConnectorClasses} from '@mui/material/StepConnector';
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
@@ -19,6 +21,13 @@ import FileTransfersContext from "@/context/FileTransfersContext";
 import OptionsSelect from "../layout/entity/OptionsSelect";
 import SenNetPopover from "@/components/SenNetPopover";
 import DataTable from "react-data-table-component";
+import LnkIc from "../layout/LnkIc";
+import AncestorsModal, { FilesBodyContent } from "../edit/dataset/AncestorsModal";
+import { SEARCH_FILES } from "@/config/search/files";
+import { cloneDeep } from 'lodash';
+import { APP_ROUTES } from "@/config/constants";
+import Select, { components } from "react-select";
+const { Option } = components;
 
 const EntityFormGroup = dynamic(() => import('@/components/custom/layout/entity/FormGroup'))
 
@@ -31,13 +40,13 @@ export default function BulkTransfer({
     const [activeStep, setActiveStep] = useState(0)
     const [isNextButtonDisabled, setIsNextButtonDisabled] = useState(false)
     const [validated, setValidated] = useState(false)
+    const [showHideModal, setShowHideModal] = useState(false)
 
 
     const stepLabels = ['Verify Dataset Files', 'Specify Filepath', 'Complete']
     const [steps, setSteps] = useState(stepLabels)
     const [showModal, setShowModal] = useState(true)
 
-    const [jobData, setJobData] = useState(null)
 
     const _formData = useRef({})
     const {
@@ -47,7 +56,8 @@ export default function BulkTransfer({
         transferFiles,
         globusCollections,
         globusRunURLs,
-        tableData
+        tableData,
+        setTableData
     } = useContext(FileTransfersContext)
 
     const ColorlibConnector = styled(StepConnector)(({theme}) => ({
@@ -113,6 +123,12 @@ export default function BulkTransfer({
     useEffect(() => {
         setIsNextButtonDisabled(error != null)
     }, [error])
+    
+
+    useEffect(() => {
+        setIsNextButtonDisabled(!tableData.length)
+
+    }, [tableData])
 
 
     function getStepsLength() {
@@ -124,8 +140,7 @@ export default function BulkTransfer({
         if (activeStep === 1) {
             transferFiles(_formData.current)
         } else if (activeStep === 2) {
-            handleReset()
-            return
+            window.location = APP_ROUTES.search
         }
         setActiveStep(prevState => prevState + 1)
     }
@@ -133,12 +148,14 @@ export default function BulkTransfer({
 
     const handleNext = () => {
         if (activeStep === 1) {
-            setIsNextButtonDisabled(true)
+            setIsNextButtonDisabled(false)
             const form = document.getElementById("transfers-form")
-            if (form.checkValidity() === false) {
-                console.log("Form is invalid")
-                setIsNextButtonDisabled(false)
-            } else {
+            let customInvalid = false
+            if (!_formData.current.destination_collection_id || !_formData.current.destination_collection_id.length) {
+                customInvalid = true
+                $('.destinationCollectionSelect__control').addClass('form-inputInvalid')
+            }
+            if (form.checkValidity() === true && !customInvalid) {
                 onNextStep()
             }
             setValidated(true)
@@ -150,26 +167,13 @@ export default function BulkTransfer({
     }
 
     const handleBack = () => {
-
-        setJobData(null)
-        setIsNextButtonDisabled(true)
+       
         setError(null)
 
-
-        if (activeStep !== 0) {
+        if (activeStep !== 0 || activeStep !== isAtLastStep()) {
             setActiveStep(prevState => prevState - 1)
         }
     }
-
-    const handleReset = () => {
-
-        setActiveStep(0)
-        setError(null)
-        setIsNextButtonDisabled(true)
-        setShowModal(true)
-        setJobData(null)
-    }
-
 
     function isStepFailed(index) {
         return error !== null && error[index] !== null && error[index] === true
@@ -199,11 +203,53 @@ export default function BulkTransfer({
     }
 
     const isAtLastStep = () => {
-        return (activeStep === 2 && getStepsLength() === 3 || activeStep === 3 && getStepsLength() === 4)
+        return (activeStep === getStepsLength() - 1)
     }
 
     const getTitle = () => {
-        return 'Transfer Files'
+        return 'Initiate Globus File Transfer'
+    }
+
+    const updateSessionProp = (list) => {
+      sessionStorage.setItem('transferFiles', JSON.stringify(list))
+    }
+
+    const deleteFileRow = (e, row) => {
+      let filtered = tableData.filter((d) => d.dataset !== row.dataset)
+      updateSessionProp(filtered)
+      setTableData(filtered)
+    }
+
+    const handleAncestorsModalSearchSumit = (event, onSubmit) => {
+        onSubmit(event)
+    }
+
+    const addDataset = async (e, _, more) => {
+      let _list = Array.from(tableData)
+      if (!_list.length) {
+        setError(null)
+      }
+      let _dict = {}
+      // Avoid duplicates
+      for (let i of _list) {
+        _dict[i.dataset + i.file_path] = true
+      }
+      for (let i of more) {
+        if (!_dict[i.dataset + i.file_path]) {
+          _list.push(i)
+        }
+      }
+      updateSessionProp(_list)
+      setTableData(_list)
+      hideModal()
+    }
+
+    const hideModal = () => {
+        setShowHideModal(false)
+    }
+
+    const addFileRow = () => {
+      setShowHideModal(true)
     }
 
     const getColumns = () => {
@@ -212,19 +258,39 @@ export default function BulkTransfer({
                 name: 'SenNet ID',
                 id: 'dataset',
                 selector: row => row.dataset,
+                format: row =>  {
+                  return (<SenNetPopover text={row.dataset_type} trigger={'hover'}
+                                                className={`popover-${row.dataset}`}><span>{row.dataset}</span></SenNetPopover>)
+                }
 
             },
             {
                 name: 'File',
                 id: 'file_path',
                 selector: row => row.file_path,
-                format: row => row.file_path === '/' ? 'All files' : row.file_path,
+                format: row => row.file_path === '/' ? 'All files' : (<span title={row.file_path}>{row.file_path}</span>),
+            },
+            {
+                name: 'Delete',
+                id: 'delete',
+                width: '100px',
+                selector: row => '',
+                format: row =>  {
+                    return (
+                        <Button className="pt-0 pb-0 btn-delete-file-transfer-row"
+                                variant="link"
+                                onClick={(e) => deleteFileRow(e, row)}
+                              >
+                            <i className={'bi bi-trash-fill'} style={{color:"red"}}/>
+                        </Button>
+                    )
+                },
             },
         ])
     }
 
-    const onChangeGlobusCollection = (e, id, value) => {
-        _onChange({value}, 'destination_collection_id')
+    const onChangeGlobusCollection = (e) => {
+        _onChange({value: e.value}, 'destination_collection_id')
     }
 
     const onCheckedChange = (e) => {
@@ -239,6 +305,46 @@ export default function BulkTransfer({
         _formData.current = {..._formData.current, [field]: e.value}
     }
 
+    const IconOption = props => (
+        <Option {...props}>
+            <p>{props.data.icon}
+            {props.data.label}</p>
+            <p><small style={{fontSize: '10px'}}>{props.data.description}</small></p>
+        </Option>
+    );
+
+    const getDestinationOptions = () => {
+        let options = []
+        
+        const icon = (v) => {
+            return v.startsWith('GCP') ? <LanIcon fontSize="small" /> : <PublicIcon fontSize="small" />
+        }
+        options.push({
+            value: '', label: '---', icon: '', description: ''
+        })
+        let selectedIndex = 0, index = 1
+        for (let o of globusCollections) {
+            options.push({
+                value: o.id, label: o.display_name, icon: icon(o.entity_type), description: o.description
+            })
+            if (_formData.current.destination_collection_id === o.id) {
+                selectedIndex = index 
+            }
+            index++
+        }
+        
+
+        return (<Select className="form__destinationCollectionSelect"
+            classNamePrefix="destinationCollectionSelect"
+            name='destination_collection_id'
+            //menuIsOpen={true} //for debugging
+            onChange={onChangeGlobusCollection}
+            defaultValue={options[selectedIndex]}
+            options={options}
+            components={{ Option: IconOption }}
+        />)
+    }
+
     return (
         <div className='main-wrapper' data-js-ada='modal'>
             <Container sx={{mt: 5}}>
@@ -250,13 +356,9 @@ export default function BulkTransfer({
                     <div>
                         <SenNetAlert variant={'warning'} className="clt-alert"
                                      text={<> For transferring data to the local
-                                         machine, the <a
-                                             href={'https://www.globus.org/globus-connect-personal'} target='_blank'
-                                             className={'lnk--ic'}>Globus
-                                             Connect Personal (GCP)<i
-                                                 className="bi bi-box-arrow-up-right"></i></a> endpoint must also be
+                                         machine, the <LnkIc text={'Globus Connect Personal (GCP)'} href='https://www.globus.org/globus-connect-personal' /> endpoint must also be
                                          up and
-                                         running.
+                                         running. <p className="mt-1">To monitor the status of ongoing transfers, please visit <LnkIc text={'Globus Activity'} href="https://app.globus.org/activity" /></p>
                                      </>}/>
 
                     </div>
@@ -270,7 +372,14 @@ export default function BulkTransfer({
                                 <>
                                     <p>Verify the following files for the associated <code>Dataset(s)</code> that you
                                         would like to transfer.</p>
-                                    <div className="w-75 mx-auto"><DataTable columns={getColumns()} data={tableData}/>
+                                    <div className="w-75 mx-auto mt-5 mb-5">
+                                      <DataTable columns={getColumns()} data={tableData} pagination/>
+                                      <div className="text-right"><SenNetPopover text={<span>Add more files</span>} className="popover-add-files"><button aria-label="Add" className="btn" onClick={addFileRow}><i className="bi bi-plus-square"></i></button></SenNetPopover></div>
+                                      <AncestorsModal data={[]} hideModal={hideModal}
+                                        changeAncestor={addDataset} showHideModal={showHideModal}
+                                        searchConfig={cloneDeep(SEARCH_FILES)}
+                                        resultsBodyContent={<FilesBodyContent handleChangeAncestor={addDataset} />}
+                                        handleSearchFormSubmit={handleAncestorsModalSearchSumit} />
                                     </div>
                                 </>
                             }
@@ -332,18 +441,20 @@ export default function BulkTransfer({
                         <Grid container className={'form--transfer w-75 mx-auto mt-5'}>
                             <Form className={"w-100"} noValidate validated={validated} id={"transfers-form"}>
                                 <Grid item xs>
+                                    
                                     <OptionsSelect
-                                        propLabel='display_name'
-                                        propVal={'id'}
-                                        className={'form__flexGroup'}
+                                        className={'form__flexGroup form__destinationCollection'}
                                         popover={<>Select the Globus collection you wish to transfer files to. </>}
                                         controlId={'destination_collection_id'}
-                                        isRequired={true} label={'Globus Collection'}
-                                        onChange={onChangeGlobusCollection}
-                                        data={globusCollections}/>
+                                        isRequired={true} label={'Destination Globus Collection'}
+                                        view={<>
+                                            {getDestinationOptions()}
+                                        </>}
+                                        />
 
                                     <EntityFormGroup label='Destination File Path' controlId='destination_file_path'
                                                      className={'form__flexGroup'}
+                                                     value={_formData.current.destination_file_path}
                                                      onChange={onPathChange}
                                                      isRequired={true}
                                                      otherInputProps={{pattern: '^(\\/)?([^\\/\\0]+(\\/)?)+$'}}
@@ -390,7 +501,7 @@ export default function BulkTransfer({
                                 onClick={handleNext}
                                 disabled={isNextButtonDisabled}
                             >
-                                {activeStep === getStepsLength() - 1 ? 'Finish' : 'Next'}
+                                {isAtLastStep() ? 'Finish' : 'Next'}
                             </Button>
                         </Grid>
                     </Grid>

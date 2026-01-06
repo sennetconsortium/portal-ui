@@ -7,7 +7,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Box from '@mui/material/Box';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import {autoBlobDownloader} from '../../js/functions';
+import {autoBlobDownloader, goToTransfers} from '../../js/functions';
 import LnkIc from '../../layout/LnkIc';
 import Button from "react-bootstrap/Button";
 
@@ -23,6 +23,7 @@ function CLTModal({data, showModal, setShowModal}) {
             for (let e of list) {
                 manifest.push({
                     dataset: e.sennet_id,
+                    dataset_type: e.dataset_type,
                     file_path: '/'
                 })
             }
@@ -34,8 +35,7 @@ function CLTModal({data, showModal, setShowModal}) {
             buildManifest(data.processed)
         }
         if (manifest.length) {
-            sessionStorage.setItem('transferFiles', JSON.stringify(manifest))
-            window.location = '/transfers'
+            goToTransfers(manifest)
         }
     }
 

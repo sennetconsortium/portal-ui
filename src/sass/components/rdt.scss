@@ -39,6 +39,13 @@
           padding: .4em 0;
         }
       }
+      .rdt_TableCell {
+        input[type="checkbox"]:indeterminate {
+      
+          accent-color: grey; 
+        }
+      }
+      
     }
     &--hascheckboxes {
       @media (max-width: 859px) {

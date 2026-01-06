@@ -2,7 +2,7 @@ import {useCallback, useEffect, useRef} from 'react'
 
 export const getCheckboxes = () => $('.rdt_TableBody [type=checkbox]')
 
-function useSelectedRows({pageNumber, pageSize}) {
+function useSelectedRows({pageNumber, pageSize, onCheckboxChange}) {
 
     const selectedRows = useRef([])
     const sel = {
@@ -10,21 +10,31 @@ function useSelectedRows({pageNumber, pageSize}) {
         selectedCount: 'sui-selected-count'
     }
 
+    const getUuid = ($el) => $el.attr('name').replace('select-row-', '')
+
+    const updatedSelected = (uuid) => {
+        selectedRows.current = selectedRows.current.filter((e) => e.id !== uuid)
+    }
+
     const handleCheckboxes = () => {
         setTimeout(()=>{
             $(`[name="${sel.selectAllIo}"`).on('click', (e)=>{
                 const $el = $(e.currentTarget)
                 if (!$el.is(':checked')) {
-                    selectedRows.current = []
+                    // loop through checkboxes on current page and uncheck them
+                    getCheckboxes().each((i, cbx) => {
+                        $(cbx).prop('checked', false)
+                        // remove reference
+                        updatedSelected(getUuid($(cbx)))
+                    });
                     updateLabel()
                 }
             })
             getCheckboxes().on('click', (e)=>{
                 const $el = $(e.currentTarget)
-                const uuid = $el.attr('name').replace('select-row-', '')
 
                 if (!$el.is(':checked')) {
-                    selectedRows.current = selectedRows.current.filter((e) => e.id !== uuid)
+                    updatedSelected(getUuid($el))
                     updateLabel()
                 }
 
@@ -39,16 +49,27 @@ function useSelectedRows({pageNumber, pageSize}) {
         // so need to bind them again
     }, [pageNumber, pageSize]);
 
-    const updateLabel = () => {
+    const updateLabel = (mod = 0, ) => {
         const $selAllIo =  $(`[name="${sel.selectAllIo}"`)
+        const totalSelected = selectedRows.current.length + mod
 
         const $checkBoxAll = $($selAllIo).parent()
         $checkBoxAll.find(`.${sel.selectedCount}`).remove()
-        $checkBoxAll.append(`<span data-js-appevent="snRowsSelected" data-count="${selectedRows.current.length}" class="${sel.selectedCount}"></span>`)
-        if (selectedRows.current.length) {
+        $checkBoxAll.append(`<span data-js-appevent="snRowsSelected" data-count="${totalSelected}" class="${sel.selectedCount}"></span>`)
+        if (totalSelected) {
             // add count label
-            $checkBoxAll.append(`<span class="${sel.selectedCount}">(${selectedRows.current.length})</span>`)
+            $checkBoxAll.append(`<span class="${sel.selectedCount}">(${totalSelected})</span>`)
+
+            // set the check all checkbox to indeterminate because row selections exit on other pages
+            if (!$selAllIo.is(':checked')) {
+                $selAllIo.prop("indeterminate", true) 
+            } 
         }
+        
+    }
+
+    const deselectRow = (id) => {
+        selectedRows.current = selectedRows.current.filter((e) => e.id !== id)
     }
 
     const handleRowSelected = useCallback(state => {
@@ -59,10 +80,25 @@ function useSelectedRows({pageNumber, pageSize}) {
         // state.selectedCount is eq to 0 on pagination updates
         // thus we will only update selected rows when state contains a value
         // and use our own custom listeners to manage deletions in handleCheckboxes
+        // At current version, DataTable persistence options also does not provide the check all checkbox in table header, 
+        // so we can't use the persistence options if even if we wanted to
         if (state.selectedCount) {
-            selectedRows.current = state.selectedRows
+            let _dict = {}
+            for (let e of selectedRows.current) {
+                _dict[e.id] = true
+            }
+            for (let e of state.selectedRows) {
+                if (!_dict[e.id]) {
+                    selectedRows.current.push(e)
+                }
+            }
         }
-        updateLabel()
+        if (onCheckboxChange) {
+            onCheckboxChange({selectedRows, updateLabel, deselectRow})
+        } else {
+            updateLabel()
+        }
+        
     }, [])
 
     // DataTable uses this to determine pre-selections like on pagination
