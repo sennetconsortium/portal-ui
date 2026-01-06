@@ -442,14 +442,14 @@ function SearchActions({
                         <span>Export</span>
                     </SenNetPopover>
                 </ListSubheader>
-                <MenuItem className={'dropdown-item'} key={`export-all`}>All to&nbsp;
+                <MenuItem className={'dropdown-item dropdown-item--export'} key={`export-all`}>All to&nbsp;
                     {getMenuItems('all')}
                 </MenuItem>
-                {hasSelectedRows() && <MenuItem className={'dropdown-item'} key={`export-selected`}>Selected to&nbsp;
+                {hasSelectedRows() && <MenuItem className={'dropdown-item dropdown-item--export'} key={`export-selected`}>Selected to&nbsp;
                     {getMenuItems()}
                 </MenuItem>}
 
-                {isLoggedIn() && (!inModal || isFilesSearch()) && <div>
+                {isLoggedIn() && (!inModal || isFilesSearch()) && <>
 
                     <MenuItem className={'dropdown-itemSubHeader dropdown-item'}
                               key={`export-all`}
@@ -480,7 +480,7 @@ function SearchActions({
                     </MenuItem>
                     </>}
 
-                </div>}
+                </>}
                 <Divider/>
                 {(hasSelectedRows() || isTransfersEnabled) &&
                     <MenuItem className={'dropdown-item'} onClick={clearSelections}><i

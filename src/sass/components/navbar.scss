@@ -51,3 +51,13 @@
   position: relative;
   top: 3px;
 }
+
+.dropdown-item--export {
+  pointer-events: none;
+  &:hover {
+    background-color: transparent !important;
+  }
+  a {
+    pointer-events: all;
+  }
+}
