@@ -1,12 +1,8 @@
 import React, {useEffect, useRef, useState, useContext} from 'react'
 import PropTypes from 'prop-types'
-import {alpha, styled} from '@mui/material/styles';
 import Button from '@mui/material/Button';
-import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import InsightsIcon from '@mui/icons-material/Insights';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import ListSubheader from '@mui/material/ListSubheader';
 
 import {PagingInfo} from "@elastic/react-search-ui";
 import {autoBlobDownloader, eq, goToTransfers} from "@/components/custom/js/functions";
@@ -16,52 +12,9 @@ import {getCheckboxes} from "@/hooks/useSelectedRows";
 import {APP_ROUTES} from "@/config/constants";
 import {Divider} from "@mui/material";
 import AppContext from '@/context/AppContext';
-
-const StyledMenu = styled((props) => (
-    <Menu
-        elevation={0}
-        anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: 'right',
-        }}
-        transformOrigin={{
-            vertical: 'top',
-            horizontal: 'right',
-        }}
-        {...props}
-    />
-))(({theme}) => ({
-    '& .MuiPaper-root': {
-        borderRadius: 6,
-        marginTop: theme.spacing(1),
-        minWidth: 180,
-        color: 'rgb(55, 65, 81)',
-        boxShadow:
-            'rgb(255, 255, 255) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 0px 0px 1px, rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px',
-        '& .MuiMenu-list': {
-            padding: '4px 0',
-        },
-        '& .MuiMenuItem-root': {
-            '& .MuiSvgIcon-root': {
-                fontSize: 18,
-                color: theme.palette.text.secondary,
-                marginRight: theme.spacing(1.5),
-                ...theme.applyStyles('dark', {
-                    color: 'inherit',
-                }),
-            },
-            '&:active': {
-                backgroundColor: alpha(
-                    theme.palette.primary.main,
-                    theme.palette.action.selectedOpacity,
-                ),
-            },
-        },
-        ...theme.applyStyles('dark', {
-            color: theme.palette.grey[300],
-        }),
-    },
-}));
+import StyledMenu from '@/components/custom/layout/StyledMenu';
+import NestedMenuItem from '../layout/NestedMenuItem';
+import ListItemText from '@mui/material/ListItemText';
 
 function SearchActions({
                            selectedRows,
@@ -86,7 +39,12 @@ function SearchActions({
     const modalSelectedFiles = actionHandlers.getModalSelectedFiles ? actionHandlers.getModalSelectedFiles() : []
 
 
-    const handleClick = (event) => setAnchorEl(event.currentTarget)
+    const handleClick = (event) => {
+        setTimeout(()=> {
+            $('.snMenu-item--export').eq(0).focus()
+        }, 100)
+        setAnchorEl(event.currentTarget)
+    }
     const handleClose = () => setAnchorEl(null)
 
     const getId = (column) => column.id || column.uuid
@@ -286,17 +244,21 @@ function SearchActions({
         let results = []
         const isAll = range === 'all'
         const exportActions = getActions()
+        const icon = {
+            json: 'bi-filetype-json',
+            tsv: 'bi-file-earmark-ruled',
+            manifest: 'bi-filetype-txt',
+        }
         let i = 1
 
         for (let action in exportActions) {
-            results.push(
-                <SenNetPopover key={`${range}-${action}`} text={popoverText(action)} className={`${range}-${action}`}>
-                    <a onClick={(e) => downloadData(e, action, isAll)}><code>{exportActions[action]}</code></a>
+            results.push(<MenuItem className='snMenu-item' onClick={(e) => downloadData(e, action, isAll)} key={`${range}-${action}`}>
+                <SenNetPopover  text={popoverText(action)} className={`${range}-${action}`}>
+                    <ListItemText><i class={`bi ${icon[action]}`}></i> &nbsp;<code>{exportActions[action]}</code></ListItemText>
                 </SenNetPopover>
+                </MenuItem>
             )
-            if (i !== Object.keys(exportActions).length) {
-                results.push(<span key={`${range}-${action}-sep`}>&nbsp;|&nbsp;</span>)
-            }
+           
             i++
         }
         return results
@@ -409,11 +371,13 @@ function SearchActions({
         return actionHandlers.getModalSelectedUuids ? actionHandlers.getModalSelectedUuids() : []
     }
 
+    const itemEnabled = isLoggedIn() && (!inModal || isFilesSearch())
+
     return (
         <div className='c-searchActions'>
             <Button
                 id="sui-search-actions-btn"
-                aria-controls={open ? 'sui-search-actions-menu' : undefined}
+                aria-controls={'sui-tbl-checkbox-actions'}
                 aria-haspopup="true"
                 aria-expanded={open ? 'true' : undefined}
                 variant="contained"
@@ -432,58 +396,66 @@ function SearchActions({
                         'aria-labelledby': 'sui-search-actions-btn',
                     },
                 }}
+                anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'right',
+                }}
+                transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                }}
                 anchorEl={anchorEl}
                 open={open}
                 onClose={handleClose}
             >
-                <ListSubheader>
+                {/* <ListSubheader>
                     <i className="bi bi-download fs-6 mx-2"></i>
                     <SenNetPopover text={<>Click a format below to download the file to your local device.</>}>
                         <span>Export</span>
                     </SenNetPopover>
-                </ListSubheader>
-                <MenuItem className={'dropdown-item dropdown-item--export'} key={`export-all`}>All to&nbsp;
-                    {getMenuItems('all')}
-                </MenuItem>
-                {hasSelectedRows() && <MenuItem className={'dropdown-item dropdown-item--export'} key={`export-selected`}>Selected to&nbsp;
-                    {getMenuItems()}
-                </MenuItem>}
+                </ListSubheader> */}
+              
 
-                {isLoggedIn() && (!inModal || isFilesSearch()) && <>
+                <NestedMenuItem idPrefix={'export-all'} 
+                parentClassName={'snMenu-item snMenu-item--export'} 
+                parentLabel={<span> Export all to &nbsp;</span>}>{getMenuItems('all')}</NestedMenuItem>
 
-                    <MenuItem className={'dropdown-itemSubHeader dropdown-item'}
-                              key={`export-all`}
+           
+                {hasSelectedRows() && <NestedMenuItem idPrefix={'export-selected'} 
+                parentClassName={'snMenu-item snMenu-item--export'} 
+                parentLabel={<span> Export selected to &nbsp;</span>}>{getMenuItems()}</NestedMenuItem>}
+
+                {itemEnabled &&
+
+                    <MenuItem className={`snMenu-item ${isTransfersEnabled ? '' : 'text-disabled'}`}
+                              key={`transfer-files`}
                               onClick={isTransfersEnabled ? goTransferFiles : undefined}>
-                                 
-                        <ListSubheader className={`${isTransfersEnabled ? '' : 'disabled text-disabled'}`}>
-                            <SenNetPopover text={<span>Initiate a transfer of <code>Dataset</code> files via Globus.</span>}>
-                            <i className="bi bi-arrow-right-square fs-6 mx-2"></i>
-                            <span>Transfer Files &nbsp; <i className="bi bi-question-circle-fill"></i>
-                        </span>
+                        <ListItemText>
+                            <span>Transfer Files &nbsp;</span><SenNetPopover text={<span>Initiate a transfer of <code>Dataset</code> files via Globus.</span>}><i className="bi bi-question-circle-fill"></i>
                     </SenNetPopover>
-                    </ListSubheader>
-                   
-                    </MenuItem>
+                        </ListItemText>
+                    </MenuItem>}
 
-                    {eq(context, 'entities') && <>
-                        <ListSubheader>
-                        <InsightsIcon className={'mx-2'}/>
-                        <SenNetPopover
-                            text={<span>Select up to 4 datasets of the same <code>Dataset Type</code> to compare the visualizations. You must have <code>Dataset</code> from the Entity Type facet and <code>True</code> from Has Spatial Information facet selected to enable this option.</span>}>
-                        <span>Visualize <i
-                            className="bi bi-question-circle-fill"></i></span>
-                        </SenNetPopover>
-                    </ListSubheader>
-                    <MenuItem className={`dropdown-item ${hasSelectedDatasetsWithViz() ? '' : 'disabled text-disabled'}`}
+                    {itemEnabled && eq(context, 'entities') &&
+                        
+                    <MenuItem className={`snMenu-item ${hasSelectedDatasetsWithViz() ? '' : 'text-disabled'}`}
                               key={`export-all`} onClick={hasSelectedDatasetsWithViz() ? goCompare : undefined}>
-                        Compare Datasets
+                        <ListItemText>
+                            
+                        <span>Compare Datasets &nbsp;</span>
+                            <SenNetPopover
+                            text={<span>Select up to 4 datasets of the same <code>Dataset Type</code> to compare the visualizations. You must have <code>Dataset</code> from the Entity Type facet and <code>True</code> from Has Spatial Information facet selected to enable this option.</span>}>
+                            <i className="bi bi-question-circle-fill"></i>
+                        </SenNetPopover>
+                        </ListItemText>
+                        
                     </MenuItem>
-                    </>}
+                    }
 
-                </>}
+                
                 <Divider/>
                 {(hasSelectedRows() || isTransfersEnabled) &&
-                    <MenuItem className={'dropdown-item'} onClick={clearSelections}><i
+                    <MenuItem className={'snMenu-item'} onClick={clearSelections}><i
                         className="bi bi-x-circle"></i> &nbsp; Clear row selections ({selectedRows.current.length + getModalSelectedUuids().length})
                     </MenuItem>}
 

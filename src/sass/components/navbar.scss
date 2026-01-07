@@ -52,12 +52,17 @@
   top: 3px;
 }
 
-.dropdown-item--export {
-  pointer-events: none;
-  &:hover {
-    background-color: transparent !important;
+.snMenu-item {
+  .MuiListItemText-root * {
+    font-size: 0.9rem;
   }
-  a {
-    pointer-events: all;
+  &.text-disabled {
+    &:hover {
+      background-color: transparent !important;
+      cursor: default;
+      i {
+        cursor: pointer;
+      }
+    }
   }
 }
