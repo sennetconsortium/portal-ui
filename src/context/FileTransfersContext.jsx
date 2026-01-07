@@ -47,6 +47,7 @@ export const FileTransfersProvider = ({children}) => {
             name: 'SenNet ID',
             id: 'sennetId',
             selector: row => row.sennetId,
+            format: (row) => <span title={row.uuid}>{row.sennetId}</span>
         },
         {
             name: 'Status',

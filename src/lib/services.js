@@ -713,18 +713,27 @@ export const getDatasetsByIds = async (sennet_ids) => {
     const body = {
         query: {
             bool: {
-                filter: [
+                must: [
                     {
                         term: {
                             'entity_type.keyword': 'Dataset'
                         }
                     },
+                    
+                ],
+                should: [
                     {
                         terms: {
                             'sennet_id.keyword': sennet_ids
                         }
-                    }
-                ]
+                    },
+                    {
+                        terms: {
+                            'uuid.keyword': sennet_ids
+                        }
+                    },
+                ],
+                "minimum_should_match": 1
             }
         },
         size: 10000,
