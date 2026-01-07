@@ -2,7 +2,7 @@ import {useCallback, useEffect, useRef} from 'react'
 
 export const getCheckboxes = () => $('.rdt_TableBody [type=checkbox]')
 
-function useSelectedRows({pageNumber, pageSize, onCheckboxChange}) {
+function useSelectedRows({pageNumber, pageSize, filters, onCheckboxChange}) {
 
     const selectedRows = useRef([])
     const sel = {
@@ -47,7 +47,7 @@ function useSelectedRows({pageNumber, pageSize, onCheckboxChange}) {
 
         // the listeners are lost on pagination updates
         // so need to bind them again
-    }, [pageNumber, pageSize]);
+    }, [pageNumber, pageSize, filters]);
 
     const updateLabel = (mod = 0, ) => {
         const $selAllIo =  $(`[name="${sel.selectAllIo}"`)

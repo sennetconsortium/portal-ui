@@ -55,7 +55,7 @@ function ResultsBlock({getTableColumns, onCheckboxChange, disableRowClick, table
     }, [isBusy]);
 
     const [hiddenColumns, setHiddenColumns] = useState(null)
-    const {selectedRows, handleRowSelected, rowSelectCriteria  } = useSelectedRows({pageNumber, pageSize, onCheckboxChange})
+    const {selectedRows, handleRowSelected, rowSelectCriteria  } = useSelectedRows({filters, pageNumber, pageSize, onCheckboxChange})
     const [_, setRefresh] = useState(new Date().getMilliseconds())
 
     return (

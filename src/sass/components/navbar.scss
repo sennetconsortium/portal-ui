@@ -51,3 +51,18 @@
   position: relative;
   top: 3px;
 }
+
+.snMenu-item {
+  .MuiListItemText-root * {
+    font-size: 0.9rem;
+  }
+  &.text-disabled {
+    &:hover {
+      background-color: transparent !important;
+      cursor: default;
+      i {
+        cursor: pointer;
+      }
+    }
+  }
+}
