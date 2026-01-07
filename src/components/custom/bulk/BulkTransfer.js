@@ -46,6 +46,7 @@ export default function BulkTransfer({
     const stepLabels = ['Verify Dataset Files', 'Specify Filepath', 'Complete']
     const [steps, setSteps] = useState(stepLabels)
     const [showModal, setShowModal] = useState(true)
+    const [destinationOptions, setDestinationOptions] = useState(null)
 
 
     const _formData = useRef({})
@@ -345,6 +346,10 @@ export default function BulkTransfer({
         />)
     }
 
+    useEffect(() => {
+        setDestinationOptions(getDestinationOptions())
+    }, [globusCollections])
+
     return (
         <div className='main-wrapper' data-js-ada='modal'>
             <Container sx={{mt: 5}}>
@@ -448,7 +453,7 @@ export default function BulkTransfer({
                                         controlId={'destination_collection_id'}
                                         isRequired={true} label={'Destination Globus Collection'}
                                         view={<>
-                                            {getDestinationOptions()}
+                                            {destinationOptions}
                                         </>}
                                         />
 
