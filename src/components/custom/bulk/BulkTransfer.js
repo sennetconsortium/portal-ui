@@ -9,6 +9,8 @@ import DoneOutlineIcon from '@mui/icons-material/DoneOutline';
 import DriveFileMoveIcon from '@mui/icons-material/DriveFileMove';
 import PublicIcon from '@mui/icons-material/Public'
 import LanIcon from '@mui/icons-material/Lan'
+import TaskAltIcon from '@mui/icons-material/TaskAlt';
+import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 import StepConnector, {stepConnectorClasses} from '@mui/material/StepConnector';
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
@@ -180,8 +182,12 @@ export default function BulkTransfer({
         return error !== null && error[index] !== null && error[index] === true
     }
 
+    const successIcon = <TaskAltIcon color={'success'} />
+
+    const errIcon = <WarningAmberIcon sx={{color: '#842029'}} />
+
     function getModalTitle() {
-        return `Files Transfer In Process`
+        return error ? <span>{errIcon} Transfer Failed to Initiate</span> : <span>{successIcon} Files Transfer In Process</span>
     }
 
     function getModalBody() {
@@ -431,6 +437,7 @@ export default function BulkTransfer({
                     {
                         isAtLastStep() &&
                         <AppModal
+                            className={`modal--ctaConfirm ${error ? 'is-light-error' : ''}`}
                             modalTitle={getModalTitle()}
                             modalBody={getModalBody()}
                             modalSize='lg'

@@ -709,6 +709,47 @@ export const getSamplesByOrgan = async (organCodes) => {
     });
 }
 
+export const getDatasetsByIds = async (sennet_ids) => {
+    const body = {
+        query: {
+            bool: {
+                filter: [
+                    {
+                        term: {
+                            'entity_type.keyword': 'Dataset'
+                        }
+                    },
+                    {
+                        terms: {
+                            'sennet_id.keyword': sennet_ids
+                        }
+                    }
+                ]
+            }
+        },
+        size: 10000,
+        _source: {
+            includes: [
+                'sennet_id',
+                'group_name',
+                'status',
+            ]
+        }
+    }
+    const content = await fetchSearchAPIEntities(body);
+    if (!content) {
+        return null;
+    }
+    return content.hits.hits.map((hit) => {
+        return {
+            uuid: hit._id,
+            sennetId: hit._source.sennet_id,
+            groupName: hit._source.group_name,
+            status: hit._source.status,
+        }
+    });
+}
+
 export const filterProperties = {
     ancestors: {
         filter_properties: [
