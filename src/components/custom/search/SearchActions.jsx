@@ -408,14 +408,8 @@ function SearchActions({
                 open={open}
                 onClose={handleClose}
             >
-                {/* <ListSubheader>
-                    <i className="bi bi-download fs-6 mx-2"></i>
-                    <SenNetPopover text={<>Click a format below to download the file to your local device.</>}>
-                        <span>Export</span>
-                    </SenNetPopover>
-                </ListSubheader> */}
-              
-
+                
+            
                 <NestedMenuItem idPrefix={'export-all'} 
                 parentClassName={'snMenu-item snMenu-item--export'} 
                 parentLabel={<span> Export all to &nbsp;</span>}>{getMenuItems('all')}</NestedMenuItem>
@@ -453,7 +447,7 @@ function SearchActions({
                     }
 
                 
-                <Divider/>
+                {hasSelectedRows() && <Divider/>}
                 {(hasSelectedRows() || isTransfersEnabled) &&
                     <MenuItem className={'snMenu-item'} onClick={clearSelections}><i
                         className="bi bi-x-circle"></i> &nbsp; Clear row selections ({selectedRows.current.length + getModalSelectedUuids().length})
