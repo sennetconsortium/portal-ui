@@ -44,8 +44,10 @@ function BulkDataTransfer({data, entityType, currentEntity}) {
                         list[data[k][indexOfCurrentEntity].sennet_id] = data[k][indexOfCurrentEntity]
                     } 
                     for (let l = 0; l < (eq(k, 'component') ? 2 : 1); l++ ) {
-                        data[k][l].shape = icons[k]
-                        list[data[k][l].sennet_id] = data[k][l]
+                        if (data[k][l]) {
+                            data[k][l].shape = icons[k]
+                            list[data[k][l].sennet_id] = data[k][l]
+                        }
                     }
                 }
             }
