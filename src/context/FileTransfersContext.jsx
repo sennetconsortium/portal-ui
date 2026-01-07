@@ -101,7 +101,7 @@ export const FileTransfersProvider = ({children}) => {
             <p>Additionally, please make sure there are no duplicate transfers at <LnkIc text={'Globus Activity'} href="https://app.globus.org/activity" /> before continuing.</p>
             <DataTable columns={referenceColumns} data={datasets} pagination/>
             <br />
-            <h5>Server error message:</h5>
+            <h5>Globus error message:</h5>
             <pre><code>{jsonResponse.error}</code></pre>
             </>)
             setIsLoading(false)
