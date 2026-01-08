@@ -11,7 +11,7 @@ import AppContext from "@/context/AppContext";
 const FileTransfersContext = createContext()
 
 export const FileTransfersProvider = ({children}) => {
-    const {logout} = useContext(AppContext)
+    const {logout, authorized} = useContext(AppContext)
     const [isLoading, setIsLoading] = useState(null)
     const [error, setError] = useState(null)
 
@@ -29,8 +29,10 @@ export const FileTransfersProvider = ({children}) => {
     }
 
     const tokenExpired = () => {
-        logout()
-        location.reload()
+        if (authorized) {
+            logout()
+            location.reload()
+        }
     }
 
     async function getGlobusCollections() {
