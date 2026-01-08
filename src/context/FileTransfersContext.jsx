@@ -42,7 +42,7 @@ export const FileTransfersProvider = ({children}) => {
         }
         const response = await fetch(getTransferEndpointsUrl(), requestOptions)
         // Upon load of /transfers, check the token response
-        if (response.status == 498) {
+        if (response.status == 401 || response.status == 498) {
             tokenExpired()
         }
         if (response.ok) {
