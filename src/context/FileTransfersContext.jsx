@@ -1,4 +1,4 @@
-import {createContext,  useEffect, useState} from "react";
+import {createContext, useContext, useEffect, useState} from "react";
 import {getDatasetsByIds, getTransferAuthJsonHeaders, parseJson} from "@/lib/services";
 import {getIngestEndPoint} from "@/config/config";
 import {APP_ROUTES} from "@/config/constants";
@@ -6,16 +6,17 @@ import LnkIc from "@/components/custom/layout/LnkIc";
 import {getStatusColor, getStatusDefinition,} from "@/components/custom/js/functions"
 import DataTable from "react-data-table-component";
 import SenNetPopover from "@/components/SenNetPopover";
+import AppContext from "@/context/AppContext";
 
 const FileTransfersContext = createContext()
 
 export const FileTransfersProvider = ({children}) => {
+    const {logout} = useContext(AppContext)
     const [isLoading, setIsLoading] = useState(null)
     const [error, setError] = useState(null)
 
     const [globusCollections, setGlobusCollections] = useState([])
     const [globusRunURLs, setGlobusRunURLs] = useState(null)
-
 
     const [tableData, setTableData] = useState([])
 
@@ -27,6 +28,11 @@ export const FileTransfersProvider = ({children}) => {
         return `${getIngestEndPoint()}transfers`
     }
 
+    const tokenExpired = () => {
+        logout()
+        location.reload()
+    }
+
     async function getGlobusCollections() {
         setIsLoading(true)
         let data
@@ -35,6 +41,10 @@ export const FileTransfersProvider = ({children}) => {
             headers: getTransferAuthJsonHeaders(),
         }
         const response = await fetch(getTransferEndpointsUrl(), requestOptions)
+        // Upon load of /transfers, check the token response
+        if (response.status == 498) {
+            tokenExpired()
+        }
         if (response.ok) {
             data = await response.json()
             setGlobusCollections(data)
@@ -134,6 +144,9 @@ export const FileTransfersProvider = ({children}) => {
                 href={APP_ROUTES.search + '/files'}>Files</a> search page.</span>)
         }
 
+        setTimeout(()=>{
+            tokenExpired()
+        }, (1000 * 60 * 60)) // logout the user after 1 hour since the token would now be expired
 
     }, [])
 
