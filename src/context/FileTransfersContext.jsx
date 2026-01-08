@@ -1,4 +1,4 @@
-import {createContext, useContext, useEffect, useState} from "react";
+import {createContext, useContext, useEffect, useRef, useState} from "react";
 import {getDatasetsByIds, getTransferAuthJsonHeaders, parseJson} from "@/lib/services";
 import {getIngestEndPoint} from "@/config/config";
 import {APP_ROUTES} from "@/config/constants";
@@ -19,6 +19,7 @@ export const FileTransfersProvider = ({children}) => {
     const [globusRunURLs, setGlobusRunURLs] = useState(null)
 
     const [tableData, setTableData] = useState([])
+    const expiredToken = useRef(null)
 
     const getTransferEndpointsUrl = () => {
         return `${getIngestEndPoint()}transfers/endpoints`
@@ -35,6 +36,12 @@ export const FileTransfersProvider = ({children}) => {
         }
     }
 
+    useEffect(() => {
+        if (expiredToken.current) {
+            tokenExpired()
+        }
+    }, [authorized])
+
     async function getGlobusCollections() {
         setIsLoading(true)
         let data
@@ -45,6 +52,7 @@ export const FileTransfersProvider = ({children}) => {
         const response = await fetch(getTransferEndpointsUrl(), requestOptions)
         // Upon load of /transfers, check the token response
         if (response.status == 401 || response.status == 498) {
+            expiredToken.current = true
             tokenExpired()
         }
         if (response.ok) {
@@ -147,6 +155,7 @@ export const FileTransfersProvider = ({children}) => {
         }
 
         setTimeout(()=>{
+            expiredToken.current = true
             tokenExpired()
         }, (1000 * 60 * 60)) // logout the user after 1 hour since the token would now be expired
 
