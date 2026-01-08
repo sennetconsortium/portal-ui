@@ -1,7 +1,11 @@
 import {createContext,  useEffect, useState} from "react";
-import {getTransferAuthJsonHeaders, parseJson} from "@/lib/services";
+import {getDatasetsByIds, getTransferAuthJsonHeaders, parseJson} from "@/lib/services";
 import {getIngestEndPoint} from "@/config/config";
 import {APP_ROUTES} from "@/config/constants";
+import LnkIc from "@/components/custom/layout/LnkIc";
+import {getStatusColor, getStatusDefinition,} from "@/components/custom/js/functions"
+import DataTable from "react-data-table-component";
+import SenNetPopover from "@/components/SenNetPopover";
 
 const FileTransfersContext = createContext()
 
@@ -38,6 +42,28 @@ export const FileTransfersProvider = ({children}) => {
         return data
     }
 
+    const referenceColumns = [
+        {
+            name: 'SenNet ID',
+            id: 'sennetId',
+            selector: row => row.sennetId,
+            format: (row) => <span title={row.uuid}>{row.sennetId}</span>
+        },
+        {
+            name: 'Status',
+            id: 'status',
+            selector: row => row.status,
+            format: (row) => <span className={`${getStatusColor(row.status)} badge`}><SenNetPopover
+                        text={getStatusDefinition(row.status)}
+                        className={`status-info-${row.uuid}`}>{row.status}</SenNetPopover></span>,
+        },
+        {
+            name: 'Group',
+            id: 'groupName',
+            selector: row => row.groupName,
+        }
+    ]
+
 
     async function transferFiles(formData) {
         setIsLoading(true)
@@ -65,8 +91,20 @@ export const FileTransfersProvider = ({children}) => {
             setGlobusRunURLs(globusRunURLs)
             setIsLoading(false)
         } else {
+           
+            let ids = manifest.map((g) => g.dataset)
+            let datasets = await getDatasetsByIds(ids)
+            
             let jsonResponse = await response.json()
-            setError(jsonResponse.error)
+            setError(<>
+            <p>Transfering files from the <code>Datasets</code> listed below failed. If these <code>Datasets</code> are not <span className={`${getStatusColor('Published')} badge`}>Published</span>, you must belong to the 
+                corresponding group to transfer files. </p>
+            <p>Additionally, please make sure there are no duplicate transfers at <LnkIc text={'Globus Activity'} href="https://app.globus.org/activity" /> before continuing.</p>
+            <DataTable columns={referenceColumns} data={datasets} pagination/>
+            <br />
+            <h5>Globus error message:</h5>
+            <pre><code>{jsonResponse.error}</code></pre>
+            </>)
             setIsLoading(false)
         }
     }
