@@ -29,8 +29,8 @@ export const FileTransfersProvider = ({children}) => {
         return `${getIngestEndPoint()}transfers`
     }
 
-    const tokenExpired = () => {
-        if (authorized) {
+    const tokenExpired = (_authorized) => {
+        if (_authorized || authorized) {
             logout()
             location.reload()
         }
@@ -38,7 +38,7 @@ export const FileTransfersProvider = ({children}) => {
 
     useEffect(() => {
         if (expiredToken.current) {
-            tokenExpired()
+            tokenExpired(authorized)
         }
     }, [authorized])
 
