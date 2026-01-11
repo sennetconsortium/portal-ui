@@ -44,6 +44,15 @@
       }
     }
 
+    &.is-light-error {
+      .modal-title, h5 {
+         color: swatch.$col-err-txt;
+      }
+      .modal-content {
+        border-color: swatch.$col-err-bdr;
+      }
+    }
+
     &.is-warning-outline {
       .modal-content {
         color: swatch.$col-warn-txt;
