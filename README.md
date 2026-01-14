@@ -170,4 +170,4 @@ Configure the json object with the following properties:
 ## Custom Plugins
 There are some custom JS plugins located in `src/components/custom/js/addons` which adds additional functionality to the UI on HTML elements with classes or properties like `js-{app}--{component}` or `data-js-{app}` respectively.
 The ES6 classes have been excluded from docker build time and are automatically rebuilt to `main-plugins.js` when developing under `npm run run` or `npm run plugins-watch`. 
-Use `npm run plugins` to manually rebuild. Also note: the `src/components/custom/js/addons/plugins/__polyfill.js` file should not be edited, it's provided by babel and adds cross browser support.
+Use `npm run plugins` to manually rebuild. 

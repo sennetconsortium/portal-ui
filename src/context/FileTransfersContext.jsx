@@ -66,12 +66,14 @@ export const FileTransfersProvider = ({children}) => {
         {
             name: 'SenNet ID',
             id: 'sennetId',
+            width: '25%',
             selector: row => row.sennetId,
             format: (row) => <span title={row.uuid}>{row.sennetId}</span>
         },
         {
             name: 'Status',
             id: 'status',
+            width: '25%',
             selector: row => row.status,
             format: (row) => <span className={`${getStatusColor(row.status)} badge`}><SenNetPopover
                         text={getStatusDefinition(row.status)}
