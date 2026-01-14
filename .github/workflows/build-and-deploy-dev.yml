@@ -27,9 +27,9 @@ jobs:
       - name: Make build script executable
         run: chmod +x ./docker-development.sh
         working-directory: ./docker
-
-      - name: Initialize Submodule
-        run: git submodule update --init --remote
+#
+#      - name: Initialize Submodule
+#        run: git submodule update --init --remote
 
       - name: Run the Docker build shell script
         run: ./docker-development.sh build
