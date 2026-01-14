@@ -98,7 +98,7 @@ else
 
         docker compose -f docker-compose.yml -f docker-compose.development.yml -p portal-ui build
     elif [ "$1" = "start" ]; then
-        docker compose -f docker-compose.yml -f docker-compose.development.yml -p portal-ui up -d
+        docker compose -f docker-compose.yml -f docker-compose.deployment.dev.yml -p portal-ui up -d
     elif [ "$1" = "stop" ]; then
         docker compose -f docker-compose.yml -f docker-compose.development.yml -p portal-ui stop
     elif [ "$1" = "down" ]; then
