@@ -94,6 +94,7 @@ else
             --exclude='.env*' \
             ../src/ portal-ui/src/
 
+        file="../src/.env.local" && [ -f "${file}" ] && cp "${file}" "portal-ui/src"
 #        cp ../src/.env.local portal-ui/src
 
         docker compose -f docker-compose.yml -f docker-compose.development.yml -p portal-ui build
