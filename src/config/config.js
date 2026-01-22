@@ -141,6 +141,10 @@ export function getCookieDomain() {
     return process.env.NEXT_PUBLIC_COOKIE_DOMAIN
 }
 
+export function getVitessceVersion() {
+    return process.env.NEXT_PUBLIC_VITESSCE_VERSION
+}
+
 export const RESULTS_PER_PAGE = [10, 20, 30, 50, 100, 250, 500]
 
 //Config options to exclude datasets from results
