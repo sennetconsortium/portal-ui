@@ -9,6 +9,7 @@ import SenNetAccordion from "@/components/custom/layout/SenNetAccordion";
 import MultiProfileSelector from "./MultiProfileSelector";
 import SuspendVitessce from "./SuspendVitessce";
 import {getDatasetTypeDisplay} from "@/components/custom/js/functions";
+import {getVitessceVersion} from "@/config/config";
 
 export const DescendantInfo = ({isPrimaryDataset, derivedDataset, wrapClassNames = 'col m-2'}) => {
     return (<div className={'row'}>
@@ -54,7 +55,7 @@ export const SenNetVitessce = ({ title, id, expanded = true, showPoweredInfo = t
                      <span className={'fw-light fs-6'}>Powered by
                         <a className={'ms-2'} target="_blank" href="http://vitessce.io/" rel="noopener noreferrer"
                            title={'Vitessce.io'}>
-                            Vitessce V3.8.5
+                            Vitessce v{getVitessceVersion()}
                         </a>
                     </span>
                 </div>}
