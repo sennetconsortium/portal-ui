@@ -1,0 +1,113 @@
+name: Build and Deploy Docker Image on Dev
+
+on:
+  push:
+    branches:
+      - dev-integrate
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: 'true'
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Create $PORTAL_UI_VERSION
+        run: |
+          export PORTAL_UI_VERSION=$(tr -d "\n\r" < ../VERSION | xargs)
+          echo "PORTAL_UI_VERSION=$PORTAL_UI_VERSION" >> $GITHUB_ENV
+        working-directory: ./docker
+
+      - name: Set AWS Log Group
+        run: |
+          export PORTAL_UI_CLOUDWATCH_LOG_GROUP="/aws/ec2/sennet-dev/portal-ui/next-server"
+          echo "PORTAL_UI_CLOUDWATCH_LOG_GROUP=PORTAL_UI_CLOUDWATCH_LOG_GROUP" >> $GITHUB_ENV
+
+      - name: Make build script executable
+        run: chmod +x ./docker-development.sh
+        working-directory: ./docker
+
+      - name: Create .env file
+        uses: SpicyPizza/create-envfile@v2.0
+        with:
+          # Prefix the input names with 'envkey_' to add them to the .env file
+          envkey_NEXT_PUBLIC_FILES_INDEX: ${{ secrets.NEXT_PUBLIC_FILES_INDEX }}
+          envkey_NEXT_PUBLIC_ENTITIES_INDEX: ${{ secrets.NEXT_PUBLIC_ENTITIES_INDEX }}
+          envkey_NEXT_PUBLIC_SEARCH_API_ENDPOINT: ${{ secrets.NEXT_PUBLIC_SEARCH_API_ENDPOINT}}
+          envkey_NEXT_PUBLIC_ENTITY_API_ENDPOINT : ${{ secrets.NEXT_PUBLIC_ENTITY_API_ENDPOINT }}
+          envkey_NEXT_PUBLIC_INGEST_API_ENDPOINT : ${{ secrets.NEXT_PUBLIC_INGEST_API_ENDPOINT }}
+          envkey_NEXT_PUBLIC_UUID_API_ENDPOINT : ${{ secrets.NEXT_PUBLIC_UUID_API_ENDPOINT }}
+          envkey_NEXT_PUBLIC_APP_ROOT_URL : ${{ secrets.NEXT_PUBLIC_APP_ROOT_URL }}
+          envkey_NEXT_PUBLIC_INGEST_LOGIN : ${{ secrets.NEXT_PUBLIC_INGEST_LOGIN }}
+          envkey_NEXT_PUBLIC_ASSETS_ENDPOINT : ${{ secrets.NEXT_PUBLIC_ASSETS_ENDPOINT }}
+          envkey_NEXT_PUBLIC_DATA_INGEST_BOARD_ENDPOINT : ${{ secrets.NEXT_PUBLIC_DATA_INGEST_BOARD_ENDPOINT }}
+          envkey_NEXT_PUBLIC_GOOGLE_TAG_MANAGER : ${{ secrets.NEXT_PUBLIC_GOOGLE_TAG_MANAGER }}
+          envkey_NEXT_PUBLIC_DOCS_ROOT_URL : ${{ secrets.NEXT_PUBLIC_DOCS_ROOT_URL }}
+          envkey_NEXT_PUBLIC_LOG_LEVEL : ${{ secrets.NEXT_PUBLIC_LOG_LEVEL }}
+          envkey_NEXT_PUBLIC_COOKIE_DOMAIN : ${{ secrets.NEXT_PUBLIC_COOKIE_DOMAIN }}
+          envkey_NEXT_PUBLIC_UBKG_API_ENDPOINT : ${{ secrets.NEXT_PUBLIC_UBKG_API_ENDPOINT }}
+          envkey_NEXT_PUBLIC_UBKG_VALUESET_PATH : ${{ secrets.NEXT_PUBLIC_UBKG_VALUESET_PATH }}
+          envkey_NEXT_PUBLIC_UBKG_CODES : ${{ secrets.NEXT_PUBLIC_UBKG_CODES }}
+          envkey_ NEXT_PUBLIC_UBKG_CODES_PATHS: ${{ secrets.NEXT_PUBLIC_UBKG_CODES_PATHS }}
+          envkey_GLOBUS_TOKEN : ${{ secrets.GLOBUS_TOKEN }}
+          envkey_PROTOCOLS_TOKEN : ${{ secrets.PROTOCOLS_TOKEN }}
+          envkey_UI_PSWD : ${{ secrets.UI_PSWD }}
+#          envkey_ : ${{ secrets. }}
+          directory: ./src
+          file_name: .env.local
+
+
+      - name: Run the Docker build shell script
+        run: ./docker-development.sh build
+        working-directory: ./docker
+
+      - name: Tag the Docker Image
+        # Alternatively we could use ${{ github.sha }} instead of latest
+        run: docker image tag sennet/portal-ui:$PORTAL_UI_VERSION sennet/portal-ui-dev:latest
+        working-directory: ./docker
+
+      - name: Push the Docker image
+        run: docker push sennet/portal-ui-dev:latest
+        working-directory: ./docker
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build-and-push
+    steps:
+      - name: Whitelist GitHub Actions IP
+        uses: bbharathkumarreddy/aws-whitelist-ip@v1.0
+        with:
+          security-group-id: sg-0ddfcbe0a83a5266c
+          action: whitelist
+          port: 22
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+      - name: Deploy to Server via SSH
+        uses: appleboy/ssh-action@v1
+        with:
+          host: '${{ secrets.REMOTE_HOST }}'
+          username: ${{ secrets.REMOTE_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          use_insecure_cipher: true
+          script: |
+            # Change to codcc user on server
+            sudo su - codcc -c "cd /opt/sennet/portal-ui/docker/; git pull; docker pull sennet/portal-ui-dev:latest; ./docker-development.sh down; ./docker-development.sh start;"
+      - name: Remove GitHub Actions IP
+        uses: bbharathkumarreddy/aws-whitelist-ip@v1.0
+        if: always()
+        with:
+          security-group-id: sg-0ddfcbe0a83a5266c
+          action: remove
+          port: 22
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
