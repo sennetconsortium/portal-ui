@@ -59,3 +59,5 @@ src/cache/.redirect
 
 # Banner config
 src/public/content/banners/index.json
+
+/.secrets
