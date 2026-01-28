@@ -5,13 +5,13 @@ import {
     doesAggregationHaveBuckets,
     doesTermFilterContainValues,
     getAuth,
-    getEntitiesIndex,
+    getCellTypesIndex,
     getSearchEndPoint,
     lateralOrgans,
 } from '../config';
 
 const connector = new SearchAPIConnector({
-    indexName: getEntitiesIndex(),
+    indexName: getCellTypesIndex(),
     indexUrl: getSearchEndPoint(),
     accessToken: getAuth(),
 })
