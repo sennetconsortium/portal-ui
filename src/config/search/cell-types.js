@@ -27,35 +27,35 @@ export const SEARCH_CELL_TYPES = {
             },
         ],
         facets: {
-          
-            dataset_type: {
-                label: 'Dataset Type',
+            'cell_characteristics.cell_label': {
+                label: 'Cell Type',
                 type: 'value',
-                field: 'dataset_type_hierarchy.second_level.keyword',
-                isExpanded: false,
-                filterType: 'any',
-                isFilterable: false,
-                facetType: 'hierarchy',
-                groupByField: 'dataset_type_hierarchy.first_level.keyword',
-                isAggregationActive: true,
-                isFacetVisible: doesAggregationHaveBuckets('dataset_type')
-            },
-            'sources.source_type': {
-                label: 'Source Type',
-                type: 'value',
-                field: 'sources.source_type.keyword',
+                field: 'cell_characteristics.cell_label.keyword',
                 filterType: 'any',
                 isExpanded: false,
                 isFilterable: false,
                 facetType: 'term',
-                isAggregationActive: doesTermFilterContainValues('entity_type', ['Dataset']),
-                isFacetVisible: doesAggregationHaveBuckets('sources.source_type')
+                // isAggregationActive: doesTermFilterContainValues('entity_type', ['Dataset']),
+                // isFacetVisible: doesAggregationHaveBuckets('sources.source_type')
             },
+            organ: {
+                label: 'Organ',
+                type: 'value',
+                field: 'organ.keyword',
+                isExpanded: false,
+                filterType: 'any',
+                isFilterable: false,
+                facetType: 'term',
+                groupByField: 'organ.keyword',
+                // isAggregationActive: true,
+                // isFacetVisible: doesAggregationHaveBuckets('dataset_type')
+            },
+            
             // Source Human
-            'source_mapped_metadata.age.value': {
+            'source_metadata.age.value': {
                 label: 'Age',
                 type: 'range',
-                field: 'source_mapped_metadata.age.value',
+                field: 'source_metadata.age.value',
                 isExpanded: false,
                 filterType: 'any',
                 isFilterable: false,
@@ -65,13 +65,13 @@ export const SEARCH_CELL_TYPES = {
                     // Needs to check if entity_type:Source AND source_type:Human is selected
                     return true
                 },
-                isFacetVisible: doesAggregationHaveBuckets('source_mapped_metadata.age.value')
+                isFacetVisible: doesAggregationHaveBuckets('source_metadata.age.value')
             },
             
-            'source_mapped_metadata.race.value': {
+            'source_metadata.race.value': {
                 label: 'Race',
                 type: 'value',
-                field: 'source_mapped_metadata.race.value.keyword',
+                field: 'source_metadata.race.value.keyword',
                 isExpanded: false,
                 filterType: 'any',
                 isFilterable: false,
@@ -80,12 +80,12 @@ export const SEARCH_CELL_TYPES = {
                     // Needs to check if entity_type:Source AND source_type:Human is selected
                     return true
                 },
-                isFacetVisible: doesAggregationHaveBuckets('source_mapped_metadata.race.value')
+                isFacetVisible: doesAggregationHaveBuckets('source_metadata.race.value')
             },
-            'source_mapped_metadata.sex.value': {
+            'source_metadata.sex.value': {
                 label: 'Sex',
                 type: 'value',
-                field: 'source_mapped_metadata.sex.value.keyword',
+                field: 'source_metadata.sex.value.keyword',
                 isExpanded: false,
                 filterType: 'any',
                 isFilterable: false,
@@ -94,7 +94,7 @@ export const SEARCH_CELL_TYPES = {
                     // Needs to check if entity_type:Source AND source_type:Human is selected
                     return true
                 },
-                isFacetVisible: doesAggregationHaveBuckets('source_mapped_metadata.sex.value')
+                isFacetVisible: doesAggregationHaveBuckets('source_metadata.sex.value')
             },
         },
         disjunctiveFacets: [],
@@ -103,15 +103,13 @@ export const SEARCH_CELL_TYPES = {
             all_text: {type: 'value'},
         },
         source_fields: [
-            'sennet_id',
-          
-            'uuid',
-            'organs',
-            'source_type',
-            'dataset_type',
-            'status',
-            'title',
-            'description',
+            'dataset_sennet_id',
+            'dataset_uuid',
+            'organ_sennet_id',
+            'organ',
+            'cell_characteristics',
+            'source_metadata'
+            
         ],
         // Moving this configuration into `searchQuery` so the config inside search-tools can read this
         trackTotalHits: true,
@@ -120,7 +118,7 @@ export const SEARCH_CELL_TYPES = {
         current: 1,
         resultsPerPage: 20,
         sortList: [{
-            field: 'last_modified_timestamp',
+            field: 'dataset_sennet_id.keyword',
             direction: 'desc'
         }]
     },
