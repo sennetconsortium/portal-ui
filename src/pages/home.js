@@ -85,8 +85,11 @@ function ViewHome({children}) {
                                 </p>
                                 <p>
                                     <Button variant="outline-primary fs-7" className={'w-25'}
+                                                        href={'/discover/cell-types'}>Overview</Button> &nbsp;
+                                    <Button variant="outline-primary fs-7" className={'w-25'}
                                                         href={'/search/cell-types'}>Search Cell Types</Button>
                                 </p>
+                                
                             </Card.Body>
                             </div>
                         </Card>
