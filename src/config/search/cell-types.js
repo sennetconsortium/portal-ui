@@ -14,23 +14,43 @@ const connector = new SearchAPIConnector({
     indexName: getCellTypesIndex(),
     indexUrl: getSearchEndPoint(),
     accessToken: getAuth(),
+        beforeSearchCall: (queryOptions, next) => {
+        
+        queryOptions.collapse =  {
+            field : "cl_id.keyword",
+                inner_hits: {
+                name: "cellTypes",
+                    size: queryOptions.size,
+                    sort: [{ "cl_id.keyword": "asc" }]
+            },
+            max_concurrent_group_searches: 4
+        };
+       
+        // append additional aggregations needs for the table
+        const aggs = queryOptions.aggs || {};
+        aggs.total_cell_types = {
+            cardinality: {
+                field: "cl_id.keyword"
+            }
+        };
+
+        queryOptions.aggs = aggs;
+
+        return next(queryOptions)
+    }
 })
 
 export const SEARCH_CELL_TYPES = {
     alwaysSearchOnInitialLoad: true,
     searchQuery: {
         excludeFilters: [
-            {
-                type: 'term',
-                field: 'sample_category.keyword',
-                values: ['Organ'],
-            },
+            
         ],
         facets: {
-            'cell_characteristics.cell_label': {
+            'cell_label': {
                 label: 'Cell Type',
                 type: 'value',
-                field: 'cell_characteristics.cell_label.keyword',
+                field: 'cell_label.keyword',
                 filterType: 'any',
                 isExpanded: false,
                 isFilterable: false,
@@ -38,24 +58,24 @@ export const SEARCH_CELL_TYPES = {
                 // isAggregationActive: doesTermFilterContainValues('entity_type', ['Dataset']),
                 // isFacetVisible: doesAggregationHaveBuckets('sources.source_type')
             },
-            organ: {
+            'organs.code': {
                 label: 'Organ',
                 type: 'value',
-                field: 'organ.keyword',
+                field: 'organs.code.keyword',
                 isExpanded: false,
                 filterType: 'any',
                 isFilterable: false,
                 facetType: 'term',
-                groupByField: 'organ.keyword',
+                groupByField: 'organs.code.keyword',
                 // isAggregationActive: true,
                 // isFacetVisible: doesAggregationHaveBuckets('dataset_type')
             },
             
             // Source Human
-            'source_metadata.age.value': {
+            'dataset.age.value': {
                 label: 'Age',
                 type: 'range',
-                field: 'source_metadata.age.value',
+                field: 'dataset.age.value',
                 isExpanded: false,
                 filterType: 'any',
                 isFilterable: false,
@@ -65,7 +85,7 @@ export const SEARCH_CELL_TYPES = {
                     // Needs to check if entity_type:Source AND source_type:Human is selected
                     return true
                 },
-                isFacetVisible: doesAggregationHaveBuckets('source_metadata.age.value')
+                isFacetVisible: doesAggregationHaveBuckets('dataset.age.value')
             },
             
             'source_metadata.race.value': {
@@ -100,14 +120,19 @@ export const SEARCH_CELL_TYPES = {
         disjunctiveFacets: [],
         conditionalFacets: {},
         search_fields: {
+            cell_label: {type: 'value'},
+            cl_id: {type: 'value'},
+            cell_definition: {type: 'value'},
+            'organs.type': {type: 'value'},
             all_text: {type: 'value'},
         },
         source_fields: [
-            'dataset_sennet_id',
-            'dataset_uuid',
-            'organ_sennet_id',
-            'organ',
-            'cell_characteristics',
+            'dataset',
+            'organs',
+            'cell_label',
+            'cell_definition',
+            'cl_id',
+            'cell_count' ,
             'source_metadata'
             
         ],
@@ -118,7 +143,7 @@ export const SEARCH_CELL_TYPES = {
         current: 1,
         resultsPerPage: 20,
         sortList: [{
-            field: 'dataset_sennet_id.keyword',
+            field: 'dataset.uuid.keyword',
             direction: 'desc'
         }]
     },

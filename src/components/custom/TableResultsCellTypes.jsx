@@ -15,44 +15,60 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import { Chip } from "@mui/material";
 import SenNetPopover from "../SenNetPopover";
 import AppModal from "../AppModal";
-import FileTreeView from "./entities/dataset/FileTreeView";
-import { COLS_ORDER_KEY, FILE_KEY_SEPARATOR } from "@/config/config";
-import { fetchGlobusFilepath, parseJson } from "@/lib/services";
+import { COLS_ORDER_KEY } from "@/config/config";
+import { parseJson } from "@/lib/services";
 import { useSearchUIContext } from "@/search-ui/components/core/SearchUIContext";
-import DataUsageModal from "@/components/custom/entities/dataset/DataUsageModal";
 import { ShimmerText } from "react-shimmer-effects";
 import { Button } from 'react-bootstrap'
+import { organs } from '@/config/organs';
 
 function TableResultsCellTypes({ children, onRowClicked, filters, forData = false, rowFn, inModal = false, rawResponse }) {
 
   const raw = rowFn ? rowFn : ((obj) => obj ? (obj.raw || obj) : null)
 
-  const getId = (column) => column.id || column.uuid
+  const getId = (column) => column.code
 
   const currentColumns = useRef([])
   const [showModal, setShowModal] = useState(false)
+  const [modalTitle, setModalTitle] = useState(null)
+  const [modalBody, setModalBody] = useState(null)
   const [results, setResults] = useState([])
   const hiddenColumns = useRef(null)
   const tableContext = useRef(null)
   const [isBusy, setIsBusy] = useState(true)
   const [searchResponse, setSearchResponse] = useState({})
+  const {pageSize} = useSearchUIContext()
 
   const loadingComponent = <ShimmerText line={2} gap={10} />
 
+  function updatePagingInfo(resultsCount) {
+        $('.sui-paging-info strong').eq(1).text(resultsCount)
+    }
+
+  const formatDataForTable = () => {
+
+    setResults(rawResponse.records['cell-types'])
+    updatePagingInfo(rawResponse.record_count)
+  }
   useEffect(() => {
     // TODO: build results array
+    formatDataForTable()
     setIsBusy(false)
-  }, [])
+  }, [rawResponse, pageSize, pageSize])
+
+  const getHotLink = (row) => {
+      window.location = `/cell-types/${row.cl_id}`
+  }
 
   // Prepare opsDict
-  getOptions(children.length)
+  getOptions(results.length)
 
   const getSearchContext = () => `cellTypes.${tableContext.current}`
 
   const handleModal = (row) => {
     setShowModal(true)
-    setModalBody(<span>{raw(row.description)}</span>)
-    setModalTitle(<h5>Description for <code>{raw(row.sennet_id)}</code><ClipboardCopy text={raw(row.sennet_id)} /></h5>)
+    setModalBody(<span>{raw(row.cell_definition)}</span>)
+    setModalTitle(<h5>Description for <code>{raw(row.cell_label)}</code><ClipboardCopy text={raw(row.cell_label)} /></h5>)
   }
 
   const defaultColumns = ({ hasMultipleFileTypes = true, columns = [], _isLoggedIn }) => {
@@ -61,32 +77,32 @@ function TableResultsCellTypes({ children, onRowClicked, filters, forData = fals
     cols.push(
       {
         name: 'Cell Type',
-        id: 'name',
-        width: '200px',
-        selector: row => raw(row.name),
+        id: 'cell_label',
+        width: '25%',
+        selector: row => raw(row.cell_label),
         sortable: true,
         reorder: true,
-        format: row => <div><span>{raw(row.name)}</span><br /><small className='text-muted'>{raw(row.id)}</small></div>,
+        format: row => <div><span>{raw(row.cell_label)}</span><br /><small className='text-muted'>{raw(row.cl_id)}</small></div>,
       }
     )
 
     cols.push(
       {
         name: 'Description',
-        id: 'description',
-        selector: row => raw(row.description),
+        id: 'cell_definition',
+        selector: row => raw(row.cell_definition),
         sortable: true,
         reorder: true,
         format: (row) => {
           const max = 100
-          const desc = raw(row.description)
+          const desc = raw(row.cell_definition)
           if (!desc) {
             return null
           }
           return (<div>
             {desc.length > max ? desc.slice(0, max) : desc}
             {desc.length > max && <SenNetPopover text={'Read full details'} className={`popover-${getId(row)}`}>
-              <Chip label={<MoreHorizIcon />} size="small" onClick={() => handleModal(row)} />
+              &nbsp;<Chip label={<MoreHorizIcon />} size="small" onClick={() => handleModal(row)} />
             </SenNetPopover>}
           </div>)
         }
@@ -95,28 +111,26 @@ function TableResultsCellTypes({ children, onRowClicked, filters, forData = fals
 
     cols.push({
       name: 'Organs',
-      id: 'organs.label',
+      id: 'organs.code',
       width: '10%',
       selector: row => {
         let val = raw(row.organs)
         let organs = new Set()
-        if (val) {
-          if (Array.isArray(val)) {
-            for (let o of val) {
-              organs.add(getUBKGFullName(o.code))
-            }
-          } else {
-            organs.add(getUBKGFullName(val.code))
+        if (Array.isArray(val)) {
+          for (let o of val) {
+            organs.add(getUBKGFullName(o.code))
           }
-          if (organs.size > 0) {
-            return [...organs].join(', ')
-          }
+        }
+        if (organs.size > 0) {
+          return [...organs].join(', ')
         }
         return ''
       },
       sortable: true,
       reorder: true,
     })
+
+    return cols
 
   }
 
@@ -125,7 +139,7 @@ function TableResultsCellTypes({ children, onRowClicked, filters, forData = fals
     if (checkFilterType(filters) === false) {
       tableContext.current = 'default'
       cols = defaultColumns({});
-    } 
+    }
 
     if (columnsToHide) {
       hiddenColumns.current = columnsToHide
@@ -141,7 +155,7 @@ function TableResultsCellTypes({ children, onRowClicked, filters, forData = fals
 
   return (
     <>
-      <TableResultsProvider onRowClicked={onRowClicked} columnsRef={currentColumns} getId={getId} rows={results} filters={filters} forData={forData} raw={raw} inModal={inModal}>
+      <TableResultsProvider onRowClicked={onRowClicked} getHotLink={getHotLink} columnsRef={currentColumns} getId={getId} rows={results} filters={filters} forData={forData} raw={raw} inModal={inModal}>
         <ResultsBlock
           //onCheckboxChange={handleChecboxSelectionsStates}
           //searchActionHandlers={{getModalSelectedFiles:getModalSelectedFiles, clearCheckboxSelections: clearCheckboxSelections, getModalSelectedUuids: getModalSelectedUuids}}
@@ -150,7 +164,23 @@ function TableResultsCellTypes({ children, onRowClicked, filters, forData = fals
           searchContext={getSearchContext}
           tableClassName={'rdt_Results--CellTypes'}
           getTableColumns={getTableColumns}
-          totalRows={searchResponse?.aggregations?.total_datasets.value}
+          totalRows={results.length}
+          selectableRows={false}
+        />
+
+        <AppModal
+          className={`modal--searchCellTypes`}
+          modalSize={'xl'}
+          showModal={showModal}
+          modalTitle={modalTitle}
+          modalBody={modalBody}
+          handleSecondaryBtn={
+            () => {
+              setShowModal(false)
+            }}
+          showPrimaryBtn={false}
+          secondaryBtnLabel={
+            'Okay'}
         />
 
       </TableResultsProvider>

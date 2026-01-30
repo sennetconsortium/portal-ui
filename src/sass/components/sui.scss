@@ -139,6 +139,10 @@
   width: 100%;
   padding: 0 0 32px 32px;
 }
+.sui-facet {
+  max-height: 500px;
+  overflow-y: auto;
+}
 
 .sui-facet__title {
   outline: None !important;

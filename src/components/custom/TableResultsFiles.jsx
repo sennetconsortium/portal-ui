@@ -52,13 +52,13 @@ function TableResultsFiles({children, onRowClicked, filters, forData = false, ro
 
     useEffect(()=> {
         const resp = rawResponse
-        const results = transformResults(rawResponse)
-        setResults(results)
+        const _results = transformResults(rawResponse)
+        setResults(_results)
         setSearchResponse(resp)
         updatePagingInfo(resp?.aggregations?.total_datasets.value, resp)
         setIsBusy(false)
 
-    }, [rawResponse, pageSize, pageSize])
+    }, [rawResponse, pageSize])
 
     /**
      * A callback whenever rows are selected on the main table
