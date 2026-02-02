@@ -120,10 +120,10 @@ export const SEARCH_CELL_TYPES = {
         disjunctiveFacets: [],
         conditionalFacets: {},
         search_fields: {
-            cell_label: {type: 'value'},
-            cl_id: {type: 'value'},
-            cell_definition: {type: 'value'},
-            'organs.type': {type: 'value'},
+            'cell_label^2': {type: 'value'},
+            'cl_id^2': {type: 'value'},
+            'cell_definition^3': {type: 'value'},
+            //'organs.type': {type: 'value'},
             all_text: {type: 'value'},
         },
         source_fields: [
