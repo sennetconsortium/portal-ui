@@ -17,9 +17,13 @@ const connector = new SearchAPIConnector({
     accessToken: getAuth(),
     beforeSearchCall: (queryOptions, next) => {
         let esqFilter = parseJson(sessionStorage.getItem('esqFilter'))
-        console.log(esqFilter)
         if (esqFilter && Array.isArray(esqFilter) && esqFilter.length) {
-            queryOptions.query.bool.filter = [queryOptions.query.bool.filter, ...esqFilter]
+            if (Array.isArray(queryOptions.query.bool.filter)) {
+                queryOptions.query.bool.filter = [...queryOptions.query.bool.filter, ...esqFilter]
+            } else {
+                queryOptions.query.bool.filter = [queryOptions.query.bool.filter, ...esqFilter]
+            }
+            
         }
     return next(queryOptions)
     }

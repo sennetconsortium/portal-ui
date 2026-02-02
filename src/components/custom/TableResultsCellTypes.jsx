@@ -85,7 +85,7 @@ function TableResultsCellTypes({ children, onRowClicked, filters, forData = fals
         }
 
         if (ids.length) {
-          window.location = APP_ROUTES.search + `?addFilters=sennet_id=${ids.join(',')};entity_type=Dataset&fct=1`
+          window.location = APP_ROUTES.search + `?addFilters=sennet_id=${ids.join(',')};entity_type=Dataset;sources.source_type=Human;dataset_type=RNAseq&fct=1`
         }
         $(btnSelector).removeClass('btn-disabled')
         isSearching.current = false

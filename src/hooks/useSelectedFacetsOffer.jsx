@@ -33,14 +33,26 @@ function useSelectedFacetsOffer({filters}) {
 
   const determineOffers = () => {
     if (filters.length) {
-        for (let f of filters) {
-            if (_isDatasetFilter(f)) {
-              if (!hasOffered.current['searchByCellTypes'] && !fromCellTypeQuery.current) {
-                offerSearchByCellTypes()
-              }
-              break
-            }
+      let offerpoints = {
+        searchByCellTypes: 0
+      }
+      for (let f of filters) {
+        if (_isDatasetFilter(f)) {
+          offerpoints.searchByCellTypes += 1
         }
+        if (eq(f.field, 'sources.source_type') && eq(f.values[0], 'human')) {
+          offerpoints.searchByCellTypes += 1
+        }
+
+        if (eq(f.field, 'dataset_type') && ['transcriptomics', 'rnaseq'].contains(f.values[0])) {
+          offerpoints.searchByCellTypes += 1
+        }
+      }
+      if (offerpoints.searchByCellTypes === 3) {
+        if (!hasOffered.current['searchByCellTypes'] && !fromCellTypeQuery.current) {
+          offerSearchByCellTypes()
+        }
+      }
     }
   }
 

@@ -79,7 +79,7 @@ function SelectedFacets({searchContext}) {
         setTimeout(() => {
             resolveStaticChips()
         }, 300)
-    }, [])
+    }, [filters])
 
     const convertToDisplayLabel = (facet, key) => {
         switch (facet.facetType) {
