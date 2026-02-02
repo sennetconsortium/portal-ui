@@ -1,4 +1,5 @@
 import { useEffect, useState, useRef } from 'react'
+import { useRouter } from 'next/router'
 import {toast} from "react-toastify";
 import {
     eq
@@ -6,6 +7,8 @@ import {
 import { APP_ROUTES } from '@/config/constants';
 
 function useSelectedFacetsOffer({filters}) {
+  const router = useRouter()
+  const fromCellTypeQuery = useRef(false)
 
   const hasOffered = useRef({})
 
@@ -29,19 +32,22 @@ function useSelectedFacetsOffer({filters}) {
   }
 
   const determineOffers = () => {
-    const query = new URLSearchParams(window.location.search)
     if (filters.length) {
         for (let f of filters) {
             if (_isDatasetFilter(f)) {
-              if (!hasOffered.current['searchByCellTypes'] && !query.get('fct')) {
+              if (!hasOffered.current['searchByCellTypes'] && !fromCellTypeQuery.current) {
                 offerSearchByCellTypes()
               }
-              
               break
             }
         }
     }
   }
+
+  useEffect(() => {
+    if (!router.isReady) return
+    fromCellTypeQuery.current = router.query.fct
+  }, [router.isReady, router.query])
 
   useEffect(() => {
     determineOffers()
