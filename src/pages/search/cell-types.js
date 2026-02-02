@@ -110,7 +110,7 @@ function SearchCellTypes() {
                                         />
                                     </div>
                                     <div className='sui-filters-summary'>
-                                        <SelectedFacets/>
+                                        <SelectedFacets searchContext={'cellTypes'}/>
                                     </div>
                                 </>
                             }

@@ -14,7 +14,7 @@ const connector = new SearchAPIConnector({
     indexName: getCellTypesIndex(),
     indexUrl: getSearchEndPoint(),
     accessToken: getAuth(),
-        beforeSearchCall: (queryOptions, next) => {
+    beforeSearchCall: (queryOptions, next) => {
         
         queryOptions.collapse =  {
             field : "cl_id.keyword",

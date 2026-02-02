@@ -759,6 +759,43 @@ export const getDatasetsByIds = async (sennet_ids) => {
     });
 }
 
+export const getCellTypesByIds = async (ids) => {
+    const body = {
+        query: {
+            bool: {
+                filter: [
+                    {
+                    terms: {
+                        "cl_id.keyword": ids
+                    }
+                    }
+                ]
+            }
+        },
+        size: 10000,
+        _source: {
+            includes: [
+                'cl_id',
+                'cell_label',
+                'dataset',
+                'organs',
+            ]
+        }
+    }
+    const content = await fetchSearchAPIEntities(body, 'cell-types');
+    if (!content) {
+        return null;
+    }
+    return content.hits.hits.map((hit) => {
+        return {
+            cl_id: hit.cl_id,
+            cell_label: hit._source.cell_label,
+            dataset: hit._source.dataset,
+            organs: hit._source.organs,
+        }
+    });
+}
+
 export const filterProperties = {
     ancestors: {
         filter_properties: [

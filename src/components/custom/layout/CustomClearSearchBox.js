@@ -9,6 +9,7 @@ function CustomClearSearchBox({shouldClearFilters = true}) {
         setPageSize(20)
         setPageNumber(1)
         clearSearchTerm(shouldClearFilters)
+        sessionStorage.clear()
     }
 
     return (

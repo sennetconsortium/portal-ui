@@ -434,3 +434,13 @@
     text-transform: uppercase;
   }
 }
+
+.sui-chipToggle--static {
+  .chip-value {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    max-width: 150px;
+    display: inline-flex;
+  }
+}

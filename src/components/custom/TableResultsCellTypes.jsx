@@ -16,11 +16,12 @@ import { Chip } from "@mui/material";
 import SenNetPopover from "../SenNetPopover";
 import AppModal from "../AppModal";
 import { COLS_ORDER_KEY } from "@/config/config";
-import { parseJson } from "@/lib/services";
+import { getCellTypesByIds, parseJson } from "@/lib/services";
 import { useSearchUIContext } from "@/search-ui/components/core/SearchUIContext";
 import { ShimmerText } from "react-shimmer-effects";
 import { Button } from 'react-bootstrap'
 import { organs } from '@/config/organs';
+import { APP_ROUTES } from '@/config/constants';
 
 function TableResultsCellTypes({ children, onRowClicked, filters, forData = false, rowFn, inModal = false, rawResponse }) {
 
@@ -38,6 +39,7 @@ function TableResultsCellTypes({ children, onRowClicked, filters, forData = fals
   const [isBusy, setIsBusy] = useState(true)
   const [searchResponse, setSearchResponse] = useState({})
   const {pageSize} = useSearchUIContext()
+  const isSearching = useRef(false)
 
   const loadingComponent = <ShimmerText line={2} gap={10} />
 
@@ -57,7 +59,7 @@ function TableResultsCellTypes({ children, onRowClicked, filters, forData = fals
   }, [rawResponse, pageSize, pageSize])
 
   const getHotLink = (row) => {
-      window.location = `/cell-types/${row.cl_id}`
+      return `/cell-types/${row.cl_id}`
   }
 
   // Prepare opsDict
@@ -71,6 +73,26 @@ function TableResultsCellTypes({ children, onRowClicked, filters, forData = fals
     setModalTitle(<h5>Description for <code>{raw(row.cell_label)}</code><ClipboardCopy text={raw(row.cell_label)} /></h5>)
   }
 
+  const getIds = (e, row) => {
+    if (!isSearching.current) {
+      isSearching.current = true
+      const btnSelector = '.js-btn--cellTypes__viewDatasets'
+      $(btnSelector).addClass('btn-disabled')
+      getCellTypesByIds([row.cl_id]).then((_results)=>{
+        let ids = []
+        for (let r of _results) {
+          ids.push(r.dataset.sennet_id)
+        }
+
+        if (ids.length) {
+          window.location = APP_ROUTES.search + `?addFilters=sennet_id=${ids.join(',')};entity_type=Dataset&fct=1`
+        }
+        $(btnSelector).removeClass('btn-disabled')
+        isSearching.current = false
+      })
+    }
+  }
+
   const defaultColumns = ({ hasMultipleFileTypes = true, columns = [], _isLoggedIn }) => {
     let cols = []
 
@@ -82,7 +104,7 @@ function TableResultsCellTypes({ children, onRowClicked, filters, forData = fals
         selector: row => raw(row.cell_label),
         sortable: true,
         reorder: true,
-        format: row => <div><span>{raw(row.cell_label)}</span><br /><small className='text-muted'>{raw(row.cl_id)}</small></div>,
+        format: row => <a href={getHotLink(row)}><span>{raw(row.cell_label)}</span><br /><small className='text-muted'>{raw(row.cl_id)}</small></a>,
       }
     )
 
@@ -129,6 +151,19 @@ function TableResultsCellTypes({ children, onRowClicked, filters, forData = fals
       sortable: true,
       reorder: true,
     })
+
+    cols.push(
+      {
+        name: '',
+        id: 'view_datasets',
+        width: '25%',
+        selector: row => '',
+        sortable: false,
+        reorder: true,
+        format: row => <span role='button' className='btn btn-outline-primary js-btn--cellTypes__viewDatasets' onClick={(e) => getIds(e, row)}>View Datasets</span>,
+      }
+    )
+
 
     return cols
 

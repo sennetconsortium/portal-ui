@@ -9,11 +9,20 @@ import {
     isDateFacetVisible,
     lateralOrgans
 } from '../config';
+import { parseJson } from '@/lib/services';
 
 const connector = new SearchAPIConnector({
     indexName: getEntitiesIndex(),
     indexUrl: getSearchEndPoint(),
     accessToken: getAuth(),
+    beforeSearchCall: (queryOptions, next) => {
+        let esqFilter = parseJson(sessionStorage.getItem('esqFilter'))
+        console.log(esqFilter)
+        if (esqFilter && Array.isArray(esqFilter) && esqFilter.length) {
+            queryOptions.query.bool.filter = [queryOptions.query.bool.filter, ...esqFilter]
+        }
+    return next(queryOptions)
+    }
 })
 
 export const SEARCH_ENTITIES = {

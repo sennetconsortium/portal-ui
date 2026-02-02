@@ -100,7 +100,7 @@ function SearchEntities() {
                                         />
                                     </div>
                                     <div className='sui-filters-summary'>
-                                        <SelectedFacets/>
+                                        <SelectedFacets searchContext={'entities'} />
                                     </div>
                                 </>
                             }

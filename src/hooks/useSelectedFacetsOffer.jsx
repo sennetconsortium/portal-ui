@@ -14,6 +14,7 @@ function useSelectedFacetsOffer({filters}) {
   const offerSearchByCellTypes = () => {
     hasOffered.current['searchByCellTypes'] = true
     toast(<>With these search filters, you can now <a href={APP_ROUTES.search + '/cell-types'}>search the cell types</a>.</>, {
+      toastId: 'searchByCellOffer',
       className: 'Toastify__toast-center-left',
       position: "top-left",
       autoClose: 5000,
@@ -28,10 +29,11 @@ function useSelectedFacetsOffer({filters}) {
   }
 
   const determineOffers = () => {
+    const query = new URLSearchParams(window.location.search)
     if (filters.length) {
         for (let f of filters) {
             if (_isDatasetFilter(f)) {
-              if (!hasOffered.current['searchByCellTypes']) {
+              if (!hasOffered.current['searchByCellTypes'] && !query.get('fct')) {
                 offerSearchByCellTypes()
               }
               
@@ -42,7 +44,7 @@ function useSelectedFacetsOffer({filters}) {
   }
 
   useEffect(() => {
-      determineOffers()
+    determineOffers()
   }, [filters])
 
   return {}
