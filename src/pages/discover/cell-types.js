@@ -11,6 +11,7 @@ import { formatNum, getUBKGFullName } from "@/components/custom/js/functions";
 import { VisualizationsProvider } from "@/context/VisualizationsContext";
 import { prepareStackedData } from "@/components/custom/visualizations/charts/StackedBar";
 import { FormControlLabel, Switch } from "@mui/material";
+import { APP_ROUTES } from "@/config/constants";
 
 const AppNavbar = dynamic(() => import("../../components/custom/layout/AppNavbar"))
 const Header = dynamic(() => import("../../components/custom/layout/Header"))
@@ -64,10 +65,10 @@ function CellTypes() {
                     <div className="py-4 d-flex bd-highlight align-items-center">
                         <h1 className="m-0 flex-grow-1 bd-highlight fs-2">Cell Types</h1>
                         <div className="bd-highlight">
-                            <button className="btn btn-outline-primary rounded-0 clear-filter-button"
+                            <a href={APP_ROUTES.search + 'cell-types'} className="btn btn-outline-primary rounded-0 clear-filter-button"
                             >
                                 Search All {Object.values(subGroupLabels.current).length} Cell Types
-                            </button>
+                            </a>
                         </div>
                     </div>
                 </Row>
