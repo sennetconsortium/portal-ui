@@ -114,7 +114,7 @@ function Bar({
             .selectAll()
             .data(data)
             .join("rect")
-            .attr("class", d => `bar--${d.id?.toDashedCase()}`)
+            .attr("class", d => `bar--${d.label?.toDashedCase()}`)
             .attr("x", (d) => x(d.label))
             .attr('data-value', (d) => yAxis.formatter ? yAxis.formatter(d.value) : d.value)
             .attr("fill", function (d) {
