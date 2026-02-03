@@ -33,7 +33,7 @@ function SimpleBarChart({ data, xAxisLabel, yAxisLabel, ariaLabel, width = 600, 
     const ticks = Array.from({ length: yTicks + 1 }, (_, i) => Math.round((maxCount * i) / yTicks))
 
     return (
-        <div style={{ width, maxWidth: '100%', paddingBottom: '1rem' }}>
+        <div style={{ width, maxWidth: '100%' }}>
             <svg
                 width='100%'
                 viewBox={`0 0 ${width} ${height}`}
