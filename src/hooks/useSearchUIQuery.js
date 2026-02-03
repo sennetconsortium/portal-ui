@@ -62,20 +62,7 @@ export default function useSearchUIQuery(index, body) {
                 if (cancelled || !mounted.current) {
                     return
                 }
-
-                // extract hits
-                const hits = []
-                if (res.hits) {
-                    for (const hit of res.hits.hits) {
-                        hits.push(hit._source)
-                    }
-                }
-
-                setData({
-                    hits: hits,
-                    total: res.hits ? res.hits.total : 0,
-                    aggregations: res.aggregations || {}
-                })
+                setData(res)
             } catch (err) {
                 if (cancelled || !mounted.current) {
                     return
