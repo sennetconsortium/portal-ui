@@ -1,9 +1,9 @@
-import ClipboardCopy from '@/components/ClipboardCopy';
-import { displayBodyHeader, getOrganMeta, getUBKGFullName } from '@/components/custom/js/functions';
-import { APP_ROUTES } from "@/config/constants";
-import { getOrganByCode } from "@/config/organs";
-import Image from 'next/image';
-import { Fragment } from 'react';
+import ClipboardCopy from '@/components/ClipboardCopy'
+import { displayBodyHeader, getOrganMeta, getUBKGFullName } from '@/components/custom/js/functions'
+import { APP_ROUTES } from '@/config/constants'
+import { getOrganByCode } from '@/config/organs'
+import Image from 'next/image'
+import { Fragment } from 'react'
 
 const getOrganRoute = (ruiCode) => {
     const organ = getOrganByCode(ruiCode)
@@ -51,16 +51,6 @@ function ViewHeader({ label, clId, organs }) {
                                 )}
                             </Fragment>
                         ))}
-
-                    <h5 className='title-badge'>
-                        <span className='badge bg-secondary me-2'>{'Blood'}</span>
-                    </h5>
-                    <h5 className='title-badge'>
-                        <span className='badge bg-secondary me-2'>{'RNA-Seq'}</span>
-                    </h5>
-                    <h5 className='title-badge'>
-                        <span className='badge bg-secondary me-2'>{'Slide-seq'}</span>
-                    </h5>
                 </div>
             </div>
         </div>

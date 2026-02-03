@@ -22,6 +22,10 @@ function ViewCellType() {
     const router = useRouter()
     const { clid } = router.query
 
+    function getUniqueOrgans(data) {
+        return data?.aggregations?.unique_organs?.buckets?.map((bucket) => bucket.key) || []
+    }
+
     const query = clid
         ? {
               _source: ['cell_label', 'cell_definition', 'cl_id', 'cell_count'],
@@ -30,6 +34,14 @@ function ViewCellType() {
                   term: {
                       'cl_id.keyword': {
                           value: clid
+                      }
+                  }
+              },
+              aggs: {
+                  unique_organs: {
+                      terms: {
+                          field: 'organs.code.keyword',
+                          size: 10000
                       }
                   }
               }
@@ -78,7 +90,11 @@ function ViewCellType() {
                     <main className='col m-md-3 entity-details'>
                         <SidebarBtn />
 
-                        <ViewHeader label={data?.hits?.hits[0]?._source?.cell_label} clId={clid} />
+                        <ViewHeader
+                            label={data?.hits?.hits[0]?._source?.cell_label}
+                            clId={clid}
+                            organs={getUniqueOrgans(data)}
+                        />
 
                         {/*Description*/}
                         <SenNetAccordion
