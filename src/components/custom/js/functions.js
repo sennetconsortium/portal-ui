@@ -126,6 +126,8 @@ export function getUBKGFullName(term) {
     }
 }
 
+export const formatNum = (num) => typeof num === 'number' ?  new Intl.NumberFormat().format(num) : 0
+
 const normalizedNames = {
     true: "True",
     false: "False",
@@ -493,6 +495,20 @@ Object.assign(String.prototype, {
             /\w\S*/g,
             text => text.charAt(0).toUpperCase() + text.substring(1).toLowerCase()
         )
+    },
+    toCamelCase() {
+        return this.replace(/\s(.)/g, function (a) {
+            return a.toUpperCase();
+        })
+        .replace(/\s/g, '')
+        .replace(/^(.)/, function (b) {
+            return b.toLowerCase();
+        });
+    },
+    toDashedCase() {
+        return this
+            .replace(/[^a-zA-Z0-9]+/g, '-')
+            .toLowerCase();
     },
     contains(needle) {
         return this.indexOf(needle) !== -1

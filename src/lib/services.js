@@ -796,6 +796,44 @@ export const getCellTypesByIds = async (ids) => {
     });
 }
 
+export const getDistinctOrgansAndCellTypes = async () => {
+    const body = {
+        size: 0,
+        aggs: {
+            group_by_organs: {
+            terms: {
+                field: "organs.code.keyword",
+                size: 10000
+            },
+            aggs: {
+                group_by_cell_label: {
+                terms: {
+                    field: "cell_label.keyword"
+                },
+                aggs: {
+                    total_cell_count: {
+                    sum: {
+                        field: "cell_count"
+                    }
+                    }
+                }
+                }
+            }
+            }
+        }
+        }
+    const content = await fetchSearchAPIEntities(body, 'cell-types');
+    if (!content) {
+        return null;
+    }
+    return content.aggregations.group_by_organs.buckets.map((hit) => {
+        return {
+            code: hit.key,
+            cellTypes: hit.group_by_cell_label.buckets,
+        }
+    });
+}
+
 export const filterProperties = {
     ancestors: {
         filter_properties: [
