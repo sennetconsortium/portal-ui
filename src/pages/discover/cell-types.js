@@ -78,6 +78,7 @@ function CellTypes() {
                 <VisualizationsProvider>
                     <FormControlLabel control={<Switch defaultChecked />} label="Log scale" onChange={changeScale} />
                     <ChartContainer subGroupLabels={subGroupLabels.current} data={visualizationData} xAxis={xAxis} yAxis={yAxis} chartType={'stackedBar'}/>
+                     <ChartContainer subGroupLabels={subGroupLabels.current} data={visualizationData} xAxis={xAxis} yAxis={yAxis} chartType={'horizontalStackedBar'}/>
                 </VisualizationsProvider>
             </Container>
         </>

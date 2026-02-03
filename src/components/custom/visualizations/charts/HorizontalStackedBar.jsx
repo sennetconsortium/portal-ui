@@ -3,26 +3,14 @@ import * as d3 from 'd3';
 import { useContext, useEffect, useRef } from 'react'
 import VisualizationsContext from '@/context/VisualizationsContext';
 
-export const prepareStackedData = (data, desc = true) => {
-    let sorted = []
-    for (let d of data) {
-        sorted.push(Object.fromEntries(
-            Object.entries(d).sort(([, a], [, b]) => desc ? (b - a) : (a - b))
-        ))
-    }
 
-    Addon.log('prepareStackedData', { data: sorted })
-
-    return sorted
-}
-
-function StackedBar({
+function HorizontalStackedBar({
     setLegend,
     filters,
     data = [],
     reload = true,
     subGroupLabels = {},
-    chartId = 'modal',
+    chartId = 'hStackedBar',
     yAxis = {},
     xAxis = {}
 }) {
@@ -32,7 +20,7 @@ function StackedBar({
         appendTooltip } = useContext(VisualizationsContext)
 
 
-    const chartType = 'stackedBar'
+    const chartType = 'horizontalStackedBar'
     const colors = useRef({})
     const chartData = useRef([])
     const hasLoaded = useRef(false)
@@ -52,7 +40,7 @@ function StackedBar({
     const buildChart = () => {
 
         const dyWidth = Math.max(460, data.length * 150)
-        const margin = { top: 10, right: 30, bottom: 40, left: 50 },
+        const margin = { top: 10, right: 30, bottom: 40, left: 100 },
             width = (Math.min((dyWidth), 1000)) - margin.left - margin.right,
             height = 420 - margin.top - margin.bottom;
         const marginY = (margin.top + margin.bottom) * 3
@@ -72,15 +60,15 @@ function StackedBar({
 
         const groups = data.map(d => (d.group))
 
-        // Add X axis
-        const x = d3.scaleBand()
+        // Add Y axis
+        const y = d3.scaleBand()
             .domain(groups)
-            .range([0, width])
+            .range([0, height])
             .padding([0.2])
 
         g.append("g")
-            .attr("transform", `translate(0, ${height})`)
-            .call(d3.axisBottom(x).tickSizeOuter(0));
+            //.attr("transform", `translate(0, ${height})`)
+            .call(d3.axisLeft(y));
 
         let maxY = 0;
         for (let d of data) {
@@ -101,16 +89,17 @@ function StackedBar({
             stackedSorted.push(subgroupsSorted)
         }
 
-        const ticks = yAxis.scaleLog || yAxis.ticks ? yAxis.ticks || 5 : undefined
+        const ticks = yAxis.scaleLog || yAxis.ticks ? yAxis.ticks || 3 : undefined
         const scaleMethod = yAxis.scaleLog ? d3.scaleLog : d3.scaleLinear
         const minY = yAxis.scaleLog ? 1 : 0
 
-        // Add Y axis
-        const y = scaleMethod()
+        // Add X axis
+        const x = scaleMethod()
             .domain([minY, maxY])
-            .range([height, 0]);
+            .range([0, width]);
         g.append("g")
-            .call(d3.axisLeft(y).ticks(ticks))
+            .attr("transform", `translate(0, ${height})`)
+            .call(d3.axisBottom(x).ticks(ticks))
 
         if (showYLabels()) {
             svg.append("g")
@@ -142,14 +131,14 @@ function StackedBar({
 
         const getSubgroupLabel = (v) => subGroupLabels[v] || v
 
-        g.selectAll(".y-grid")
-            .data(y.ticks(ticks))
+        g.selectAll(".x-grid")
+            .data(x.ticks(ticks))
             .enter().append("line")
-            .attr("class", "y-grid")
-            .attr("x1", 0)
-            .attr("y1", d => Math.ceil(y(d)))
-            .attr("x2", width)
-            .attr("y2", d => Math.ceil(y(d)))
+            .attr("class", "x-grid")
+            .attr("y1", 0)
+            .attr("x1", d => Math.ceil(x(d)))
+            .attr("y2", width)
+            .attr("x2", d => Math.ceil(x(d)))
             .style("stroke", "#eee") // Light gray
             .style("stroke-width", "1px")
 
@@ -176,10 +165,9 @@ function StackedBar({
                 return getSubgroupLabel(d.key)
             })
             .attr("class", d => `bar--${getSubgroupLabel(d.key).toDashedCase()}`)
-            .attr("x", d => x(d.group))
-            .attr("y", height)
-            .attr("height", 0)
-            .attr("width", x.bandwidth())
+            .attr("y", d => y(d.group))
+            .attr("width", d => x(d.val))
+            .attr("height", y.bandwidth())
             .append("title")
             .text(d => {
                 return `${d.group}\n${getSubgroupLabel(d.key)}: ${formatVal(d.val)}`
@@ -193,12 +181,13 @@ function StackedBar({
         svg.selectAll("rect")
             .transition()
             .duration(800)
-            .attr("height", d => {
-                return height - y(d.val)
-            })
-            .attr("y", d => {
-                return y(d.val)
-            })
+            // .attr("height", d => {
+            //     return width - x(d.val)
+            // })
+            // .attr("x", d => {
+            //     return x(d.val)
+            // })
+            
 
         return svg.node();
     }
@@ -227,8 +216,8 @@ function StackedBar({
     }, [filters, yAxis])
 
     return (
-        <div className={`c-visualizations__chart c-visualizations__stackedBar c-bar`} id={`c-visualizations__stackedBar--${chartId}`}></div>
+        <div className={`c-visualizations__chart c-visualizations__horizontalStackedBar c-bar`} id={`c-visualizations__horizontalStackedBar--${chartId}`}></div>
     )
 }
 
-export default StackedBar
+export default HorizontalStackedBar
