@@ -9,7 +9,7 @@ import useSearchUIQuery from '@/hooks/useSearchUIQuery'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/router'
 import { useContext } from 'react'
-import Card from 'react-bootstrap/Card'
+import { Button, Card } from 'react-bootstrap'
 
 const AppFooter = dynamic(() => import('@/components/custom/layout/AppFooter'))
 const Header = dynamic(() => import('@/components/custom/layout/Header'))
@@ -79,6 +79,20 @@ function ViewCellType() {
                         <SidebarBtn />
 
                         <ViewHeader label={data?.hits?.hits[0]?._source?.cell_label} clId={clid} />
+
+                        {/*Description*/}
+                        <SenNetAccordion
+                            id='Description'
+                            title={data?.hits?.hits[0]?._source?.cell_definition}
+                        >
+                            <Button
+                                variant='outline-primary'
+                                className='rounded-0 mb-4'
+                                href='/search'
+                            >
+                                View Datasets
+                            </Button>
+                        </SenNetAccordion>
 
                         {/* Cell Type Distribution */}
                         <SenNetAccordion id='CellTypeDistribution' title='Cell Type Distribution'>

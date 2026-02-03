@@ -30,9 +30,8 @@ export default function CellTypeDistribution({ clId }) {
                     size: 100
                 },
                 aggs: {
-                    total_cells: {
-                        sum: { field: 'cell_count' }
-                    }
+                    total_cells: { sum: { field: 'cell_count' } },
+                    unique_datasets: { cardinality: { field: 'dataset.uuid.keyword' } }
                 }
             }
         }
@@ -81,6 +80,9 @@ export default function CellTypeDistribution({ clId }) {
 
     return (
         <VisualizationsProvider>
+            <div>
+                Organs
+            </div>
             <ChartContainer
                 data={buildOrganChartData(data)}
                 xAxis={xAxis}
