@@ -1,17 +1,21 @@
 import { getOrganByCode } from '@/config/organs'
-import useSearchUIQuery from '@/hooks/useSearchUIQuery'
-import Spinner from '../Spinner'
-import SimpleBarChart from './SimpleBarChart'
-import { formatNum } from '../js/functions'
 import { VisualizationsProvider } from '@/context/VisualizationsContext'
+import useSearchUIQuery from '@/hooks/useSearchUIQuery'
+import { formatNum } from '../js/functions'
+import Spinner from '../Spinner'
 import ChartContainer from '../visualizations/ChartContainer'
 
 /**
- * Displays a bar chart of Organ (x) -> sum(cell_count) (y) for a given CL id.
- *
- * @param {{clId: string, width?: number, height?: number}} props
+ * @typedef {object} CellTypeDistributionProps
+ * @property {string} clId - The CL ID to query.
  */
-export default function CellTypeDistribution({ clId, width = 700, height = 320 }) {
+
+/**
+ * Displays a bar chart with organs on x-axis and cell counts on y-axis for a given CL id.
+ *
+ * @param {CellTypeDistributionProps} props
+ */
+export default function CellTypeDistribution({ clId }) {
     const query = {
         size: 0,
         query: {
@@ -68,12 +72,21 @@ export default function CellTypeDistribution({ clId, width = 700, height = 320 }
         return <div>Unable to load chart</div>
     }
 
-    const yAxis = { label: "Cell Count", formatter: formatNum, scaleLog: false, ticks: 3 }
-    const xAxis = { formatter: formatNum, label: 'Organ', description: `Bar chart showing distribution of cell type ${clId} across organs.`}
+    const yAxis = { label: 'Cell Count', formatter: formatNum, scaleLog: false, ticks: 3 }
+    const xAxis = {
+        formatter: formatNum,
+        label: 'Organ',
+        description: `Bar chart showing distribution of cell type ${clId} across organs.`
+    }
 
     return (
         <VisualizationsProvider>
-            <ChartContainer  data={buildOrganChartData(data)} xAxis={xAxis} yAxis={yAxis} chartType={'bar'} />
+            <ChartContainer
+                data={buildOrganChartData(data)}
+                xAxis={xAxis}
+                yAxis={yAxis}
+                chartType={'bar'}
+            />
         </VisualizationsProvider>
     )
 }
