@@ -1,25 +1,26 @@
-import React from 'react'
-
 /**
- * @typedef {Object} BarDataItem
- * @property {string} organ - Organ name (e.g. 'Kidney').
- * @property {number} count - Cell count for the organ.
+ * @typedef {Object} SimpleBarDataItem
+ * @property {string} label - Item label (x axis).
+ * @property {number} number - Item value (y axis).
  */
 
 /**
- * @typedef {Object} BarChartProps
- * @property {BarDataItem[]} [data] - Array of data items to plot.
+ * @typedef {Object} SimpleBarChartProps
+ * @property {SimpleBarDataItem[]} data - Array of data items to plot.
+ * @property {string} xAxisLabel - Label for the x axis.
+ * @property {string} yAxisLabel - Label for the y axis.
+ * @property {string} ariaLabel - Accessible label for the chart.
  * @property {number} [width] - Overall chart width.
  * @property {number} [height] - Overall chart height.
  */
 
 /**
- * BarChart component: renders a simple SVG bar chart.
+ * SimpleBarChart component: renders a simple SVG bar chart.
  *
- * @param {BarChartProps} props
+ * @param {SimpleBarChartProps} props
  * @returns {JSX.Element}
  */
-function BarChart({ data, width = 600, height = 300 }) {
+function SimpleBarChart({ data, xAxisLabel, yAxisLabel, ariaLabel, width = 600, height = 300 }) {
     const margin = { top: 20, right: 20, bottom: 50, left: 100 }
     const innerWidth = width - margin.left - margin.right
     const innerHeight = height - margin.top - margin.bottom
@@ -37,7 +38,7 @@ function BarChart({ data, width = 600, height = 300 }) {
                 width='100%'
                 viewBox={`0 0 ${width} ${height}`}
                 role='img'
-                aria-label='Organ cell count bar chart'
+                aria-label={ariaLabel}
                 style={{ overflow: 'visible' }}
             >
                 {/* y axis ticks and labels */}
@@ -78,7 +79,7 @@ function BarChart({ data, width = 600, height = 300 }) {
                         const barHeight = (d.count / maxCount) * innerHeight
                         const y = innerHeight - barHeight
                         return (
-                            <g key={d.organ}>
+                            <g key={d.label}>
                                 <rect
                                     x={x}
                                     y={y}
@@ -103,7 +104,7 @@ function BarChart({ data, width = 600, height = 300 }) {
                                     textAnchor='middle'
                                     fill='#111'
                                 >
-                                    {d.organ}
+                                    {d.label}
                                 </text>
                             </g>
                         )
@@ -117,7 +118,7 @@ function BarChart({ data, width = 600, height = 300 }) {
                         textAnchor='middle'
                         fontWeight='bold'
                     >
-                        Cell Count
+                        {yAxisLabel}
                     </text>
                     <text
                         x={innerWidth / 2}
@@ -127,7 +128,7 @@ function BarChart({ data, width = 600, height = 300 }) {
                         fill='#111'
                         fontWeight='bold'
                     >
-                        Organ
+                        {xAxisLabel}
                     </text>
                 </g>
             </svg>
@@ -135,4 +136,4 @@ function BarChart({ data, width = 600, height = 300 }) {
     )
 }
 
-export default BarChart
+export default SimpleBarChart

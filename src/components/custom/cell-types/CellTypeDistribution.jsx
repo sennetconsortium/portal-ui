@@ -1,7 +1,7 @@
 import { getOrganByCode } from '@/config/organs'
-import { fetchSearchAPIEntities } from '@/lib/services'
-import { useEffect, useState } from 'react'
-import BarChart from './BarChart'
+import useSearchUIQuery from '@/hooks/useSearchUIQuery'
+import Spinner from '../Spinner'
+import SimpleBarChart from './SimpleBarChart'
 
 /**
  * Displays a bar chart of Organ (x) -> sum(cell_count) (y) for a given CL id.
@@ -17,7 +17,7 @@ export default function CellTypeDistribution({ clId, width = 700, height = 320 }
             }
         },
         aggs: {
-            organ_codes: {
+            by_organ_code: {
                 terms: {
                     field: 'organs.code.keyword',
                     size: 100
@@ -31,12 +31,50 @@ export default function CellTypeDistribution({ clId, width = 700, height = 320 }
         }
     }
 
+    function buildOrganChartData(data) {
+        // combine buckets that are lateral organs
+        const organs = {}
+        data?.aggregations?.by_organ_code?.buckets?.forEach((bucket) => {
+            const organInfo = getOrganByCode(bucket.key)
+            if (!organInfo) {
+                return
+            }
+            if (organs[organInfo.label]) {
+                organs[organInfo.label] += bucket.total_cells.value
+            } else {
+                organs[organInfo.label] = bucket.total_cells.value
+            }
+        })
+        const organList = Object.keys(organs).map((organLabel) => ({
+            label: organLabel,
+            count: organs[organLabel]
+        }))
+
+        // sort by count
+        organList.sort((a, b) => b.count - a.count)
+
+        console.log('==== organList', organList)
+
+        return organList
+    }
+
     const { data, loading, error } = useSearchUIQuery('cell-types', query)
 
-    if (loading) return <div>Loading chart…</div>
-    if (error && error.status === 404) return <div>{error.message}</div>
-    if (error) return <div>Error loading chart</div>
-    if (!data) return null
+    if (loading) {
+        return <Spinner />
+    }
+    if (error || !data) {
+        return <div>Unable to load chart</div>
+    }
 
-    return <BarChart data={data} width={width} height={height} />
+    return (
+        <SimpleBarChart
+            data={buildOrganChartData(data)}
+            xAxisLabel='Organ'
+            yAxisLabel='Cell Count'
+            ariaLabel={`Bar chart showing distribution of cell type ${clId} across organs.`}
+            width={width}
+            height={height}
+        />
+    )
 }
