@@ -78,7 +78,7 @@ function ViewCellType() {
                     <main className='col m-md-3 entity-details'>
                         <SidebarBtn />
 
-                        <ViewHeader label={data?.hits[0]?.cell_label} clId={clid} />
+                        <ViewHeader label={data?.hits?.hits[0]?._source?.cell_label} clId={clid} />
 
                         {/* Cell Type Distribution */}
                         {/* <SenNetAccordion id='CellTypeDistribution' title='Cell Type Distribution'>
