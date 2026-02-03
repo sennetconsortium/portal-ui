@@ -1,4 +1,5 @@
 import CellTypeDistribution from '@/components/custom/cell-types/CellTypeDistribution'
+import CellTypeDistributionAcrossOrgans from '@/components/custom/cell-types/CellTypeDistributionAcrossOrgans'
 import ViewHeader from '@/components/custom/cell-types/ViewHeader'
 import AppNavbar from '@/components/custom/layout/AppNavbar'
 import SenNetAccordion from '@/components/custom/layout/SenNetAccordion'
@@ -89,19 +90,16 @@ function ViewCellType() {
                         </SenNetAccordion>
 
                         {/* Cell Type Distribution Across Organs */}
-                        {/* <SenNetAccordion
+                        <SenNetAccordion
                             id='CellTypeDistributionAcrossOrgans'
                             title='Cell Type Distribution Across Organs'
                         >
                             <Card border='0'>
-                                <Card.Body className='mx-auto'>
-                                    <CellTypeDistributionAcrossOrgans
-                                        clId={clid}
-                                        organCode='UBERON:0002168'
-                                    />
+                                <Card.Body className='mx-auto w-100 mb-4'>
+                                    <CellTypeDistributionAcrossOrgans clId={clid} />
                                 </Card.Body>
                             </Card>
-                        </SenNetAccordion> */}
+                        </SenNetAccordion>
                     </main>
                 </div>
             </div>
