@@ -11,7 +11,6 @@ export const VisualizationsProvider = ({ children }) => {
     return (
         <VisualizationsContext.Provider
             value={{
-                uiAdminAuthorized
             }}
         >
         {children}
