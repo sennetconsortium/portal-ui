@@ -76,7 +76,8 @@ function CellTypes() {
                     Visualize and compare cell type distribution across organs using interactive plots, and find datasets relevant to the cell type.</p>
                 <VisualizationsProvider>
                     <FormControlLabel control={<Switch defaultChecked />} label="Log scale" onChange={changeScale} />
-                    <ChartContainer subGroupLabels={subGroupLabels.current} data={visualizationData} xAxis={xAxis} yAxis={yAxis} /></VisualizationsProvider>
+                    <ChartContainer subGroupLabels={subGroupLabels.current} data={visualizationData} xAxis={xAxis} yAxis={yAxis} chartType={'stackedBar'}/>
+                </VisualizationsProvider>
             </Container>
         </>
     )

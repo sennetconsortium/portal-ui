@@ -2,6 +2,9 @@ import { getOrganByCode } from '@/config/organs'
 import useSearchUIQuery from '@/hooks/useSearchUIQuery'
 import Spinner from '../Spinner'
 import SimpleBarChart from './SimpleBarChart'
+import { formatNum } from '../js/functions'
+import { VisualizationsProvider } from '@/context/VisualizationsContext'
+import ChartContainer from '../visualizations/ChartContainer'
 
 /**
  * Displays a bar chart of Organ (x) -> sum(cell_count) (y) for a given CL id.
@@ -47,11 +50,11 @@ export default function CellTypeDistribution({ clId, width = 700, height = 320 }
         })
         const organList = Object.keys(organs).map((organLabel) => ({
             label: organLabel,
-            count: organs[organLabel]
+            value: organs[organLabel]
         }))
 
         // sort by count
-        organList.sort((a, b) => b.count - a.count)
+        organList.sort((a, b) => b.value - a.value)
 
         return organList
     }
@@ -65,14 +68,12 @@ export default function CellTypeDistribution({ clId, width = 700, height = 320 }
         return <div>Unable to load chart</div>
     }
 
+    const yAxis = { label: "Cell Count", formatter: formatNum, scaleLog: false, ticks: 3 }
+    const xAxis = { formatter: formatNum, label: 'Organ', description: `Bar chart showing distribution of cell type ${clId} across organs.`}
+
     return (
-        <SimpleBarChart
-            data={buildOrganChartData(data)}
-            xAxisLabel='Organ'
-            yAxisLabel='Cell Count'
-            ariaLabel={`Bar chart showing distribution of cell type ${clId} across organs.`}
-            width={width}
-            height={height}
-        />
+        <VisualizationsProvider>
+            <ChartContainer  data={buildOrganChartData(data)} xAxis={xAxis} yAxis={yAxis} chartType={'bar'} />
+        </VisualizationsProvider>
     )
 }
