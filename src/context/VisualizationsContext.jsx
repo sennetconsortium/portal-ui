@@ -1,22 +1,22 @@
 import {createContext, useContext, useEffect, useState} from "react";
 import AppContext from "./AppContext";
 
-const ChartContext = createContext()
+const VisualizationsContext = createContext()
 
-export const ChartProvider = ({ children }) => {
+export const VisualizationsProvider = ({ children }) => {
 
     const { _t, authorized, isUnauthorized, router} = useContext(AppContext)
 
    
     return (
-        <ChartContext.Provider
+        <VisualizationsContext.Provider
             value={{
                 uiAdminAuthorized
             }}
         >
         {children}
-    </ChartContext.Provider>
+    </VisualizationsContext.Provider>
     )
 }
 
-export default ChartContext
+export default VisualizationsContext

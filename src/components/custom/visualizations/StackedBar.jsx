@@ -1,7 +1,7 @@
 import React from 'react'
 import * as d3 from 'd3';
 import { useContext, useEffect, useRef } from 'react'
-import ChartContext from '@/context/ChartContext';
+import VisualizationsContext from '@/context/VisualizationsContext';
 
 export const prepareStackedData = (data) => {
     let sorted = []
@@ -29,7 +29,7 @@ function StackedBar({
     const {
         getChartSelector,
         toolTipHandlers,
-        appendTooltip } = useContext(ChartContext)
+        appendTooltip } = useContext(VisualizationsContext)
 
 
     const chartType = 'stackedBar'
