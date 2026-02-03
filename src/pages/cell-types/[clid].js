@@ -82,7 +82,7 @@ function ViewCellType() {
                         {/* Cell Type Distribution */}
                         <SenNetAccordion id='CellTypeDistribution' title='Cell Type Distribution'>
                             <Card border='0'>
-                                <Card.Body className='mx-auto'>
+                                <Card.Body className='mx-auto mb-4'>
                                     <CellTypeDistribution clId={clid} />
                                 </Card.Body>
                             </Card>
