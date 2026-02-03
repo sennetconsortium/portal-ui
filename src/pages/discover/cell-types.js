@@ -53,8 +53,8 @@ function CellTypes() {
         })
     }, [])
 
-    const yAxis = { label: "Cell Count", formatter: formatNum, scaleLog: isLogScale, ticks: 3 }
-    const xAxis = { formatter: formatNum, label: `Organs` }
+    const yAxis = { label: "Cell Count", formatter: formatNum, scaleLog: isLogScale, showLabels: false, showGrid: false, ticks: 3 }
+    const xAxis = { formatter: formatNum, label: `Organs`, showLabels: false, showGrid: false }
 
     return (
         <>
@@ -78,7 +78,7 @@ function CellTypes() {
                 <VisualizationsProvider>
                     <FormControlLabel control={<Switch defaultChecked />} label="Log scale" onChange={changeScale} />
                     <ChartContainer subGroupLabels={subGroupLabels.current} data={visualizationData} xAxis={xAxis} yAxis={yAxis} chartType={'stackedBar'}/>
-                     <ChartContainer subGroupLabels={subGroupLabels.current} data={visualizationData} xAxis={xAxis} yAxis={yAxis} chartType={'horizontalStackedBar'}/>
+                    <ChartContainer subGroupLabels={subGroupLabels.current} data={[visualizationData[0]]} style={{width: 820, height: 200}} xAxis={xAxis} yAxis={yAxis} chartType={'horizontalStackedBar'}/>
                 </VisualizationsProvider>
             </Container>
         </>

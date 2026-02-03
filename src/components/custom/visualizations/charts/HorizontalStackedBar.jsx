@@ -11,6 +11,7 @@ function HorizontalStackedBar({
     reload = true,
     subGroupLabels = {},
     chartId = 'hStackedBar',
+    style = {},
     yAxis = {},
     xAxis = {}
 }) {
@@ -39,10 +40,10 @@ function HorizontalStackedBar({
 
     const buildChart = () => {
 
-        const dyWidth = Math.max(460, data.length * 150)
+        const dyWidth = style.width || (Math.max(460, data.length * 150))
         const margin = { top: 10, right: 30, bottom: 40, left: 100 },
             width = (Math.min((dyWidth), 1000)) - margin.left - margin.right,
-            height = 420 - margin.top - margin.bottom;
+            height = (style.height || 420) - margin.top - margin.bottom;
         const marginY = (margin.top + margin.bottom) * 3
         const marginX = margin.left + margin.right * 3
 
@@ -58,17 +59,13 @@ function HorizontalStackedBar({
 
         const subgroups = Object.keys(subGroupLabels)
 
-        const groups = data.map(d => (d.group))
+        const groups = data.map(d => (d?.group))
 
         // Add Y axis
         const y = d3.scaleBand()
             .domain(groups)
             .range([0, height])
             .padding([0.2])
-
-        g.append("g")
-            //.attr("transform", `translate(0, ${height})`)
-            .call(d3.axisLeft(y));
 
         let maxY = 0;
         for (let d of data) {
@@ -98,6 +95,7 @@ function HorizontalStackedBar({
             .domain([minY, maxY])
             .range([0, width]);
         g.append("g")
+            .attr('class', 'x-axis')
             .attr("transform", `translate(0, ${height})`)
             .call(d3.axisBottom(x).ticks(ticks))
 
@@ -131,7 +129,8 @@ function HorizontalStackedBar({
 
         const getSubgroupLabel = (v) => subGroupLabels[v] || v
 
-        g.selectAll(".x-grid")
+        if (xAxis.showGrid) {
+            g.selectAll(".x-grid")
             .data(x.ticks(ticks))
             .enter().append("line")
             .attr("class", "x-grid")
@@ -141,6 +140,8 @@ function HorizontalStackedBar({
             .attr("x2", d => Math.ceil(x(d)))
             .style("stroke", "#eee") // Light gray
             .style("stroke-width", "1px")
+        }
+        
 
         // Show the bars
         g.append("g")
@@ -166,7 +167,7 @@ function HorizontalStackedBar({
             })
             .attr("class", d => `bar--${getSubgroupLabel(d.key).toDashedCase()}`)
             .attr("y", d => y(d.group))
-            .attr("width", d => x(d.val))
+            .attr("width", 0)
             .attr("height", y.bandwidth())
             .append("title")
             .text(d => {
@@ -181,13 +182,14 @@ function HorizontalStackedBar({
         svg.selectAll("rect")
             .transition()
             .duration(800)
-            // .attr("height", d => {
-            //     return width - x(d.val)
-            // })
-            // .attr("x", d => {
-            //     return x(d.val)
-            // })
-            
+            .attr("width", d => {
+                return x(d.val)
+            })
+          
+           
+        g.append("g")
+            .attr("class", `y-axis`)
+            .call(d3.axisLeft(y));
 
         return svg.node();
     }
@@ -203,6 +205,7 @@ function HorizontalStackedBar({
     }
 
     useEffect(() => {
+     
         if (reload || chartData.current.length !== data.length || !hasLoaded.current) {
             hasLoaded.current = true
             chartData.current = Array.from(data)
@@ -216,7 +219,7 @@ function HorizontalStackedBar({
     }, [filters, yAxis])
 
     return (
-        <div className={`c-visualizations__chart c-visualizations__horizontalStackedBar c-bar`} id={`c-visualizations__horizontalStackedBar--${chartId}`}></div>
+        <div className={`c-visualizations__chart c-visualizations__horizontalStackedBar c-bar ${style.className || ''}`} id={`c-visualizations__horizontalStackedBar--${chartId}`}></div>
     )
 }
 
