@@ -53,8 +53,6 @@ export default function CellTypeDistribution({ clId, width = 700, height = 320 }
         // sort by count
         organList.sort((a, b) => b.count - a.count)
 
-        console.log('==== organList', organList)
-
         return organList
     }
 
