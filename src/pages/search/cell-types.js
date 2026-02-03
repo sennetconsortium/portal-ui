@@ -3,7 +3,6 @@ import React, {useContext, useEffect, useState} from "react";
 import {ErrorBoundary, SearchBox} from "@elastic/react-search-ui";
 import {Layout} from "@elastic/react-search-ui-views";
 import {APP_TITLE} from "@/config/config";
-import {SEARCH_METADATA} from "@/config/search/metadata"
 import CustomClearSearchBox from "../../components/custom/layout/CustomClearSearchBox";
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
@@ -11,7 +10,6 @@ import InputGroup from 'react-bootstrap/InputGroup';
 import AppContext from "@/context/AppContext";
 import SelectedFilters from "@/components/custom/layout/SelectedFilters";
 import {getUBKGFullName} from "@/components/custom/js/functions";
-import {TableResultsEntities} from "@/components/custom/TableResultsEntities";
 import SenNetAlert from "@/components/SenNetAlert";
 import { TableResultsCellTypes } from "@/components/custom/TableResultsCellTypes";
 import { SEARCH_CELL_TYPES } from "@/config/search/cell-types";
