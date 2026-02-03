@@ -834,6 +834,30 @@ export const getDistinctOrgansAndCellTypes = async () => {
     });
 }
 
+
+export const getDistinctDatasetsUnderCellTypes = async () => {
+    const body = {
+        size: 0,
+        query: {
+            match_all: {}
+        },
+        aggs: {
+            unique_datasets: {
+            cardinality: {
+                field: "dataset.uuid.keyword",
+                precision_threshold: 40000
+            }
+            }
+        }
+    }
+    const content = await fetchSearchAPIEntities(body, 'cell-types');
+    if (!content) {
+        return null;
+    }
+    return content.aggregations.unique_datasets.value
+}
+
+
 export const filterProperties = {
     ancestors: {
         filter_properties: [

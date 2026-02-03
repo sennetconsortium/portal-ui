@@ -1,5 +1,5 @@
 import dynamic from "next/dynamic";
-import React, {useContext} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import {ErrorBoundary, SearchBox} from "@elastic/react-search-ui";
 import {Layout} from "@elastic/react-search-ui-views";
 import {APP_TITLE} from "@/config/config";
@@ -15,6 +15,7 @@ import {TableResultsEntities} from "@/components/custom/TableResultsEntities";
 import SenNetAlert from "@/components/SenNetAlert";
 import { TableResultsCellTypes } from "@/components/custom/TableResultsCellTypes";
 import { SEARCH_CELL_TYPES } from "@/config/search/cell-types";
+import { getDistinctDatasetsUnderCellTypes } from "@/lib/services";
 
 const AppFooter = dynamic(() => import("@/components/custom/layout/AppFooter"))
 const AppNavbar = dynamic(() => import("@/components/custom/layout/AppNavbar"))
@@ -52,6 +53,18 @@ function SearchCellTypes() {
         return term.length ? getUBKGFullName(term) : 'None'
     }
 
+    const [uniqueDatasets, setUniqueDatasets] = useState(0)
+
+    const getUniqueDatasets = () => {
+        getDistinctDatasetsUnderCellTypes().then(count => {
+            setUniqueDatasets(count || 0)
+        })
+    }
+
+    useEffect(() => {
+        getUniqueDatasets()
+    }, [])
+
 
     if (validatingToken() || isAuthorizing()) {
         return <Spinner/>
@@ -83,6 +96,7 @@ function SearchCellTypes() {
                                 <>
                                     <div className="search-box-header js-gtm--search">
                                         <SenNetBanner name={'default'}/>
+                                        <SenNetAlert variant="info" text={<span>This searches across <code>{uniqueDatasets}</code> RNAseq datasets from Human sources</span>} />
                                         
 
                                         <SearchBox
