@@ -1,4 +1,5 @@
 import CellTypeDistribution from '@/components/custom/cell-types/CellTypeDistribution'
+import CellTypeDistributionAcrossOrgans from '@/components/custom/cell-types/CellTypeDistributionAcrossOrgans'
 import ViewHeader from '@/components/custom/cell-types/ViewHeader'
 import AppNavbar from '@/components/custom/layout/AppNavbar'
 import SenNetAccordion from '@/components/custom/layout/SenNetAccordion'
@@ -8,7 +9,7 @@ import useSearchUIQuery from '@/hooks/useSearchUIQuery'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/router'
 import { useContext } from 'react'
-import Card from 'react-bootstrap/Card'
+import { Button, Card } from 'react-bootstrap'
 
 const AppFooter = dynamic(() => import('@/components/custom/layout/AppFooter'))
 const Header = dynamic(() => import('@/components/custom/layout/Header'))
@@ -21,6 +22,10 @@ function ViewCellType() {
     const router = useRouter()
     const { clid } = router.query
 
+    function getUniqueOrgans(data) {
+        return data?.aggregations?.unique_organs?.buckets?.map((bucket) => bucket.key) || []
+    }
+
     const query = clid
         ? {
               _source: ['cell_label', 'cell_definition', 'cl_id', 'cell_count'],
@@ -29,6 +34,14 @@ function ViewCellType() {
                   term: {
                       'cl_id.keyword': {
                           value: clid
+                      }
+                  }
+              },
+              aggs: {
+                  unique_organs: {
+                      terms: {
+                          field: 'organs.code.keyword',
+                          size: 10000
                       }
                   }
               }
@@ -77,7 +90,25 @@ function ViewCellType() {
                     <main className='col m-md-3 entity-details'>
                         <SidebarBtn />
 
-                        <ViewHeader label={data?.hits?.hits[0]?._source?.cell_label} clId={clid} />
+                        <ViewHeader
+                            label={data?.hits?.hits[0]?._source?.cell_label}
+                            clId={clid}
+                            organs={getUniqueOrgans(data)}
+                        />
+
+                        {/*Description*/}
+                        <SenNetAccordion
+                            id='Description'
+                            title={data?.hits?.hits[0]?._source?.cell_definition}
+                        >
+                            <Button
+                                variant='outline-primary'
+                                className='rounded-0 mb-4'
+                                href='/search'
+                            >
+                                View Datasets
+                            </Button>
+                        </SenNetAccordion>
 
                         {/* Cell Type Distribution */}
                         <SenNetAccordion id='CellTypeDistribution' title='Cell Type Distribution'>
@@ -89,19 +120,16 @@ function ViewCellType() {
                         </SenNetAccordion>
 
                         {/* Cell Type Distribution Across Organs */}
-                        {/* <SenNetAccordion
+                        <SenNetAccordion
                             id='CellTypeDistributionAcrossOrgans'
                             title='Cell Type Distribution Across Organs'
                         >
                             <Card border='0'>
-                                <Card.Body className='mx-auto'>
-                                    <CellTypeDistributionAcrossOrgans
-                                        clId={clid}
-                                        organCode='UBERON:0002168'
-                                    />
+                                <Card.Body className='mx-auto w-100 mb-4'>
+                                    <CellTypeDistributionAcrossOrgans clId={clid} />
                                 </Card.Body>
                             </Card>
-                        </SenNetAccordion> */}
+                        </SenNetAccordion>
                     </main>
                 </div>
             </div>
