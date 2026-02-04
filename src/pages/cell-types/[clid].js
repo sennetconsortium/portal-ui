@@ -1,5 +1,6 @@
 import CellTypeDistribution from '@/components/custom/cell-types/CellTypeDistribution'
 import CellTypeDistributionAcrossOrgans from '@/components/custom/cell-types/CellTypeDistributionAcrossOrgans'
+import DatasetsOverview from '@/components/custom/cell-types/DatasetsOverview'
 import ViewHeader from '@/components/custom/cell-types/ViewHeader'
 import AppNavbar from '@/components/custom/layout/AppNavbar'
 import SenNetAccordion from '@/components/custom/layout/SenNetAccordion'
@@ -127,6 +128,14 @@ function ViewCellType() {
                             <Card border='0'>
                                 <Card.Body className='mx-auto w-100 mb-4'>
                                     <CellTypeDistributionAcrossOrgans clId={clid} />
+                                </Card.Body>
+                            </Card>
+                        </SenNetAccordion>
+
+                        <SenNetAccordion id='DatasetsOverview' title='Datasets Overview'>
+                            <Card border='0'>
+                                <Card.Body className='mx-auto mb-4'>
+                                    <DatasetsOverview />
                                 </Card.Body>
                             </Card>
                         </SenNetAccordion>
