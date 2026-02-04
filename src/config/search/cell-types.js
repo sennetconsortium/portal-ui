@@ -33,6 +33,20 @@ const connector = new SearchAPIConnector({
                 field: "cl_id.keyword"
             }
         };
+        aggs.group_organs_by_cell_type = {
+            terms: {
+                field: "cl_id.keyword",
+                size: 10000
+            },
+            aggs: {
+                organs: {
+                    terms: {
+                        field: "organs.code.keyword",
+                        size: 1000
+                    }
+                }
+            }
+        };
 
         queryOptions.aggs = aggs;
 

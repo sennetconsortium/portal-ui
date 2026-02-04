@@ -48,8 +48,16 @@ function TableResultsCellTypes({ children, onRowClicked, filters, forData = fals
     }
 
   const formatDataForTable = () => {
+    let _organsDict = {}
+    for (let o of rawResponse.aggregations.group_organs_by_cell_type.buckets) {
+      _organsDict[o.key] = o.organs.buckets
+    }
+    let _results = []
+    for (let c of rawResponse.records['cell-types']) {
+      _results.push({...c, organs: _organsDict[c.cl_id]})
+    }
 
-    setResults(rawResponse.records['cell-types'])
+    setResults(_results)
     updatePagingInfo(rawResponse.record_count)
   }
   useEffect(() => {
@@ -134,13 +142,13 @@ function TableResultsCellTypes({ children, onRowClicked, filters, forData = fals
     cols.push({
       name: 'Organs',
       id: 'organs.code',
-      width: '10%',
+      width: '25',
       selector: row => {
         let val = raw(row.organs)
         let organs = new Set()
         if (Array.isArray(val)) {
           for (let o of val) {
-            organs.add(getUBKGFullName(o.code))
+            organs.add(getUBKGFullName(o.key))
           }
         }
         if (organs.size > 0) {
