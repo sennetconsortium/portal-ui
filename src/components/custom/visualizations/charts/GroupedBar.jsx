@@ -3,13 +3,24 @@ import * as d3 from 'd3';
 import { useContext, useEffect, useRef } from 'react'
 import VisualizationsContext from '@/context/VisualizationsContext';
 
+/***
+ * @param {useState method} setLegend The react useState method for setting legend items
+ * @param {useState value} filters Used to trigger a rerender on filter changes
+ * @param {array} data List to visualize [{group: 'x-axis label', groupLabel1: x, groupLabel2: y}, {group: 'x-axis label 2', groupLabel1: x, groupLabel2: y}]
+ * @param {bool} rerender An additional flag if want to prevent or allow rerendering even on filters and yAxis changes
+ * @param {subGroupLabels} {object} A map of labels to use for groupLabels e.g. {groupLabel1: 'A Group Label', groupLabel2: 'Another Group Label'}
+ * @param {chartId} {string} Imperative for multiple charts on same page. 
+ * @param {style} {object} {width, height, className}
+ * @param {xAxis} {object} {formatter: function(v) for formatting axis ticks, label: string, showLabels: bool}
+ * @param {yAxis} {object} {scaleLog: bool, ticks: int, label: string, showLabels: bool, showGrid: bool}
+ */
 function GroupedBar({
     setLegend,
     filters,
     data = [],
     reload = true,
     subGroupLabels = {},
-    chartId = 'modal',
+    chartId = 'groupedBar',
     style = {},
     yAxis = {},
     xAxis = {}
@@ -17,6 +28,7 @@ function GroupedBar({
     const {
         getChartSelector,
         toolTipHandlers,
+        getSubgroupLabels,
         appendTooltip } = useContext(VisualizationsContext)
 
 
@@ -55,6 +67,8 @@ function GroupedBar({
         const g = svg
             .append("g")
             .attr("transform", `translate(${margin.left * 1.5},${margin.top + 50})`)
+        
+        subGroupLabels = getSubgroupLabels(data, subGroupLabels)
 
         const subgroups = Object.keys(subGroupLabels)
 
@@ -105,7 +119,6 @@ function GroupedBar({
                 .attr("transform", "rotate(-90)")
                 .text(yAxis.label || "Frequency")
         }
-
 
         if (xAxis.label && showXLabels()) {
             svg.append("g")

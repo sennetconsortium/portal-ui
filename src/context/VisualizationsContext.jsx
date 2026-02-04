@@ -16,6 +16,19 @@ export const VisualizationsProvider = ({ children }) => {
         base: 'c-visualizations__'
     }
 
+    const getSubgroupLabels = (data, labels) => {
+        if (Object.keys(labels).lenght) return labels
+        let groups = {}
+        for (let d of data) {
+            for (let k in d) {
+                if (k !== 'group') {
+                    groups[k] = k
+                }
+            }
+        }
+        return groups
+    }
+
     const getChartSelector = (chartId, chart = 'bar', withHash = true) => `${withHash ? '#' : ''}${selectors.base}${chart}--${chartId}`
 
     const appendTooltip = (id, chart = 'bar') => {
@@ -100,6 +113,7 @@ export const VisualizationsProvider = ({ children }) => {
                 getChartSelector,
                 toolTipHandlers,
                 appendTooltip,
+                getSubgroupLabels,
                 selectors
             }}
         >
