@@ -85,6 +85,7 @@ export default function CellTypeDistribution({ clId }) {
             </div>
             <ChartContainer
                 data={buildOrganChartData(data)}
+                chartId={'cellTypeDistribution'}
                 xAxis={xAxis}
                 yAxis={yAxis}
                 chartType={'bar'}

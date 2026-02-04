@@ -19,7 +19,7 @@ const Spinner = dynamic(() => import("../../components/custom/Spinner"))
 
 function CellTypes() {
     const { logout, isRegisterHidden, isAuthorizing, isUnauthorized, hasAuthenticationCookie } = useContext(AppContext)
-    const subGroupLabels = useRef([])
+    const subGroupLabels = useRef({})
     const [isLogScale, setIsLogScale] = useState(true)
 
     const changeScale = (e) => {
@@ -53,8 +53,8 @@ function CellTypes() {
         })
     }, [])
 
-    const yAxis = { label: "Cell Count", formatter: formatNum, scaleLog: isLogScale, showLabels: false, showGrid: false, ticks: 3 }
-    const xAxis = { formatter: formatNum, label: `Organs`, showLabels: false, showGrid: false }
+    const yAxis = { label: "Cell Count", formatter: formatNum, scaleLog: isLogScale, showLabels: true, ticks: 3 }
+    const xAxis = { formatter: formatNum, label: `Organs`, showLabels: true }
 
     return (
         <>
@@ -78,7 +78,6 @@ function CellTypes() {
                 <VisualizationsProvider>
                     <FormControlLabel control={<Switch defaultChecked />} label="Log scale" onChange={changeScale} />
                     <ChartContainer subGroupLabels={subGroupLabels.current} data={visualizationData} xAxis={xAxis} yAxis={yAxis} chartType={'stackedBar'}/>
-                    <ChartContainer subGroupLabels={subGroupLabels.current} data={[visualizationData[0]]} style={{width: 820, height: 200}} xAxis={xAxis} yAxis={yAxis} chartType={'horizontalStackedBar'}/>
                 </VisualizationsProvider>
             </Container>
         </>

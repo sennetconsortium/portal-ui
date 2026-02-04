@@ -5,6 +5,7 @@ import VisualizationsContext from '@/context/VisualizationsContext';
 
 export const prepareStackedData = (data, desc = true) => {
     let sorted = []
+    if (!data) return sorted
     for (let d of data) {
         sorted.push(Object.fromEntries(
             Object.entries(d).sort(([, a], [, b]) => desc ? (b - a) : (a - b))
@@ -29,6 +30,7 @@ function StackedBar({
     const {
         getChartSelector,
         toolTipHandlers,
+        getSubgroupLabels,
         appendTooltip } = useContext(VisualizationsContext)
 
 
@@ -67,6 +69,9 @@ function StackedBar({
         const g = svg
             .append("g")
             .attr("transform", `translate(${margin.left * 1.5},${margin.top + 50})`)
+
+
+        subGroupLabels = getSubgroupLabels(data, subGroupLabels)
 
         const subgroups = Object.keys(subGroupLabels)
 

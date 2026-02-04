@@ -126,7 +126,7 @@ function ViewCellType() {
                         >
                             <Card border='0'>
                                 <Card.Body className='mx-auto w-100 mb-4'>
-                                    <CellTypeDistributionAcrossOrgans clId={clid} />
+                                    <CellTypeDistributionAcrossOrgans clId={clid} cell={{id: clid, label: data?.hits?.hits[0]?._source?.cell_label}} />
                                 </Card.Body>
                             </Card>
                         </SenNetAccordion>

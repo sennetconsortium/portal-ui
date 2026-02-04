@@ -36,3 +36,9 @@
 		height: auto;
 	}
 }
+
+.c-visualization__noAxis {
+	.x-axis, .y-axis {
+		display: none;
+	}
+}

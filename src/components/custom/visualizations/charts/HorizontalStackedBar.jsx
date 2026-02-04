@@ -8,7 +8,7 @@ function HorizontalStackedBar({
     setLegend,
     filters,
     data = [],
-    reload = true,
+    reload = false,
     subGroupLabels = {},
     chartId = 'hStackedBar',
     style = {},
@@ -18,6 +18,7 @@ function HorizontalStackedBar({
     const {
         getChartSelector,
         toolTipHandlers,
+        getSubgroupLabels,
         appendTooltip } = useContext(VisualizationsContext)
 
 
@@ -50,12 +51,18 @@ function HorizontalStackedBar({
         // append the svg object to the body of the page
         const svg = d3.create("svg")
             .attr("width", width + marginX)
-            .attr("height", height + marginY)
-            .attr("viewBox", [0, 0, width + marginX, height + marginY])
+            .attr("height", height + (style.strict ? 0 : marginY))
+
+        if (!style.hideViewbox) {
+            svg.attr("viewBox", [0, 0, width + marginX, height + marginY])
+        } 
 
         const g = svg
             .append("g")
-            .attr("transform", `translate(${margin.left * 1.5},${margin.top + 50})`)
+            .attr("transform", style.transform || `translate(${margin.left * 1.5},${margin.top + 50})`)
+
+    
+        subGroupLabels = getSubgroupLabels(data, subGroupLabels)
 
         const subgroups = Object.keys(subGroupLabels)
 
@@ -165,7 +172,7 @@ function HorizontalStackedBar({
             .attr('data-label', d => {
                 return getSubgroupLabel(d.key)
             })
-            .attr("class", d => `bar--${getSubgroupLabel(d.key).toDashedCase()}`)
+            .attr("class", d => `bar--${getSubgroupLabel(d.key)?.toDashedCase()}`)
             .attr("y", d => y(d.group))
             .attr("width", 0)
             .attr("height", y.bandwidth())
@@ -205,7 +212,6 @@ function HorizontalStackedBar({
     }
 
     useEffect(() => {
-     
         if (reload || chartData.current.length !== data.length || !hasLoaded.current) {
             hasLoaded.current = true
             chartData.current = Array.from(data)

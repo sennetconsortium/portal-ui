@@ -1,13 +1,17 @@
 import { getOrganByCode } from '@/config/organs'
 import useSearchUIQuery from '@/hooks/useSearchUIQuery'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef, memo } from 'react'
 import Nav from 'react-bootstrap/Nav'
 import Tab from 'react-bootstrap/Tab'
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
 import Spinner from '../Spinner'
+
+import CellTypeDistributionAcrossOrgansTab from './CellTypeDistributionAcrossOrgansTab'
 
 /**
  * @typedef {Object} CellTypeDistributionAcrossOrgansProps
- * @property {string} clId - CL identifier to fetch distribution for (e.g. CL:0002394)
+ * @property {object} cell - CL identifier to fetch distribution for (e.g. {id: 'CL:0002394', label: string})
  */
 
 /**
@@ -15,13 +19,13 @@ import Spinner from '../Spinner'
  *
  * @param {CellTypeDistributionAcrossOrgansProps} props
  */
-export default function CellTypeDistributionAcrossOrgans({ clId }) {
+const CellTypeDistributionAcrossOrgans = memo(({ cell }) => {
     const query = {
         size: 0,
         query: {
             term: {
                 'cl_id.keyword': {
-                    value: clId
+                    value: cell.id
                 }
             }
         },
@@ -35,7 +39,7 @@ export default function CellTypeDistributionAcrossOrgans({ clId }) {
                     by_cell_label: {
                         terms: {
                             field: 'cell_label.keyword',
-                            size: 50
+                            size: 10000
                         }
                     }
                 }
@@ -52,24 +56,34 @@ export default function CellTypeDistributionAcrossOrgans({ clId }) {
         })
     }
 
-    function getSegmentDataForOrgan(data, organCode) {
-        const organData = data?.aggregations?.by_organ_code?.buckets?.find(
+    const [tabData, setTabData] = useState({})
+    
+    
+    
+    function getSegmentDataForOrgan(organCode) {
+        const organData = otherCellTypes?.data?.aggregations?.by_organ_code?.buckets?.find(
             (o) => o.key === organCode
         )
         if (!organData) {
             return []
         }
 
-        return organData.by_cell_label.buckets.map((b) => {
-            return {
-                label: b.key,
-                number: b.doc_count
+        let _barData = {group: organCode}
+        let currentCell = 0
+        organData.by_cell_label.buckets.map((b) => {
+            if (b.key === cell.label) {
+                currentCell = b.doc_count
             }
+            _barData[b.key] = b.doc_count
         })
+
+        return {data: [_barData], cells: organData.doc_count, types: organData.by_cell_label.buckets.length, currentCell}
     }
 
     const [selectedTab, setSelectedTab] = useState(null)
     const { data, loading, error } = useSearchUIQuery('cell-types', query)
+    query.query = {match_all: {}}
+    const otherCellTypes = useSearchUIQuery('cell-types', query)
 
     useEffect(() => {
         if (!data || selectedTab) {
@@ -78,15 +92,23 @@ export default function CellTypeDistributionAcrossOrgans({ clId }) {
         const organs = getOrganData(data) || []
         if (organs.length > 0) {
             setSelectedTab(organs[0].code)
+            let _tabData = {organs}
+            for (let o of organs) {
+                _tabData[o.code] = getSegmentDataForOrgan(o.code)
+            }
+            setTabData(_tabData)
+            console.log('TD', _tabData)
         }
-    }, [data, selectedTab])
+    }, [data])
 
-    if (loading) {
+    if (loading || !Object.keys(tabData).length) {
         return <Spinner />
     }
     if (error || !data) {
         return <div>Unable to load chart</div>
     }
+
+    
 
     return (
         <Tab.Container activeKey={selectedTab} onSelect={(k) => setSelectedTab(k)}>
@@ -101,10 +123,12 @@ export default function CellTypeDistributionAcrossOrgans({ clId }) {
             <Tab.Content>
                 {getOrganData(data).map((organ) => (
                     <Tab.Pane eventKey={organ.code} key={organ.code} className='mt-4'>
-                        <div>This is the {organ.label} tab</div>
+                        <CellTypeDistributionAcrossOrgansTab organ={organ} tabData={tabData} cell={cell} />
                     </Tab.Pane>
                 ))}
             </Tab.Content>
         </Tab.Container>
     )
-}
+})
+
+export default CellTypeDistributionAcrossOrgans

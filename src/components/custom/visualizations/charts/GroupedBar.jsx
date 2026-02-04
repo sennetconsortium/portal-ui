@@ -7,7 +7,7 @@ import VisualizationsContext from '@/context/VisualizationsContext';
  * @param {useState method} setLegend The react useState method for setting legend items
  * @param {useState value} filters Used to trigger a rerender on filter changes
  * @param {array} data List to visualize [{group: 'x-axis label', groupLabel1: x, groupLabel2: y}, {group: 'x-axis label 2', groupLabel1: x, groupLabel2: y}]
- * @param {bool} rerender An additional flag if want to prevent or allow rerendering even on filters and yAxis changes
+ * @param {bool} reload An additional flag if want to prevent or allow rerendering even on filters and yAxis changes
  * @param {subGroupLabels} {object} A map of labels to use for groupLabels e.g. {groupLabel1: 'A Group Label', groupLabel2: 'Another Group Label'}
  * @param {chartId} {string} Imperative for multiple charts on same page. 
  * @param {style} {object} {width, height, className}
