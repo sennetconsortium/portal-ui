@@ -51,7 +51,7 @@ function VersionDropdown({className = '', data}) {
         }
     }
 
-    if (isBusy || (!isBusy && revisions.length <= 0)) {
+    if (isBusy || (!isBusy && revisions.length <= 1)) {
         return <></>
     }
 
