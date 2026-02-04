@@ -11,6 +11,7 @@ function Bar({
     chartId = 'modal',
     reload = true,
     onSectionClick,
+    style = {},
     yAxis = {},
     xAxis = {},
 }) {
@@ -43,8 +44,8 @@ function Bar({
         }
     
         // Declare the chart dimensions and margins.
-        const width = 700;
-        let height = 320;
+        const width = style.width || 700;
+        let height = style.height || 320;
         const margin = {top: 30, right: 0, bottom: 30 * 1.5, left: 90 * 1.2}
 
         if (showXLabels()) {
@@ -214,7 +215,7 @@ function Bar({
     }, [filters, yAxis])
 
     return (
-        <div className={`c-visualizations__chart c-visualizations__bar c-bar`} id={`c-visualizations__bar--${chartId}`}></div>
+        <div className={`c-visualizations__chart c-visualizations__bar c-bar ${style.className || ''}`} id={`c-visualizations__bar--${chartId}`}></div>
     )
 }
 

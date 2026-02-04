@@ -10,6 +10,7 @@ function GroupedBar({
     reload = true,
     subGroupLabels = {},
     chartId = 'modal',
+    style = {},
     yAxis = {},
     xAxis = {}
 }) {
@@ -38,10 +39,10 @@ function GroupedBar({
 
     const buildChart = () => {
 
-        const dyWidth = Math.max(460, data.length * 150)
+        const dyWidth = style.width || Math.max(460, data.length * 150)
         const margin = { top: 10, right: 30, bottom: 40, left: 50 },
             width = (Math.min((dyWidth), 1000)) - margin.left - margin.right,
-            height = 420 - margin.top - margin.bottom;
+            height = (style.height || 420) - margin.top - margin.bottom;
         const marginY = (margin.top + margin.bottom) * 3
         const marginX = margin.left + margin.right * 3
 
@@ -210,7 +211,7 @@ function GroupedBar({
     }, [filters, yAxis])
 
     return (
-        <div className={`c-visualizations__chart c-visualizations__groupedBar c-bar`} id={`c-visualizations__groupedBar--${chartId}`}></div>
+        <div className={`c-visualizations__chart c-visualizations__groupedBar c-bar ${style.className || ''}`} id={`c-visualizations__groupedBar--${chartId}`}></div>
     )
 }
 
