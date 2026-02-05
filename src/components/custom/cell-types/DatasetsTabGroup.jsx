@@ -34,22 +34,34 @@ function DatasetsTabGroup({ clId, cellLabel }) {
                 }
             ]
 
+        // Calculate counts for each organ
         const countTotal = hits.length
         const countByOrgan = new Map()
 
         for (const hit of hits) {
             const src = hit._source
-            for (const organ of src.organs) {
-                const organCode = organ.code
-                const prevCount = countByOrgan.get(organCode) || 0
-                countByOrgan.set(organCode, prevCount + 1)
+            const organNames = new Set()
+            for (const o of src.organs) {
+                const organ = getOrganByCode(o.code)
+                if (!organ) {
+                    continue
+                }
+
+                // Don't count lateral organs twice if both sides are present
+                if (organNames.has(organ.label)) {
+                    continue
+                }
+                organNames.add(organ.label)
+
+                const prevCount = countByOrgan.get(organ.label) || 0
+                countByOrgan.set(organ.label, prevCount + 1)
             }
         }
 
+        // Build titles for tabs
         const titles = [{ key: allTabKey, title: `${cellLabel} (${countTotal})` }]
-        for (const [organCode, organCount] of countByOrgan.entries()) {
-            const organ = getOrganByCode(organCode)
-            titles.push({ key: organCode, title: `${cellLabel} in ${organ.label} (${organCount})` })
+        for (const [organLabel, organCount] of countByOrgan.entries()) {
+            titles.push({ key: organLabel, title: `${cellLabel} in ${organLabel} (${organCount})` })
         }
 
         return titles
@@ -65,12 +77,10 @@ function DatasetsTabGroup({ clId, cellLabel }) {
             }, 0) || 1
         return hits?.map((hit) => {
             const source = hit._source
-            const organs = source.organs.map((organ) => getOrganByCode(organ.code).label).join(', ')
             return {
                 uuid: source.dataset.uuid,
                 sennetId: source.dataset.sennet_id,
-                organCodes: source.organs.map((organ) => organ.code),
-                organs: organs,
+                organLabels: source.organs.map((organ) => getOrganByCode(organ.code).label),
                 cellCountPercent: ((source.cell_count / totalCells) * 100).toFixed(2) + '%',
                 cellCount: source.cell_count
             }
@@ -85,7 +95,7 @@ function DatasetsTabGroup({ clId, cellLabel }) {
             return allData
         }
 
-        return allData.filter((row) => row.organCodes.includes(selectedTab))
+        return allData.filter((row) => row.organLabels.includes(selectedTab))
     }, [allData, selectedTab])
 
     if (loading) {
@@ -114,7 +124,7 @@ function DatasetsTabGroup({ clId, cellLabel }) {
         {
             name: 'Organs',
             selector: (row) => {
-                return row.organs
+                return row.organLabels.join(', ')
             },
             sortable: true
         },
