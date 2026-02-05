@@ -14,7 +14,7 @@ const CellTypeDistributionAcrossOrgansTab = memo(({organ, tabData, cell}) => {
   const [legend, setLegend] = useState({})
 
   const getAxis = () => {
-    return { showLabels: false, showGrid: false, scaleLog: true }
+    return { showLabels: false, showGrid: false, scaleLog: false }
   }
 
   return (
@@ -24,7 +24,7 @@ const CellTypeDistributionAcrossOrgansTab = memo(({organ, tabData, cell}) => {
         <ChartContainer
           setLegend={setLegend}
           chartId={getUBKGFullName(organ.code).toDashedCase()}
-          data={prepareStackedData(tabData[organ.code].data)}
+          data={prepareStackedData(tabData[organ.code].data, false)}
           xAxis={getAxis()} yAxis={getAxis()}
           style={{
             className: 'c-visualization__noAxis',
@@ -33,7 +33,7 @@ const CellTypeDistributionAcrossOrgansTab = memo(({organ, tabData, cell}) => {
             key: organ.code,
             height: 120, width: '1200'
           }}
-          chartType={'horizontalStackedBar'} />
+          chartType={'horizontalDistributionBar'} />
 
       </VisualizationsProvider>
       <CellTypeDistributionAcrossOrgansLayout organ={organ} cell={cell} tabData={tabData} legend={legend}>

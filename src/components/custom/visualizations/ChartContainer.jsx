@@ -4,6 +4,7 @@ import StackedBar from './charts/StackedBar'
 import HorizontalStackedBar from './charts/HorizontalStackedBar'
 import { eq } from '../js/functions'
 import GroupedBar from './charts/GroupedBar'
+import HorizontalDistributionBar from './charts/HorizontalDistributionBar'
 
 /***
  * @param {useState method} setLegend The react useState method for setting legend items
@@ -18,6 +19,7 @@ const ChartContainer = memo(({children, data, subGroupLabels, setLegend, chartId
   return (
     <div>
       {eq(chartType, 'stackedBar') && <StackedBar data={data} chartId={chartId} setLegend={setLegend} yAxis={yAxis} xAxis={xAxis} subGroupLabels={subGroupLabels}  />}
+      {eq(chartType, 'horizontalDistributionBar') && <HorizontalDistributionBar data={data} chartId={chartId} setLegend={setLegend} yAxis={yAxis} xAxis={xAxis} subGroupLabels={subGroupLabels} style={style}  />}
       {eq(chartType, 'horizontalStackedBar') && <HorizontalStackedBar data={data} chartId={chartId} setLegend={setLegend} yAxis={yAxis} xAxis={xAxis} subGroupLabels={subGroupLabels} style={style}  />}
       {eq(chartType, 'bar') && <Bar data={data} chartId={chartId} setLegend={setLegend} yAxis={yAxis} xAxis={xAxis}   />}
       {eq(chartType, 'groupedBar') && <GroupedBar data={data} chartId={chartId} setLegend={setLegend} yAxis={yAxis} xAxis={xAxis} subGroupLabels={subGroupLabels}  />}
