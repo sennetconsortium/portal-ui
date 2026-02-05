@@ -154,11 +154,12 @@ function GroupedBar({
             // Enter in the stack data = loop key per key = group per group
             .data(data)
             .join("g")
-                .attr("transform", function(d) { return "translate(" + x(d.group) + ",0)"; })
+                .attr("transform", (d) => { return "translate(" + x(d.group) + ",0)"; })
             .selectAll("rect")
             // enter a second time = loop subgroup per subgroup to add all rectangles
-            .data(function(d) { 
-                return subgroups.map(function(key) { return {key: key, val: d[key] || 0}; }); })
+            .data((d) => { 
+                return subgroups.map((key) => { 
+                    return {key: key, group: d.group, val: d[key] || 0}; }); })
             .join("rect")
             .attr("fill", d => {
                 const color = colorScale(d.key)
