@@ -157,7 +157,7 @@ function HorizontalDistributionBar({
             .attr('data-label', d => {
                 return getSubgroupLabel(d.key)
             })
-            .attr("class", d => `bar--${getSubgroupLabel(d.key)?.toDashedCase()}`)
+            .attr("class", d => `bar--${getSubgroupLabel(d.key)?.toDashedCase()} ${style.highlight === d.key ? 'bar--highlighted' : ''}`)
             .attr("x", d => x(d[0]))
             .attr("y", d => y(d.data[0]))
             .attr("height", y.bandwidth())
