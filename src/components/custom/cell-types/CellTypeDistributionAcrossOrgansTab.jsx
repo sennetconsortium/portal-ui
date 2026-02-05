@@ -4,6 +4,7 @@ import { VisualizationsProvider } from '@/context/VisualizationsContext'
 import ChartContainer from '../visualizations/ChartContainer'
 import { formatNum, getUBKGFullName } from '../js/functions'
 import { prepareStackedData } from '../visualizations/charts/StackedBar'
+import * as d3 from 'd3';
 
 /**
  * @param {object} organ The current organ
@@ -15,6 +16,12 @@ const CellTypeDistributionAcrossOrgansTab = memo(({organ, tabData, cell}) => {
 
   const getAxis = () => {
     return { showLabels: false, showGrid: false, scaleLog: false }
+  }
+
+  const _colorScale = d3.scaleSequential(d3.interpolateWarm)
+
+  const colorScale = ({d, maxY}) => {
+    return _colorScale(d[0].data[d.key] / maxY)
   }
 
   return (
@@ -31,7 +38,9 @@ const CellTypeDistributionAcrossOrgansTab = memo(({organ, tabData, cell}) => {
             hideViewbox: true, highlight: cell.label,
             transform: 'translate(0, 30)', strict: true,
             key: organ._id,
-            height: 120, width: '1200'
+            height: 120, 
+            colorScheme: d3.schemeTableau10
+            //colorScale
           }}
           chartType={'horizontalDistributionBar'} />
 

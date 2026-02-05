@@ -65,9 +65,7 @@ const CellTypeDistributionAcrossOrgans = memo(({ cell }) => {
         return Object.values(_dict)
     }
 
-    const [tabData, setTabData] = useState({})
-    
-    
+    const [tabData, setTabData] = useState(null)
     
     function getSegmentDataForOrgan(_organ) {
         let cells = 0, types = 0,  currentCell = 0
@@ -109,7 +107,6 @@ const CellTypeDistributionAcrossOrgans = memo(({ cell }) => {
     const query2 = JSON.parse(JSON.stringify(query))
     query2.query = {match_all: {}}
     const otherCellTypes = useSearchUIQuery('cell-types', query2)
-    const [preparingData, setPreparingData] = useState(true)
 
     useEffect(() => {
         if (!data || selectedTab) {
@@ -122,19 +119,17 @@ const CellTypeDistributionAcrossOrgans = memo(({ cell }) => {
             for (let o of organs) {
                 _tabData[o._id] = getSegmentDataForOrgan(o)
             }
+            Addon.log('CellTypeDistributionAcrossOrgans', {data: _tabData, color: '#ff0000'})
             setTabData(_tabData)
-            setPreparingData(false)
         }
-    }, [data])
+    }, [otherCellTypes?.data])
 
-    if (loading || preparingData) {
+    if (loading || !tabData) {
         return <Spinner />
     }
     if (error || !data) {
         return <div>Unable to load chart</div>
     }
-
-    
 
     return (
         <Tab.Container activeKey={selectedTab} onSelect={(k) => setSelectedTab(k)}>

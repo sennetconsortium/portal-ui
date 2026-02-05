@@ -83,15 +83,36 @@ export const VisualizationsProvider = ({ children }) => {
             .style('cursor', 'pointer')
     }
 
+    const handleSvgSizing = (style, chartId, chart = 'bar') => {
+        let divWidth = $(getChartSelector(chartId, chart)).width() - 50
+        const minWidth = style.minWidth || 480
+        const minHeight = style.minHeight || 420
+
+        divWidth = style.width || (Math.max(minWidth, divWidth))
+        const margin = { top: 10, right: 30, bottom: 40, left: 100, ...(style.margin || {}) },
+            width = divWidth - (margin.left + margin.right),
+            height = (style.height || minHeight) - (margin.top + margin.bottom);
+        const marginY = (margin.top + margin.bottom) * 3
+        const marginX = margin.left + margin.right * 3
+
+        return {width, height, margin: {
+            Y: marginY,
+            X: marginX,
+            top: margin.top,
+            bottom: margin.bottom,
+            right: margin.right,
+            left: margin.left
+        }}
+    }
+
     const addHighlightToolTip = (id, highlight, chart = 'bar') => {
-        let rect, xPos, yPos
+        let rect, xPos
         let name = 'highlight'
         
         $(`${getChartSelector(id, chart)} .bar--highlighted`).each(function(index, element) {
             appendDiv(id, name, chart, index)
             rect = element?.getBoundingClientRect()
 
-            
             xPos = Number($(element).attr('x'))
             d3.select(`#${selectors.base}${name}--${id}${index}`)
                 .html(`<em>${highlight}</strong>`)
@@ -135,6 +156,7 @@ export const VisualizationsProvider = ({ children }) => {
                 appendTooltip,
                 addHighlightToolTip,
                 getSubgroupLabels,
+                handleSvgSizing,
                 selectors
             }}
         >

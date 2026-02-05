@@ -32,7 +32,7 @@ function VizLegend({legend, sortLegend = true, selectedValues = [], onItemClick}
     }
 
     return (
-        <div className={`c-legend mb-4 ${!onItemClick ? 'c-legend--noHover' : ''}`}>
+        <div className={`c-vizLegend mb-4 ${!onItemClick ? 'c-legend--noHover' : ''}`}>
             <div className='c-vizLegend__title'>
                 {/* <h5>Legend</h5> */}
                 {onItemClick && <SenNetPopover text='Click a legend item or graph section to filter results'>
