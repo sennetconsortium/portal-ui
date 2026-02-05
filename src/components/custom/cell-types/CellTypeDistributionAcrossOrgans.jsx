@@ -3,8 +3,6 @@ import useSearchUIQuery from '@/hooks/useSearchUIQuery'
 import { useEffect, useState, useRef, memo } from 'react'
 import Nav from 'react-bootstrap/Nav'
 import Tab from 'react-bootstrap/Tab'
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
 import Spinner from '../Spinner'
 
 import CellTypeDistributionAcrossOrgansTab from './CellTypeDistributionAcrossOrgansTab'
@@ -39,7 +37,7 @@ const CellTypeDistributionAcrossOrgans = memo(({ cell }) => {
                     by_cell_label: {
                         terms: {
                             field: 'cell_label.keyword',
-                            size: 10000
+                            size: 10000,
                         }
                     }
                 }
@@ -55,7 +53,7 @@ const CellTypeDistributionAcrossOrgans = memo(({ cell }) => {
             if (_dict[label]) {
                 _dict[label].codes.push(o.key)
             } else {
-                _dict[label] =  {
+                _dict[label] = {
                     _id: label.toCamelCase(),
                     codes: [o.key],
                     label
@@ -66,10 +64,11 @@ const CellTypeDistributionAcrossOrgans = memo(({ cell }) => {
     }
 
     const [tabData, setTabData] = useState(null)
-    
+    const cellIds = useRef({})
+
     function getSegmentDataForOrgan(_organ) {
-        let cells = 0, types = 0,  currentCell = 0
-        let empty = {data: [], cells, types, currentCell}
+        let cells = 0, types = 0, currentCell = 0
+        let empty = { data: [], cells, types, currentCell }
         if (!otherCellTypes?.data) return empty
         let organData = []
         for (let code of _organ.codes) {
@@ -78,14 +77,14 @@ const CellTypeDistributionAcrossOrgans = memo(({ cell }) => {
             )
             organData = [...organData, _data]
         }
-       
+
         if (!organData) return empty
 
-        let _barData = {group: _organ.label}
+        let _barData = { group: _organ.label }
 
-        
+
         for (let od of organData) {
-             od.by_cell_label.buckets.map((b) => {
+            od.by_cell_label.buckets.map((b) => {
                 if (b.key === cell.label) {
                     currentCell += b.doc_count
                 }
@@ -94,18 +93,28 @@ const CellTypeDistributionAcrossOrgans = memo(({ cell }) => {
                 } else {
                     _barData[b.key] = b.doc_count
                 }
+                cellIds.current[b.key] = b.by_cell_id.buckets[0]?.key
             })
             cells += od.doc_count
             types += od.by_cell_label.buckets.length
         }
-   
-        return {data: [_barData], cells, types, currentCell}
+
+        return { data: [_barData], cells, types, currentCell }
     }
 
     const [selectedTab, setSelectedTab] = useState(null)
     const { data, loading, error } = useSearchUIQuery('cell-types', query)
     const query2 = JSON.parse(JSON.stringify(query))
-    query2.query = {match_all: {}}
+    query2.query = { match_all: {} }
+    query2.aggs.by_organ_code.aggs.by_cell_label.aggs = {
+        by_cell_id: {
+            terms: {
+                field: 'cl_id.keyword',
+                size: 10000,
+            }
+        }
+    }
+    
     const otherCellTypes = useSearchUIQuery('cell-types', query2)
 
     useEffect(() => {
@@ -115,11 +124,11 @@ const CellTypeDistributionAcrossOrgans = memo(({ cell }) => {
         const organs = getOrganData(data) || []
         if (organs.length > 0) {
             setSelectedTab(organs[0]._id)
-            let _tabData = {organs}
+            let _tabData = { organs }
             for (let o of organs) {
                 _tabData[o._id] = getSegmentDataForOrgan(o)
             }
-            Addon.log('CellTypeDistributionAcrossOrgans', {data: _tabData, color: '#ff0000'})
+            Addon.log('CellTypeDistributionAcrossOrgans', { data: _tabData, color: '#ff0000' })
             setTabData(_tabData)
         }
     }, [otherCellTypes?.data])
@@ -144,7 +153,7 @@ const CellTypeDistributionAcrossOrgans = memo(({ cell }) => {
             <Tab.Content>
                 {getOrganData(data).map((organ) => (
                     <Tab.Pane eventKey={organ._id} key={organ._id} className='mt-4'>
-                        <CellTypeDistributionAcrossOrgansTab organ={organ} tabData={tabData} cell={cell} />
+                        <CellTypeDistributionAcrossOrgansTab organ={organ} tabData={tabData} cell={{...cell, cellIds: cellIds.current}} />
                     </Tab.Pane>
                 ))}
             </Tab.Content>

@@ -63,8 +63,19 @@
 	}
 }
 
-.c-visualization__noAxis {
-	.x-axis, .y-axis {
-		display: none;
+.c-visualization {
+	&--boxShadow {
+		rect:hover {
+			filter: drop-shadow(4px 4px 8px rgba(0, 0, 0, 0.5));
+		} 
+		g:hover {
+			cursor: pointer;
+		}
+	}
+	&--noAxis {
+		.x-axis, .y-axis {
+			display: none;
+		}
+		
 	}
 }

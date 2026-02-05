@@ -30,11 +30,11 @@ const CellTypeDistributionAcrossOrgansTab = memo(({organ, tabData, cell}) => {
       <VisualizationsProvider>
         <ChartContainer
           setLegend={setLegend}
-          chartId={getUBKGFullName(organ._id).toDashedCase()}
+          chartId={organ._id}
           data={prepareStackedData(tabData[organ._id].data, false)}
           xAxis={getAxis()} yAxis={getAxis()}
           style={{
-            className: 'c-visualization__noAxis',
+            className: 'c-visualization--noAxis c-visualization--boxShadow',
             hideViewbox: true, highlight: cell.label,
             transform: 'translate(0, 30)', strict: true,
             key: organ._id,
@@ -44,9 +44,10 @@ const CellTypeDistributionAcrossOrgansTab = memo(({organ, tabData, cell}) => {
           }}
           chartType={'horizontalDistributionBar'} />
 
+          <CellTypeDistributionAcrossOrgansLayout organ={organ} cell={cell} tabData={tabData} legend={legend}>
+          </CellTypeDistributionAcrossOrgansLayout>
       </VisualizationsProvider>
-      <CellTypeDistributionAcrossOrgansLayout organ={organ} cell={cell} tabData={tabData} legend={legend}>
-      </CellTypeDistributionAcrossOrgansLayout>
+      
     </div>
   )
 })

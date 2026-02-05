@@ -60,8 +60,8 @@ export const VisualizationsProvider = ({ children }) => {
     const buildTooltip = (id, chart, e, d) => {
         const $element = $(getTooltipSelector(id)).parent()
         const marginY = 40 // add a margin to prevent chrome flickering due to overlapping with tooltip
-        const label = (e.currentTarget.getAttribute('data-label')) || d.label || d.data?.label
-        const value = (e.currentTarget.getAttribute('data-value')) || d.value || d.data?.value
+        const label = (e.currentTarget?.getAttribute('data-label')) || d.label || d.data?.label
+        const value = (e.currentTarget?.getAttribute('data-value')) || d.value || d.data?.value
         const rect = $element[0]?.getBoundingClientRect()
 
         const xPos = e.clientX - rect.left
@@ -69,10 +69,15 @@ export const VisualizationsProvider = ({ children }) => {
 
         handleLineLabel(id, e, '1')
 
+        setToolTipContent(id, label, value, xPos, yPos)
+    }
+
+    const setToolTipContent = (id, label, value, xPos, yPos) => {
         getTooltip(id)
             .html(`<em>${label}</em>: <strong>${value}</strong>`)
             .style('left', xPos + 'px')
             .style('top', yPos + 'px')
+        return getTooltip(id)
     }
 
     const visibleTooltip = (id, chart, e, d) => {
@@ -157,6 +162,8 @@ export const VisualizationsProvider = ({ children }) => {
                 addHighlightToolTip,
                 getSubgroupLabels,
                 handleSvgSizing,
+                toolTipHandlers,
+                setToolTipContent,
                 selectors
             }}
         >

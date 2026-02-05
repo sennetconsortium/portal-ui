@@ -2,10 +2,36 @@
 import SenNetPopover from '@/components/SenNetPopover';
 import PropTypes from 'prop-types';
 
-function VizLegend({legend, sortLegend = true, selectedValues = [], onItemClick}) {
+/**
+ * 
+ * @param {object} legend
+ * @param {function} onItemClick Handler for clicking on legend item
+ * @param {function} onItemClick Handler for hovering on legend item
+ * @param {function} labelValueFormatter A callback to apply on printing of legend item values; Returns node
+ * @param {bool} sortLegend Whether the legend should be sorted by values
+ * @param {array} selectedValues List of labels to highlight
+ * @param {array} excludedValues List of labels to exclude
+ * @param {node|string} legendTooTip The text of the tooltip when a onItemClick is applied
+ * @returns 
+ */
+function VizLegend({legend, onItemClick, onItemHover, labelValueFormatter, sortLegend = true, selectedValues = [], excludedValues = [], legendTooTip = 'Click a legend item or graph section to filter results'}) {
     const handleItemClick = (label) => {
         if (onItemClick) {
             onItemClick(label)
+        }
+    }
+
+    const handleItemHover = (label) => {
+        if (onItemHover) {
+            onItemHover(label)
+        }
+    }
+
+    const handleLabelValueFormatter = (label) => {
+        if (labelValueFormatter) {
+            return labelValueFormatter(label)
+        } else {
+            return <>({label.value})</>
         }
     }
 
@@ -17,16 +43,18 @@ function VizLegend({legend, sortLegend = true, selectedValues = [], onItemClick}
         }
         for (let l of _legend) {
             let className = 'c-vizLegend__item'
-            if (selectedValues.includes(l.label)) {
-                className += ' c-vizLegend__item__selected'
+            if (!excludedValues.includes(l.label)) {
+                if (selectedValues.includes(l.label)) {
+                    className += ' c-vizLegend__item__selected'
+                }
+                res.push(
+                    <li onMouseOver={() => handleItemHover(l)} onClick={() => handleItemClick(l)} className={className} key={l.label}>
+                        <span className='c-vizLegend__item__col' style={{backgroundColor: l.color, ...(l.style || {})}}></span>
+                        <span className='c-vizLegend__item__label'>{l.label}</span>
+                        <span className='c-vizLegend__item__value'>{handleLabelValueFormatter(l)}</span>
+                    </li>
+                )
             }
-            res.push(
-                <li onClick={() => handleItemClick(l.label)} className={className} key={l.label}>
-                    <span className='c-vizLegend__item__col' style={{backgroundColor: l.color, ...(l.style || {})}}></span>
-                    <span className='c-vizLegend__item__label'>{l.label}</span>
-                    <span className='c-vizLegend__item__value'>({l.value})</span>
-                </li>
-            )
         }
         return res
     }
@@ -34,9 +62,8 @@ function VizLegend({legend, sortLegend = true, selectedValues = [], onItemClick}
     return (
         <div className={`c-vizLegend mb-4 ${!onItemClick ? 'c-legend--noHover' : ''}`}>
             <div className='c-vizLegend__title'>
-                {/* <h5>Legend</h5> */}
-                {onItemClick && <SenNetPopover text='Click a legend item or graph section to filter results'>
-                    I
+                {onItemClick && <SenNetPopover text={legendTooTip}>
+                    <i className="bi bi-info-circle"></i>
                 </SenNetPopover>}
             </div>
             <ul className='c-vizLegend__list'>
