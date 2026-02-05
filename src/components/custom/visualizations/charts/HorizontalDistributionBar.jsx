@@ -152,7 +152,7 @@ function HorizontalDistributionBar({
             .join("rect")
             
             .attr('data-value', d => {
-                return formatVal(d[0])
+                return formatVal(d.data[d.key])
             })
             .attr('data-label', d => {
                 return getSubgroupLabel(d.key)
@@ -164,7 +164,7 @@ function HorizontalDistributionBar({
             .attr("width", 0)
             .append("title")
             .text(d => {
-                return `${d.group}\n${getSubgroupLabel(d.key)}: ${formatVal(d.val)}`
+                return `${d.data.group}\n${getSubgroupLabel(d.key)}: ${formatVal(d.data[d.key])}`
             })
 
         svg.selectAll("rect")
