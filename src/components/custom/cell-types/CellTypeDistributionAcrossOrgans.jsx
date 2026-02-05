@@ -48,36 +48,60 @@ const CellTypeDistributionAcrossOrgans = memo(({ cell }) => {
     }
 
     function getOrganData(data) {
-        return data?.aggregations?.by_organ_code?.buckets?.map((o) => {
-            return {
-                code: o.key,
-                label: getOrganByCode(o.key)?.label
+        let _dict = {}
+        let label
+        for (let o of data?.aggregations?.by_organ_code?.buckets) {
+            label = getOrganByCode(o.key)?.label
+            if (_dict[label]) {
+                _dict[label].codes.push(o.key)
+            } else {
+                _dict[label] =  {
+                    _id: label.toCamelCase(),
+                    codes: [o.key],
+                    label
+                }
             }
-        })
+        }
+        return Object.values(_dict)
     }
 
     const [tabData, setTabData] = useState({})
     
     
     
-    function getSegmentDataForOrgan(organCode) {
-        const organData = otherCellTypes?.data?.aggregations?.by_organ_code?.buckets?.find(
-            (o) => o.key === organCode
-        )
-        if (!organData) {
-            return []
+    function getSegmentDataForOrgan(_organ) {
+        let cells = 0, types = 0,  currentCell = 0
+        let empty = {data: [], cells, types, currentCell}
+        if (!otherCellTypes?.data) return empty
+        let organData = []
+        for (let code of _organ.codes) {
+            let _data = otherCellTypes?.data?.aggregations?.by_organ_code?.buckets?.find(
+                (o) => o.key === code
+            )
+            organData = [...organData, _data]
         }
+       
+        if (!organData) return empty
 
-        let _barData = {group: organCode}
-        let currentCell = 0
-        organData.by_cell_label.buckets.map((b) => {
-            if (b.key === cell.label) {
-                currentCell = b.doc_count
-            }
-            _barData[b.key] = b.doc_count
-        })
+        let _barData = {group: _organ.label}
 
-        return {data: [_barData], cells: organData.doc_count, types: organData.by_cell_label.buckets.length, currentCell}
+        
+        for (let od of organData) {
+             od.by_cell_label.buckets.map((b) => {
+                if (b.key === cell.label) {
+                    currentCell += b.doc_count
+                }
+                if (_barData[b.key]) {
+                    _barData[b.key] += b.doc_count
+                } else {
+                    _barData[b.key] = b.doc_count
+                }
+            })
+            cells += od.doc_count
+            types += od.by_cell_label.buckets.length
+        }
+   
+        return {data: [_barData], cells, types, currentCell}
     }
 
     const [selectedTab, setSelectedTab] = useState(null)
@@ -91,13 +115,12 @@ const CellTypeDistributionAcrossOrgans = memo(({ cell }) => {
         }
         const organs = getOrganData(data) || []
         if (organs.length > 0) {
-            setSelectedTab(organs[0].code)
+            setSelectedTab(organs[0]._id)
             let _tabData = {organs}
             for (let o of organs) {
-                _tabData[o.code] = getSegmentDataForOrgan(o.code)
+                _tabData[o._id] = getSegmentDataForOrgan(o)
             }
             setTabData(_tabData)
-            console.log('TD', _tabData)
         }
     }, [data])
 
@@ -114,15 +137,15 @@ const CellTypeDistributionAcrossOrgans = memo(({ cell }) => {
         <Tab.Container activeKey={selectedTab} onSelect={(k) => setSelectedTab(k)}>
             <Nav variant='pills' className='overflow-auto align-items-center gap-2'>
                 {getOrganData(data).map((organ) => (
-                    <Nav.Item key={organ.code}>
-                        <Nav.Link eventKey={organ.code}>{organ.label}</Nav.Link>
+                    <Nav.Item key={organ._id}>
+                        <Nav.Link eventKey={organ._id}>{organ.label}</Nav.Link>
                     </Nav.Item>
                 ))}
             </Nav>
 
             <Tab.Content>
                 {getOrganData(data).map((organ) => (
-                    <Tab.Pane eventKey={organ.code} key={organ.code} className='mt-4'>
+                    <Tab.Pane eventKey={organ._id} key={organ._id} className='mt-4'>
                         <CellTypeDistributionAcrossOrgansTab organ={organ} tabData={tabData} cell={cell} />
                     </Tab.Pane>
                 ))}

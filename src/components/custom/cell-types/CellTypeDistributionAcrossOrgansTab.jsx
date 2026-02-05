@@ -7,7 +7,7 @@ import { prepareStackedData } from '../visualizations/charts/StackedBar'
 
 /**
  * @param {object} organ The current organ
- * @param {object} tabData Data of the current tab {[organ.code]: {data, cells, types}}
+ * @param {object} tabData Data of the current tab {[organ._id]: {data, cells, types}}
  * @param {object} cell The current cell {id, label}
  */
 const CellTypeDistributionAcrossOrgansTab = memo(({organ, tabData, cell}) => {
@@ -23,14 +23,14 @@ const CellTypeDistributionAcrossOrgansTab = memo(({organ, tabData, cell}) => {
       <VisualizationsProvider>
         <ChartContainer
           setLegend={setLegend}
-          chartId={getUBKGFullName(organ.code).toDashedCase()}
-          data={prepareStackedData(tabData[organ.code].data, false)}
+          chartId={getUBKGFullName(organ._id).toDashedCase()}
+          data={prepareStackedData(tabData[organ._id].data, false)}
           xAxis={getAxis()} yAxis={getAxis()}
           style={{
             className: 'c-visualization__noAxis',
             hideViewbox: true, highlight: cell.label,
             transform: 'translate(0, 30)', strict: true,
-            key: organ.code,
+            key: organ._id,
             height: 120, width: '1200'
           }}
           chartType={'horizontalDistributionBar'} />
