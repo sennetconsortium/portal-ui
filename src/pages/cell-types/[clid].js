@@ -1,6 +1,7 @@
 import CellTypeDistribution from '@/components/custom/cell-types/CellTypeDistribution'
 import CellTypeDistributionAcrossOrgans from '@/components/custom/cell-types/CellTypeDistributionAcrossOrgans'
 import DatasetsOverview from '@/components/custom/cell-types/DatasetsOverview'
+import DatasetsTabGroup from '@/components/custom/cell-types/DatasetsTabGroup'
 import ViewHeader from '@/components/custom/cell-types/ViewHeader'
 import AppNavbar from '@/components/custom/layout/AppNavbar'
 import SenNetAccordion from '@/components/custom/layout/SenNetAccordion'
@@ -127,15 +128,34 @@ function ViewCellType() {
                         >
                             <Card border='0'>
                                 <Card.Body className='mx-auto w-100 mb-4'>
-                                    <CellTypeDistributionAcrossOrgans clId={clid} cell={{id: clid, label: data?.hits?.hits[0]?._source?.cell_label}} />
+                                    <CellTypeDistributionAcrossOrgans
+                                        clId={clid}
+                                        cell={{
+                                            id: clid,
+                                            label: data?.hits?.hits[0]?._source?.cell_label
+                                        }}
+                                    />
                                 </Card.Body>
                             </Card>
                         </SenNetAccordion>
 
+                        {/* Datasets Overview */}
                         <SenNetAccordion id='DatasetsOverview' title='Datasets Overview'>
                             <Card border='0'>
                                 <Card.Body className='mx-auto mb-4'>
                                     <DatasetsOverview />
+                                </Card.Body>
+                            </Card>
+                        </SenNetAccordion>
+
+                        {/* Datasets Table */}
+                        <SenNetAccordion id='Datasets' title='Datasets'>
+                            <Card border='0'>
+                                <Card.Body className='mx-auto w-100 mb-4'>
+                                    <DatasetsTabGroup
+                                        clId={clid}
+                                        cellLabel={data?.hits?.hits[0]?._source?.cell_label}
+                                    />
                                 </Card.Body>
                             </Card>
                         </SenNetAccordion>
