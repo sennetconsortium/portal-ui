@@ -10,7 +10,7 @@ import DataTable from 'react-data-table-component'
 function DatasetsTabGroup({ clId, cellLabel }) {
     const query = {
         size: 500,
-        _source: ['dataset.uuid', 'dataset.sennet_id', 'organs.code', 'cell_count'],
+        _source: ['dataset.uuid', 'dataset.sennet_id', 'organs.category', 'cell_count'],
         query: {
             term: {
                 'cl_id.keyword': {
@@ -37,24 +37,11 @@ function DatasetsTabGroup({ clId, cellLabel }) {
         // Calculate counts for each organ
         const countTotal = hits.length
         const countByOrgan = new Map()
-
         for (const hit of hits) {
-            const src = hit._source
-            const organNames = new Set()
-            for (const o of src.organs) {
-                const organ = getOrganByCode(o.code)
-                if (!organ) {
-                    continue
-                }
-
-                // Don't count lateral organs twice if both sides are present
-                if (organNames.has(organ.label)) {
-                    continue
-                }
-                organNames.add(organ.label)
-
-                const prevCount = countByOrgan.get(organ.label) || 0
-                countByOrgan.set(organ.label, prevCount + 1)
+            const organLabels = new Set(hit._source.organs.map((o) => o.category))
+            for (const organLabel of organLabels) {
+                const prevCount = countByOrgan.get(organLabel) || 0
+                countByOrgan.set(organLabel, prevCount + 1)
             }
         }
 
@@ -80,7 +67,7 @@ function DatasetsTabGroup({ clId, cellLabel }) {
             return {
                 uuid: source.dataset.uuid,
                 sennetId: source.dataset.sennet_id,
-                organLabels: source.organs.map((organ) => getOrganByCode(organ.code).label),
+                organLabels: source.organs.map((organ) => organ.category),
                 cellCountPercent: ((source.cell_count / totalCells) * 100).toFixed(2) + '%',
                 cellCount: source.cell_count
             }
