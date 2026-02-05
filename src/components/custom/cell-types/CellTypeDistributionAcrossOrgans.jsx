@@ -106,8 +106,10 @@ const CellTypeDistributionAcrossOrgans = memo(({ cell }) => {
 
     const [selectedTab, setSelectedTab] = useState(null)
     const { data, loading, error } = useSearchUIQuery('cell-types', query)
-    query.query = {match_all: {}}
-    const otherCellTypes = useSearchUIQuery('cell-types', query)
+    const query2 = JSON.parse(JSON.stringify(query))
+    query2.query = {match_all: {}}
+    const otherCellTypes = useSearchUIQuery('cell-types', query2)
+    const [preparingData, setPreparingData] = useState(true)
 
     useEffect(() => {
         if (!data || selectedTab) {
@@ -121,10 +123,11 @@ const CellTypeDistributionAcrossOrgans = memo(({ cell }) => {
                 _tabData[o._id] = getSegmentDataForOrgan(o)
             }
             setTabData(_tabData)
+            setPreparingData(false)
         }
     }, [data])
 
-    if (loading || !Object.keys(tabData).length) {
+    if (loading || preparingData) {
         return <Spinner />
     }
     if (error || !data) {

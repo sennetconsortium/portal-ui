@@ -19,6 +19,7 @@ function HorizontalDistributionBar({
         getChartSelector,
         toolTipHandlers,
         getSubgroupLabels,
+        addHighlightToolTip,
         appendTooltip } = useContext(VisualizationsContext)
 
 
@@ -189,7 +190,11 @@ function HorizontalDistributionBar({
         $(getChartSelector(chartId, chartType)).html('')
         appendTooltip(chartId, chartType)
         $(getChartSelector(chartId, chartType)).append(buildChart())
-
+        if (style.highlight) {
+          setTimeout(() => {
+            addHighlightToolTip(chartId, style.highlight, chartType)
+          }, 1000)
+        }
         if (setLegend) {
             setLegend(colors.current)
         }

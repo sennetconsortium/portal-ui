@@ -10,7 +10,7 @@
 	border-bottom-left-radius: 0;
 	border-top-left-radius: 0;
 }
-.c-visualizations__tooltip {
+.c-visualizations__tooltip, .c-visualizations__highlight {
 	background-color: #fff;
 	border: solid #eee 1px;
 	position: absolute;
@@ -19,6 +19,31 @@
 	z-index: 1000;
 	font-size: 12px;
 	width: max-content;
+}
+.c-visualizations__highlight {
+		color: var(--bs-warning-text-emphasis);
+    background-color: var(--bs-warning-bg-subtle);
+    border: var(--bs-warning-border-subtle);
+	
+	em {
+		color: var(--bs-warning-text-emphasis);
+		position: relative;
+		&:after {
+			background: none;
+			content: "";
+			position: absolute;
+			width: 0;
+			height: 0;
+			/* Use the border trick to create a triangle */
+			border: 5px solid transparent; 
+			/* Set one border color to match the bubble background for an upward-pointing arrow */
+			border-top-color: var(--bs-warning-border-subtle);
+			/* Positioning the arrow at the top center */
+			top: 22px; /* Half the border width to place it outside the bubble */
+			left: 1px;
+			transform: translateX(-50%);
+		}
+	}
 }
 .c-visualizations__chart {
 	overflow-x: auto;

@@ -31,13 +31,17 @@ export const VisualizationsProvider = ({ children }) => {
 
     const getChartSelector = (chartId, chart = 'bar', withHash = true) => `${withHash ? '#' : ''}${selectors.base}${chart}--${chartId}`
 
+    const appendDiv = (id, divName, chart = 'bar', index = '') => {
+        d3.select(getChartSelector(id, chart))
+            .insert('div')
+            .attr('id', `${selectors.base}${divName}--${id}${index}`)
+            .style('opacity', 0)
+            .attr('class', `${selectors.base}${divName}`)
+    }
+
     const appendTooltip = (id, chart = 'bar') => {
         chartId.current = id
-        d3.select(getChartSelector(id, chart))
-            .append('div')
-            .attr('id', `${selectors.base}tooltip--${id}`)
-            .style('opacity', 0)
-            .attr('class', `${selectors.base}tooltip`)
+        appendDiv(id, 'tooltip', chart)
     }
 
     const getTooltipSelector = (id) => `#${selectors.base}tooltip--${id}`
@@ -55,8 +59,6 @@ export const VisualizationsProvider = ({ children }) => {
 
     const buildTooltip = (id, chart, e, d) => {
         const $element = $(getTooltipSelector(id)).parent()
-        // const miniCharts = $element.parents('.c-visualizations__miniCharts')
-        // const isMiniChart = miniCharts.length > 0
         const marginY = 40 // add a margin to prevent chrome flickering due to overlapping with tooltip
         const label = (e.currentTarget.getAttribute('data-label')) || d.label || d.data?.label
         const value = (e.currentTarget.getAttribute('data-value')) || d.value || d.data?.value
@@ -79,6 +81,24 @@ export const VisualizationsProvider = ({ children }) => {
         d3.select(this)
             .style('opacity', 0.9)
             .style('cursor', 'pointer')
+    }
+
+    const addHighlightToolTip = (id, highlight, chart = 'bar') => {
+        let rect, xPos, yPos
+        let name = 'highlight'
+        
+        $(`${getChartSelector(id, chart)} .bar--highlighted`).each(function(index, element) {
+            appendDiv(id, name, chart, index)
+            rect = element?.getBoundingClientRect()
+
+            
+            xPos = Number($(element).attr('x'))
+            d3.select(`#${selectors.base}${name}--${id}${index}`)
+                .html(`<em>${highlight}</strong>`)
+                .style('left', xPos + 'px')
+                .style('opacity', 1)
+                .style('top', '2px')
+        })
     }
 
     const toolTipHandlers = (id, chart = 'bar') => {
@@ -113,6 +133,7 @@ export const VisualizationsProvider = ({ children }) => {
                 getChartSelector,
                 toolTipHandlers,
                 appendTooltip,
+                addHighlightToolTip,
                 getSubgroupLabels,
                 selectors
             }}
