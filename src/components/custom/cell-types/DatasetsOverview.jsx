@@ -1,5 +1,6 @@
 import { VisualizationsProvider } from '@/context/VisualizationsContext'
 import useSearchUIQuery from '@/hooks/useSearchUIQuery'
+import { useMemo } from 'react'
 import Spinner from '../Spinner'
 import ChartContainer from '../visualizations/ChartContainer'
 
@@ -42,8 +43,15 @@ function DatasetsOverview() {
         }
     }
 
-    function buildChartData(data) {
+    const { data, loading, error } = useSearchUIQuery('cell-types', query)
+
+    const chartData = useMemo(() => {
+        if (!data) {
+            return null
+        }
+
         const buckets = data?.aggregations?.by_sex?.buckets
+        const labels = {}
         const groups = [
             { group: '0-10' },
             { group: '10-20' },
@@ -58,6 +66,7 @@ function DatasetsOverview() {
         ]
         for (const bucket of buckets) {
             const sex = bucket.key
+            labels[sex] = sex.charAt(0).toUpperCase() + sex.slice(1)
             for (const ageRange of bucket.age_ranges.buckets) {
                 const idx = groups.findIndex((g) => g.group === ageRange.key)
                 if (idx !== -1) {
@@ -66,19 +75,11 @@ function DatasetsOverview() {
             }
         }
 
-        return groups
-    }
-
-    function buildSubGroupLabels(data) {
-        const buckets = data?.aggregations?.by_sex?.buckets
-        const labels = {}
-        for (const bucket of buckets) {
-            labels[bucket.key] = bucket.key.charAt(0).toUpperCase() + bucket.key.slice(1)
+        return {
+            labels: labels,
+            groups: groups
         }
-        return labels
-    }
-
-    const { data, loading, error } = useSearchUIQuery('cell-types', query)
+    }, [data])
 
     if (loading) {
         return <Spinner />
@@ -94,8 +95,8 @@ function DatasetsOverview() {
         <VisualizationsProvider>
             <ChartContainer
                 chartType='groupedBar'
-                data={buildChartData(data)}
-                subGroupLabels={buildSubGroupLabels(data)}
+                data={chartData.groups}
+                subGroupLabels={chartData.labels}
                 xAxis={xAxis}
                 yAxis={yAxis}
             />
