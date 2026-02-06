@@ -218,6 +218,12 @@ function Bar({
         updateChart()
     }, [filters, yAxis])
 
+    useEffect(() => {
+        addEventListener("resize", (event) => {
+            updateChart()
+        })
+    }, [])
+
     return (
         <div className={`c-visualizations__chart c-visualizations__bar c-bar ${style.className || ''}`} id={`c-visualizations__bar--${chartId}`}></div>
     )

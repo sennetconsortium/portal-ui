@@ -221,6 +221,12 @@ function GroupedBar({
         updateChart()
     }, [filters, yAxis])
 
+    useEffect(() => {
+        addEventListener("resize", (event) => {
+            updateChart()
+        })
+    }, [])
+
     return (
         <div className={`c-visualizations__chart c-visualizations__groupedBar c-bar ${style.className || ''}`} id={`c-visualizations__groupedBar--${chartId}`}></div>
     )

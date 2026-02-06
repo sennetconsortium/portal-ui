@@ -219,6 +219,12 @@ function HorizontalStackedBar({
         updateChart()
     }, [filters, yAxis])
 
+    useEffect(() => {
+        addEventListener("resize", (event) => {
+            updateChart()
+        })
+    }, [])
+
     return (
         <div className={`c-visualizations__chart c-visualizations__horizontalStackedBar c-bar ${style.className || ''}`} id={`c-visualizations__horizontalStackedBar--${chartId}`}></div>
     )
