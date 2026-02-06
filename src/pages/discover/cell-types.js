@@ -25,13 +25,33 @@ const ChartOverview = memo(({ subGroupLabels, visualizationData }) => {
     }
 
     const onSetToolTipContent = (ops) => {
+        let total = 0
+        let current = 0
+        for (let d of visualizationData) {
+            if (d.group === ops.d?.group) {
+                for (let c in d) {
+                    if (c !=='group') {
+                        total += d[c]
+                    }
+                    if (c === ops.label) {
+                        current = d[c]
+                    }
+                }
+            }
+        }
         
-        const html = `<div><span>${ops.d?.group}</span>
-        <span><em>${subGroupLabels.current[ops.label]}</em>: <strong>${ops.value}</strong></span></div>`
-        ops.tooltip
-            .html(html)
+        const html = `<div"><span>${ops.d?.group}</span>
+        <span><em>${subGroupLabels.current[ops.label]}</em>: <strong>${ops.value}</strong></span>
+        <span><em>Other cell types</em>: <strong>${formatNum(total - current)}</strong></span>
+        <span><em>Total</em>: <strong>${formatNum(total)}</strong></span>
+        </div>`
+        
+        ops.tooltip.getD3(ops.id)
             .style('left', ops.xPos + 'px')
-            .style('top', ops.yPos + 'px')
+            .style('top', ops.yPos - 60 + 'px')
+            .attr('class', 'c-visualizations__tooltip c-visualizations__tooltip--multiLine')
+            .html(html)
+        
     }
 
     const changeScale = (e) => {

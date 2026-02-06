@@ -72,7 +72,7 @@ export const VisualizationsProvider = ({ children, options = {} }) => {
 
     const setToolTipContent = ({id, label, value, xPos, yPos, e, d, chart}) => {
         if (options.onSetToolTipContent) {
-            options.onSetToolTipContent({tooltip: getTooltip(id), id, label, value, xPos, yPos, e, d, chart})
+            options.onSetToolTipContent({tooltip: {getD3: getTooltip, getSelector: getTooltipSelector }, id, label, value, xPos, yPos, e, d, chart})
         } else {
             getTooltip(id)
                 .html(`<span><em>${label}</em>: <strong>${value}</strong></span>`)
