@@ -19,6 +19,7 @@ function HorizontalStackedBar({
         getChartSelector,
         toolTipHandlers,
         getSubgroupLabels,
+        handleSvgSizing,
         appendTooltip } = useContext(VisualizationsContext)
 
 
@@ -41,25 +42,20 @@ function HorizontalStackedBar({
 
     const buildChart = () => {
 
-        const dyWidth = style.width || (Math.max(460, data.length * 150))
-        const margin = { top: 10, right: 30, bottom: 40, left: 100 },
-            width = (Math.min((dyWidth), 1000)) - margin.left - margin.right,
-            height = (style.height || 420) - margin.top - margin.bottom;
-        const marginY = (margin.top + margin.bottom) * 3
-        const marginX = margin.left + margin.right * 3
+        const sizing = handleSvgSizing(style, chartId, chartType)
 
         // append the svg object to the body of the page
         const svg = d3.create("svg")
-            .attr("width", width + marginX)
-            .attr("height", height + (style.strict ? 0 : marginY))
+            .attr("width", sizing.width + sizing.margin.X)
+            .attr("height", sizing.height + (style.strict ? 0 : sizing.margin.Y))
 
         if (!style.hideViewbox) {
-            svg.attr("viewBox", [0, 0, width + marginX, height + marginY])
+            svg.attr("viewBox", [0, 0, sizing.width + sizing.margin.X, sizing.height + sizing.margin.Y])
         } 
 
         const g = svg
             .append("g")
-            .attr("transform", style.transform || `translate(${margin.left * 1.5},${margin.top + 50})`)
+            .attr("transform", style.transform || `translate(${sizing.margin.left * 1.5},${sizing.margin.top + 50})`)
 
     
         subGroupLabels = getSubgroupLabels(data, subGroupLabels)
@@ -71,7 +67,7 @@ function HorizontalStackedBar({
         // Add Y axis
         const y = d3.scaleBand()
             .domain(groups)
-            .range([0, height])
+            .range([0, sizing.height])
             .padding([0.2])
 
         let maxY = 0;
@@ -80,7 +76,6 @@ function HorizontalStackedBar({
                 maxY = Math.max(maxY, d[subgroup] || 0)
             }
         }
-
         
         let stackedSorted = []
         for (let d of data) {
@@ -100,10 +95,10 @@ function HorizontalStackedBar({
         // Add X axis
         const x = scaleMethod()
             .domain([minY, maxY])
-            .range([0, width]);
+            .range([0, sizing.width]);
         g.append("g")
             .attr('class', 'x-axis')
-            .attr("transform", `translate(0, ${height})`)
+            .attr("transform", `translate(0, ${sizing.height})`)
             .call(d3.axisBottom(x).ticks(ticks))
 
         if (showYLabels()) {
@@ -112,7 +107,7 @@ function HorizontalStackedBar({
                 .attr("class", "y label")
                 .attr("text-anchor", "end")
                 .attr("y", yAxis.labelPadding || 0)
-                .attr("x", (height / 2) * -1)
+                .attr("x", (sizing.height / 2) * -1)
                 .attr("dy", ".74em")
                 .attr("transform", "rotate(-90)")
                 .text(yAxis.label || "Frequency")
@@ -124,13 +119,13 @@ function HorizontalStackedBar({
                 .append("text")
                 .attr("class", "x label")
                 .attr("text-anchor", "middle")
-                .attr("x", (width / 2) + margin.left)
-                .attr("y", height * 1.3)
+                .attr("x", (sizing.width / 2) + sizing.margin.left)
+                .attr("y", sizing.height * 1.3)
                 .text(xAxis.label)
         }
 
         // color palette = one color per subgroup
-        const colorScale = d3.scaleOrdinal(d3.schemeCategory10)
+        const colorScale = d3.scaleOrdinal(style.colorScheme || d3.schemeCategory10)
 
         const formatVal = (v) => xAxis.formatter ? xAxis.formatter(v) : v
 
@@ -143,12 +138,11 @@ function HorizontalStackedBar({
             .attr("class", "x-grid")
             .attr("y1", 0)
             .attr("x1", d => Math.ceil(x(d)))
-            .attr("y2", width)
+            .attr("y2", sizing.width)
             .attr("x2", d => Math.ceil(x(d)))
             .style("stroke", "#eee") // Light gray
             .style("stroke-width", "1px")
         }
-        
 
         // Show the bars
         g.append("g")
@@ -161,7 +155,7 @@ function HorizontalStackedBar({
             .data(D => D.map(d => (d)))
             .join("rect")
             .attr("fill", d => {
-                const color = colorScale(d.key)
+                const color = style.colorScale  ? style.colorScale({d, maxY}) : colorScale(d.key)
                 const label = getSubgroupLabel(d.key)
                 colors.current[label] = { color, label, value: formatVal(getSubGroupSum(d.key)) }
                 return color

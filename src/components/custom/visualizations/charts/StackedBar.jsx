@@ -24,6 +24,7 @@ function StackedBar({
     reload = true,
     subGroupLabels = {},
     chartId = 'modal',
+    style = {},
     yAxis = {},
     xAxis = {}
 }) {
@@ -31,6 +32,7 @@ function StackedBar({
         getChartSelector,
         toolTipHandlers,
         getSubgroupLabels,
+        handleSvgSizing,
         appendTooltip } = useContext(VisualizationsContext)
 
 
@@ -53,22 +55,17 @@ function StackedBar({
 
     const buildChart = () => {
 
-        const dyWidth = Math.max(460, data.length * 150)
-        const margin = { top: 10, right: 30, bottom: 40, left: 50 },
-            width = (Math.min((dyWidth), 1000)) - margin.left - margin.right,
-            height = 420 - margin.top - margin.bottom;
-        const marginY = (margin.top + margin.bottom) * 3
-        const marginX = margin.left + margin.right * 3
+        const sizing = handleSvgSizing(style, chartId, chartType)
 
         // append the svg object to the body of the page
         const svg = d3.create("svg")
-            .attr("width", width + marginX)
-            .attr("height", height + marginY)
-            .attr("viewBox", [0, 0, width + marginX, height + marginY])
+            .attr("width", sizing.width + sizing.margin.X)
+            .attr("height", sizing.height + sizing.margin.Y)
+            .attr("viewBox", [0, 0, sizing.width + sizing.margin.X, sizing.height + sizing.margin.Y])
 
         const g = svg
             .append("g")
-            .attr("transform", `translate(${margin.left * 1.5},${margin.top + 50})`)
+            .attr("transform", `translate(${sizing.margin.left * 1.5},${sizing.margin.top + 50})`)
 
 
         subGroupLabels = getSubgroupLabels(data, subGroupLabels)
@@ -80,11 +77,11 @@ function StackedBar({
         // Add X axis
         const x = d3.scaleBand()
             .domain(groups)
-            .range([0, width])
+            .range([0, sizing.width])
             .padding([0.2])
 
         g.append("g")
-            .attr("transform", `translate(0, ${height})`)
+            .attr("transform", `translate(0, ${sizing.height})`)
             .call(d3.axisBottom(x).tickSizeOuter(0));
 
         let maxY = 0;
@@ -93,7 +90,6 @@ function StackedBar({
                 maxY = Math.max(maxY, d[subgroup] || 0)
             }
         }
-
         
         let stackedSorted = []
         for (let d of data) {
@@ -113,7 +109,7 @@ function StackedBar({
         // Add Y axis
         const y = scaleMethod()
             .domain([minY, maxY])
-            .range([height, 0]);
+            .range([sizing.height, 0]);
         g.append("g")
             .call(d3.axisLeft(y).ticks(ticks))
 
@@ -123,25 +119,24 @@ function StackedBar({
                 .attr("class", "y label")
                 .attr("text-anchor", "end")
                 .attr("y", yAxis.labelPadding || 0)
-                .attr("x", (height / 2) * -1)
+                .attr("x", (sizing.height / 2) * -1)
                 .attr("dy", ".74em")
                 .attr("transform", "rotate(-90)")
                 .text(yAxis.label || "Frequency")
         }
-
 
         if (xAxis.label && showXLabels()) {
             svg.append("g")
                 .append("text")
                 .attr("class", "x label")
                 .attr("text-anchor", "middle")
-                .attr("x", (width / 2) + margin.left)
-                .attr("y", height * 1.3)
+                .attr("x", (sizing.width / 2) + sizing.margin.left)
+                .attr("y", sizing.height * 1.3)
                 .text(xAxis.label)
         }
 
         // color palette = one color per subgroup
-        const colorScale = d3.scaleOrdinal(d3.schemeCategory10)
+        const colorScale = d3.scaleOrdinal(style.colorScheme || d3.schemeCategory10)
 
         const formatVal = (v) => xAxis.formatter ? xAxis.formatter(v) : v
 
@@ -153,7 +148,7 @@ function StackedBar({
             .attr("class", "y-grid")
             .attr("x1", 0)
             .attr("y1", d => Math.ceil(y(d)))
-            .attr("x2", width)
+            .attr("x2", sizing.width)
             .attr("y2", d => Math.ceil(y(d)))
             .style("stroke", "#eee") // Light gray
             .style("stroke-width", "1px")
@@ -169,7 +164,7 @@ function StackedBar({
             .data(D => D.map(d => (d)))
             .join("rect")
             .attr("fill", d => {
-                const color = colorScale(d.key)
+                const color = style.colorScale  ? style.colorScale({d, maxY}) : colorScale(d.key)
                 const label = getSubgroupLabel(d.key)
                 colors.current[label] = { color, label, value: formatVal(getSubGroupSum(d.key)) }
                 return color
@@ -182,7 +177,7 @@ function StackedBar({
             })
             .attr("class", d => `bar--${getSubgroupLabel(d.key).toDashedCase()}`)
             .attr("x", d => x(d.group))
-            .attr("y", height)
+            .attr("y", sizing.height)
             .attr("height", 0)
             .attr("width", x.bandwidth())
             .append("title")
@@ -199,7 +194,7 @@ function StackedBar({
             .transition()
             .duration(800)
             .attr("height", d => {
-                return height - y(d.val)
+                return sizing.height - y(d.val)
             })
             .attr("y", d => {
                 return y(d.val)

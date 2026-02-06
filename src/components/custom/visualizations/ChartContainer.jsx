@@ -17,7 +17,7 @@ import HorizontalDistributionBar from './charts/HorizontalDistributionBar'
  */
 const ChartContainer = memo(({children, data, subGroupLabels, setLegend, chartId,  yAxis = {}, xAxis = {}, style = {}, chartType}) => {
   return (
-    <div>
+    <div className='c-visualizations'>
       {eq(chartType, 'stackedBar') && <StackedBar data={data} chartId={chartId} setLegend={setLegend} yAxis={yAxis} xAxis={xAxis} subGroupLabels={subGroupLabels}  />}
       {eq(chartType, 'horizontalDistributionBar') && <HorizontalDistributionBar data={data} chartId={chartId} setLegend={setLegend} yAxis={yAxis} xAxis={xAxis} subGroupLabels={subGroupLabels} style={style}  />}
       {eq(chartType, 'horizontalStackedBar') && <HorizontalStackedBar data={data} chartId={chartId} setLegend={setLegend} yAxis={yAxis} xAxis={xAxis} subGroupLabels={subGroupLabels} style={style}  />}

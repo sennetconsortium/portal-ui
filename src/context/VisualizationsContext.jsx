@@ -94,7 +94,7 @@ export const VisualizationsProvider = ({ children, options = {} }) => {
 
     const handleSvgSizing = (style, chartId, chart = 'bar') => {
         let divWidth = $(getChartSelector(chartId, chart)).width() - 50
-        const minWidth = style.minWidth || 480
+        const minWidth = style.minWidth || 1024
         const minHeight = style.minHeight || 420
 
         divWidth = style.width || (Math.max(minWidth, divWidth))
