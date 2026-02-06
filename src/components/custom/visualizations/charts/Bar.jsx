@@ -8,7 +8,7 @@ function Bar({
     column,
     filters,
     data = [],
-    chartId = 'modal',
+    chartId = 'bar',
     reload = true,
     onSectionClick,
     style = {},
@@ -20,8 +20,10 @@ function Bar({
     const {
         getChartSelector,
         toolTipHandlers,
+        handleSvgSizing,
         appendTooltip } = useContext(VisualizationsContext)
 
+    const chartType = 'bar'
     const colors = {}
     const chartData = useRef([])
 
@@ -44,9 +46,7 @@ function Bar({
         }
     
         // Declare the chart dimensions and margins.
-        const width = style.width || 700;
-        let height = style.height || 320;
-        const margin = {top: 30, right: 0, bottom: 30 * 1.5, left: 90 * 1.2}
+        const sizing = handleSvgSizing(style, chartId, chartType)
 
         if (showXLabels()) {
             // We need to calculate the maximum label width to adjust for the label being at 45 degrees.
@@ -64,22 +64,20 @@ function Bar({
             tempSvg.remove();
 
             // Adjust the bottom margin and height to not cut off the labels.
-            margin.bottom = margin.bottom + maxLabelWidth * Math.sin(Math.PI / 4);
-            height = height + maxLabelWidth * Math.sin(Math.PI / 4);
+            sizing.margin.bottom = sizing.margin.bottom + maxLabelWidth * Math.sin(Math.PI / 4);
+            sizing.height = sizing.height + maxLabelWidth * Math.sin(Math.PI / 4);
         }
 
         // Declare the x (horizontal position) scale.
         const x = d3.scaleBand()
             .domain(names) // descending value
-            .range([margin.left, width - margin.right])
+            .range([sizing.margin.left, sizing.width - sizing.margin.right])
             .padding(0.1);
 
         const scaleRange = data.length <= 1 ? 2 : data.length
 
         // Create the color scale.
-        const colorScale = d3.scaleOrdinal()
-            .domain(data.map(d => d.label))
-            .range(d3.quantize(t => d3.interpolateSpectral(t * 0.8 + 0.1), scaleRange))
+        const colorScale = d3.scaleOrdinal(style.colorScheme || d3.schemeCategory10)
 
         // Bar must have a minimum height to be able to click. 2% of the max value seems good
         const maxY = d3.max(data, (d) => d.value);
@@ -91,21 +89,21 @@ function Bar({
         let y = yAxis.scaleLog ? d3.scaleLog()
             .domain(yDomain).nice() : d3.scaleLinear().domain(yDomain)
 
-           y = y.range([height - margin.bottom, margin.top]);
+           y = y.range([sizing.height - sizing.margin.bottom, sizing.margin.top]);
 
         // Create the SVG container.
         const svg = d3.create("svg")
-            .attr("width", width)
-            .attr("height", height)
-            .attr("viewBox", [0, 0, width, height])
+            .attr("width", sizing.width + sizing.margin.X)
+            .attr("height", sizing.height + sizing.margin.Y)
+            .attr("viewBox", [0, 0, sizing.width + sizing.margin.X, sizing.height])
 
         svg.selectAll(".y-grid")
             .data(y.ticks(ticks))
             .enter().append("line")
             .attr("class", "y-grid")
-            .attr("x1", margin.left)
+            .attr("x1", sizing.margin.left)
             .attr("y1", d => Math.ceil(y(d)))
-            .attr("x2", width - margin.right)
+            .attr("x2", sizing.width - sizing.margin.right)
             .attr("y2", d => Math.ceil(y(d)))
             .style("stroke", "#eee") // Light gray
             .style("stroke-width", "1px")
@@ -119,7 +117,7 @@ function Bar({
             .attr("x", (d) => x(d.label))
             .attr('data-value', (d) => yAxis.formatter ? yAxis.formatter(d.value) : d.value)
             .attr("fill", function (d) {
-                const color = xAxis?.colorMethods && xAxis?.colorMethods[column] ? xAxis?.colorMethods[column](d.label) : (xAxis.monoColor ? xAxis.monoColor : colorScale(d.label));
+                const color = style.colorScale  ? style.colorScale({d, maxY, column}) : colorScale(d.label)
                 colors[d.label] = { color, value: yAxis.formatter ? yAxis.formatter(d.value) : d.value, label: d.label };
                 return color;
             })
@@ -147,7 +145,7 @@ function Bar({
 
         // Add the x-axis and label.
         svg.append("g")
-            .attr("transform", `translate(0,${height - margin.bottom})`)
+            .attr("transform", `translate(0,${sizing.height - sizing.margin.bottom})`)
             .call(d3.axisBottom(x).tickSizeOuter(0))
             .selectAll("text")
             .style("display", showXLabels() ? "block" : "none")
@@ -162,7 +160,7 @@ function Bar({
 
         // Add the y-axis and label, and remove the domain line.
         svg.append("g")
-            .attr("transform", `translate(${margin.left},0)`)
+            .attr("transform", `translate(${sizing.margin.left},0)`)
             .call(d3.axisLeft(y).ticks(ticks).tickFormat((y) => yAxis.formatter ? yAxis.formatter(y) : (y).toFixed()))
 
         if (showYLabels()) {
@@ -170,8 +168,8 @@ function Bar({
             .append("text")
             .attr("class", "y label")
             .attr("text-anchor", "end")
-            .attr("y",  yAxis.labelPadding || 40)
-            .attr("x", (height/3) * -1)
+            .attr("y",  yAxis.labelPadding || 0)
+            .attr("x", (sizing.height / 3) * -1)
             .attr("dy", ".74em")
             .attr("transform", "rotate(-90)")
             .text(yAxis.label || "Frequency")
@@ -183,8 +181,8 @@ function Bar({
                 .append("text")
                 .attr("class", "x label")
                 .attr("text-anchor", "end")
-                .attr("x", width / 1.7)
-                .attr("y", height - 10)
+                .attr("x", sizing.width / 1.7)
+                .attr("y", sizing.height)
                 .text(xAxis.label)
         }
 
