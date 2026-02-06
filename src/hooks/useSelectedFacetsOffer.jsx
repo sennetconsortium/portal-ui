@@ -50,7 +50,8 @@ function useSelectedFacetsOffer({filters}) {
       }
       
       if (offerpoints.searchByCellTypes === 3) {
-        if (!hasOffered.current['searchByCellTypes'] && !fromCellTypeQuery.current) {
+        if (!fromCellTypeQuery.current) {
+          // TODO: add !hasOffered.current['searchByCellTypes'] after feature has been established
           offerSearchByCellTypes()
         }
       }
