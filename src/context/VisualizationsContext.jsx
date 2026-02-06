@@ -91,7 +91,17 @@ export const VisualizationsProvider = ({ children, options = {} }) => {
     }
 
     const handleSvgSizing = (style, chartId, chart = 'bar') => {
-        let divWidth = $(getChartSelector(chartId, chart)).width() - 50
+        let $parent = $(getChartSelector(chartId, chart))
+        let parentWidth = $parent.width()
+        let i = 0
+        
+        while (parentWidth <= 0 && i < 10) {
+            $parent = $parent.parent()
+            parentWidth = $parent.width()
+            i++
+        }
+
+        let divWidth = parentWidth - 50
         const minWidth = style.minWidth || 1024
         const minHeight = style.minHeight || 420
 
