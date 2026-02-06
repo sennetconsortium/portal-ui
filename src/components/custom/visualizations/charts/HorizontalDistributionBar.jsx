@@ -48,12 +48,10 @@ function HorizontalDistributionBar({
 
         // append the svg object to the body of the page
         const svg = d3.create("svg")
-            .attr("width", sizing.width + sizing.margin.X)
-            .attr("height", sizing.height + sizing.margin.Y)
-
-        if (!style.hideViewbox) {
-            svg.attr("viewBox", [0, 0, sizing.width + sizing.margin.X, sizing.height + sizing.margin.Y])
-        } 
+            // .attr("width", sizing.width + sizing.margin.X)
+            // .attr("height", sizing.height + sizing.margin.Y)
+            .attr("viewBox", [0, 0, sizing.width + sizing.margin.X * 1.1, sizing.height + sizing.margin.Y * 1.5])
+        
 
         const g = svg
             .append("g")
@@ -90,7 +88,7 @@ function HorizontalDistributionBar({
         // Add X axis
         const x = scaleMethod()
             .domain([minY, d3.max(stackedSeries, d => d3.max(d, d => d[1]))])
-            .range([0, sizing.width]);
+            .range([0, sizing.width + sizing.margin.X * .5]);
         g.append("g")
             .attr('class', 'x-axis')
             .attr("transform", `translate(0, ${sizing.height})`)

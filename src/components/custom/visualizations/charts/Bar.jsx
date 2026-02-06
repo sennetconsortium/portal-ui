@@ -92,13 +92,13 @@ function Bar({
 
         // Create the SVG container.
         const svg = d3.create("svg")
-            .attr("width", sizing.width + sizing.margin.X)
-            .attr("height", sizing.height + sizing.margin.Y)
-            .attr("viewBox", [0, 0, sizing.width + sizing.margin.X, sizing.height])
+            // .attr("width", sizing.width + sizing.margin.X)
+            // .attr("height", sizing.height + sizing.margin.Y)
+            .attr("viewBox", [0, 0, sizing.width + sizing.margin.X, sizing.height + (sizing.margin.bottom)])
 
         const g = svg
             .append("g")
-            .attr("transform", `translate(${sizing.margin.left/2},${sizing.margin.top/2})`)
+            .attr("transform", `translate(${sizing.margin.left/2},${sizing.margin.top+50})`)
 
         g.selectAll(".y-grid")
             .data(y.ticks(ticks))
@@ -170,9 +170,9 @@ function Bar({
             svg.append("g")
                 .append("text")
                 .attr("class", "x label")
-                .attr("text-anchor", "end")
-                .attr("x", sizing.width / 1.5)
-                .attr("y", sizing.height)
+                .attr("text-anchor", "middle")
+                .attr("x", (sizing.width + sizing.margin.X)  / 2)
+                .attr("y", sizing.height + sizing.margin.bottom * .8)
                 .text(xAxis.label)
         }
 

@@ -24,10 +24,15 @@ const CellTypeDistributionAcrossOrgansTab = memo(({organ, tabData, cell}) => {
     return _colorScale(d[0].data[d.key] / maxY)
   }
 
+  const onRectClick = (eventData) => {
+    Addon.log('onBarClick', { data: eventData })
+    window.location = `/cell-types/${cell.cellIds[eventData.d.key]}`
+  }
+
   return (
     <div>
       <div>The bar below shows the distribution of cell types in the {organ.label} tissue. The distribution is based on the number of cells annotated in SenNet datasets.</div>
-      <VisualizationsProvider>
+      <VisualizationsProvider options={{onRectClick}}>
         <ChartContainer
           setLegend={setLegend}
           chartId={organ._id}

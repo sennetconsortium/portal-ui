@@ -131,7 +131,7 @@ export const VisualizationsProvider = ({ children, options = {} }) => {
             appendDiv(id, name, chart, index)
             rect = element?.getBoundingClientRect()
 
-            xPos = Number($(element).attr('x'))
+            xPos = Number($(element).attr('x')) - 5
             d3.select(`#${selectors.base}${name}--${id}${index}`)
                 .html(`<em>${highlight}</strong>`)
                 .style('left', xPos + 'px')

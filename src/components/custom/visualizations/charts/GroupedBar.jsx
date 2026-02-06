@@ -56,9 +56,9 @@ function GroupedBar({
 
         // append the svg object to the body of the page
         const svg = d3.create("svg")
-            .attr("width", sizing.width + sizing.margin.X)
-            .attr("height", sizing.height + sizing.margin.Y)
-            .attr("viewBox", [0, 0, sizing.width + sizing.margin.X, sizing.height + sizing.margin.Y])
+            // .attr("width", sizing.width + sizing.margin.X)
+            // .attr("height", sizing.height + sizing.margin.Y)
+            .attr("viewBox", [0, 0, sizing.width + sizing.margin.X, sizing.height + (sizing.margin.Y * 1.3)])
 
         const g = svg
             .append("g")
@@ -121,8 +121,8 @@ function GroupedBar({
                 .append("text")
                 .attr("class", "x label")
                 .attr("text-anchor", "middle")
-                .attr("x", (sizing.width / 2) + sizing.margin.left)
-                .attr("y", sizing.height * 1.3)
+                .attr("x", (sizing.width + sizing.margin.X) / 2)
+                .attr("y", sizing.height + sizing.margin.Y * 1.2)
                 .text(xAxis.label)
         }
 
