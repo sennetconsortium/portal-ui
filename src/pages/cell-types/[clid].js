@@ -69,7 +69,7 @@ function ViewCellType() {
             <AppNavbar hidden={isRegisterHidden} signoutHidden={false} />
 
             <div className='container-fluid'>
-                <div className='row flex-nowrap entity-body g-0'>
+                <div className='row flex-nowrap entity-body has-visualizations g-0'>
                     <div className='col-auto p-0'>
                         <div
                             id='sidebar'

@@ -92,25 +92,26 @@ export const VisualizationsProvider = ({ children, options = {} }) => {
 
     const handleSvgSizing = (style, chartId, chart = 'bar') => {
         let $parent = $(getChartSelector(chartId, chart))
-        let parentWidth = $parent.width()
+        let divWidth = $parent.width()
         let i = 0
         
-        while (parentWidth <= 0 && i < 10) {
+        while (divWidth <= 0 && i < 10) {
             $parent = $parent.parent()
-            parentWidth = $parent.width()
+            divWidth = $parent.width()
             i++
         }
 
-        let divWidth = parentWidth - 50
-        const minWidth = style.minWidth || 1024
+        const minWidth = style.minWidth || divWidth
         const minHeight = style.minHeight || 420
 
-        divWidth = style.width || (Math.max(minWidth, divWidth))
-        const margin = { top: 10, right: 30, bottom: 40, left: 100, ...(style.margin || {}) },
-            width = divWidth - (margin.left + margin.right),
-            height = (style.height || minHeight) - (margin.top + margin.bottom);
-        const marginY = (margin.top + margin.bottom) * 3
-        const marginX = margin.left + margin.right * 3
+        divWidth = style.width || minWidth
+        let divHeight = style.height || minHeight
+        const margin = { top: 10, right: 30, bottom: 40, left: 80, ...(style.margin || {}) };
+            
+        const marginY = (margin.top + margin.bottom) * 2
+        const marginX = (margin.left + margin.right) * 2
+        const width = divWidth - marginX,
+            height = divHeight - marginY;
 
         return {width, height, margin: {
             Y: marginY,
