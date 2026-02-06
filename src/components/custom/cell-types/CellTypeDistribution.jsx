@@ -72,7 +72,7 @@ export default function CellTypeDistribution({ clId }) {
         return <div>Unable to load chart</div>
     }
 
-    const yAxis = { label: 'Cell Count', formatter: formatNum, scaleLog: false, ticks: 3 }
+    const yAxis = { label: 'Cell Count', formatter: formatNum }
     const xAxis = {
         formatter: formatNum,
         label: 'Organ',
@@ -87,6 +87,7 @@ export default function CellTypeDistribution({ clId }) {
                 xAxis={xAxis}
                 yAxis={yAxis}
                 chartType={'bar'}
+                style={{height: 600}}
             />
         </VisualizationsProvider>
     )

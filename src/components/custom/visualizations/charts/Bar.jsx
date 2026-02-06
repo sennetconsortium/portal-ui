@@ -71,10 +71,9 @@ function Bar({
         // Declare the x (horizontal position) scale.
         const x = d3.scaleBand()
             .domain(names) // descending value
-            .range([sizing.margin.left, sizing.width - sizing.margin.right])
-            .padding(0.1);
+            .range([sizing.margin.left, sizing.width + sizing.margin.left])
+            .padding(0.3);
 
-        const scaleRange = data.length <= 1 ? 2 : data.length
 
         // Create the color scale.
         const colorScale = d3.scaleOrdinal(style.colorScheme || d3.schemeCategory10)
@@ -160,20 +159,19 @@ function Bar({
                 .append("text")
                 .attr("class", "y label")
                 .attr("text-anchor", "end")
-                .attr("y",  yAxis.labelPadding || 0)
+                .attr("y",  yAxis.labelPadding || 40)
                 .attr("x", (sizing.height / 3) * -1)
                 .attr("dy", ".74em")
                 .attr("transform", "rotate(-90)")
                 .text(yAxis.label || "Frequency")
         }
-        
             
         if (xAxis.label && showXLabels()) {
             svg.append("g")
                 .append("text")
                 .attr("class", "x label")
                 .attr("text-anchor", "end")
-                .attr("x", sizing.width / 1.7)
+                .attr("x", sizing.width / 1.5)
                 .attr("y", sizing.height)
                 .text(xAxis.label)
         }

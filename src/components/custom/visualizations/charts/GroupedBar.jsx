@@ -109,7 +109,7 @@ function GroupedBar({
                 .append("text")
                 .attr("class", "y label")
                 .attr("text-anchor", "end")
-                .attr("y", yAxis.labelPadding || 0)
+                .attr("y", yAxis.labelPadding || 40)
                 .attr("x", (sizing.height / 2) * -1)
                 .attr("dy", ".74em")
                 .attr("transform", "rotate(-90)")

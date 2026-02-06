@@ -40,7 +40,7 @@ const CellTypeDistributionAcrossOrgansTab = memo(({organ, tabData, cell}) => {
             margin: {bottom: 5},
             key: organ._id,
             height: 70, 
-            colorScheme: d3.schemeTableau10
+            colorScheme: d3.schemeTableau10,
             //colorScale
           }}
           chartType={'horizontalDistributionBar'} />
