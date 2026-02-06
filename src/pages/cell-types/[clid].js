@@ -11,7 +11,7 @@ import useSearchUIQuery from '@/hooks/useSearchUIQuery'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/router'
 import { useContext } from 'react'
-import { Button, Card } from 'react-bootstrap'
+import { Card } from 'react-bootstrap'
 
 const AppFooter = dynamic(() => import('@/components/custom/layout/AppFooter'))
 const Header = dynamic(() => import('@/components/custom/layout/Header'))
@@ -98,11 +98,29 @@ function ViewCellType() {
                             organs={getUniqueOrgans(data)}
                         />
 
-                        {/*Description*/}
-                        <SenNetAccordion
-                            id='Description'
-                            title={data?.hits?.hits[0]?._source?.cell_definition}
-                        ></SenNetAccordion>
+                        {/* Description */}
+                        <SenNetAccordion id='Description' title='Description'>
+                            <Card border='0'>
+                                <Card.Body className='mb-4'>
+                                    <Card.Text>
+                                        {data?.hits?.hits[0]?._source?.cell_definition}
+                                    </Card.Text>
+                                    <Card.Subtitle>Known References</Card.Subtitle>
+                                    <Card.Text>
+                                        <a
+                                            target='_blank'
+                                            href={`http://purl.obolibrary.org/obo/${data?.hits?.hits[0]?._source?.cl_id.replace(':', '_')}`}
+                                            className='icon-inline'
+                                        >
+                                            <span className='me-1'>
+                                                {data?.hits?.hits[0]?._source?.cl_id}
+                                            </span>{' '}
+                                            <i className='bi bi-box-arrow-up-right'></i>
+                                        </a>
+                                    </Card.Text>
+                                </Card.Body>
+                            </Card>
+                        </SenNetAccordion>
 
                         {/* Cell Type Distribution */}
                         <SenNetAccordion id='CellTypeDistribution' title='Cell Type Distribution'>
