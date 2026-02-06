@@ -102,15 +102,7 @@ function ViewCellType() {
                         <SenNetAccordion
                             id='Description'
                             title={data?.hits?.hits[0]?._source?.cell_definition}
-                        >
-                            <Button
-                                variant='outline-primary'
-                                className='rounded-0 mb-4'
-                                href='/search'
-                            >
-                                View Datasets
-                            </Button>
-                        </SenNetAccordion>
+                        ></SenNetAccordion>
 
                         {/* Cell Type Distribution */}
                         <SenNetAccordion id='CellTypeDistribution' title='Cell Type Distribution'>

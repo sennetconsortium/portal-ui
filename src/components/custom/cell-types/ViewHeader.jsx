@@ -3,7 +3,7 @@ import { displayBodyHeader, getOrganMeta, getUBKGFullName } from '@/components/c
 import { APP_ROUTES } from '@/config/constants'
 import { getOrganByCode } from '@/config/organs'
 import Image from 'next/image'
-import { Fragment } from 'react'
+import { Fragment, useMemo } from 'react'
 
 const getOrganRoute = (ruiCode) => {
     const organ = getOrganByCode(ruiCode)
@@ -12,6 +12,23 @@ const getOrganRoute = (ruiCode) => {
 }
 
 function ViewHeader({ label, clId, organs }) {
+    const organObjs = useMemo(() => {
+        if (!organs) {
+            return []
+        }
+
+        return organs
+            ?.map((organ) => {
+                return {
+                    code: organ,
+                    icon: getOrganMeta(organ).icon,
+                    label: displayBodyHeader(getUBKGFullName(organ)),
+                    url: getOrganRoute(organ)
+                }
+            })
+            .sort((a, b) => a.label.localeCompare(b.label))
+    }, [organs])
+
     return (
         <div style={{ width: '100%' }}>
             <h4>{label}</h4>
@@ -22,20 +39,18 @@ function ViewHeader({ label, clId, organs }) {
 
             <div className='row mb-2'>
                 <div className='col-md-8 col-sm-12 entity-subtitle icon-inline'>
-                    {organs &&
-                        organs.length > 0 &&
-                        organs.map((organ) => (
-                            <Fragment key={organ}>
-                                {/* Some organs don't have an organ page */}
-                                {getOrganRoute(organ) ? (
-                                    <a href={getOrganRoute(organ)}>
+                    {organObjs &&
+                        organObjs.map((organ) => (
+                            <Fragment key={organ.code}>
+                                {organ.url ? (
+                                    <a href={organ.url}>
                                         <h5 className='title-badge'>
                                             <span className='badge badge-organ me-2'>
-                                                {displayBodyHeader(getUBKGFullName(organ))}
+                                                {organ.label}
                                                 &nbsp;
                                                 <Image
                                                     alt={''}
-                                                    src={getOrganMeta(organ).icon}
+                                                    src={organ.icon}
                                                     width={16}
                                                     height={16}
                                                 />
@@ -45,7 +60,7 @@ function ViewHeader({ label, clId, organs }) {
                                 ) : (
                                     <h5 className='title-badge'>
                                         <span className='badge badge-organ me-2'>
-                                            {displayBodyHeader(getUBKGFullName(organ))}
+                                            {organ.label}
                                         </span>
                                     </h5>
                                 )}
