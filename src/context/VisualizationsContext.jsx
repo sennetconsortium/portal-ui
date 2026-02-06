@@ -10,8 +10,6 @@ export const VisualizationsProvider = ({ children, options = {} }) => {
     const { _t, authorized, isUnauthorized, router} = useContext(AppContext)
 
     const chartId = useRef('main')
-    let currentColorPointer = 1
-    let currentColorIndex = 0
     const selectors = {
         base: 'c-visualizations__'
     }
@@ -69,12 +67,12 @@ export const VisualizationsProvider = ({ children, options = {} }) => {
 
         handleLineLabel(id, e, '1')
 
-        setToolTipContent(id, label, value, xPos, yPos)
+        setToolTipContent({id, label, value, xPos, yPos, e, d, chart})
     }
 
-    const setToolTipContent = (id, label, value, xPos, yPos) => {
+    const setToolTipContent = ({id, label, value, xPos, yPos, e, d, chart}) => {
         if (options.onSetToolTipContent) {
-            options.onSetToolTipContent({tooltip: getTooltip(id), id, label, value, xPos, yPos})
+            options.onSetToolTipContent({tooltip: getTooltip(id), id, label, value, xPos, yPos, e, d, chart})
         } else {
             getTooltip(id)
                 .html(`<span><em>${label}</em>: <strong>${value}</strong></span>`)

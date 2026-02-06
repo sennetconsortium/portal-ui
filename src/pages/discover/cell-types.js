@@ -21,6 +21,17 @@ const ChartOverview = memo(({ subGroupLabels, visualizationData }) => {
 
     const onRectClick = (eventData) => {
         Addon.log('onBarClick', { data: eventData })
+        window.location = `/cell-types/${eventData.d.key}`
+    }
+
+    const onSetToolTipContent = (ops) => {
+        
+        const html = `<div><span>${ops.d?.group}</span>
+        <span><em>${subGroupLabels.current[ops.label]}</em>: <strong>${ops.value}</strong></span></div>`
+        ops.tooltip
+            .html(html)
+            .style('left', ops.xPos + 'px')
+            .style('top', ops.yPos + 'px')
     }
 
     const changeScale = (e) => {
@@ -30,7 +41,7 @@ const ChartOverview = memo(({ subGroupLabels, visualizationData }) => {
     const yAxis = { label: "Cell Count", formatter: formatNum, scaleLog: isLogScale, showLabels: true, ticks: 3 }
     const xAxis = { formatter: formatNum, label: `Organs`, showLabels: true }
 
-    return (<VisualizationsProvider options={{ onRectClick }}>
+    return (<VisualizationsProvider options={{ onRectClick, onSetToolTipContent }}>
         <FormControlLabel control={<Switch defaultChecked />} label="Log scale" onChange={changeScale} />
         <ChartContainer style={{className: 'c-visualizations--boxShadow'}} subGroupLabels={subGroupLabels.current} data={visualizationData} xAxis={xAxis} yAxis={yAxis} chartType={'stackedBar'} />
     </VisualizationsProvider>)

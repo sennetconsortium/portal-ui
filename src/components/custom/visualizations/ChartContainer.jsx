@@ -16,13 +16,18 @@ import HorizontalDistributionBar from './charts/HorizontalDistributionBar'
  * @param {yAxis} {object} {scaleLog: bool, ticks: int, label: string, showLabels: bool, showGrid: bool}
  */
 const ChartContainer = memo(({children, data, subGroupLabels, setLegend, chartId,  yAxis = {}, xAxis = {}, style = {}, chartType}) => {
+  const charts = {
+    bar: Bar,
+    groupedBar: GroupedBar,
+    stackedBar: StackedBar,
+    horizontalDistributionBar: HorizontalDistributionBar,
+    horizontalStackedBar: HorizontalStackedBar
+  }
+  const DisplayChart = charts[chartType]
+  if (!DisplayChart) return <>Invalid chart</>
   return (
     <div className='c-visualizations'>
-      {eq(chartType, 'stackedBar') && <StackedBar data={data} chartId={chartId} setLegend={setLegend} yAxis={yAxis} xAxis={xAxis} subGroupLabels={subGroupLabels}  />}
-      {eq(chartType, 'horizontalDistributionBar') && <HorizontalDistributionBar data={data} chartId={chartId} setLegend={setLegend} yAxis={yAxis} xAxis={xAxis} subGroupLabels={subGroupLabels} style={style}  />}
-      {eq(chartType, 'horizontalStackedBar') && <HorizontalStackedBar data={data} chartId={chartId} setLegend={setLegend} yAxis={yAxis} xAxis={xAxis} subGroupLabels={subGroupLabels} style={style}  />}
-      {eq(chartType, 'bar') && <Bar data={data} chartId={chartId} setLegend={setLegend} yAxis={yAxis} xAxis={xAxis}   />}
-      {eq(chartType, 'groupedBar') && <GroupedBar data={data} chartId={chartId} setLegend={setLegend} yAxis={yAxis} xAxis={xAxis} subGroupLabels={subGroupLabels}  />}
+      <DisplayChart data={data} chartId={chartId} setLegend={setLegend} yAxis={yAxis} xAxis={xAxis} subGroupLabels={subGroupLabels} style={style}  />
       {children}
     </div>
   )
