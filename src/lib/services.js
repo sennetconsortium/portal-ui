@@ -352,6 +352,7 @@ export const fetchSearchAPIEntities = async (body, index='entities') => {
     if (token) {
         headers.append("Authorization", `Bearer ${token}`)
     }
+    Addon.log('SearchAPI', {data: {body, index}, color: 'orange'})
     try {
         const res = await fetch(`${getSearchEndPoint()}${index}/search`, {
             method: "POST",
@@ -801,27 +802,30 @@ export const getDistinctOrgansAndCellTypes = async () => {
         size: 0,
         aggs: {
             group_by_organs: {
-            terms: {
-                field: "organs.code.keyword",
-                size: 10000
-            },
-            aggs: {
-                group_by_cell_label: {
                 terms: {
-                    field: "cell_label.keyword"
+                    field: "organs.code.keyword",
+                    size: 10000
                 },
+                
                 aggs: {
-                    total_cell_count: {
-                    sum: {
-                        field: "cell_count"
-                    }
+                    group_by_cell_label: {
+                        terms: {
+                            field: "cell_label.keyword"
+                        },
+                        aggs: {
+                            cell_id: {top_hits: {size: 1, _source: {include: ['cl_id']}}},
+                            total_cell_count: {
+                                sum: {
+                                    field: "cell_count"
+                                    
+                                }
+                            }
+                        }
                     }
                 }
-                }
-            }
             }
         }
-        }
+    }
     const content = await fetchSearchAPIEntities(body, 'cell-types');
     if (!content) {
         return null;

@@ -4,7 +4,6 @@ import { APP_TITLE } from "@/config/config"
 import AppContext from "@/context/AppContext"
 import Container from "react-bootstrap/Container"
 import Row from "react-bootstrap/Row"
-import Col from "react-bootstrap/Col"
 import ChartContainer from "@/components/custom/visualizations/ChartContainer";
 import { getDistinctOrgansAndCellTypes } from "@/lib/services";
 import { formatNum, getUBKGFullName } from "@/components/custom/js/functions";
@@ -17,39 +16,42 @@ const AppNavbar = dynamic(() => import("../../components/custom/layout/AppNavbar
 const Header = dynamic(() => import("../../components/custom/layout/Header"))
 const Spinner = dynamic(() => import("../../components/custom/Spinner"))
 
-const ChartOverview = memo(({subGroupLabels, visualizationData}) => {
+const ChartOverview = memo(({ subGroupLabels, visualizationData }) => {
     const [isLogScale, setIsLogScale] = useState(true)
 
     const onRectClick = (eventData) => {
-        Addon.log('onBarClick', {data: eventData})
-    } 
+        Addon.log('onBarClick', { data: eventData })
+    }
 
-     const changeScale = (e) => {
+    const changeScale = (e) => {
         setIsLogScale(!isLogScale)
     }
 
     const yAxis = { label: "Cell Count", formatter: formatNum, scaleLog: isLogScale, showLabels: true, ticks: 3 }
     const xAxis = { formatter: formatNum, label: `Organs`, showLabels: true }
 
-    return (<VisualizationsProvider options={{onRectClick}}>
+    return (<VisualizationsProvider options={{ onRectClick }}>
         <FormControlLabel control={<Switch defaultChecked />} label="Log scale" onChange={changeScale} />
-        <ChartContainer subGroupLabels={subGroupLabels.current} data={visualizationData} xAxis={xAxis} yAxis={yAxis} chartType={'stackedBar'}/>
+        <ChartContainer style={{className: 'c-visualizations--boxShadow'}} subGroupLabels={subGroupLabels.current} data={visualizationData} xAxis={xAxis} yAxis={yAxis} chartType={'stackedBar'} />
     </VisualizationsProvider>)
 })
 
 function CellTypes() {
-    const { logout, isRegisterHidden, isAuthorizing, isUnauthorized, hasAuthenticationCookie } = useContext(AppContext)
+    const { isRegisterHidden } = useContext(AppContext)
     const subGroupLabels = useRef({})
 
     const [visualizationData, setVisualizationData] = useState([])
     const formatData = (data) => {
         let results = []
         let cellTypes = {}
+        let cellId
         for (let d of data) {
             cellTypes = {}
+            
             for (let cellType of d.cellTypes) {
-                cellTypes[cellType.key.toCamelCase()] = cellType.total_cell_count.value
-                subGroupLabels.current[cellType.key.toCamelCase()] = cellType.key
+                cellId = cellType.cell_id.hits?.hits[0]?._source?.cl_id
+                cellTypes[cellId] = cellType.total_cell_count.value
+                subGroupLabels.current[cellId] = cellType.key
             }
             results.push({
                 group: getUBKGFullName(d.code),
@@ -64,7 +66,6 @@ function CellTypes() {
             if (data) {
                 formatData(data)
             }
-
         })
     }, [])
 

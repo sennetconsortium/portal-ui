@@ -34,7 +34,7 @@ const CellTypeDistributionAcrossOrgansTab = memo(({organ, tabData, cell}) => {
           data={prepareStackedData(tabData[organ._id].data, false)}
           xAxis={getAxis()} yAxis={getAxis()}
           style={{
-            className: 'c-visualization--noAxis c-visualization--boxShadow c-visualization--tooltipHasArrow',
+            className: 'c-visualizations--noAxis c-visualizations--boxShadow c-visualizations--tooltipHasArrow',
             hideViewbox: true, highlight: cell.label,
             transform: 'translate(0, 30)', strict: true,
             key: organ._id,

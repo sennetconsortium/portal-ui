@@ -23,7 +23,7 @@ function StackedBar({
     data = [],
     reload = false,
     subGroupLabels = {},
-    chartId = 'modal',
+    chartId = 'stackedBar',
     style = {},
     yAxis = {},
     xAxis = {}
@@ -228,7 +228,7 @@ function StackedBar({
     }, [filters, yAxis])
 
     return (
-        <div className={`c-visualizations__chart c-visualizations__stackedBar c-bar`} id={`c-visualizations__stackedBar--${chartId}`}></div>
+        <div className={`c-visualizations__chart c-visualizations__stackedBar c-bar ${style.className || ''}`} id={`c-visualizations__stackedBar--${chartId}`}></div>
     )
 }
 
