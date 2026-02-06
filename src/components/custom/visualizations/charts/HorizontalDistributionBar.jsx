@@ -49,7 +49,7 @@ function HorizontalDistributionBar({
         // append the svg object to the body of the page
         const svg = d3.create("svg")
             .attr("width", sizing.width + sizing.margin.X)
-            .attr("height", sizing.height + (style.strict ? 0 : sizing.margin.Y))
+            .attr("height", sizing.height + sizing.margin.Y)
 
         if (!style.hideViewbox) {
             svg.attr("viewBox", [0, 0, sizing.width + sizing.margin.X, sizing.height + sizing.margin.Y])
@@ -144,6 +144,7 @@ function HorizontalDistributionBar({
             // Enter in the stack data = loop key per key = group per group
             .data(stackedSeries)
             .join("g")
+              .attr('class', d => style.highlight === d.key ? 'g--highlight' : '')
               .attr("fill", d => {
                 const color = style.colorScale  ? style.colorScale({d, maxY}) : colorScale(d.key)
                 const label = getSubgroupLabel(d.key)
@@ -164,7 +165,7 @@ function HorizontalDistributionBar({
             .attr("class", d => `bar--${getSubgroupLabel(d.key)?.toDashedCase()} ${style.highlight === d.key ? 'bar--highlighted' : ''}`)
             .attr("x", d => x(d[0]))
             .attr("y", d => y(d.data[0]))
-            .attr("height", y.bandwidth())
+            .attr("height", d => style.highlight === d.key ? y.bandwidth() + 5 : y.bandwidth() )
             .attr("width", 0)
             .append("title")
             .text(d => {

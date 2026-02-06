@@ -36,9 +36,10 @@ const CellTypeDistributionAcrossOrgansTab = memo(({organ, tabData, cell}) => {
           style={{
             className: 'c-visualizations--noAxis c-visualizations--boxShadow c-visualizations--tooltipHasArrow',
             hideViewbox: true, highlight: cell.label,
-            transform: 'translate(0, 30)', strict: true,
+            transform: 'translate(0, 30)',
+            margin: {bottom: 5},
             key: organ._id,
-            height: 120, 
+            height: 70, 
             colorScheme: d3.schemeTableau10
             //colorScale
           }}

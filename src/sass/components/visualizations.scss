@@ -81,6 +81,12 @@
 			}
 		}
 	}
+	.g--highlight {
+		fill: limegreen;
+		rect {
+			filter: drop-shadow(4px 4px 8px rgba(66, 208, 19, 0.5));
+		} 
+	}
 	&--boxShadow {
 		rect:hover {
 			filter: drop-shadow(4px 4px 8px rgba(0, 0, 0, 0.5));

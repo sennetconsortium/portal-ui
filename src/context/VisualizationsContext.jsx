@@ -153,8 +153,6 @@ export const VisualizationsProvider = ({ children, options = {} }) => {
                 getTooltip(id)
                     .style('opacity', 0)
                 d3.select(this)
-                    .style('stroke', 'none')
-                    .style('cursor', 'default')
                     .style('opacity', 1)
             }
         };
