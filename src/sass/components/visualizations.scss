@@ -1,3 +1,15 @@
+@mixin visualization-tooltipArrow() {
+  background: none;
+	content: "";
+	position: absolute;
+	width: 0;
+	height: 0;
+	border: 5px solid transparent; 
+	border-top-color: white;
+	top: 22px; 
+	left: 1px;
+	transform: translateX(-50%);
+}
 
 .c-visualizations__dropdownContainer {
 	display: flex;
@@ -30,19 +42,8 @@
 		color: var(--bs-warning-text-emphasis);
 		position: relative;
 		&:after {
-			background: none;
-			content: "";
-			position: absolute;
-			width: 0;
-			height: 0;
-			/* Use the border trick to create a triangle */
-			border: 5px solid transparent; 
-			/* Set one border color to match the bubble background for an upward-pointing arrow */
+			@include visualization-tooltipArrow();
 			border-top-color: var(--bs-warning-border-subtle);
-			/* Positioning the arrow at the top center */
-			top: 22px; /* Half the border width to place it outside the bubble */
-			left: 1px;
-			transform: translateX(-50%);
 		}
 	}
 }
@@ -64,6 +65,17 @@
 }
 
 .c-visualization {
+	&--tooltipHasArrow {
+		.c-visualizations__tooltip {
+			span {
+				color: var(--bs-warning-text-emphasis);
+				position: relative;
+				&:after {
+					@include visualization-tooltipArrow();
+				}
+			}
+		}
+	}
 	&--boxShadow {
 		rect:hover {
 			filter: drop-shadow(4px 4px 8px rgba(0, 0, 0, 0.5));

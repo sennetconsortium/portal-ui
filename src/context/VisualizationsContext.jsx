@@ -5,7 +5,7 @@ import { eq } from "@/components/custom/js/functions";
 
 const VisualizationsContext = createContext({})
 
-export const VisualizationsProvider = ({ children }) => {
+export const VisualizationsProvider = ({ children, options = {} }) => {
 
     const { _t, authorized, isUnauthorized, router} = useContext(AppContext)
 
@@ -73,10 +73,14 @@ export const VisualizationsProvider = ({ children }) => {
     }
 
     const setToolTipContent = (id, label, value, xPos, yPos) => {
-        getTooltip(id)
-            .html(`<em>${label}</em>: <strong>${value}</strong>`)
-            .style('left', xPos + 'px')
-            .style('top', yPos + 'px')
+        if (options.onSetToolTipContent) {
+            options.onSetToolTipContent({tooltip: getTooltip(id), id, label, value, xPos, yPos})
+        } else {
+            getTooltip(id)
+                .html(`<span><em>${label}</em>: <strong>${value}</strong></span>`)
+                .style('left', xPos + 'px')
+                .style('top', yPos + 'px')
+        }
         return getTooltip(id)
     }
 
