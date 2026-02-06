@@ -1,5 +1,5 @@
 import dynamic from "next/dynamic";
-import React, { useContext, useEffect, useState, useRef } from "react"
+import React, { useContext, useEffect, useState, useRef, memo } from "react"
 import { APP_TITLE } from "@/config/config"
 import AppContext from "@/context/AppContext"
 import Container from "react-bootstrap/Container"
@@ -17,14 +17,30 @@ const AppNavbar = dynamic(() => import("../../components/custom/layout/AppNavbar
 const Header = dynamic(() => import("../../components/custom/layout/Header"))
 const Spinner = dynamic(() => import("../../components/custom/Spinner"))
 
+const ChartOverview = memo(({subGroupLabels, visualizationData}) => {
+    const [isLogScale, setIsLogScale] = useState(true)
+
+    const onRectClick = (eventData) => {
+        Addon.log('onBarClick', {data: eventData})
+    } 
+
+     const changeScale = (e) => {
+        setIsLogScale(!isLogScale)
+    }
+
+    const yAxis = { label: "Cell Count", formatter: formatNum, scaleLog: isLogScale, showLabels: true, ticks: 3 }
+    const xAxis = { formatter: formatNum, label: `Organs`, showLabels: true }
+
+    return (<VisualizationsProvider options={{onRectClick}}>
+        <FormControlLabel control={<Switch defaultChecked />} label="Log scale" onChange={changeScale} />
+        <ChartContainer subGroupLabels={subGroupLabels.current} data={visualizationData} xAxis={xAxis} yAxis={yAxis} chartType={'stackedBar'}/>
+    </VisualizationsProvider>)
+})
+
 function CellTypes() {
     const { logout, isRegisterHidden, isAuthorizing, isUnauthorized, hasAuthenticationCookie } = useContext(AppContext)
     const subGroupLabels = useRef({})
-    const [isLogScale, setIsLogScale] = useState(true)
 
-    const changeScale = (e) => {
-        setIsLogScale(!isLogScale)
-    }
     const [visualizationData, setVisualizationData] = useState([])
     const formatData = (data) => {
         let results = []
@@ -52,8 +68,6 @@ function CellTypes() {
         })
     }, [])
 
-    const yAxis = { label: "Cell Count", formatter: formatNum, scaleLog: isLogScale, showLabels: true, ticks: 3 }
-    const xAxis = { formatter: formatNum, label: `Organs`, showLabels: true }
 
     return (
         <>
@@ -74,10 +88,7 @@ function CellTypes() {
                 <p>Explore annotated cell types across SenNet <code>Datasets</code>,
                     with insights into their anatomical distribution and associated biomarkers.
                     Visualize and compare cell type distribution across organs using interactive plots, and find datasets relevant to the cell type.</p>
-                <VisualizationsProvider>
-                    <FormControlLabel control={<Switch defaultChecked />} label="Log scale" onChange={changeScale} />
-                    <ChartContainer subGroupLabels={subGroupLabels.current} data={visualizationData} xAxis={xAxis} yAxis={yAxis} chartType={'stackedBar'}/>
-                </VisualizationsProvider>
+                <ChartOverview subGroupLabels={subGroupLabels} visualizationData={visualizationData} />
             </Container>
         </>
     )

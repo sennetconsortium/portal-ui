@@ -179,6 +179,7 @@ function HorizontalStackedBar({
             .on("mouseover", toolTipHandlers(chartId, chartType).mouseover)
             .on("mousemove", toolTipHandlers(chartId, chartType).mousemove)
             .on("mouseleave", toolTipHandlers(chartId, chartType).mouseleave)
+            .on("click", toolTipHandlers(chartId, chartType).click)
 
         svg.selectAll("rect")
             .transition()

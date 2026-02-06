@@ -9,7 +9,7 @@ function Bar({
     filters,
     data = [],
     chartId = 'bar',
-    reload = true,
+    reload = false,
     onSectionClick,
     style = {},
     yAxis = {},
@@ -142,6 +142,7 @@ function Bar({
             .on("mouseover", toolTipHandlers(chartId).mouseover)
             .on("mousemove", toolTipHandlers(chartId).mousemove)
             .on("mouseleave", toolTipHandlers(chartId).mouseleave)
+            .on("click", toolTipHandlers(chartId, chartType).click)
 
         // Add the x-axis and label.
         svg.append("g")

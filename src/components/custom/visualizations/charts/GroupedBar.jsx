@@ -18,7 +18,7 @@ function GroupedBar({
     setLegend,
     filters,
     data = [],
-    reload = true,
+    reload = false,
     subGroupLabels = {},
     chartId = 'groupedBar',
     style = {},
@@ -183,6 +183,7 @@ function GroupedBar({
             .on("mouseover", toolTipHandlers(chartId, chartType).mouseover)
             .on("mousemove", toolTipHandlers(chartId, chartType).mousemove)
             .on("mouseleave", toolTipHandlers(chartId, chartType).mouseleave)
+            .on("click", toolTipHandlers(chartId, chartType).click)
 
         svg.selectAll("rect")
             .transition()

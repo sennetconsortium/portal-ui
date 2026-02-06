@@ -133,6 +133,11 @@ export const VisualizationsProvider = ({ children, options = {} }) => {
 
     const toolTipHandlers = (id, chart = 'bar') => {
         return {
+            click: function (e, d) {
+                if (options.onRectClick) {
+                    options.onRectClick({id, chart, e, d})
+                }
+            },
             mouseover: function (e, d) {
                 visibleTooltip(id, chart, e, d)
             },
