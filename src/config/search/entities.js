@@ -13,7 +13,7 @@ import {
 const connector = new SearchAPIConnector({
     indexName: getEntitiesIndex(),
     indexUrl: getSearchEndPoint(),
-    accessToken: getAuth(),
+    accessToken: getAuth()
 })
 
 export const SEARCH_ENTITIES = {
@@ -31,6 +31,18 @@ export const SEARCH_ENTITIES = {
             }
         ],
         facets: {
+            sennet_id: {
+                label: 'SenNet ID',
+                type: 'value',
+                field: 'sennet_id.keyword',
+                isExpanded: false,
+                filterType: 'any',
+                isFilterable: false,
+                facetType: 'term',
+                facetChipType: 'bulk',
+                isAggregationActive: true,
+                isFacetVisible: false
+            },
             entity_type: {
                 label: 'Entity Type',
                 type: 'value',

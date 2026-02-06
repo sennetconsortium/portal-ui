@@ -139,6 +139,10 @@
   width: 100%;
   padding: 0 0 32px 32px;
 }
+.sui-facet {
+  max-height: 500px;
+  overflow-y: auto;
+}
 
 .sui-facet__title {
   outline: None !important;
@@ -425,8 +429,24 @@
   }
 }
 
+.sui-facets--entities .facetContainer--sennet_id-keyword, .sui-facets--entities .facetContainer--uuid-keyword  {
+  position: absolute;
+  opacity: 0;
+  left: -1000px;
+}
+
 .sui-facets--entities {
   .sui-facet__AssayInputEntity .sui-multi-checkbox-facet__input-text:first-letter {
     text-transform: uppercase;
+  }
+}
+
+.sui-chipToggle--static {
+  .chip-value {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    max-width: 150px;
+    display: inline-flex;
   }
 }

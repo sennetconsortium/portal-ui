@@ -254,7 +254,7 @@ function SearchActions({
         for (let action in exportActions) {
             results.push(<MenuItem className='snMenu-item' onClick={(e) => downloadData(e, action, isAll)} key={`${range}-${action}`}>
                 <SenNetPopover  text={popoverText(action)} className={`${range}-${action}`}>
-                    <ListItemText><i class={`bi ${icon[action]}`}></i> &nbsp;<code>{exportActions[action]}</code></ListItemText>
+                    <ListItemText><i className={`bi ${icon[action]}`}></i> &nbsp;<code>{exportActions[action]}</code></ListItemText>
                 </SenNetPopover>
                 </MenuItem>
             )

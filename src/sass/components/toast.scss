@@ -42,3 +42,7 @@
   }
 }
 
+.Toastify__toast-container--top-left:has(.Toastify__toast-center-left) {
+  top: 50% !important;
+}
+

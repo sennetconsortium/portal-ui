@@ -16,6 +16,7 @@ import useSelectedRows from "@/hooks/useSelectedRows";
  * @param {function} onCheckboxChange A function to run on change of DataTable checkbox
  * @param {bool} disableRowClick Whether or not to disable row clicks
  * @param {string} tableClassName
+ * @param {bool} selectableRows
  * @param {array} defaultHiddenColumns List of DataTable type column.name
  * @param {function} searchContext The current context of the table, could be based on certain selected facets
  * @param {int} totalRows Number of rows for data table, useful when dealing with query aggregations and count won't be the rawResponse.record_count
@@ -24,7 +25,7 @@ import useSelectedRows from "@/hooks/useSelectedRows";
  * @param {object} searchActionHandlers An object of callbacks for various search actions. getModalSelectedFiles: Returns a list of files selected in row level FileTree modal
  * @returns 
  */
-function ResultsBlock({getTableColumns, onCheckboxChange, disableRowClick, tableClassName = '', 
+function ResultsBlock({getTableColumns, onCheckboxChange, disableRowClick, tableClassName = '', selectableRows,
     exportKind, defaultHiddenColumns = [], searchContext, totalRows, isBusy, index, searchActionHandlers}) {
 
     const {
@@ -58,6 +59,9 @@ function ResultsBlock({getTableColumns, onCheckboxChange, disableRowClick, table
     const {selectedRows, handleRowSelected, rowSelectCriteria  } = useSelectedRows({filters, pageNumber, pageSize, onCheckboxChange})
     const [_, setRefresh] = useState(new Date().getMilliseconds())
 
+    const paginationTotalRows = totalRows !== undefined ? totalRows : rawResponse.record_count
+    const _selectableRows = selectableRows !== undefined ? selectableRows : (!inModal || eq(index, 'files'))
+
     return (
         <>
             <div className='sui-layout-main-header'>
@@ -73,7 +77,7 @@ function ResultsBlock({getTableColumns, onCheckboxChange, disableRowClick, table
                         <ResultsPerPage updateTablePagination={updateTablePagination}
                                         resultsPerPage={pageSize}
                                         setResultsPerPage={setResultsPerPage}
-                                        totalRows={totalRows || rawResponse.record_count}  />
+                                        totalRows={paginationTotalRows}  />
                     </div>
                 </div>
             </div>
@@ -104,11 +108,11 @@ function ResultsBlock({getTableColumns, onCheckboxChange, disableRowClick, table
                         paginationServer
                         //paginationServerOptions={{persistSelectedOnPageChange: true, persistSelectedOnSort: true}}
                         paginationDefaultPage={pageNumber}
-                        paginationTotalRows={totalRows || rawResponse.record_count}
+                        paginationTotalRows={paginationTotalRows}
                         progressPending={isSearching}
                         progressComponent={<Spinner />}
                         selectableRowSelected={rowSelectCriteria}
-                        selectableRows={!inModal || eq(index, 'files')}
+                        selectableRows={_selectableRows}
                         onSelectedRowsChange={handleRowSelected}
                         selectableRowsVisibleOnly={true}
                 />}

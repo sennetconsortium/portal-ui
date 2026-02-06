@@ -68,6 +68,10 @@ export function getUserEmail() {
     return JSON.parse(info).email
 }
 
+export function getCellTypesIndex() {
+    return process.env.NEXT_PUBLIC_CELL_TYPES_INDEX
+}
+
 export function getEntitiesIndex() {
     return process.env.NEXT_PUBLIC_ENTITIES_INDEX
 }

@@ -11,12 +11,11 @@ const connector = new SearchAPIConnector({
     indexUrl: getSearchEndPoint(),
     accessToken: getAuth(),
     beforeSearchCall: (queryOptions, next) => {
-
         queryOptions.collapse=  {
             "field" : "dataset_uuid.keyword",
                 "inner_hits": {
                 "name": "files",
-                    "size": 20,
+                    "size": queryOptions.size,
                     "sort": [{ "dataset_uuid.keyword": "asc" }]
             },
             "max_concurrent_group_searches": 4

@@ -169,3 +169,20 @@ fieldset[disabled] .btn-dataset.active {
     margin-bottom: 0;
   }
  }
+
+ .btn-disabled {
+  cursor: default;
+  color: var(--bs-gray);
+  border-color: var(--bs-gray);
+  pointer-events: none;
+  &:hover {
+    cursor: default;
+    background-color: transparent;
+    color: var(--bs-gray);
+    border-color: var(--bs-gray);
+  }
+ }
+
+ [data-tag="allowRowEvents"]:has(.btn-disabled) {
+  cursor: default;
+ }
