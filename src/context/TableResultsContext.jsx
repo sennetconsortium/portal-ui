@@ -38,20 +38,10 @@ export const TableResultsProvider = ({ columnsRef, children, getHotLink, rows, f
                 // handle the actual facets sent in request
                 let kv = f.split('=')
                 let values = kv[1].split(',')
-                if (['uuid', 'sennet_id'].contains(kv[0])) {
-                    esq.push({
-                        terms: {
-                            [`${kv[0].toLowerCase()}.keyword`]: values
-                        }
-                    })
-                } else {
-                    for (let v of values) {
-                        addFilter(kv[0], v)
-                    } 
-                }
-                
+                for (let v of values) {
+                    addFilter(kv[0], v)
+                } 
             }
-            sessionStorage.setItem('esqFilter', JSON.stringify(esq))
         }
 
     }, [router.isReady, router.query])

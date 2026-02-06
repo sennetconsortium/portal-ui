@@ -429,6 +429,12 @@
   }
 }
 
+.sui-facets--entities .facetContainer--sennet_id-keyword, .sui-facets--entities .facetContainer--uuid-keyword  {
+  position: absolute;
+  opacity: 0;
+  left: -1000px;
+}
+
 .sui-facets--entities {
   .sui-facet__AssayInputEntity .sui-multi-checkbox-facet__input-text:first-letter {
     text-transform: uppercase;

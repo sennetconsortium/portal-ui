@@ -1,12 +1,9 @@
-import React, { useRef, useState, useEffect } from 'react'
 import { Chip } from '@mui/material'
 import { getUBKGFullName } from '../js/functions'
 import { useSearchUIContext } from "search-ui/components/core/SearchUIContext";
-import { parseJson } from '@/lib/services';
 
-function SelectedFacets({searchContext}) {
+function SelectedFacets() {
     const { facetConfig, filters, setFilter, removeFilter, findFacet } = useSearchUIContext()
-    const [staticChips, setStaticChips] = useState(null)
 
     const getSelector = (pre, label, value) => {
         return `sui-${pre}--${formatVal(label)}-${formatVal(value)}`
@@ -15,71 +12,6 @@ function SelectedFacets({searchContext}) {
     const formatVal = (id) => {
         return `${id}`.replace(/\W+/g, '')
     }
-
-    const clearStaticFacet = (field) => {
-        let esqFilter = parseJson(sessionStorage.getItem('esqFilter'))
-        let esqFilterUpdated = []
-        if (esqFilter && Array.isArray(esqFilter)) {
-            for (let f of esqFilter) {
-                for (let term in f.terms) {
-                    if (term.replace('.keyword', '') === field) {
-                        delete f.terms[term]
-                    }
-                }
-               
-            }
-            for (let f of esqFilter) {
-                if (Object.values(f.terms).length) {
-                    esqFilterUpdated.push(f)
-                }
-            }
-        }
-        
-        if (esqFilterUpdated.length) {
-            sessionStorage.setItem('esqFilter', JSON.stringify(esqFilterUpdated))
-        } else {
-            sessionStorage.removeItem('esqFilter')
-        }
-        if (filters.length) {
-            let _filter = filters[0]
-            removeFilter(_filter.field, _filter.values[0])
-            setFilter(_filter.field, _filter.values[0])
-        }
-        resolveStaticChips()
-    }
-
-    const getAllowedTermsForRoute = () => {
-        if (searchContext === 'entities') {
-            return ['sennet_id', 'uuid']
-        }
-        return []
-    }
-
-    const resolveStaticChips = () => {
-        let allowedTermsForRoute = getAllowedTermsForRoute()
-        if (!allowedTermsForRoute.length) return
-        let staticChips = []
-        let field
-        let esqFilter = parseJson(sessionStorage.getItem('esqFilter'))
-        if (esqFilter && Array.isArray(esqFilter)) {
-            for (let f of esqFilter) {
-                for (let term in f.terms) {
-                    field = term.replace('.keyword', '').toLowerCase()
-                    if (allowedTermsForRoute.contains(field)) {
-                        staticChips.push(buildStaticFacetChip(field, f.terms[term].join(', ')))
-                    }
-                    
-                }
-            }
-        }
-        setStaticChips(staticChips)
-    }
-
-    useEffect(()=>{
-        setTimeout(() => {
-            resolveStaticChips()
-        }, 300)
-    }, [filters])
 
     const convertToDisplayLabel = (facet, key) => {
         switch (facet.facetType) {
@@ -152,24 +84,6 @@ function SelectedFacets({searchContext}) {
         return chips
     }
 
-     const buildStaticFacetChip = (field, value) => {
-        return (
-            <Chip
-                key={`${field}_${formatVal(value)}`}
-                className={`${getSelector('chipToggle', field, value)} sui-chipToggle--static`}
-                label={
-                    <>
-                        {' '}
-                        <span className='chip-title'>{field}</span>:{' '}
-                        <span className='chip-value'>{value}</span>
-                    </>
-                }
-                variant='outlined'
-                onDelete={(e) => clearStaticFacet(field)}
-            />
-        )
-    }
-
     const buildValueFacetChip = (filter, facet, value) => {
         return (
             <Chip
@@ -188,24 +102,48 @@ function SelectedFacets({searchContext}) {
         )
     }
 
+    const buildListValuesFacetChip = (filter) => {
+        const field = filter.field 
+        const value = filter.values.join(', ')
+        return (
+            <Chip
+                key={`${field}_${formatVal(value)}`}
+                className={`${getSelector('chipToggle', field, value)} sui-chipToggle--static`}
+                label={
+                    <>
+                        {' '}
+                        <span className='chip-title'>{field}</span>:{' '}
+                        <span className='chip-value'>{value}</span>
+                    </>
+                }
+                variant='outlined'
+                onDelete={(e) => filter.values.map(v => removeFilter(field, v))}
+            />
+        )
+    }
+
     return (
         <div className={`c-SelectedFacets`}>
             {filters.reduce((acc, filter) => {
                 const facet = findFacet(filter.field)
-                for (const value of filter.values) {
-                    switch (facet?.facetType) {
-                    case 'daterange':
-                    case 'histogram':
-                        acc.push(...buildRangeFacetChip(filter, facet, value))
-                        break;
-                    default:
-                        acc.push(buildValueFacetChip(filter, facet, value))
-                        break;
+                if (facet?.facetChipType) {
+                    acc.push(buildListValuesFacetChip(filter))
+                } else {
+                    for (const value of filter.values) {
+                        switch (facet?.facetType) {
+                            case 'daterange':
+                            case 'histogram':
+                                acc.push(...buildRangeFacetChip(filter, facet, value))
+                                break;
+                            default:
+                                acc.push(buildValueFacetChip(filter, facet, value))
+                                break;
+                        }
                     }
                 }
+                
                 return acc
             }, [])}
-            {staticChips}
         </div>
     )
 }

@@ -9,24 +9,11 @@ import {
     isDateFacetVisible,
     lateralOrgans
 } from '../config';
-import { parseJson } from '@/lib/services';
 
 const connector = new SearchAPIConnector({
     indexName: getEntitiesIndex(),
     indexUrl: getSearchEndPoint(),
-    accessToken: getAuth(),
-    beforeSearchCall: (queryOptions, next) => {
-        let esqFilter = parseJson(sessionStorage.getItem('esqFilter'))
-        if (esqFilter && Array.isArray(esqFilter) && esqFilter.length) {
-            if (Array.isArray(queryOptions.query.bool.filter)) {
-                queryOptions.query.bool.filter = [...queryOptions.query.bool.filter, ...esqFilter]
-            } else {
-                queryOptions.query.bool.filter = [queryOptions.query.bool.filter, ...esqFilter]
-            }
-            
-        }
-    return next(queryOptions)
-    }
+    accessToken: getAuth()
 })
 
 export const SEARCH_ENTITIES = {
@@ -44,6 +31,18 @@ export const SEARCH_ENTITIES = {
             }
         ],
         facets: {
+            sennet_id: {
+                label: 'SenNet ID',
+                type: 'value',
+                field: 'sennet_id.keyword',
+                isExpanded: false,
+                filterType: 'any',
+                isFilterable: false,
+                facetType: 'term',
+                facetChipType: 'bulk',
+                isAggregationActive: true,
+                isFacetVisible: false
+            },
             entity_type: {
                 label: 'Entity Type',
                 type: 'value',
