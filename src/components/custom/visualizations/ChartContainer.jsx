@@ -15,7 +15,7 @@ import HorizontalDistributionBar from './charts/HorizontalDistributionBar'
  * @param {xAxis} {object} {formatter: function(v) for formatting axis ticks, label: string, showLabels: bool}
  * @param {yAxis} {object} {scaleLog: bool, ticks: int, label: string, showLabels: bool, showGrid: bool}
  */
-const ChartContainer = memo(({children, data, subGroupLabels, setLegend, chartId,  yAxis = {}, xAxis = {}, style = {}, chartType}) => {
+const ChartContainer = memo(({children, ...otherProps}) => {
   const charts = {
     bar: Bar,
     groupedBar: GroupedBar,
@@ -23,11 +23,11 @@ const ChartContainer = memo(({children, data, subGroupLabels, setLegend, chartId
     horizontalDistributionBar: HorizontalDistributionBar,
     horizontalStackedBar: HorizontalStackedBar
   }
-  const DisplayChart = charts[chartType]
+  const DisplayChart = charts[otherProps.chartType]
   if (!DisplayChart) return <>Invalid chart</>
   return (
     <div className='c-visualizations'>
-      <DisplayChart data={data} chartId={chartId} setLegend={setLegend} yAxis={yAxis} xAxis={xAxis} subGroupLabels={subGroupLabels} style={style}  />
+      <DisplayChart {...otherProps} />
       {children}
     </div>
   )
