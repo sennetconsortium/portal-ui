@@ -11,6 +11,7 @@ import { VisualizationsProvider } from "@/context/VisualizationsContext";
 import { prepareStackedData } from "@/components/custom/visualizations/charts/StackedBar";
 import { FormControlLabel, Switch } from "@mui/material";
 import { APP_ROUTES } from "@/config/constants";
+import { getOrganByCode } from "@/config/organs";
 
 const AppNavbar = dynamic(() => import("../../components/custom/layout/AppNavbar"))
 const Header = dynamic(() => import("../../components/custom/layout/Header"))
@@ -73,19 +74,24 @@ function CellTypes() {
 
     const [visualizationData, setVisualizationData] = useState([])
     const formatData = (data) => {
+        let dict = {}
         let results = []
         let cellTypes = {}
-        let cellId
+        let result
+        let cellId, organ
         for (let d of data) {
             cellTypes = {}
             
+            organ = getOrganByCode(d.code)?.label
+            result = dict[organ] || {}
             for (let cellType of d.cellTypes) {
                 cellId = cellType.cell_id.hits?.hits[0]?._source?.cl_id
-                cellTypes[cellId] = cellType.total_cell_count.value
+                cellTypes[cellId] = cellType.total_cell_count.value + (result[cellId] || 0)
                 subGroupLabels.current[cellId] = cellType.key
             }
+           
             results.push({
-                group: getUBKGFullName(d.code),
+                group: organ,
                 ...cellTypes
             })
         }
