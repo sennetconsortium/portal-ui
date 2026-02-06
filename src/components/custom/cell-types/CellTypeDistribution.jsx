@@ -4,6 +4,7 @@ import useSearchUIQuery from '@/hooks/useSearchUIQuery'
 import { formatNum } from '../js/functions'
 import Spinner from '../Spinner'
 import ChartContainer from '../visualizations/ChartContainer'
+import { useMemo } from 'react'
 
 /**
  * @typedef {object} CellTypeDistributionProps
@@ -37,7 +38,9 @@ export default function CellTypeDistribution({ clId }) {
         }
     }
 
-    function buildOrganChartData(data) {
+    const { data, loading, error } = useSearchUIQuery('cell-types', query)
+
+    const chartData = useMemo(() => {
         // combine buckets that are lateral organs
         const organs = {}
         data?.aggregations?.by_organ_code?.buckets?.forEach((bucket) => {
@@ -60,9 +63,7 @@ export default function CellTypeDistribution({ clId }) {
         organList.sort((a, b) => b.value - a.value)
 
         return organList
-    }
-
-    const { data, loading, error } = useSearchUIQuery('cell-types', query)
+    }, [data])
 
     if (loading) {
         return <Spinner />
@@ -80,11 +81,8 @@ export default function CellTypeDistribution({ clId }) {
 
     return (
         <VisualizationsProvider>
-            <div>
-                Organs
-            </div>
             <ChartContainer
-                data={buildOrganChartData(data)}
+                data={chartData}
                 chartId={'cellTypeDistribution'}
                 xAxis={xAxis}
                 yAxis={yAxis}
