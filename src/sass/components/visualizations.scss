@@ -65,6 +65,11 @@
 }
 
 .c-visualizations {
+	&__tooltip--multiLine {
+		span {
+			display: block;
+		}
+	}
 	&--tooltipHasArrow {
 		.c-visualizations__tooltip {
 			span {
