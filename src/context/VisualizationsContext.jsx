@@ -72,7 +72,9 @@ export const VisualizationsProvider = ({ children, options = {} }) => {
 
     const setToolTipContent = ({id, label, value, xPos, yPos, e, d, chart}) => {
         if (options.onSetToolTipContent) {
-            options.onSetToolTipContent({tooltip: {getD3: getTooltip, getSelector: getTooltipSelector }, id, label, value, xPos, yPos, e, d, chart})
+            options.onSetToolTipContent({tooltip: {getD3: getTooltip, getSelector: getTooltipSelector }, 
+                id, label, value, xPos, yPos, e, d, 
+                chart})
         } else {
             getTooltip(id)
                 .html(`<span><em>${label}</em>: <strong>${value}</strong></span>`)
@@ -133,10 +135,10 @@ export const VisualizationsProvider = ({ children, options = {} }) => {
 
             xPos = Number($(element).attr('x')) - 5
             d3.select(`#${selectors.base}${name}--${id}${index}`)
-                .html(`<em>${highlight}</strong>`)
+                .html(`<em class="fs-6">${highlight}</strong>`)
                 .style('left', xPos + 'px')
                 .style('opacity', 1)
-                .style('top', '2px')
+                .style('top', '20px')
         })
     }
 

@@ -150,7 +150,7 @@ const CellTypeDistributionAcrossOrgans = memo(({ cell }) => {
                 ))}
             </Nav>
 
-            <Tab.Content>
+            <Tab.Content className={'tabContent tabContent--cellTypeOrgan'}>
                 {getOrganData(data).map((organ) => (
                     <Tab.Pane eventKey={organ._id} key={organ._id} className='mt-4'>
                         <CellTypeDistributionAcrossOrgansTab organ={organ} tabData={tabData} cell={{...cell, cellIds: cellIds.current}} />

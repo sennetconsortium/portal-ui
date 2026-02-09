@@ -2,7 +2,7 @@ import React, {useState, memo} from 'react'
 import CellTypeDistributionAcrossOrgansLayout from './CellTypeDistributionAcrossOrgansLayout'
 import { VisualizationsProvider } from '@/context/VisualizationsContext'
 import ChartContainer from '../visualizations/ChartContainer'
-import { formatNum, getUBKGFullName } from '../js/functions'
+import { formatNum, getUBKGFullName, percentage } from '../js/functions'
 import { prepareStackedData } from '../visualizations/charts/StackedBar'
 import * as d3 from 'd3';
 
@@ -24,22 +24,57 @@ const CellTypeDistributionAcrossOrgansTab = memo(({organ, tabData, cell}) => {
     return _colorScale(d[0].data[d.key] / maxY)
   }
 
+  const onSetToolTipContent = (ops) => {
+      let total = 0
+      let current = 0
+      let currentGroup = ops.d?.data?.group
+      for (let d of visualizationData) {
+          if (d.group === currentGroup) {
+              for (let c in d) {
+                  if (c !=='group') {
+                      total += d[c]
+                  }
+                  if (c === ops.label) {
+                      current = d[c]
+                  }
+              }
+          }
+      }
+      const label = ops.label
+
+
+      
+      const html = `<div">
+      <span class="fs-6"><em>${label}</em>: <strong>${ops.value} (${percentage(ops.value, total)}%)</strong></span>
+      <span><em>Other cell types</em>: <strong>${formatNum(total - current)} (${percentage(total - current, total)}%)</strong></span>
+      <span><em>Total</em>: <strong>${formatNum(total)}</strong></span>
+      </div>`
+      
+      ops.tooltip.getD3(ops.id)
+          .style('left', ops.xPos + 'px')
+          .style('top', ops.yPos - 20 + 'px')
+          .attr('class', 'c-visualizations__tooltip c-visualizations__tooltip--multiLine')
+          .html(html) 
+  }
+
   const onRectClick = (eventData) => {
     Addon.log('onBarClick', { data: eventData })
     window.location = `/cell-types/${cell.cellIds[eventData.d.key]}`
   }
 
+  const visualizationData = prepareStackedData(tabData[organ._id].data, false)
+
   return (
     <div>
       <div>The bar below shows the distribution of cell types in the {organ.label} tissue. The distribution is based on the number of cells annotated in SenNet datasets.</div>
-      <VisualizationsProvider options={{onRectClick}}>
+      <VisualizationsProvider options={{onRectClick, onSetToolTipContent, visualizationData}}>
         <ChartContainer
           setLegend={setLegend}
           chartId={organ._id}
-          data={prepareStackedData(tabData[organ._id].data, false)}
+          data={visualizationData}
           xAxis={getAxis()} yAxis={getAxis()}
           style={{
-            className: 'c-visualizations--noAxis c-visualizations--boxShadow c-visualizations--tooltipHasArrow',
+            className: 'c-visualizations--noAxis c-visualizations--posInherit c-visualizations--boxShadow c-visualizations--tooltipHasArrow',
             hideViewbox: true, highlight: cell.label,
             transform: 'translate(0, 30)',
             margin: {bottom: 5},

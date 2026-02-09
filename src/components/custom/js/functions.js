@@ -126,6 +126,8 @@ export function getUBKGFullName(term) {
     }
 }
 
+export const percentage = (a, b, fixed = 2) => (a / b * 100).toFixed(fixed)
+
 export const formatNum = (num) => typeof num === 'number' ?  new Intl.NumberFormat().format(num) : 0
 
 const normalizedNames = {

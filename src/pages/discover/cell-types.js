@@ -25,13 +25,18 @@ const ChartOverview = memo(({ subGroupLabels, visualizationData }) => {
         window.location = `/cell-types/${eventData.d.key}`
     }
 
+    const changeScale = (e) => {
+        setIsLogScale(!isLogScale)
+    }
+
     const onSetToolTipContent = (ops) => {
         let total = 0
         let current = 0
+        let currentGroup = ops.d?.group
         for (let d of visualizationData) {
-            if (d.group === ops.d?.group) {
+            if (d.group === currentGroup) {
                 for (let c in d) {
-                    if (c !=='group') {
+                    if (c !== 'group') {
                         total += d[c]
                     }
                     if (c === ops.label) {
@@ -40,31 +45,27 @@ const ChartOverview = memo(({ subGroupLabels, visualizationData }) => {
                 }
             }
         }
-        
-        const html = `<div"><span>${ops.d?.group}</span>
-        <span><em>${subGroupLabels.current[ops.label]}</em>: <strong>${ops.value}</strong></span>
-        <span><em>Other cell types</em>: <strong>${formatNum(total - current)}</strong></span>
-        <span><em>Total</em>: <strong>${formatNum(total)}</strong></span>
-        </div>`
-        
+        const label = subGroupLabels.current[ops.label]
+
+        const html = `<div"><span class="fs-6">${currentGroup}</span>
+            <span><em>${label}</em>: <strong>${ops.value} (${percentage(ops.value, total)}%)</strong></span>
+            <span><em>Other cell types</em>: <strong>${formatNum(total - current)} (${percentage(total - current, total)}%)</strong></span>
+            <span><em>Total</em>: <strong>${formatNum(total)}</strong></span>
+            </div>`
+
         ops.tooltip.getD3(ops.id)
             .style('left', ops.xPos + 'px')
-            .style('top', ops.yPos - 60 + 'px')
+            .style('top', ops.yPos - 50 + 'px')
             .attr('class', 'c-visualizations__tooltip c-visualizations__tooltip--multiLine')
             .html(html)
-        
-    }
-
-    const changeScale = (e) => {
-        setIsLogScale(!isLogScale)
     }
 
     const yAxis = { label: "Cell Count", formatter: formatNum, scaleLog: isLogScale, showLabels: true, ticks: 3 }
     const xAxis = { formatter: formatNum, label: `Organs`, showLabels: true }
 
-    return (<VisualizationsProvider options={{ onRectClick, onSetToolTipContent }}>
+    return (<VisualizationsProvider options={{ onRectClick, onSetToolTipContent, visualizationData, subGroupLabels: subGroupLabels.current }}>
         <FormControlLabel control={<Switch defaultChecked />} label="Log scale" onChange={changeScale} />
-        <ChartContainer style={{className: 'c-visualizations--boxShadow'}} subGroupLabels={subGroupLabels.current} data={visualizationData} xAxis={xAxis} yAxis={yAxis} chartType={'stackedBar'} />
+        <ChartContainer style={{ className: 'c-visualizations--boxShadow' }} subGroupLabels={subGroupLabels.current} data={visualizationData} xAxis={xAxis} yAxis={yAxis} chartType={'stackedBar'} />
     </VisualizationsProvider>)
 })
 
@@ -81,7 +82,7 @@ function CellTypes() {
         let cellId, organ
         for (let d of data) {
             cellTypes = {}
-            
+
             organ = getOrganByCode(d.code)?.label
             result = dict[organ] || {}
             for (let cellType of d.cellTypes) {
@@ -89,7 +90,7 @@ function CellTypes() {
                 cellTypes[cellId] = cellType.total_cell_count.value + (result[cellId] || 0)
                 subGroupLabels.current[cellId] = cellType.key
             }
-           
+
             results.push({
                 group: organ,
                 ...cellTypes
