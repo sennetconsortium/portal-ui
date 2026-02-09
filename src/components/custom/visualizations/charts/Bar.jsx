@@ -106,7 +106,7 @@ function Bar({
             .attr("class", "y-grid")
             .attr("x1", sizing.margin.left)
             .attr("y1", d => Math.ceil(y(d)))
-            .attr("x2", sizing.width - sizing.margin.right)
+            .attr("x2", sizing.width + sizing.margin.left)
             .attr("y2", d => Math.ceil(y(d)))
             .style("stroke", "#eee") // Light gray
             .style("stroke-width", "1px")
