@@ -4,6 +4,7 @@ import { useEffect, useState, useRef, memo } from 'react'
 import Nav from 'react-bootstrap/Nav'
 import Tab from 'react-bootstrap/Tab'
 import Spinner from '../Spinner'
+import Image from 'next/image'
 
 import CellTypeDistributionAcrossOrgansTab from './CellTypeDistributionAcrossOrgansTab'
 
@@ -56,7 +57,8 @@ const CellTypeDistributionAcrossOrgans = memo(({ cell }) => {
                 _dict[label] = {
                     _id: label.toCamelCase(),
                     codes: [o.key],
-                    label
+                    label,
+                    icon: getOrganByCode(o.key)?.icon
                 }
             }
         }
@@ -114,7 +116,7 @@ const CellTypeDistributionAcrossOrgans = memo(({ cell }) => {
             }
         }
     }
-    
+
     const otherCellTypes = useSearchUIQuery('cell-types', query2)
 
     useEffect(() => {
@@ -145,7 +147,15 @@ const CellTypeDistributionAcrossOrgans = memo(({ cell }) => {
             <Nav variant='pills' className='overflow-auto align-items-center gap-2'>
                 {getOrganData(data).map((organ) => (
                     <Nav.Item key={organ._id}>
-                        <Nav.Link eventKey={organ._id}>{organ.label}</Nav.Link>
+                        <Nav.Link eventKey={organ._id}>
+                            <span>{organ.label}</span> &nbsp;
+                            <Image
+                                alt={''}
+                                src={organ.icon}
+                                width={16}
+                                height={16}
+                            />
+                        </Nav.Link>
                     </Nav.Item>
                 ))}
             </Nav>
@@ -153,7 +163,7 @@ const CellTypeDistributionAcrossOrgans = memo(({ cell }) => {
             <Tab.Content className={'tabContent tabContent--cellTypeOrgan'}>
                 {getOrganData(data).map((organ) => (
                     <Tab.Pane eventKey={organ._id} key={organ._id} className='mt-4'>
-                        <CellTypeDistributionAcrossOrgansTab organ={organ} tabData={tabData} cell={{...cell, cellIds: cellIds.current}} />
+                        <CellTypeDistributionAcrossOrgansTab organ={organ} tabData={tabData} cell={{ ...cell, cellIds: cellIds.current }} />
                     </Tab.Pane>
                 ))}
             </Tab.Content>
