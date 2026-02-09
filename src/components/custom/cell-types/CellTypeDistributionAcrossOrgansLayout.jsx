@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import VizLegend from '@/components/custom/visualizations/VizLegend'
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
-import { formatNum} from '../js/functions'
+import { formatNum, percentage} from '../js/functions'
 import VisualizationsContext from '@/context/VisualizationsContext';
 
 /**
@@ -20,10 +20,7 @@ function CellTypeDistributionAcrossOrgansLayout({ children, organ, tabData, cell
     setRefresh(new Date().getTime())
   }, [tabData])
 
-  const percentage = (a, b) => {
-    return (a/b * 100).toFixed(2)
-  }
-
+  
   const onLegendItemClick = (_cell) => {
     if (cell.cellIds[_cell.label]) {
       window.location = `/cell-types/${cell.cellIds[_cell.label]}`

@@ -48,7 +48,7 @@ const ChartOverview = memo(({ subGroupLabels, visualizationData }) => {
         const label = subGroupLabels.current[ops.label]
     
         const html = `<div"><span class="fs-6">${currentGroup}</span>
-            <span><em>${label}</em>: <strong>${ops.value} (${percentage(ops.value, total)}%)</strong></span>
+            <span><em>${label}</em>: <strong>${ops.value} (${percentage(current, total)}%)</strong></span>
             <span><em>Other cell types</em>: <strong>${formatNum(total - current)} (${percentage(total - current, total)}%)</strong></span>
             <span><em>Total</em>: <strong>${formatNum(total)}</strong></span>
             </div>`
