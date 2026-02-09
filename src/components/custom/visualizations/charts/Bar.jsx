@@ -152,7 +152,7 @@ function Bar({
         // Add the y-axis and label, and remove the domain line.
         g.append("g")
             .attr("transform", `translate(${sizing.margin.left},0)`)
-            .call(d3.axisLeft(y).ticks(ticks).tickFormat((y) => yAxis.formatter ? yAxis.formatter({y, maxY}) : (y).toFixed()))
+            .call(d3.axisLeft(y).ticks(ticks).tickFormat((y) => yAxis.formatter ? yAxis.formatter(y) : (y).toFixed()))
 
         if (showYLabels()) {
             svg.append("g")
