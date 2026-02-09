@@ -1,9 +1,10 @@
 import {createContext, useCallback, useRef, useState} from "react";
 import $ from "jquery";
 import log from "loglevel";
-import {datasetIs, fetchEntity, getDatasetTypeDisplay} from "@/components/custom/js/functions";
-import {fetchVitessceConfiguration, getEntityData, getProvInfo} from "@/lib/services";
+import {datasetIs, fetchEntity, getDatasetTypeDisplay, getHeaders} from "@/components/custom/js/functions";
+import {fetchRevisions, fetchVitessceConfiguration, getEntityData, getProvInfo} from "@/lib/services";
 import useVitessceEncoder from "@/hooks/useVitessceEncoder";
+import {getEntityEndPoint} from "@/config/config";
 
 const DerivedContext = createContext({})
 
@@ -25,6 +26,7 @@ export const DerivedProvider = ({children, showVitessceList, setShowVitessceList
     const [showProtocolsWorkflow, setShowProtocolsWorkflow] = useState(false)
     const [workflow, setWorkflow] = useState({})
     const [isDerivedContextInitialized, setIsDerivedContextInitialized] = useState(null)
+    const [revisions, setRevisions] = useState(null)
 
     // Load the correct Vitessce view config
     const set_vitessce_config = async (data, dataset_id, dataset_type) => {
@@ -69,6 +71,9 @@ export const DerivedProvider = ({children, showVitessceList, setShowVitessceList
                 if (Object.keys(prov_info).length) {
                     const processed_datasets = prov_info['processed_dataset_uuid']
                     const processed_dataset_statuses = prov_info['processed_dataset_status']
+
+                    // Call `/datasets/<uuid>/revisions`
+                    setRevisions(await fetchRevisions(processed_datasets[0]))
 
                     // Iterate over processed datasets and check that the status is valid
                     for (let i = 0; i < processed_dataset_statuses?.length; i++) {
