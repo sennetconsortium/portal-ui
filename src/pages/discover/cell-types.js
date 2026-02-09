@@ -12,6 +12,8 @@ import { prepareStackedData } from "@/components/custom/visualizations/charts/St
 import { FormControlLabel, Switch } from "@mui/material";
 import { APP_ROUTES } from "@/config/constants";
 import { getOrganByCode } from "@/config/organs";
+import * as d3 from 'd3';
+import { Card } from "react-bootstrap";
 
 const AppNavbar = dynamic(() => import("../../components/custom/layout/AppNavbar"))
 const Header = dynamic(() => import("../../components/custom/layout/Header"))
@@ -28,6 +30,8 @@ const ChartOverview = memo(({ subGroupLabels, visualizationData }) => {
     const changeScale = (e) => {
         setIsLogScale(!isLogScale)
     }
+
+    const combinedColors = d3.schemeDark2.concat(d3.schemeCategory10).concat(d3.schemePastel1).concat(d3.schemePaired);
 
     const onSetToolTipContent = (ops) => {
         let total = 0
@@ -55,7 +59,7 @@ const ChartOverview = memo(({ subGroupLabels, visualizationData }) => {
 
         ops.tooltip.getD3(ops.id)
             .style('left', ops.xPos + 'px')
-            .style('top', ops.yPos - 50 + 'px')
+            .style('top', ops.yPos - 60 + 'px')
             .attr('class', 'c-visualizations__tooltip c-visualizations__tooltip--multiLine')
             .html(html)
     }
@@ -65,7 +69,7 @@ const ChartOverview = memo(({ subGroupLabels, visualizationData }) => {
 
     return (<VisualizationsProvider options={{ onRectClick, onSetToolTipContent }}>
         <FormControlLabel control={<Switch defaultChecked />} label="Log scale" onChange={changeScale} />
-        <ChartContainer style={{ className: 'c-visualizations--boxShadow' }} subGroupLabels={subGroupLabels.current} data={visualizationData} xAxis={xAxis} yAxis={yAxis} chartType={'stackedBar'} />
+        <ChartContainer style={{ className: 'c-visualizations--boxShadow', colorScheme: combinedColors  }} subGroupLabels={subGroupLabels.current} data={visualizationData} xAxis={xAxis} yAxis={yAxis} chartType={'stackedBar'} />
     </VisualizationsProvider>)
 })
 
@@ -127,7 +131,11 @@ function CellTypes() {
                 <p>Explore annotated cell types across SenNet <code>Datasets</code>,
                     with insights into their anatomical distribution and associated biomarkers.
                     Visualize and compare cell type distribution across organs using interactive plots, and find datasets relevant to the cell type.</p>
-                <ChartOverview subGroupLabels={subGroupLabels} visualizationData={visualizationData} />
+                <Card>
+                    <Card.Body>
+                        <div className="p-4"><ChartOverview subGroupLabels={subGroupLabels} visualizationData={visualizationData} /></div>
+                    </Card.Body>
+                </Card>
             </Container>
         </>
     )

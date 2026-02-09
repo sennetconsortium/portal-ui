@@ -2,7 +2,7 @@ import React, {useState, memo} from 'react'
 import CellTypeDistributionAcrossOrgansLayout from './CellTypeDistributionAcrossOrgansLayout'
 import { VisualizationsProvider } from '@/context/VisualizationsContext'
 import ChartContainer from '../visualizations/ChartContainer'
-import { formatNum, getUBKGFullName, percentage } from '../js/functions'
+import { formatNum, percentage } from '../js/functions'
 import { prepareStackedData } from '../visualizations/charts/StackedBar'
 import * as d3 from 'd3';
 
