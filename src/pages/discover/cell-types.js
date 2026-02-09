@@ -6,7 +6,7 @@ import Container from "react-bootstrap/Container"
 import Row from "react-bootstrap/Row"
 import ChartContainer from "@/components/custom/visualizations/ChartContainer";
 import { getDistinctOrgansAndCellTypes } from "@/lib/services";
-import { formatNum, getUBKGFullName } from "@/components/custom/js/functions";
+import { formatNum,  percentage } from "@/components/custom/js/functions";
 import { VisualizationsProvider } from "@/context/VisualizationsContext";
 import { prepareStackedData } from "@/components/custom/visualizations/charts/StackedBar";
 import { FormControlLabel, Switch } from "@mui/material";
@@ -46,7 +46,7 @@ const ChartOverview = memo(({ subGroupLabels, visualizationData }) => {
             }
         }
         const label = subGroupLabels.current[ops.label]
-
+    
         const html = `<div"><span class="fs-6">${currentGroup}</span>
             <span><em>${label}</em>: <strong>${ops.value} (${percentage(ops.value, total)}%)</strong></span>
             <span><em>Other cell types</em>: <strong>${formatNum(total - current)} (${percentage(total - current, total)}%)</strong></span>
