@@ -147,9 +147,10 @@ const CellTypeDistributionAcrossOrgans = memo(({ cell }) => {
             <Nav variant='pills' className='overflow-auto align-items-center gap-2'>
                 {getOrganData(data).map((organ) => (
                     <Nav.Item key={organ._id}>
-                        <Nav.Link eventKey={organ._id}>
+                        <Nav.Link className='tabHeader' eventKey={organ._id}>
                             <span>{organ.label}</span> &nbsp;
                             <Image
+                                className='tabHeader__organImg'
                                 alt={''}
                                 src={organ.icon}
                                 width={16}

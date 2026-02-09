@@ -6,11 +6,12 @@ import { useMemo, useState } from 'react'
 import Nav from 'react-bootstrap/Nav'
 import Tab from 'react-bootstrap/Tab'
 import DataTable from 'react-data-table-component'
+import Image from 'next/image'
 
 function DatasetsTabGroup({ clId, cellLabel }) {
     const query = {
         size: 500,
-        _source: ['dataset.uuid', 'dataset.sennet_id', 'organs.category', 'cell_count'],
+        _source: ['dataset.uuid', 'dataset.sennet_id', 'organs.category', 'organs.code', 'cell_count'],
         query: {
             term: {
                 'cl_id.keyword': {
@@ -44,11 +45,19 @@ function DatasetsTabGroup({ clId, cellLabel }) {
                 countByOrgan.set(organLabel, prevCount + 1)
             }
         }
+ 
+        // code by label
+        const organCodes = {}
+        for (const hit of hits) {
+            for (const o of hit._source.organs) {
+                organCodes[o.category] = o.code
+            }
+        }
 
         // Build titles for tabs
         const titles = [{ key: allTabKey, title: `${cellLabel} (${countTotal})` }]
         for (const [organLabel, organCount] of countByOrgan.entries()) {
-            titles.push({ key: organLabel, title: `${cellLabel} in ${organLabel} (${organCount})` })
+            titles.push({ key: organLabel, title: `${cellLabel} in ${organLabel} (${organCount})`, icon: getOrganByCode(organCodes[organLabel])?.icon })
         }
 
         return titles
@@ -136,7 +145,16 @@ function DatasetsTabGroup({ clId, cellLabel }) {
             <Nav variant='pills' className='overflow-auto align-items-center gap-2'>
                 {tabTitles.map((title) => (
                     <Nav.Item key={title.key}>
-                        <Nav.Link eventKey={title.key}>{title.title}</Nav.Link>
+                        <Nav.Link className='tabHeader' eventKey={title.key}>
+                            <span>{title.title}</span>&nbsp;
+                            <Image
+                                className='tabHeader__organImg'
+                                alt={''}
+                                src={title.icon}
+                                width={16}
+                                height={16}
+                            />
+                            </Nav.Link>
                     </Nav.Item>
                 ))}
             </Nav>

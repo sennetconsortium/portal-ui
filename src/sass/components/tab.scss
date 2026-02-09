@@ -1,3 +1,15 @@
+.tab {
+  &Header{
+    .tabHeader__organImg {
+      filter: invert(29%) sepia(62%) saturate(4030%) hue-rotate(209deg) brightness(102%) contrast(98%);
+    }
+    &.active {
+      .tabHeader__organImg {
+      filter: invert(93%) sepia(93%) saturate(28%) hue-rotate(48deg) brightness(106%) contrast(109%);
+    }
+    }
+  }
+}
 .tabContent {
   &--cellTypeOrgan {
     position: relative;
