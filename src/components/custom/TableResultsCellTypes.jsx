@@ -1,10 +1,8 @@
 import React, { useRef, useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import {
-  autoBlobDownloader,
   checkFilterType,
-  checkMultipleFilterType, getEntityViewUrl,
-  getUBKGFullName, matchArrayOrder, goToTransfers
+  getOrganHierarchy, matchArrayOrder, 
 } from './js/functions'
 import { getOptions } from "./search/ResultsPerPage";
 import ResultsBlock from "./search/ResultsBlock";
@@ -19,8 +17,6 @@ import { COLS_ORDER_KEY } from "@/config/config";
 import { getCellTypesByIds, parseJson } from "@/lib/services";
 import { useSearchUIContext } from "@/search-ui/components/core/SearchUIContext";
 import { ShimmerText } from "react-shimmer-effects";
-import { Button } from 'react-bootstrap'
-import { organs } from '@/config/organs';
 import { APP_ROUTES } from '@/config/constants';
 
 function TableResultsCellTypes({ children, onRowClicked, filters, forData = false, rowFn, inModal = false, rawResponse }) {
@@ -148,7 +144,7 @@ function TableResultsCellTypes({ children, onRowClicked, filters, forData = fals
         let organs = new Set()
         if (Array.isArray(val)) {
           for (let o of val) {
-            organs.add(getUBKGFullName(o.key))
+            organs.add(getOrganHierarchy(o.key))
           }
         }
         if (organs.size > 0) {

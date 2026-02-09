@@ -126,6 +126,19 @@ export function getUBKGFullName(term) {
     }
 }
 
+export function getOrganHierarchy(term) {
+    if (!window.UBKG_CACHE) return term
+    if (term in window.UBKG_CACHE.organTypes) {
+        for (const o of window.UBKG_CACHE.organs) {
+            if (eq(term, o.organ_uberon) || eq(term, o.term)) {
+                return o.category?.term || window.UBKG_CACHE.organTypes[term]
+            }
+        }
+        return window.UBKG_CACHE.organTypes[term]
+    } 
+    return getNormalizedName(term)
+}
+
 export const percentage = (a, b, fixed = 2) => (a / b * 100).toFixed(fixed)
 
 export const formatNum = (num) => typeof num === 'number' ?  new Intl.NumberFormat().format(num) : 0
