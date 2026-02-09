@@ -63,7 +63,7 @@ const ChartOverview = memo(({ subGroupLabels, visualizationData }) => {
     const yAxis = { label: "Cell Count", formatter: formatNum, scaleLog: isLogScale, showLabels: true, ticks: 3 }
     const xAxis = { formatter: formatNum, label: `Organs`, showLabels: true }
 
-    return (<VisualizationsProvider options={{ onRectClick, onSetToolTipContent, visualizationData, subGroupLabels: subGroupLabels.current }}>
+    return (<VisualizationsProvider options={{ onRectClick, onSetToolTipContent }}>
         <FormControlLabel control={<Switch defaultChecked />} label="Log scale" onChange={changeScale} />
         <ChartContainer style={{ className: 'c-visualizations--boxShadow' }} subGroupLabels={subGroupLabels.current} data={visualizationData} xAxis={xAxis} yAxis={yAxis} chartType={'stackedBar'} />
     </VisualizationsProvider>)

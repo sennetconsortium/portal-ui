@@ -67,7 +67,7 @@ const CellTypeDistributionAcrossOrgansTab = memo(({organ, tabData, cell}) => {
   return (
     <div>
       <div>The bar below shows the distribution of cell types in the {organ.label} tissue. The distribution is based on the number of cells annotated in SenNet datasets.</div>
-      <VisualizationsProvider options={{onRectClick, onSetToolTipContent, visualizationData}}>
+      <VisualizationsProvider options={{onRectClick, onSetToolTipContent}}>
         <ChartContainer
           setLegend={setLegend}
           chartId={organ._id}
