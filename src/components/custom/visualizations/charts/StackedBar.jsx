@@ -33,6 +33,7 @@ function StackedBar({
         toolTipHandlers,
         getSubgroupLabels,
         handleSvgSizing,
+        getTotalY,
         appendTooltip } = useContext(VisualizationsContext)
 
 
@@ -102,16 +103,24 @@ function StackedBar({
             stackedSorted.push(subgroupsSorted)
         }
 
-        const ticks = yAxis.scaleLog || yAxis.ticks ? yAxis.ticks || 5 : undefined
+        const getTicks = () => {
+            if (typeof yAxis.ticks === 'object') {
+                return yAxis.scaleLog ? yAxis.ticks.log : yAxis.ticks.linear
+            }
+            return yAxis.ticks
+        }
+
+        const ticks = yAxis.scaleLog || yAxis.ticks ? getTicks() || 5 : undefined
         const scaleMethod = yAxis.scaleLog ? d3.scaleLog : d3.scaleLinear
         const minY = yAxis.scaleLog ? 1 : 0
+        const totalY = getTotalY(data)
 
         // Add Y axis
         const y = scaleMethod()
             .domain([minY, maxY])
             .range([sizing.height, 0]);
         g.append("g")
-            .call(d3.axisLeft(y).ticks(ticks))
+            .call(d3.axisLeft(y).ticks(ticks).tickFormat((y) => yAxis.formatter ? yAxis.formatter({y, maxY, totalY}) : (y).toFixed()))
 
         if (showYLabels()) {
             svg.append("g")

@@ -21,6 +21,7 @@ const Spinner = dynamic(() => import("../../components/custom/Spinner"))
 
 const ChartOverview = memo(({ subGroupLabels, visualizationData }) => {
     const [isLogScale, setIsLogScale] = useState(true)
+    const [isPercentage, setIsPercentage] = useState(false)
 
     const onRectClick = (eventData) => {
         Addon.log('onBarClick', { data: eventData })
@@ -31,7 +32,15 @@ const ChartOverview = memo(({ subGroupLabels, visualizationData }) => {
         setIsLogScale(!isLogScale)
     }
 
-    const combinedColors = d3.schemeDark2.concat(d3.schemeCategory10).concat(d3.schemePastel1).concat(d3.schemePaired);
+    const changeTickFormat = (e) => {
+        setIsPercentage(!isPercentage)
+    }
+
+    const yAxisFormatter = ({y, maxY}) => {
+        return percentage(y,  maxY) + '%'
+    }
+
+    const combinedColors = d3.schemeDark2.concat(d3.schemeObservable10).concat(d3.schemePastel1).concat(d3.schemePaired);
 
     const onSetToolTipContent = (ops) => {
         let total = 0
@@ -43,13 +52,13 @@ const ChartOverview = memo(({ subGroupLabels, visualizationData }) => {
                     if (c !== 'group') {
                         total += d[c]
                     }
-                    if (c === ops.label) {
+                    if (subGroupLabels.current[c] === ops.label) {
                         current = d[c]
                     }
                 }
             }
         }
-        const label = subGroupLabels.current[ops.label]
+        const label = ops.label
     
         const html = `<div"><span class="fs-6">${currentGroup}</span>
             <span><em>${label}</em>: <strong>${ops.value} (${percentage(current, total)}%)</strong></span>
@@ -64,11 +73,13 @@ const ChartOverview = memo(({ subGroupLabels, visualizationData }) => {
             .html(html)
     }
 
-    const yAxis = { label: "Cell Count", formatter: formatNum, scaleLog: isLogScale, showLabels: true, ticks: 3 }
+    const yAxis = { label: "Cell Count", formatter: isPercentage ? yAxisFormatter : null, scaleLog: isLogScale, showLabels: true, ticks: {linear: 10, log: 4} }
     const xAxis = { formatter: formatNum, label: `Organs`, showLabels: true }
+    console.log(subGroupLabels.current)
 
     return (<VisualizationsProvider options={{ onRectClick, onSetToolTipContent }}>
         <FormControlLabel control={<Switch defaultChecked />} label="Log scale" onChange={changeScale} />
+        <FormControlLabel control={<Switch defaultChecked />} label="Total Count" onChange={changeTickFormat} />
         <ChartContainer style={{ className: 'c-visualizations--boxShadow', colorScheme: combinedColors  }} subGroupLabels={subGroupLabels.current} data={visualizationData} xAxis={xAxis} yAxis={yAxis} chartType={'stackedBar'} />
     </VisualizationsProvider>)
 })
@@ -89,7 +100,7 @@ function CellTypes() {
 
             organ = getOrganByCode(d.code)?.label
             result = dict[organ] || {}
-            for (let cellType of d.cellTypes) {
+            for (const cellType of d.cellTypes) {
                 cellId = cellType.cell_id.hits?.hits[0]?._source?.cl_id
                 cellTypes[cellId] = cellType.total_cell_count.value + (result[cellId] || 0)
                 subGroupLabels.current[cellId] = cellType.key

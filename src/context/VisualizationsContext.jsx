@@ -15,7 +15,7 @@ export const VisualizationsProvider = ({ children, options = {} }) => {
     }
 
     const getSubgroupLabels = (data, labels) => {
-        if (Object.keys(labels).lenght) return labels
+        if (Object.keys(labels).length) return labels
         let groups = {}
         for (let d of data) {
             for (let k in d) {
@@ -40,6 +40,19 @@ export const VisualizationsProvider = ({ children, options = {} }) => {
     const appendTooltip = (id, chart = 'bar') => {
         chartId.current = id
         appendDiv(id, 'tooltip', chart)
+    }
+
+    const getTotalY = (data) => {
+        const totalY = data.reduce((sum, row) => {
+            let currentSum = 0
+            for (const k in row) {
+                if (k !== 'group') {
+                    currentSum += row[k]
+                }
+            }
+            return sum + currentSum;
+        }, 0);
+        return totalY
     }
 
     const getTooltipSelector = (id) => `#${selectors.base}tooltip--${id}`
@@ -182,6 +195,7 @@ export const VisualizationsProvider = ({ children, options = {} }) => {
                 handleSvgSizing,
                 toolTipHandlers,
                 setToolTipContent,
+                getTotalY,
                 selectors
             }}
         >
