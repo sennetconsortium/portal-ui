@@ -2,7 +2,7 @@ import ClipboardCopy from '@/components/ClipboardCopy'
 import Spinner from '@/components/custom/Spinner'
 import { getOrganByCode } from '@/config/organs'
 import useSearchUIQuery from '@/hooks/useSearchUIQuery'
-import { useMemo, useState } from 'react'
+import { useMemo, useState, useRef } from 'react'
 import Nav from 'react-bootstrap/Nav'
 import Tab from 'react-bootstrap/Tab'
 import DataTable from 'react-data-table-component'
@@ -24,6 +24,7 @@ function DatasetsTabGroup({ clId, cellLabel }) {
 
     const { data, loading, error } = useSearchUIQuery('cell-types', query)
     const [selectedTab, setSelectedTab] = useState(allTabKey)
+    const organCodes = useRef({})
 
     const tabTitles = useMemo(() => {
         const hits = data?.hits?.hits
@@ -47,17 +48,16 @@ function DatasetsTabGroup({ clId, cellLabel }) {
         }
  
         // code by label
-        const organCodes = {}
         for (const hit of hits) {
             for (const o of hit._source.organs) {
-                organCodes[o.category] = o.code
+                organCodes.current[o.category] = o.code
             }
         }
 
         // Build titles for tabs
         const titles = [{ key: allTabKey, title: `${cellLabel} (${countTotal})` }]
         for (const [organLabel, organCount] of countByOrgan.entries()) {
-            titles.push({ key: organLabel, title: `${cellLabel} in ${organLabel} (${organCount})`, icon: getOrganByCode(organCodes[organLabel])?.icon })
+            titles.push({ key: organLabel, title: `${cellLabel} in ${organLabel} (${organCount})`, icon: getOrganByCode(organCodes.current[organLabel])?.icon })
         }
 
         return titles
@@ -121,6 +121,20 @@ function DatasetsTabGroup({ clId, cellLabel }) {
             name: 'Organs',
             selector: (row) => {
                 return row.organLabels.join(', ')
+            },
+            format: (row) => {
+                let list = []
+                for (const o of row.organLabels) {
+                    list.push(<span key={o}>{o} &nbsp;
+                        <Image
+                            alt={''}
+                            src={getOrganByCode(organCodes.current[o])?.icon}
+                            width={16}
+                            height={16}
+                        />
+                    &nbsp;</span>)
+                }
+                return <div>{list}</div>
             },
             sortable: true
         },
