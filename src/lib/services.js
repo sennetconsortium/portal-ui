@@ -719,7 +719,7 @@ export const getDatasetsByIds = async (sennet_ids) => {
                             'entity_type.keyword': 'Dataset'
                         }
                     },
-                    
+
                 ],
                 should: [
                     {
