@@ -115,7 +115,7 @@ function SearchMetadata() {
                                         />
                                     </div>
                                     <div className='sui-filters-summary'>
-                                        <SelectedFacets/>
+                                        <SelectedFacets searchContext={'metadata'}/>
                                     </div>
                                 </>
                             }

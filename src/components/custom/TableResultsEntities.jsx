@@ -18,8 +18,10 @@ import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import AppModal from "../AppModal";
 import {parseJson} from "@/lib/services";
 import {COLS_ORDER_KEY} from "@/config/config";
+import useSelectedFacetsOffer from '@/hooks/useSelectedFacetsOffer'
 
 function TableResultsEntities({children, filters, onRowClicked, currentColumns = useRef([]), forData = false, rowFn, inModal = false, rawResponse}) {
+    const _offers = useSelectedFacetsOffer({filters})
     let hasMultipleEntityTypes = checkMultipleFilterType(filters);
     const {isLoggedIn, cache, getGroupName} = useContext(AppContext)
     const hiddenColumns = useRef(null)

@@ -41,6 +41,11 @@
   .rdt_Table {
     width: 100%;
   }
+  &.has-visualizations {
+    .card {
+      display: block;
+    }
+  }
 }
 
 @media screen and (min-width: 768px) {

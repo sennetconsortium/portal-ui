@@ -37,9 +37,12 @@
 @use 'components/swal';
 @use 'components/toast';
 @use 'components/vitessce';
+@use 'components/tab';
 @use 'components/table';
 @use 'components/treeView';
 @use 'components/viewHeader';
+@use 'components/visualizations';
+@use 'components/vizLegend';
 
 @use 'vendor/datepicker';
 @use 'vendor/primereact';

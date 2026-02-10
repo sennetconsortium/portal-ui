@@ -1,0 +1,64 @@
+.c-vizLegend {
+	height: 100%;
+	font-size: 0.8rem;
+	&.c-vizLegend--noHover {
+		.c-vizLegend__item {
+			&:hover {
+				background-color: inherit;
+				cursor: default;
+			}
+		}
+	}
+	ul {
+		padding-left: 0;
+	}
+}
+.c-vizLegend__title {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 0.5rem;
+	margin-right: 0.5rem;
+}
+.c-vizLegend__list {
+	max-height: 30vh;
+	overflow-y: auto;
+}
+.c-vizLegend__item {
+	list-style: none;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	padding: 0.25rem 0.5rem;
+	cursor: pointer;
+	gap: 0.5rem;
+	&:hover {
+		background-color: #fafafa;
+	}
+}
+.c-vizLegend__item__selected {
+	background-color: #98c1e8;
+	&:hover {
+		background-color: #98c1e8;
+	}
+}
+.c-vizLegend__item__col {
+	width: 20px;
+	height: 20px;
+	display: inline-block;
+}
+.c-vizLegend__item__label {
+	flex-grow: 1;
+	display: inline-block;
+	width: 150px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	margin-right: 20px;
+	vertical-align: middle;
+}
+.c-vizLegend__item__value {
+	display: inline-block;
+	text-align: right;
+}

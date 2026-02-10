@@ -1,0 +1,145 @@
+@mixin visualization-tooltipArrow() {
+	background: none;
+	content: "";
+	position: absolute;
+	width: 0;
+	height: 0;
+	border: 5px solid transparent;
+	border-top-color: white;
+	top: 21px;
+	left: 1px;
+	transform: translateX(-50%);
+}
+
+.c-visualizations {
+	&__dropdownContainer {
+		display: flex;
+	}
+
+	&__columnDropdown {
+		border-bottom-right-radius: 0;
+		border-top-right-radius: 0;
+	}
+
+	&__chartDropdown {
+		border-bottom-left-radius: 0;
+		border-top-left-radius: 0;
+	}
+
+	&__tooltip {
+		color: var(--bs-gray-dark);
+		em {
+			color: black;
+			&::after {
+				border-radius: 3px;
+		}
+		}
+	}
+
+	&__tooltip,
+	&__highlight {
+		background-color: #fff;
+		border: solid #eee 1px;
+		position: absolute;
+		border-radius: 5px;
+		padding: 5px;
+		z-index: 1000;
+		font-size: 12px;
+		width: max-content;
+	}
+
+	&__highlight {
+		color: var(--bs-warning-text-emphasis);
+		background-color: var(--bs-warning-bg-subtle);
+		border: var(--bs-warning-border-subtle);
+		z-index: 0;
+		top: 40px;
+
+		em {
+			color: var(--bs-warning-text-emphasis);
+			position: relative;
+
+			&:after {
+				@include visualization-tooltipArrow();
+				border-top-color: var(--bs-warning-border-subtle);
+				top: 25px;
+			}
+		}
+	}
+
+	&__chart {
+		overflow-x: auto;
+		position: relative;
+
+		circle {
+			cursor: pointer;
+		}
+	}
+
+	&__miniCharts {
+		.c-visualizations__chart {
+			overflow-x: inherit;
+		}
+
+		svg {
+			max-width: 100%;
+			height: auto;
+		}
+	}
+
+	&--posInherit {
+		position: inherit;
+	}
+
+
+
+	&__tooltip {
+		&--flexWidth {
+			width: inherit;
+		}
+		&--multiLine {
+				span {
+					display: block;
+				}
+			}
+	}
+
+	&--tooltipHasArrow {
+		.c-visualizations__tooltip {
+			span {
+				position: relative;
+
+				&:after {
+					@include visualization-tooltipArrow();
+				}
+			}
+		}
+	}
+
+	.g--highlight {
+		fill: limegreen;
+
+		rect {
+			filter: drop-shadow(4px 4px 8px rgba(66, 208, 19, 0.5));
+		}
+	}
+
+	&--boxShadow {
+		rect:hover {
+			filter: drop-shadow(4px 4px 8px rgba(0, 0, 0, 0.5));
+		}
+
+		g:hover {
+			cursor: pointer;
+		}
+	}
+
+	&--noAxis {
+
+		.x-axis,
+		.y-axis {
+			display: none;
+		}
+
+	}
+}

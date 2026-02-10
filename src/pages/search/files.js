@@ -115,7 +115,7 @@ function SearchFiles() {
                                         />
                                     </div>
                                     <div className='sui-filters-summary'>
-                                        <SelectedFacets/>
+                                        <SelectedFacets searchContext={'files'}/>
                                     </div>
                                 </>
                             }

@@ -1,0 +1,244 @@
+import React from 'react'
+import * as d3 from 'd3';
+import { useContext, useEffect, useRef } from 'react'
+import VisualizationsContext from '@/context/VisualizationsContext';
+
+export const prepareStackedData = (data, desc = true) => {
+    let sorted = []
+    if (!data) return sorted
+    for (let d of data) {
+        sorted.push(Object.fromEntries(
+            Object.entries(d).sort(([, a], [, b]) => desc ? (b - a) : (a - b))
+        ))
+    }
+
+    Addon.log('prepareStackedData', { data: sorted })
+
+    return sorted
+}
+
+function StackedBar({
+    setLegend,
+    filters,
+    data = [],
+    reload = false,
+    subGroupLabels = {},
+    chartId = 'stackedBar',
+    style = {},
+    yAxis = {},
+    xAxis = {}
+}) {
+    const {
+        getChartSelector,
+        toolTipHandlers,
+        getSubgroupLabels,
+        handleSvgSizing,
+        getTotalY,
+        appendTooltip } = useContext(VisualizationsContext)
+
+
+    const chartType = 'stackedBar'
+    const colors = useRef({})
+    const chartData = useRef([])
+    const hasLoaded = useRef(false)
+
+    const getSubGroupSum = (key) => {
+        let sum = 0
+        for (let d of data) {
+            sum += d[key]
+        }
+        return sum
+    }
+
+    const showXLabels = () => xAxis.showLabels !== undefined ? xAxis.showLabels : true
+
+    const showYLabels = () => yAxis.showLabels !== undefined ? yAxis.showLabels : true
+
+    const buildChart = () => {
+
+        const sizing = handleSvgSizing(style, chartId, chartType)
+
+        // append the svg object to the body of the page
+        const svg = d3.create("svg")
+            // .attr("width", sizing.width + sizing.margin.X)
+            // .attr("height", sizing.height + sizing.margin.Y)
+            .attr("viewBox", [0, 0, sizing.width + sizing.margin.X, sizing.height + (sizing.margin.Y * 1.2)])
+
+        const g = svg
+            .append("g")
+            .attr("transform", `translate(${sizing.margin.left * 1.5},${sizing.margin.top + 50})`)
+
+
+        subGroupLabels = getSubgroupLabels(data, subGroupLabels)
+
+        const subgroups = Object.keys(subGroupLabels)
+
+        const groups = data.map(d => (d.group))
+
+        // Add X axis
+        const x = d3.scaleBand()
+            .domain(groups)
+            .range([0, sizing.width])
+            .padding([0.2])
+
+        g.append("g")
+            .attr("transform", `translate(0, ${sizing.height})`)
+            .call(d3.axisBottom(x).tickSizeOuter(0));
+
+        let maxY = 0;
+        for (let d of data) {
+            for (let subgroup of subgroups) {
+                maxY = Math.max(maxY, d[subgroup] || 0)
+            }
+        }
+        
+        let stackedSorted = []
+        for (let d of data) {
+            let subgroupsSorted = []
+            for (let k in d) {
+                if (subGroupLabels[k]) {
+                    subgroupsSorted.push({val: d[k] || 0, key: k, group: d.group})
+                }
+            }
+            stackedSorted.push(subgroupsSorted)
+        }
+
+        const getTicks = () => {
+            if (typeof yAxis.ticks === 'object') {
+                return yAxis.scaleLog ? yAxis.ticks.log : yAxis.ticks.linear
+            }
+            return yAxis.ticks
+        }
+
+        const ticks = yAxis.scaleLog || yAxis.ticks ? getTicks() || 5 : undefined
+        const scaleMethod = yAxis.scaleLog ? d3.scaleLog : d3.scaleLinear
+        const minY = yAxis.scaleLog ? 1 : 0
+        const totalY = getTotalY(data)
+
+        // Add Y axis
+        const y = scaleMethod()
+            .domain([minY, maxY])
+            .range([sizing.height, 0]);
+        g.append("g")
+            .call(d3.axisLeft(y).ticks(ticks).tickFormat((y) => yAxis.formatter ? yAxis.formatter({y, maxY, totalY}) : (y).toFixed()))
+
+        if (showYLabels()) {
+            svg.append("g")
+                .append("text")
+                .attr("class", "y label")
+                .attr("text-anchor", "end")
+                .attr("y", yAxis.labelPadding || 0)
+                .attr("x", (sizing.height / 2) * -1)
+                .attr("dy", ".74em")
+                .attr("transform", "rotate(-90)")
+                .text(yAxis.label || "Frequency")
+        }
+
+        if (xAxis.label && showXLabels()) {
+            svg.append("g")
+                .append("text")
+                .attr("class", "x label")
+                .attr("text-anchor", "middle")
+                .attr("x", (sizing.width / 2) + sizing.margin.left)
+                .attr("y", sizing.height + (sizing.margin.Y * 1.1))
+                .text(xAxis.label)
+        }
+
+        // color palette = one color per subgroup
+        const colorScale = d3.scaleOrdinal(style.colorScheme || d3.schemeCategory10)
+
+        const formatVal = (x) => xAxis.formatter ? xAxis.formatter({x}) : x
+
+        const getSubgroupLabel = (v) => subGroupLabels[v] || v
+
+        g.selectAll(".y-grid")
+            .data(y.ticks(ticks))
+            .enter().append("line")
+            .attr("class", "y-grid")
+            .attr("x1", 0)
+            .attr("y1", d => Math.ceil(y(d)))
+            .attr("x2", sizing.width)
+            .attr("y2", d => Math.ceil(y(d)))
+            .style("stroke", "#eee") // Light gray
+            .style("stroke-width", "1px")
+
+        // Show the bars
+        g.append("g")
+            .selectAll("g")
+            // Enter in the stack data = loop key per key = group per group
+            .data(stackedSorted)
+            .join("g")
+            .selectAll("rect")
+            // enter a second time = loop subgroup per subgroup to add all rectangles
+            .data(D => D.map(d => (d)))
+            .join("rect")
+            .attr("fill", d => {
+                const color = style.colorScale  ? style.colorScale({d, maxY}) : colorScale(d.key)
+                const label = getSubgroupLabel(d.key)
+                colors.current[label] = { color, label, value: formatVal(getSubGroupSum(d.key)) }
+                return color
+            })
+            .attr('data-value', d => {
+                return formatVal(d.val)
+            })
+            .attr('data-label', d => {
+                return getSubgroupLabel(d.key)
+            })
+            .attr("class", d => `bar--${getSubgroupLabel(d.key).toDashedCase()}`)
+            .attr("x", d => x(d.group))
+            .attr("y", sizing.height)
+            .attr("height", 0)
+            .attr("width", x.bandwidth())
+            .append("title")
+            .text(d => {
+                return `${d.group}\n${getSubgroupLabel(d.key)}: ${formatVal(d.val)}`
+            })
+
+        svg.selectAll("rect")
+            .on("mouseover", toolTipHandlers(chartId, chartType).mouseover)
+            .on("mousemove", toolTipHandlers(chartId, chartType).mousemove)
+            .on("mouseleave", toolTipHandlers(chartId, chartType).mouseleave)
+            .on("click", toolTipHandlers(chartId, chartType).click)
+
+        svg.selectAll("rect")
+            .transition()
+            .duration(800)
+            .attr("height", d => {
+                return sizing.height - y(d.val)
+            })
+            .attr("y", d => {
+                return y(d.val)
+            })
+
+        return svg.node();
+    }
+
+    const updateChart = () => {
+        $(getChartSelector(chartId, chartType)).html('')
+        appendTooltip(chartId, chartType)
+        $(getChartSelector(chartId, chartType)).append(buildChart())
+
+        if (setLegend) {
+            setLegend(colors.current)
+        }
+    }
+
+    useEffect(() => {
+        if (reload || chartData.current.length !== data.length || !hasLoaded.current) {
+            hasLoaded.current = true
+            chartData.current = Array.from(data)
+            updateChart()
+        }
+
+    }, [data])
+
+    useEffect(() => {
+        updateChart()
+    }, [filters, yAxis])
+
+    return (
+        <div className={`c-visualizations__chart c-visualizations__stackedBar c-bar ${style.className || ''}`} id={`c-visualizations__stackedBar--${chartId}`}></div>
+    )
+}
+
+export default StackedBar

@@ -355,6 +355,7 @@ export const fetchSearchAPIEntities = async (body, index = 'entities') => {
     if (token) {
         headers.append("Authorization", `Bearer ${token}`)
     }
+    Addon.log('SearchAPI', {data: {body, index}, color: 'orange'})
     try {
         const res = await fetch(`${getSearchEndPoint()}${index}/search`, {
             method: "POST",
@@ -761,6 +762,110 @@ export const getDatasetsByIds = async (sennet_ids) => {
         }
     });
 }
+
+export const getCellTypesByIds = async (ids) => {
+    const body = {
+        query: {
+            bool: {
+                filter: [
+                    {
+                    terms: {
+                        "cl_id.keyword": ids
+                    }
+                    }
+                ]
+            }
+        },
+        size: 10000,
+        _source: {
+            includes: [
+                'cl_id',
+                'cell_label',
+                'dataset',
+                'organs',
+            ]
+        }
+    }
+    const content = await fetchSearchAPIEntities(body, 'cell-types');
+    if (!content) {
+        return null;
+    }
+    return content.hits.hits.map((hit) => {
+        return {
+            cl_id: hit.cl_id,
+            cell_label: hit._source.cell_label,
+            dataset: hit._source.dataset,
+            organs: hit._source.organs,
+        }
+    });
+}
+
+export const getDistinctOrgansAndCellTypes = async () => {
+    const body = {
+        size: 0,
+        aggs: {
+            group_by_organs: {
+                terms: {
+                    field: "organs.code.keyword",
+                    size: 10000
+                },
+                
+                aggs: {
+                    group_by_cell_label: {
+                        terms: {
+                            field: "cell_label.keyword"
+                        },
+                        aggs: {
+                            cell_id: {top_hits: {size: 1, _source: {include: ['cl_id']}}},
+                            total_cell_count: {
+                                sum: {
+                                    field: "cell_count"
+                                    
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    const content = await fetchSearchAPIEntities(body, 'cell-types');
+    if (!content) {
+        return null;
+    }
+    return content.aggregations.group_by_organs.buckets.map((hit) => {
+        return {
+            code: hit.key,
+            cellTypes: hit.group_by_cell_label.buckets,
+        }
+    });
+}
+
+
+export const getDistinctDatasetsUnderCellTypes = async () => {
+    const body = {
+        size: 0,
+        query: {
+            match_all: {}
+        },
+        aggs: {
+            unique_datasets: {
+            cardinality: {
+                field: "dataset.uuid.keyword",
+                precision_threshold: 40000
+            }
+            }
+        }
+    }
+    const content = await fetchSearchAPIEntities(body, 'cell-types');
+    if (!content) {
+        return null;
+    }
+    return content.aggregations.unique_datasets.value
+}
+
+
+
 
 export const filterProperties = {
     ancestors: {
