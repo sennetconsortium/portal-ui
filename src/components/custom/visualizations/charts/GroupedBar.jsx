@@ -9,7 +9,7 @@ import VisualizationsContext from '@/context/VisualizationsContext';
  * @param {array} data List to visualize [{group: 'x-axis label', groupLabel1: x, groupLabel2: y}, {group: 'x-axis label 2', groupLabel1: x, groupLabel2: y}]
  * @param {bool} reload An additional flag if want to prevent or allow rerendering even on filters and yAxis changes
  * @param {subGroupLabels} {object} A map of labels to use for groupLabels e.g. {groupLabel1: 'A Group Label', groupLabel2: 'Another Group Label'}
- * @param {chartId} {string} Imperative for multiple charts on same page. 
+ * @param {chartId} {string} Imperative for multiple charts on same page.
  * @param {style} {object} {width, height, className}
  * @param {xAxis} {object} {formatter: function(v) for formatting axis ticks, label: string, showLabels: bool}
  * @param {yAxis} {object} {scaleLog: bool, ticks: int, label: string, showLabels: bool, showGrid: bool}
@@ -41,7 +41,7 @@ function GroupedBar({
     const getSubGroupSum = (key) => {
         let sum = 0
         for (let d of data) {
-            sum += d[key]
+            sum += d[key] || 0
         }
         return sum
     }
@@ -63,7 +63,7 @@ function GroupedBar({
         const g = svg
             .append("g")
             .attr("transform", `translate(${sizing.margin.left * 1.5},${sizing.margin.top + 50})`)
-        
+
         subGroupLabels = getSubgroupLabels(data, subGroupLabels)
 
         const subgroups = Object.keys(subGroupLabels)
@@ -160,8 +160,8 @@ function GroupedBar({
                 .attr("transform", (d) => { return "translate(" + x(d.group) + ",0)"; })
             .selectAll("rect")
             // enter a second time = loop subgroup per subgroup to add all rectangles
-            .data((d) => { 
-                return subgroups.map((key) => { 
+            .data((d) => {
+                return subgroups.map((key) => {
                     return {key: key, group: d.group, val: d[key] || 0}; }); })
             .join("rect")
             .attr("fill", d => {
