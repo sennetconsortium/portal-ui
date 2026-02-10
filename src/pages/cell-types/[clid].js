@@ -28,6 +28,16 @@ function ViewCellType() {
         return data?.aggregations?.unique_organs?.buckets?.map((bucket) => bucket.key) || []
     }
 
+    function titalize(str) {
+        if (!str) {
+            return ''
+        }
+        if (typeof str === 'number') {
+            return str.toString()
+        }
+        return str.charAt(0).toUpperCase() + str.slice(1)
+    }
+
     const query = clid
         ? {
               _source: ['cell_label', 'cell_definition', 'cl_id', 'cell_count'],
@@ -93,7 +103,7 @@ function ViewCellType() {
                         <SidebarBtn />
 
                         <ViewHeader
-                            label={data?.hits?.hits[0]?._source?.cell_label}
+                            label={titalize(data?.hits?.hits[0]?._source?.cell_label)}
                             clId={clid}
                             organs={getUniqueOrgans(data)}
                         />

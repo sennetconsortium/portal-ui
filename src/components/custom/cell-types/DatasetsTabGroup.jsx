@@ -2,16 +2,22 @@ import ClipboardCopy from '@/components/ClipboardCopy'
 import Spinner from '@/components/custom/Spinner'
 import { getOrganByCode } from '@/config/organs'
 import useSearchUIQuery from '@/hooks/useSearchUIQuery'
-import { useMemo, useState, useRef } from 'react'
+import Image from 'next/image'
+import { useMemo, useRef, useState } from 'react'
 import Nav from 'react-bootstrap/Nav'
 import Tab from 'react-bootstrap/Tab'
 import DataTable from 'react-data-table-component'
-import Image from 'next/image'
 
 function DatasetsTabGroup({ clId, cellLabel }) {
     const query = {
         size: 500,
-        _source: ['dataset.uuid', 'dataset.sennet_id', 'organs.category', 'organs.code', 'cell_count'],
+        _source: [
+            'dataset.uuid',
+            'dataset.sennet_id',
+            'organs.category',
+            'organs.code',
+            'cell_count'
+        ],
         query: {
             term: {
                 'cl_id.keyword': {
@@ -28,13 +34,15 @@ function DatasetsTabGroup({ clId, cellLabel }) {
 
     const tabTitles = useMemo(() => {
         const hits = data?.hits?.hits
-        if (!hits)
+        if (!cellLabel || !hits)
             return [
                 {
                     key: allTabKey,
                     title: cellLabel
                 }
             ]
+
+        const titleCellLabel = cellLabel.charAt(0).toUpperCase() + cellLabel.slice(1)
 
         // Calculate counts for each organ
         const countTotal = hits.length
@@ -46,7 +54,7 @@ function DatasetsTabGroup({ clId, cellLabel }) {
                 countByOrgan.set(organLabel, prevCount + 1)
             }
         }
- 
+
         // code by label
         for (const hit of hits) {
             for (const o of hit._source.organs) {
@@ -55,9 +63,13 @@ function DatasetsTabGroup({ clId, cellLabel }) {
         }
 
         // Build titles for tabs
-        const titles = [{ key: allTabKey, title: `${cellLabel} (${countTotal})` }]
+        const titles = [{ key: allTabKey, title: `${titleCellLabel} (${countTotal})` }]
         for (const [organLabel, organCount] of countByOrgan.entries()) {
-            titles.push({ key: organLabel, title: `${cellLabel} in ${organLabel} (${organCount})`, icon: getOrganByCode(organCodes.current[organLabel])?.icon })
+            titles.push({
+                key: organLabel,
+                title: `${titleCellLabel} in ${organLabel} (${organCount})`,
+                icon: getOrganByCode(organCodes.current[organLabel])?.icon
+            })
         }
 
         return titles
@@ -125,14 +137,18 @@ function DatasetsTabGroup({ clId, cellLabel }) {
             format: (row) => {
                 let list = []
                 for (const o of row.organLabels) {
-                    list.push(<span key={o}>{o} &nbsp;
-                        <Image
-                            alt={''}
-                            src={getOrganByCode(organCodes.current[o])?.icon}
-                            width={16}
-                            height={16}
-                        />
-                    &nbsp;</span>)
+                    list.push(
+                        <span key={o}>
+                            {o} &nbsp;
+                            <Image
+                                alt={''}
+                                src={getOrganByCode(organCodes.current[o])?.icon}
+                                width={16}
+                                height={16}
+                            />
+                            &nbsp;
+                        </span>
+                    )
                 }
                 return <div>{list}</div>
             },
@@ -161,14 +177,16 @@ function DatasetsTabGroup({ clId, cellLabel }) {
                     <Nav.Item key={title.key}>
                         <Nav.Link className='tabHeader' eventKey={title.key}>
                             <span>{title.title}</span>&nbsp;
-                            {title.icon && <Image
-                                className='tabHeader__organImg'
-                                alt={''}
-                                src={title.icon}
-                                width={16}
-                                height={16}
-                            />}
-                            </Nav.Link>
+                            {title.icon && (
+                                <Image
+                                    className='tabHeader__organImg'
+                                    alt={''}
+                                    src={title.icon}
+                                    width={16}
+                                    height={16}
+                                />
+                            )}
+                        </Nav.Link>
                     </Nav.Item>
                 ))}
             </Nav>
