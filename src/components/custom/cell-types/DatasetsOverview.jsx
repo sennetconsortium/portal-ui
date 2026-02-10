@@ -187,9 +187,12 @@ function DatasetsOverview({ clId }) {
         }
     }, [data, titalize])
 
-    if (loading) {
+    // initial load
+    if (loading && !data) {
         return <Spinner />
     }
+
+    // error on initial load
     if (error || !data) {
         return <div>Unable to load chart</div>
     }
@@ -248,17 +251,21 @@ function DatasetsOverview({ clId }) {
                 </Form.Group>
             </div>
 
-            <ChartContainer
-                chartType='groupedBar'
-                data={chartData.groups}
-                subGroupLabels={chartData.labels}
-                xAxis={{
-                    label: titalize(selectedXAxis)
-                }}
-                yAxis={{
-                    label: titalize(selectedYAxis)
-                }}
-            />
+            {!loading ? (
+                <ChartContainer
+                    chartType='groupedBar'
+                    data={chartData.groups}
+                    subGroupLabels={chartData.labels}
+                    xAxis={{
+                        label: titalize(selectedXAxis)
+                    }}
+                    yAxis={{
+                        label: titalize(selectedYAxis)
+                    }}
+                />
+            ) : (
+                <Spinner />
+            )}
         </VisualizationsProvider>
     )
 }

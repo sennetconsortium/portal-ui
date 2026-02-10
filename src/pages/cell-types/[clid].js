@@ -152,7 +152,10 @@ function ViewCellType() {
                         {/* Datasets Overview */}
                         <SenNetAccordion id='DatasetsOverview' title='Datasets Overview'>
                             <Card border='0'>
-                                <Card.Body className='mx-auto w-100 mb-4'>
+                                <Card.Body
+                                    className='mx-auto w-100 mb-4'
+                                    style={{ minHeight: '520px' }}
+                                >
                                     <DatasetsOverview clId={clid} />
                                 </Card.Body>
                             </Card>
