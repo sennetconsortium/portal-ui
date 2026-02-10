@@ -87,7 +87,14 @@ function GroupedBar({
             }
         }
 
-        const ticks = yAxis.scaleLog || yAxis.ticks ? yAxis.ticks || 3 : undefined
+        const getTicks = () => {
+            if (typeof yAxis.ticks === 'object') {
+                return yAxis.scaleLog ? yAxis.ticks.log : yAxis.ticks.linear
+            }
+            return yAxis.ticks
+        }
+
+        const ticks = yAxis.scaleLog || yAxis.ticks ? getTicks() || 3 : undefined
         const scaleMethod = yAxis.scaleLog ? d3.scaleLog : d3.scaleLinear
         const minY = yAxis.scaleLog ? 1 : 0
 
