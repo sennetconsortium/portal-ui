@@ -4,8 +4,9 @@ import PropTypes from 'prop-types';
 
 /**
  * 
- * @param {bool} isFilterable
- * @param {object} legend
+ * @param {bool} isFilterable Whether to include a search input for filtering the items
+ * @param {node|string} title Legend title
+ * @param {object} legend {color, label, value}
  * @param {function} onItemClick Handler for clicking on legend item
  * @param {function} onItemClick Handler for hovering on legend item
  * @param {function} labelValueFormatter A callback to apply on printing of legend item values; Returns node
@@ -85,7 +86,7 @@ function VizLegend({isFilterable, title, legend, onItemClick, onItemHover, label
         if (legend) {
             setLegendObg(legend)
         }
-    }, [])
+    }, [legend])
 
     return (
         <div className={`c-vizLegend mb-4 ${!onItemClick ? 'c-legend--noHover' : ''}`}>
@@ -97,7 +98,7 @@ function VizLegend({isFilterable, title, legend, onItemClick, onItemHover, label
             </div>
             {isFilterable && <div className='mb-2 input-group'>
               <input className="form-control" type="search" onKeyDown={handleOnKeyDown} />
-              <button onClick={(e) => filterLegend(e)} class="btn btn-outline-secondary" type="button" arai-label="Search" id="button-addon2"><i class="bi bi-search"></i></button>
+              <button onClick={(e) => filterLegend(e)} className="btn btn-outline-secondary" type="button" arai-label="Search" id="button-addon2"><i className="bi bi-search"></i></button>
             </div>}
             <ul className='c-vizLegend__list'>
                 {buildLegend()}

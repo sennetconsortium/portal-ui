@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState, useRef, memo } from 'react'
+import React, { useContext, useEffect, useState, memo } from 'react'
 import VizLegend from '@/components/custom/visualizations/VizLegend'
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
@@ -30,7 +30,8 @@ const CellTypeDistributionAcrossOrgansLayout = memo(({ children, organ, tabData,
   const onLegendItemHover = (_cell) => {
     const chartType = 'horizontalDistributionBar'
     const $el = $(`${getChartSelector(organ._id, chartType)} .bar--${_cell.label.toDashedCase()}`)
-    setToolTipContent(organ._id, _cell.label, _cell.value, $el.attr('x'), 0).style('opacity', 1)
+
+    setToolTipContent({id: organ._id, label: _cell.label, d: {data: {group: organ.label}}, value: _cell.value, xPos: $el.attr('x'), yPos: 0}).style('opacity', 1)
 
   }
 

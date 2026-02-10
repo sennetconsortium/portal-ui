@@ -161,13 +161,13 @@ function DatasetsTabGroup({ clId, cellLabel }) {
                     <Nav.Item key={title.key}>
                         <Nav.Link className='tabHeader' eventKey={title.key}>
                             <span>{title.title}</span>&nbsp;
-                            <Image
+                            {title.icon && <Image
                                 className='tabHeader__organImg'
                                 alt={''}
                                 src={title.icon}
                                 width={16}
                                 height={16}
-                            />
+                            />}
                             </Nav.Link>
                     </Nav.Item>
                 ))}
