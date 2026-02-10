@@ -269,7 +269,7 @@ function DatasetsOverview({ clId }) {
                             formatter: ({ y, maxY }) => (y % 1 === 0 ? y : '')
                         }}
                     />
-                    <VizLegend legend={legend} />
+                    <VizLegend legend={legend} legendToolTip={null} />
                 </div>
             ) : (
                 <Spinner />
