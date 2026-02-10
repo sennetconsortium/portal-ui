@@ -5,6 +5,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Form } from 'react-bootstrap'
 import Spinner from '../Spinner'
 import ChartContainer from '../visualizations/ChartContainer'
+import VizLegend from '../visualizations/VizLegend'
 
 const ageBins = [
     {
@@ -76,6 +77,7 @@ function DatasetsOverview({ clId }) {
     const [selectedXAxis, setSelectedXAxis] = useState('age')
     const [selectedYAxis, setSelectedYAxis] = useState('datasets')
     const [selectedCompareBy, setSelectedCompareBy] = useState('sex')
+    const [legend, setLegend] = useState({})
 
     const titalize = useCallback((str) => {
         if (!str) {
@@ -252,18 +254,23 @@ function DatasetsOverview({ clId }) {
             </div>
 
             {!loading ? (
-                <ChartContainer
-                    chartType='groupedBar'
-                    data={chartData.groups}
-                    subGroupLabels={chartData.labels}
-                    xAxis={{
-                        label: titalize(selectedXAxis)
-                    }}
-                    yAxis={{
-                        label: titalize(selectedYAxis),
-                        formatter: ({ y, maxY }) => (y % 1 === 0 ? y : '')
-                    }}
-                />
+                <div className='d-flex flex-row w-100'>
+                    <ChartContainer
+                        chartType='groupedBar'
+                        containerClassName='flex-grow-1'
+                        data={chartData.groups}
+                        setLegend={setLegend}
+                        subGroupLabels={chartData.labels}
+                        xAxis={{
+                            label: titalize(selectedXAxis)
+                        }}
+                        yAxis={{
+                            label: titalize(selectedYAxis),
+                            formatter: ({ y, maxY }) => (y % 1 === 0 ? y : '')
+                        }}
+                    />
+                    <VizLegend legend={legend} />
+                </div>
             ) : (
                 <Spinner />
             )}
