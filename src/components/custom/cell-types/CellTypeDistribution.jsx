@@ -42,6 +42,10 @@ export default function CellTypeDistribution({ clId }) {
     const { data, loading, error } = useSearchUIQuery(getCellTypesIndex(), query)
 
     const chartData = useMemo(() => {
+        if (!data) {
+            return
+        }
+
         // combine buckets that are lateral organs
         const organs = {}
         data?.aggregations?.by_organ_code?.buckets?.forEach((bucket) => {
