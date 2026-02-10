@@ -68,7 +68,7 @@ function HorizontalDistributionBar({
         const y = d3.scaleBand()
             .domain(groups)
             .range([0, sizing.height])
-            .padding([0.2])
+            .padding([0.3])
 
         const stackGen = d3.stack()
           .keys(subgroups)

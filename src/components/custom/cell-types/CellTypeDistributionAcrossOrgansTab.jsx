@@ -51,10 +51,17 @@ const CellTypeDistributionAcrossOrgansTab = memo(({organ, tabData, cell}) => {
       </div>`
       
       ops.tooltip.getD3(ops.id)
+          .html(html) 
+          .attr('class', 'c-visualizations__tooltip c-visualizations__tooltip--flexWidth c-visualizations__tooltip--multiLine')
           .style('left', ops.xPos + 'px')
           .style('top', ops.yPos - 20 + 'px')
-          .attr('class', 'c-visualizations__tooltip c-visualizations__tooltip--multiLine')
-          .html(html) 
+
+      if ($(ops.tooltip.getSelector(ops.id)).height() > 70) {
+        ops.tooltip.getD3(ops.id)
+          .style('top', ops.yPos - 60 + 'px')
+      }
+          
+          
   }
 
   const onRectClick = (eventData) => {

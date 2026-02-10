@@ -91,10 +91,17 @@
 		position: inherit;
 	}
 
-	&__tooltip--multiLine {
-		span {
-			display: block;
+
+
+	&__tooltip {
+		&--flexWidth {
+			width: inherit;
 		}
+		&--multiLine {
+				span {
+					display: block;
+				}
+			}
 	}
 
 	&--tooltipHasArrow {

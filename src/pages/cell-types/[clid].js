@@ -64,7 +64,7 @@ function ViewCellType() {
 
     return (
         <>
-            <Header title={`${clid} | Cell Type | SenNet`}></Header>
+            <Header title={`${clid} | ${data?.hits?.hits[0]?._source?.cell_label} | Cell Type | SenNet`}></Header>
 
             <AppNavbar hidden={isRegisterHidden} signoutHidden={false} />
 
