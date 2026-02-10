@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState, useRef, memo } from 'react'
 import VizLegend from '@/components/custom/visualizations/VizLegend'
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
@@ -11,7 +11,7 @@ import VisualizationsContext from '@/context/VisualizationsContext';
  * @param {object} cell The current cell {id, label}
  * @param {object} legend Legend group names and color {label: {color, label, value}}
  */
-function CellTypeDistributionAcrossOrgansLayout({ children, organ, tabData, cell, legend}) {
+const CellTypeDistributionAcrossOrgansLayout = memo(({ children, organ, tabData, cell, legend}) => {
   const [_, setRefresh] = useState(null)
 
   const {toolTipHandlers, setToolTipContent, getChartSelector} = useContext(VisualizationsContext)
@@ -50,12 +50,12 @@ function CellTypeDistributionAcrossOrgansLayout({ children, organ, tabData, cell
           <code> {percentage(tabData[organ._id].currentCell, tabData[organ._id].cells)}%</code> of total</p>
         </Col>
         <Col>
-          <h3 className='fs-6'>Other Cell Types</h3>
-          <VizLegend onItemHover={onLegendItemHover} labelValueFormatter={handleLabelValueFormatter} excludedValues={[cell.label]} legendId={organ._id} legend={legend} onItemClick={onLegendItemClick} />
+          
+          <VizLegend title={<h3 className='fs-6'>Other Cell Types</h3>} legendToolTip={'Clicking on a legend item redirects to the specific cell type page.'} isFilterable={true} onItemHover={onLegendItemHover} labelValueFormatter={handleLabelValueFormatter} excludedValues={[cell.label]} legendId={organ._id} legend={legend} onItemClick={onLegendItemClick} />
         </Col>
       </Row>
     </div>
   )
-}
+})
 
 export default CellTypeDistributionAcrossOrgansLayout
