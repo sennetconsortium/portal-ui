@@ -136,7 +136,7 @@ export async function getReadWritePrivileges() {
     }
 }
 
-export async function callIngestService(path, base='privs/') {
+export async function callIngestService(path, base = 'privs/') {
     const url = getIngestEndPoint() + base + path;
     const requestOptions = {
         method: 'GET',
@@ -266,7 +266,10 @@ export async function fetchEntityType(uuid, bearer_token) {
     }
 }
 
-export async function getAncestryData(uuid, ops = {endpoints: ['ancestors', 'descendants'], otherEndpoints: []}, entityType = null) {
+export async function getAncestryData(uuid, ops = {
+    endpoints: ['ancestors', 'descendants'],
+    otherEndpoints: []
+}, entityType = null) {
     const ancestryPromises = getAncestry(uuid, ops, entityType)
     const promiseSettled = await Promise.allSettled([...Object.values(ancestryPromises)])
     let _data = {};
@@ -290,11 +293,11 @@ export function getAncestry(uuid, {endpoints = ['ancestors', 'descendants'], oth
         let endpoint = propertyNameMap[key] || key
         let reqBody = []
         if (isEdit) {
-            reqBody =  filterProperties.ancestryEdit
+            reqBody = filterProperties.ancestryEdit
         } else if (endpoint.includes('ancestors')) {
             reqBody = filterProperties.ancestors
         } else if (endpoint.includes("descendants")) {
-            if (entityType && (entityType === 'Dataset') || (entityType === 'Publication' )) {
+            if (entityType && (entityType === 'Dataset') || (entityType === 'Publication')) {
                 reqBody = filterProperties.datasetDescendants
             } else {
                 reqBody = filterProperties.descendants
@@ -346,7 +349,7 @@ export const uploadFile = async file => {
     }
 }
 
-export const fetchSearchAPIEntities = async (body, index='entities') => {
+export const fetchSearchAPIEntities = async (body, index = 'entities') => {
     const token = getAuth();
     const headers = getJsonHeader()
     if (token) {
@@ -781,11 +784,12 @@ export const filterProperties = {
             "origin_samples",
             "creation_action",
             "ingest_metadata",
+            "last_modified_timestamp"
         ],
         is_include: true
     },
     datasetDescendants: {
-         filter_properties: [
+        filter_properties: [
             "lab_source_id",
             "lab_tissue_sample_id",
             "lab_dataset_id",
@@ -794,7 +798,8 @@ export const filterProperties = {
             "ingest_metadata",
             "metadata",
             "cedar_mapped_metadata",
-            "files"
+            "files",
+            "last_modified_timestamp"
         ],
         is_include: true
     },
