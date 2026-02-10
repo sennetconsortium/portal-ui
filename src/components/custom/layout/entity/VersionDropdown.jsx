@@ -2,9 +2,9 @@ import {useContext, useEffect, useState} from 'react'
 import PropTypes from 'prop-types'
 import Dropdown from 'react-bootstrap/Dropdown'
 import AppContext from "../../../../context/AppContext";
-import {getEntityViewUrl} from "../../js/functions";
+import {getEntityViewUrl, getHeaders} from "../../js/functions";
 import SenNetPopover, {SenPopoverOptions} from "@/components/SenNetPopover";
-import {fetchRevisions} from "@/lib/services";
+import {getEntityEndPoint} from "@/config/config";
 
 function VersionDropdown({className = '', data}) {
 
@@ -13,16 +13,20 @@ function VersionDropdown({className = '', data}) {
     const [isBusy, setIsBusy] = useState(false)
 
     useEffect(() => {
-        const getRevisions = async () => {
+        const fetchRevisions = async () => {
             setIsBusy(true)
-            let json = await fetchRevisions(data.uuid)
-            if (json != null) {
+            let response = await fetch(getEntityEndPoint() + `datasets/${data.uuid}/revisions?include_dataset=true`, {
+                method: 'GET',
+                headers: getHeaders()
+            })
+            if (response.ok) {
+                let json = await response.json()
                 setRevisions(json)
             }
             setIsBusy(false)
         }
 
-        getRevisions()
+        fetchRevisions()
     }, [])
 
     const buildRevisions = () => {

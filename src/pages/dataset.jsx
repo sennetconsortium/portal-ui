@@ -2,18 +2,15 @@ import dynamic from "next/dynamic";
 import React, {useContext, useEffect, useState} from "react";
 import log from "loglevel";
 import {
-    getDatasetTypeDisplay,
     datasetIs,
+    eq,
     fetchDataCite,
     getCreationActionRelationName,
+    getDatasetTypeDisplay,
     getEntityViewUrl,
-    getRequestHeaders, eq
+    getRequestHeaders
 } from "@/components/custom/js/functions";
-import {
-    getWritePrivilegeForGroupUuid,
-    getAncestryData,
-    getEntityData
-} from "@/lib/services";
+import {getAncestryData, getEntityData, getWritePrivilegeForGroupUuid} from "@/lib/services";
 import AppContext from "@/context/AppContext";
 import Alert from 'react-bootstrap/Alert';
 import {EntityViewHeader} from "@/components/custom/layout/entity/ViewHeader";
@@ -39,7 +36,7 @@ const CreationActionRelationship = dynamic(() => import("@/components/custom/ent
 const Header = dynamic(() => import("@/components/custom/layout/Header"))
 const Metadata = dynamic(() => import("@/components/custom/entities/Metadata"))
 const Provenance = dynamic(() => import("@/components/custom/entities/Provenance"), {
-    loading: () => <LoadingAccordion id="Provenance" title="Provenance" style={{ height:'490px' }} />
+    loading: () => <LoadingAccordion id="Provenance" title="Provenance" style={{height: '490px'}}/>
 })
 const SenNetVitessce = dynamic(() => import("@/components/custom/vitessce/SenNetVitessce"))
 
@@ -53,7 +50,16 @@ function ViewDataset() {
     const [error, setError] = useState(false)
     const [errorMessage, setErrorMessage] = useState(null)
     const [hasWritePrivilege, setHasWritePrivilege] = useState(false)
-    const {router, isRegisterHidden, _t, cache, isPreview, getPreviewView, isLoggedIn, sidebarVisible} = useContext(AppContext)
+    const {
+        router,
+        isRegisterHidden,
+        _t,
+        cache,
+        isPreview,
+        getPreviewView,
+        isLoggedIn,
+        sidebarVisible
+    } = useContext(AppContext)
     const [primaryDatasetData, setPrimaryDatasetInfo] = useState(null)
     const [showFilesSection, setShowFilesSection] = useState(null)
     const [hasViz, setHasViz] = useState(false)
@@ -100,8 +106,8 @@ function ViewDataset() {
     }, [data?.ancestors])
 
     useEffect(() => {
-        if(isDerivedContextInitialized) {
-           fetchProtocolsWorkflow(data)
+        if (isDerivedContextInitialized) {
+            fetchProtocolsWorkflow(data)
         }
     }, [data, isDerivedContextInitialized])
 
@@ -168,7 +174,7 @@ function ViewDataset() {
             fetchData(router.query.uuid)
                 .catch(log.error);
 
-            if(router.query.hasOwnProperty("redirectedFrom")) {
+            if (router.query.hasOwnProperty("redirectedFrom")) {
                 let message = router.query.redirectedFrom.replace(/\/$/, '')
                 toast.info(`You have been redirected to the unified view for ${message}.`, {
                     position: 'top-right',
@@ -185,7 +191,7 @@ function ViewDataset() {
         }
     }
 
-    if (isPreview(data, error))  {
+    if (isPreview(data, error)) {
         return getPreviewView(data)
     } else {
         return (
@@ -202,7 +208,7 @@ function ViewDataset() {
                     <div className="container-fluid">
                         {/*Processed/Component dataset alert*/}
                         {!datasetIs.primary(data.creation_action) &&
-                            <Alert className={'mt-4'} variant='info'><WarningIcon /> You are viewing a&nbsp;
+                            <Alert className={'mt-4'} variant='info'><WarningIcon/> You are viewing a&nbsp;
                                 <code>{getCreationActionRelationName(data.creation_action)}</code>.&nbsp;
                                 {primaryDatasetData && (
                                     <>
@@ -279,13 +285,13 @@ function ViewDataset() {
                                                data-bs-parent="#sidebar">Provenance</a>
                                         </li>
 
-                                            {!!((data.metadata && Object.keys(data.metadata).length || ancestorHasMetadata)) &&
-                                                <li className="nav-item">
-                                                    <a href="#Metadata"
-                                                       className="nav-link"
-                                                       data-bs-parent="#sidebar">Metadata</a>
-                                                </li>
-                                            }
+                                        {!!((data.metadata && Object.keys(data.metadata).length || ancestorHasMetadata)) &&
+                                            <li className="nav-item">
+                                                <a href="#Metadata"
+                                                   className="nav-link"
+                                                   data-bs-parent="#sidebar">Metadata</a>
+                                            </li>
+                                        }
 
                                         {data && showFilesSection && <li className="nav-item">
                                             <a href="#files-data-products"
@@ -350,16 +356,18 @@ function ViewDataset() {
 
                                         {/* Vitessce */}
                                         {data && hasViz && <SenNetSuspense showChildren={showVitessce}
-                                                        suspenseElements={<>
-                                                            <ShimmerText line={3} gap={10} />
-                                                            <ShimmerThumbnail height={700} className={'mt-2'} rounded />
-                                                        </>}
-                                                        id="Vitessce" title="Visualization"
-                                                        style={{ height:'800px' }}>
+                                                                           suspenseElements={<>
+                                                                               <ShimmerText line={3} gap={10}/>
+                                                                               <ShimmerThumbnail height={700}
+                                                                                                 className={'mt-2'}
+                                                                                                 rounded/>
+                                                                           </>}
+                                                                           id="Vitessce" title="Visualization"
+                                                                           style={{height: '800px'}}>
                                             <SenNetVitessce data={data}/>
                                         </SenNetSuspense>}
 
-                                        {showProtocolsWorkflow && <ProtocolsWorkflow data={data} />}
+                                        {showProtocolsWorkflow && <ProtocolsWorkflow data={data}/>}
 
                                         {/*Provenance*/}
                                         <Provenance data={data} hasAncestry={hasAncestry}/>
@@ -375,12 +383,14 @@ function ViewDataset() {
                                         }
 
                                         {/*Data Products*/}
-                                        { data &&
-                                            <FilesDataProducts setShowFilesSection={toggleFilesSection} showFilesSection={showFilesSection} data={data} dataProducts={dataProducts}  />
+                                        {data &&
+                                            <FilesDataProducts setShowFilesSection={toggleFilesSection}
+                                                               showFilesSection={showFilesSection} data={data}
+                                                               dataProducts={dataProducts}/>
                                         }
 
-                                        { datasetCategories &&
-                                            <BulkDataTransfer data={datasetCategories} currentEntity={data} />
+                                        {datasetCategories &&
+                                            <BulkDataTransfer data={datasetCategories} currentEntity={data}/>
                                         }
 
                                         {/*Contributors*/}

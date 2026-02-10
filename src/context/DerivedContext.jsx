@@ -1,10 +1,10 @@
-import {createContext, useCallback, useRef, useState} from "react";
+import {createContext, useCallback, useContext, useRef, useState} from "react";
 import $ from "jquery";
 import log from "loglevel";
-import {datasetIs, fetchEntity, getDatasetTypeDisplay, getHeaders} from "@/components/custom/js/functions";
-import {fetchRevisions, fetchVitessceConfiguration, getEntityData, getProvInfo} from "@/lib/services";
+import {datasetIs, fetchEntity, getDatasetTypeDisplay} from "@/components/custom/js/functions";
+import {fetchVitessceConfiguration, getEntityData, getProvInfo} from "@/lib/services";
 import useVitessceEncoder from "@/hooks/useVitessceEncoder";
-import {getEntityEndPoint} from "@/config/config";
+import AppContext from "@/context/AppContext";
 
 const DerivedContext = createContext({})
 
@@ -26,10 +26,14 @@ export const DerivedProvider = ({children, showVitessceList, setShowVitessceList
     const [showProtocolsWorkflow, setShowProtocolsWorkflow] = useState(false)
     const [workflow, setWorkflow] = useState({})
     const [isDerivedContextInitialized, setIsDerivedContextInitialized] = useState(null)
-    const [revisions, setRevisions] = useState(null)
+    const [derivedNotLatestVersion, setDerivedNotLatestVersion] = useState(false)
+
+    const {
+        isLoggedIn
+    } = useContext(AppContext)
 
     // Load the correct Vitessce view config
-    const set_vitessce_config = async (data, dataset_id, dataset_type) => {
+    const set_vitessce_config = async (data, dataset_id) => {
         fetchVitessceConfiguration(dataset_id).then(config => {
             // If the /vitessce endpoint returns anything but a 200 and an actual configuration, hide the visualization  section
             if (JSON.stringify(config) === '{}') {
@@ -68,25 +72,38 @@ export const DerivedProvider = ({children, showVitessceList, setShowVitessceList
             } else {
                 // Call `/prov-info` and check if processed datasets are returned
                 const prov_info = await getProvInfo(data.uuid)
+                console.log(prov_info)
                 if (Object.keys(prov_info).length) {
                     const processed_datasets = prov_info['processed_dataset_uuid']
                     const processed_dataset_statuses = prov_info['processed_dataset_status']
 
-                    // Call `/datasets/<uuid>/revisions`
-                    setRevisions(await fetchRevisions(processed_datasets[0]))
-
                     // Iterate over processed datasets and check that the status is valid
+                    // Check for scenario where most recent dataset is QA but an older dataset is Published
+                    let is_older_published = false;
+                    let is_newer_qa = false;
+                    let found_derived = false
                     for (let i = 0; i < processed_dataset_statuses?.length; i++) {
                         if (isDatasetStatusPassed(processed_dataset_statuses[i])) {
-                            fetchEntity(processed_datasets[i]).then(processed_dataset => {
-                                // Check that the assay type is supported by Vitessce
-                                let processed_dataset_type = processed_dataset.dataset_type?.replace(/\s+([\[]).*?([\]])/g, "")
-                                setDerivedDataset(processed_dataset)
-                                set_vitessce_config(processed_dataset, processed_dataset.uuid, processed_dataset_type)
-                                setIsDerivedContextInitialized(true)
-                            })
-                            break;
+                            if (!found_derived) {
+                                const processed_dataset = await fetchEntity(processed_datasets[i]);
+                                if (!processed_dataset.hasOwnProperty("error")) {
+                                    setDerivedDataset(processed_dataset)
+                                    set_vitessce_config(processed_dataset, processed_dataset.uuid)
+                                    setIsDerivedContextInitialized(true)
+                                    found_derived = true
+                                }
+                            }
+                            if (processed_dataset_statuses[i] === 'QA' && is_newer_qa === false) {
+                                is_newer_qa = true;
+                            } else if (processed_dataset_statuses[i] === 'Published') {
+                                if (is_newer_qa)
+                                    is_older_published = true;
+                                break;
+                            }
                         }
+                    }
+                    if (is_older_published && is_newer_qa) {
+                        setDerivedNotLatestVersion(true)
                     }
                 }
             }
@@ -94,10 +111,14 @@ export const DerivedProvider = ({children, showVitessceList, setShowVitessceList
     })
 
     const isDatasetStatusPassed = data => {
+        let allowableStatuses = ['QA', 'Published']
+        if (!isLoggedIn()) {
+            allowableStatuses = ['Published']
+        }
         if (data.hasOwnProperty('status')) {
-            return data.status === "QA" || data.status === 'Published'
+            return allowableStatuses.includes(data['status'])
         } else {
-            return data === "QA" || data === 'Published'
+            return allowableStatuses.includes(data)
         }
     }
 
@@ -239,6 +260,7 @@ export const DerivedProvider = ({children, showVitessceList, setShowVitessceList
         fetchProtocolsWorkflow,
         showProtocolsWorkflow,
         workflow,
+        derivedNotLatestVersion,
         isDerivedContextInitialized
     }}>
         {children}
