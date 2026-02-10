@@ -97,7 +97,7 @@ function GroupedBar({
             .range([sizing.height, 0])
 
         g.append("g")
-            .call(d3.axisLeft(y).ticks(ticks))
+            .call(d3.axisLeft(y).ticks(ticks).tickFormat((y) => yAxis.formatter ? yAxis.formatter({y, maxY}) : (y).toFixed()))
 
         var xSubgroup = d3.scaleBand()
             .domain(subgroups)
