@@ -10,23 +10,46 @@ import MultiProfileSelector from "./MultiProfileSelector";
 import SuspendVitessce from "./SuspendVitessce";
 import {getDatasetTypeDisplay} from "@/components/custom/js/functions";
 import {getVitessceVersion} from "@/config/config";
+import SenNetPopover from "@/components/SenNetPopover";
 
-export const DescendantInfo = ({isPrimaryDataset, derivedDataset, wrapClassNames = 'col m-2'}) => {
+export const DescendantInfo = ({
+                                   isPrimaryDataset,
+                                   derivedDataset,
+                                   derivedNotLatestVersion,
+                                   wrapClassNames = 'col m-2'
+                               }) => {
     return (<div className={'row'}>
         <div className={wrapClassNames}>
             {isPrimaryDataset && derivedDataset &&
-                <span className={'fw-light'}>
-                    Visualization from descendant
+                <>
+                    {derivedNotLatestVersion &&
+                        <SenNetPopover
+                            text={<span>This information comes from a more recent derived dataset that is not <code>Published</code>.</span>}
+                            className={`derivedNotLatest-vitessce}`}>
+                            <i className="bi text-danger bi-exclamation-circle-fill"></i>
+                        </SenNetPopover>
+                    }
+                <span className={'fw-light'}> Visualization from descendant
                     <Link target="_blank" href={{pathname: '/dataset', query: {uuid: derivedDataset.uuid}}}>
-                        <span className={'ms-2 me-2 icon-inline'}>{`${getDatasetTypeDisplay(derivedDataset)} ${derivedDataset.sennet_id}`}</span>
+                        <span
+                            className={'ms-2 me-2 icon-inline'}>{`${getDatasetTypeDisplay(derivedDataset)} ${derivedDataset.sennet_id}`}</span>
                     </Link>
                 </span>
+                </>
             }
         </div>
     </div>)
 }
 
-export const SenNetVitessce = ({ title, id, expanded = true, showPoweredInfo = true, showDescendantInfo = true, afterButton, className = '' }) => {
+export const SenNetVitessce = ({
+                                   title,
+                                   id,
+                                   expanded = true,
+                                   showPoweredInfo = true,
+                                   showDescendantInfo = true,
+                                   afterButton,
+                                   className = ''
+                               }) => {
     const {
         vitessceTheme,
         setVitessceTheme,
@@ -45,13 +68,15 @@ export const SenNetVitessce = ({ title, id, expanded = true, showPoweredInfo = t
         derivedDataset,
         vitessceParams,
         setVitessceConfigState,
-        getUrlByLengthMaximums, encodeConfigToUrl
+        getUrlByLengthMaximums, encodeConfigToUrl,
+        derivedNotLatestVersion
     } = useContext(DerivedContext)
 
     return (
-        <SenNetAccordion title={title || 'Visualization'} id={id || 'Vitessce'} expanded={expanded} className={`accordion--vitessce ${className}`} afterButton={afterButton}>
+        <SenNetAccordion title={title || 'Visualization'} id={id || 'Vitessce'} expanded={expanded}
+                         className={`accordion--vitessce ${className}`} afterButton={afterButton}>
             <div className={'row'}>
-                {showPoweredInfo &&<div className={'col m-2'}>
+                {showPoweredInfo && <div className={'col m-2'}>
                      <span className={'fw-light fs-6'}>Powered by
                         <a className={'ms-2'} target="_blank" href="http://vitessce.io/" rel="noopener noreferrer"
                            title={'Vitessce.io'}>
@@ -120,12 +145,13 @@ export const SenNetVitessce = ({ title, id, expanded = true, showPoweredInfo = t
                     <MultiProfileSelector
                         vitessceConfig={vitessceConfig}
                         profileIndex={profileIndex}
-                        setProfileIndex={setProfileIndex} />
+                        setProfileIndex={setProfileIndex}/>
                 }
 
             </div>
 
-            {showDescendantInfo && <DescendantInfo isPrimaryDataset={isPrimaryDataset} derivedDataset={derivedDataset} />}
+            {showDescendantInfo && <DescendantInfo isPrimaryDataset={isPrimaryDataset} derivedDataset={derivedDataset}
+                                                   derivedNotLatestVersion={derivedNotLatestVersion}/>}
             <Snackbar open={showExitFullscreenMessage} autoHideDuration={8000}
                       anchorOrigin={{vertical: 'top', horizontal: 'center'}}
                       onClose={() => setShowExitFullscreenMessage(false)}>
@@ -140,7 +166,7 @@ export const SenNetVitessce = ({ title, id, expanded = true, showPoweredInfo = t
                 profileIndex={profileIndex}
                 setVitessceConfigState={setVitessceConfigState}
                 vitessceTheme={vitessceTheme}
-                isFullscreen={isFullscreen} />
+                isFullscreen={isFullscreen}/>
 
         </SenNetAccordion>
     )
