@@ -1,10 +1,11 @@
+import { getCellTypesIndex } from '@/config/config'
 import { getOrganByCode } from '@/config/organs'
 import { VisualizationsProvider } from '@/context/VisualizationsContext'
 import useSearchUIQuery from '@/hooks/useSearchUIQuery'
+import { useMemo } from 'react'
 import { formatNum } from '../js/functions'
 import Spinner from '../Spinner'
 import ChartContainer from '../visualizations/ChartContainer'
-import { useMemo } from 'react'
 
 /**
  * @typedef {object} CellTypeDistributionProps
@@ -38,7 +39,7 @@ export default function CellTypeDistribution({ clId }) {
         }
     }
 
-    const { data, loading, error } = useSearchUIQuery('cell-types', query)
+    const { data, loading, error } = useSearchUIQuery(getCellTypesIndex(), query)
 
     const chartData = useMemo(() => {
         // combine buckets that are lateral organs
@@ -72,9 +73,8 @@ export default function CellTypeDistribution({ clId }) {
         return <div>Unable to load chart</div>
     }
 
-    const yAxis = { label: 'Cell Count', formatter: ({y}) => formatNum(y) }
+    const yAxis = { label: 'Cell Count', formatter: ({ y }) => formatNum(y) }
     const xAxis = {
-     
         label: 'Organ',
         description: `Bar chart showing distribution of cell type ${clId} across organs.`
     }
@@ -87,7 +87,7 @@ export default function CellTypeDistribution({ clId }) {
                 xAxis={xAxis}
                 yAxis={yAxis}
                 chartType={'bar'}
-                style={{height: 600}}
+                style={{ height: 600 }}
             />
         </VisualizationsProvider>
     )

@@ -1,5 +1,6 @@
 import ClipboardCopy from '@/components/ClipboardCopy'
 import Spinner from '@/components/custom/Spinner'
+import { getCellTypesIndex } from '@/config/config'
 import { getOrganByCode } from '@/config/organs'
 import useSearchUIQuery from '@/hooks/useSearchUIQuery'
 import Image from 'next/image'
@@ -28,7 +29,7 @@ function DatasetsTabGroup({ clId, cellLabel }) {
     }
     const allTabKey = 'all'
 
-    const { data, loading, error } = useSearchUIQuery('cell-types', query)
+    const { data, loading, error } = useSearchUIQuery(getCellTypesIndex(), query)
     const [selectedTab, setSelectedTab] = useState(allTabKey)
     const organCodes = useRef({})
 

@@ -12,6 +12,7 @@ import dynamic from 'next/dynamic'
 import { useRouter } from 'next/router'
 import { useContext } from 'react'
 import { Card } from 'react-bootstrap'
+import { getCellTypesIndex } from '@/config/config'
 
 const AppFooter = dynamic(() => import('@/components/custom/layout/AppFooter'))
 const Header = dynamic(() => import('@/components/custom/layout/Header'))
@@ -60,7 +61,7 @@ function ViewCellType() {
           }
         : null
 
-    const { data, loading, error } = useSearchUIQuery('cell-types', query)
+    const { data, loading, error } = useSearchUIQuery(getCellTypesIndex(), query)
 
     if (loading) {
         return <Spinner />
@@ -74,7 +75,9 @@ function ViewCellType() {
 
     return (
         <>
-            <Header title={`${clid} | ${data?.hits?.hits[0]?._source?.cell_label} | Cell Type | SenNet`}></Header>
+            <Header
+                title={`${clid} | ${data?.hits?.hits[0]?._source?.cell_label} | Cell Type | SenNet`}
+            ></Header>
 
             <AppNavbar hidden={isRegisterHidden} signoutHidden={false} />
 

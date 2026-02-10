@@ -1,3 +1,4 @@
+import { getCellTypesIndex } from '@/config/config'
 import { VisualizationsProvider } from '@/context/VisualizationsContext'
 import { fetchSearchAPIEntities } from '@/lib/services'
 import { Object } from 'core-js'
@@ -149,7 +150,7 @@ function DatasetsOverview({ clId }) {
             }
 
             try {
-                const res = await fetchSearchAPIEntities(query, 'cell-types')
+                const res = await fetchSearchAPIEntities(query, getCellTypesIndex())
                 setData(res)
             } catch (err) {
                 setError(err)
