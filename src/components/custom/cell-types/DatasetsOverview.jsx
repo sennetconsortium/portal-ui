@@ -260,7 +260,8 @@ function DatasetsOverview({ clId }) {
                         label: titalize(selectedXAxis)
                     }}
                     yAxis={{
-                        label: titalize(selectedYAxis)
+                        label: titalize(selectedYAxis),
+                        formatter: ({ y, maxY }) => (y % 1 === 0 ? y : '')
                     }}
                 />
             ) : (
