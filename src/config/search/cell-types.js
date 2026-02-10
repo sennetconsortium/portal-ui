@@ -1,13 +1,9 @@
-import { getCreationActionRelationName, getUBKGFullName, searchUIQueryString } from '@/components/custom/js/functions';
 import SearchAPIConnector from 'search-ui/packages/search-api-connector';
 import {
-    doFiltersContainField,
     doesAggregationHaveBuckets,
-    doesTermFilterContainValues,
     getAuth,
     getCellTypesIndex,
     getSearchEndPoint,
-    lateralOrgans,
 } from '../config';
 
 const connector = new SearchAPIConnector({
@@ -15,7 +11,7 @@ const connector = new SearchAPIConnector({
     indexUrl: getSearchEndPoint(),
     accessToken: getAuth(),
     beforeSearchCall: (queryOptions, next) => {
-        
+
         queryOptions.collapse =  {
             field : "cl_id.keyword",
                 inner_hits: {
@@ -25,7 +21,7 @@ const connector = new SearchAPIConnector({
             },
             max_concurrent_group_searches: 4
         };
-       
+
         // append additional aggregations needs for the table
         const aggs = queryOptions.aggs || {};
         aggs.total_cell_types = {
@@ -58,7 +54,7 @@ export const SEARCH_CELL_TYPES = {
     alwaysSearchOnInitialLoad: true,
     searchQuery: {
         excludeFilters: [
-            
+
         ],
         facets: {
             'cell_label': {
@@ -84,7 +80,7 @@ export const SEARCH_CELL_TYPES = {
                 // isAggregationActive: true,
                 // isFacetVisible: doesAggregationHaveBuckets('dataset_type')
             },
-            
+
             // Source Human
             'dataset.age.value': {
                 label: 'Age',
@@ -101,7 +97,7 @@ export const SEARCH_CELL_TYPES = {
                 },
                 isFacetVisible: doesAggregationHaveBuckets('dataset.age.value')
             },
-            
+
             'source_metadata.race.value': {
                 label: 'Race',
                 type: 'value',
@@ -148,7 +144,7 @@ export const SEARCH_CELL_TYPES = {
             'cl_id',
             'cell_count' ,
             'source_metadata'
-            
+
         ],
         // Moving this configuration into `searchQuery` so the config inside search-tools can read this
         trackTotalHits: true,
