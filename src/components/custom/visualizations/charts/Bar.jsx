@@ -118,10 +118,10 @@ function Bar({
             .join("rect")
             .attr("class", d => `bar--${d.label?.toDashedCase()}`)
             .attr("x", (d) => x(d.label))
-            .attr('data-value', (d) => yAxis.formatter ? yAxis.formatter(d.value) : d.value)
+            .attr('data-value', (d) => yAxis.formatter ? yAxis.formatter({y: d.value}) : d.value)
             .attr("fill", function (d) {
                 const color = style.colorScale  ? style.colorScale({d, maxY, column}) : colorScale(d.label)
-                colors[d.label] = { color, value: yAxis.formatter ? yAxis.formatter(d.value) : d.value, label: d.label };
+                colors[d.label] = { color, value: yAxis.formatter ? yAxis.formatter({y: d.value}) : d.value, label: d.label };
                 return color;
             })
             .attr("y", (d) => y(yStartPos))
@@ -152,7 +152,7 @@ function Bar({
         // Add the y-axis and label, and remove the domain line.
         g.append("g")
             .attr("transform", `translate(${sizing.margin.left},0)`)
-            .call(d3.axisLeft(y).ticks(ticks).tickFormat((y) => yAxis.formatter ? yAxis.formatter(y) : (y).toFixed()))
+            .call(d3.axisLeft(y).ticks(ticks).tickFormat((y) => yAxis.formatter ? yAxis.formatter({y, maxY}) : (y).toFixed()))
 
         if (showYLabels()) {
             svg.append("g")

@@ -72,9 +72,9 @@ export default function CellTypeDistribution({ clId }) {
         return <div>Unable to load chart</div>
     }
 
-    const yAxis = { label: 'Cell Count', formatter: formatNum }
+    const yAxis = { label: 'Cell Count', formatter: ({y}) => formatNum(y) }
     const xAxis = {
-        formatter: formatNum,
+     
         label: 'Organ',
         description: `Bar chart showing distribution of cell type ${clId} across organs.`
     }

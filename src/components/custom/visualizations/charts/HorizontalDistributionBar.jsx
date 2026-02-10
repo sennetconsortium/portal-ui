@@ -119,7 +119,7 @@ function HorizontalDistributionBar({
         // color palette = one color per subgroup
         const colorScale = d3.scaleOrdinal(style.colorScheme || d3.schemeCategory10)
 
-        const formatVal = (v) => xAxis.formatter ? xAxis.formatter(v) : v
+        const formatVal = (x) => xAxis.formatter ? xAxis.formatter({x}) : x
 
         const getSubgroupLabel = (v) => subGroupLabels[v] || v
 
