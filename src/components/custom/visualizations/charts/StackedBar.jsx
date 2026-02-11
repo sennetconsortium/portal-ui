@@ -33,7 +33,7 @@ function StackedBar({
         toolTipHandlers,
         getSubgroupLabels,
         handleSvgSizing,
-        getTotalY,
+        svgAppend,
         appendTooltip } = useContext(VisualizationsContext)
 
 
@@ -49,10 +49,6 @@ function StackedBar({
         }
         return sum
     }
-
-    const showXLabels = () => xAxis.showLabels !== undefined ? xAxis.showLabels : true
-
-    const showYLabels = () => yAxis.showLabels !== undefined ? yAxis.showLabels : true
 
     const buildChart = () => {
 
@@ -91,49 +87,9 @@ function StackedBar({
             stackedSorted.push(subgroupsSorted)
         }
 
-        const getTicks = () => {
-            if (typeof yAxis.ticks === 'object') {
-                return yAxis.scaleLog ? yAxis.ticks.log : yAxis.ticks.linear
-            }
-            return yAxis.ticks
-        }
+        const {y, minY, ticks} = svgAppend({}).yAxis({data, g, yAxis, sizing, maxY})
 
-        const ticks = yAxis.scaleLog || yAxis.ticks ? getTicks() || 5 : undefined
-        const scaleMethod = yAxis.scaleLog ? d3.scaleLog : d3.scaleLinear
-        const minY = yAxis.scaleLog ? 1 : 0
-        const totalY = getTotalY(data)
-
-        // Add Y axis
-        const y = scaleMethod()
-            .domain([minY, maxY])
-            .nice()
-            .range([sizing.height - sizing.margin.bottom, sizing.margin.top]);
-        g.append("g")
-            .call(d3.axisLeft(y).ticks(ticks).tickFormat((y) => yAxis.formatter ? yAxis.formatter({y, maxY, totalY}) : (y).toFixed()))
-
-        if (showYLabels()) {
-            svg.append("g")
-                .append("text")
-                .style("font-size", sizing.font.title)
-                .attr("class", "y label")
-                .attr("text-anchor", "start")
-                .attr("y", yAxis.labelPadding || 40)
-                .attr("x", ((sizing.height+sizing.margin.bottom)/2) * -1)
-                .attr("dy", ".74em")
-                .attr("transform", "rotate(-90)")
-                .text(yAxis.label || "Frequency")
-        }
-
-        if (xAxis.label && showXLabels()) {
-            svg.append("g")
-                .append("text")
-                .style("font-size", sizing.font.title)
-                .attr("class", "x label")
-                .attr("text-anchor", "middle")
-                .attr("x", (sizing.width / 2) + sizing.margin.left)
-                .attr("y", sizing.height + sizing.margin.bottom * .5)
-                .text(xAxis.label)
-        }
+        svgAppend({xAxis, yAxis}).axisLabels({svg, sizing})    
 
         // color palette = one color per subgroup
         const colorScale = d3.scaleOrdinal(style.colorScheme || d3.schemeCategory10)
@@ -142,30 +98,10 @@ function StackedBar({
 
         const getSubgroupLabel = (v) => subGroupLabels[v] || v
 
-        g.append("g")
-            .selectAll(".y-grid")
-            .data(y.ticks(ticks))
-            .enter().append("line")
-            .attr("class", "y-grid")
-            .attr("x1", 0)
-            .attr("y1", d => Math.ceil(y(d)))
-            .attr("x2", sizing.width)
-            .attr("y2", d => Math.ceil(y(d)))
-            .style("stroke", "#eee") // Light gray
-            .style("stroke-width", "1px")
+        svgAppend({}).grid({g, y, hideGrid: yAxis.hideGrid, ticks, sizing})
 
         // Add X axis
-        const x = d3.scaleBand()
-            .domain(groups)
-            .range([0, sizing.width])
-            .padding([0.2])
-
-        g.append("g")
-            .attr("transform", `translate(0, ${sizing.height - sizing.margin.bottom})`)
-            .call(d3.axisBottom(x))
-            .selectAll("text")
-            .style("display", showXLabels() ? "block" : "none")
-            .style("font-size", "11px")
+        const {x} = svgAppend({xAxis}).xAxis({g, groups, sizing})
 
         // Show the bars
         g.append("g")

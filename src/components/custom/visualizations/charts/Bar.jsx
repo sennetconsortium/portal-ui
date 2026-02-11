@@ -21,6 +21,7 @@ function Bar({
         getChartSelector,
         toolTipHandlers,
         handleSvgSizing,
+        svgAppend,
         appendTooltip } = useContext(VisualizationsContext)
 
     const chartType = 'bar'
@@ -32,8 +33,6 @@ function Bar({
     }
 
     const showXLabels = () => xAxis.showLabels !== undefined ? xAxis.showLabels : true
-
-    const showYLabels = () => yAxis.showLabels !== undefined ? yAxis.showLabels : true
 
     const buildChart = () => {
         let names 
@@ -74,15 +73,7 @@ function Bar({
         const colorScale = d3.scaleOrdinal(style.colorScheme || d3.schemeCategory10)
 
         // Bar must have a minimum height to be able to click. 2% of the max value seems good
-        const maxY = d3.max(data, (d) => d.value);
-        const yStartPos = yAxis.scaleLog ? 1 : (-(maxY * .02))
-        const yDomain = [yStartPos, maxY]
-        const ticks = yAxis.scaleLog || yAxis.ticks ? yAxis.ticks || 3 : undefined
-
-        // Declare the y (vertical position) scale.
-        let y = yAxis.scaleLog ? d3.scaleLog()
-            .domain(yDomain).nice() : d3.scaleLinear().domain(yDomain)
-           y = y.range([sizing.height - sizing.margin.bottom, sizing.margin.top]);
+        const maxY = d3.max(data, (d) => d.value)
 
         // Create the SVG container.
         const svg = d3.create("svg")
@@ -93,22 +84,13 @@ function Bar({
             .attr("transform", `translate(${sizing.margin.left * 1.5},${sizing.margin.top})`)
 
         // Declare the x (horizontal position) scale.
-        const x = d3.scaleBand()
-            .domain(names) // descending value
-            .range([0, sizing.width])
-            .padding(0.3);
+        const {x, xAxisLabels} = svgAppend({xAxis}).xAxis({g, groups: names, sizing})
 
-        g.append("g")
-            .selectAll(".y-grid")
-            .data(y.ticks(ticks))
-            .enter().append("line")
-            .attr("class", "y-grid")
-            .attr("x1", 0)
-            .attr("y1", d => Math.ceil(y(d)))
-            .attr("x2", sizing.width)
-            .attr("y2", d => Math.ceil(y(d)))
-            .style("stroke", "#eee") // Light gray
-            .style("stroke-width", "1px")
+        // Add the y-axis and label, and remove the domain line.
+        const {y, minY, ticks} = svgAppend({}).yAxis({data, g, yAxis, sizing, maxY})
+        
+
+        svgAppend({}).grid({g, y, hideGrid: yAxis.hideGrid, ticks, sizing})
 
         // Add a rect for each bar.
         g.append("g")
@@ -123,24 +105,11 @@ function Bar({
                 colors[d.label] = { color, value: yAxis.formatter ? yAxis.formatter({y: d.value}) : d.value, label: d.label };
                 return color;
             })
-            .attr("y", (d) => y(yStartPos))
+            .attr("y", (d) => y(minY))
             .attr("height", (d) => 0)
             .attr("width", x.bandwidth())
-            .on("click", function (event, d) {
-                if (onSectionClick) {
-                    onSectionClick(d.label)
-                }
-            });
-
-    
-        // Add the x-axis and label.
-        const xAxisLabels = g.append("g")
-            .attr("transform", `translate(0, ${sizing.height - sizing.margin.bottom})`)
-            .call(d3.axisBottom(x))
-                .selectAll("text")
-                .style("display", showXLabels() ? "block" : "none")
-                .style("font-size", "11px")
-                
+          
+      
         if (xAxis.rotateLabels) {
             xAxisLabels.style("text-anchor", "end")
                 .attr("dx", "-0.8em")
@@ -151,41 +120,14 @@ function Bar({
                 });
         }
 
-        // Add the y-axis and label, and remove the domain line.
-        g.append("g")
-            
-            .call(d3.axisLeft(y).ticks(ticks).tickFormat((y) => yAxis.formatter ? yAxis.formatter({y, maxY}) : (y).toFixed()))
-
-        if (showYLabels()) {
-            svg.append("g")
-                .append("text")
-                .style("font-size", sizing.font.title)
-                .attr("class", "y label")
-                .attr("text-anchor", "start")
-                .attr("y",  yAxis.labelPadding || 40)
-                .attr("x", ((sizing.height+sizing.margin.bottom)/2) * -1)
-                .attr("dy", ".74em")
-                .attr("transform", "rotate(-90)")
-                .text(yAxis.label || "Frequency")
-        }
-            
-        if (xAxis.label && showXLabels()) {
-            svg.append("g")
-                .append("text")
-                .style("font-size", sizing.font.title)
-                .attr("class", "x label")
-                .attr("text-anchor", "middle")
-                .attr("x", (sizing.width + sizing.margin.X)  / 2)
-                .attr("y", sizing.height + sizing.margin.bottom * .5)
-                .text(xAxis.label)
-        }
+        svgAppend({xAxis, yAxis}).axisLabels({svg, sizing}) 
 
         // Animation
         svg.selectAll("rect")
             .transition()
             .duration(800)
             .attr("y", (d) => y(d.value))
-            .attr("height", function (d) { return y(yStartPos) - y(d.value); })
+            .attr("height", function (d) { return y(minY) - y(d.value); })
             .delay(function (d, i) { return (i * 100) })
 
         svg.selectAll("rect")

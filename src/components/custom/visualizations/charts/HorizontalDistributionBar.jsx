@@ -21,6 +21,7 @@ function HorizontalDistributionBar({
         getSubgroupLabels,
         addHighlightToolTip,
         handleSvgSizing,
+        svgAppend,
         appendTooltip } = useContext(VisualizationsContext)
 
 
@@ -37,10 +38,6 @@ function HorizontalDistributionBar({
         return sum
     }
 
-    const showXLabels = () => xAxis.showLabels !== undefined ? xAxis.showLabels : true
-
-    const showYLabels = () => yAxis.showLabels !== undefined ? yAxis.showLabels : true
-
     const buildChart = () => {
 
        
@@ -48,8 +45,6 @@ function HorizontalDistributionBar({
 
         // append the svg object to the body of the page
         const svg = d3.create("svg")
-            // .attr("width", sizing.width + sizing.margin.X)
-            // .attr("height", sizing.height + sizing.margin.Y)
             .attr("viewBox", [0, 0, sizing.width + sizing.margin.X * 1.1, sizing.height + sizing.margin.Y * 1.5])
         
 
@@ -94,27 +89,7 @@ function HorizontalDistributionBar({
             .attr("transform", `translate(0, ${sizing.height})`)
             .call(d3.axisBottom(x).ticks(ticks))
 
-        if (showYLabels()) {
-            svg.append("g")
-                .append("text")
-                .attr("class", "y label")
-                .attr("text-anchor", "end")
-                .attr("y", yAxis.labelPadding || 0)
-                .attr("x", (sizing.height / 2) * -1)
-                .attr("dy", ".74em")
-                .attr("transform", "rotate(-90)")
-                .text(yAxis.label || "Frequency")
-        }
-
-        if (xAxis.label && showXLabels()) {
-            svg.append("g")
-                .append("text")
-                .attr("class", "x label")
-                .attr("text-anchor", "middle")
-                .attr("x", (sizing.width / 2) + sizing.margin.left)
-                .attr("y", sizing.height * 1.3)
-                .text(xAxis.label)
-        }
+        svgAppend({xAxis, yAxis}).axisLabels({svg, sizing})   
 
         // color palette = one color per subgroup
         const colorScale = d3.scaleOrdinal(style.colorScheme || d3.schemeCategory10)
