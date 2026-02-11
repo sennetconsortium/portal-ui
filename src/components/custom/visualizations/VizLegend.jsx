@@ -109,7 +109,7 @@ function VizLegend({isFilterable, title, legend, onItemClick, onItemHover, label
                 </SenNetPopover>}
             </div>
             {isFilterable && <div className='mb-2 input-group'>
-              <input id="form-filter" className="form-control" type="search" onKeyDown={handleOnKeyDown} />
+              <input id="form-filter" className="form-control" type="search" onChange={filterLegend} onKeyDown={handleOnKeyDown} />
               <button onClick={(e) => filterLegend(e)} className="btn btn-outline-secondary" type="button" arai-label="Search" id="button-addon2"><i className="bi bi-search"></i></button>
             </div>}
             <ul className='c-vizLegend__list'>
