@@ -58,11 +58,11 @@ function GroupedBar({
         const svg = d3.create("svg")
             // .attr("width", sizing.width + sizing.margin.X)
             // .attr("height", sizing.height + sizing.margin.Y)
-            .attr("viewBox", [0, 0, sizing.width + sizing.margin.X, sizing.height + (sizing.margin.Y * 1.3)])
+            .attr("viewBox", [0, 0, sizing.width + sizing.margin.X, sizing.height + (sizing.margin.Y)])
 
         const g = svg
             .append("g")
-            .attr("transform", `translate(${sizing.margin.left * 1.5},${sizing.margin.top + 50})`)
+            .attr("transform", `translate(${sizing.margin.left * 1.5},${sizing.margin.top})`)
 
         subGroupLabels = getSubgroupLabels(data, subGroupLabels)
 
@@ -77,8 +77,12 @@ function GroupedBar({
             .padding([0.2])
 
         g.append("g")
-            .attr("transform", `translate(0, ${sizing.height})`)
-            .call(d3.axisBottom(x).tickSize(0));
+            .attr("transform", `translate(0, ${sizing.height - sizing.margin.bottom})`)
+            .call(d3.axisBottom(x).tickSize(0))
+            .selectAll("text")
+            .style("display", showXLabels() ? "block" : "none")
+            .style("font-size", "11px")
+
 
         let maxY = 0;
         for (let d of data) {
@@ -101,7 +105,7 @@ function GroupedBar({
         // Add Y axis
         const y = scaleMethod()
             .domain([minY, maxY]).nice()
-            .range([sizing.height, 0])
+            .range([sizing.height - sizing.margin.bottom, sizing.margin.top])
 
         g.append("g")
             .call(d3.axisLeft(y).ticks(ticks).tickFormat((y) => yAxis.formatter ? yAxis.formatter({y, maxY}) : (y).toFixed()))
@@ -114,10 +118,11 @@ function GroupedBar({
         if (showYLabels()) {
             svg.append("g")
                 .append("text")
+                .style("font-size", sizing.font.title)
                 .attr("class", "y label")
-                .attr("text-anchor", "end")
+                .attr("text-anchor", "start")
                 .attr("y", yAxis.labelPadding || 40)
-                .attr("x", (sizing.height / 2) * -1)
+                .attr("x", ((sizing.height+sizing.margin.bottom)/2) * -1)
                 .attr("dy", ".74em")
                 .attr("transform", "rotate(-90)")
                 .text(yAxis.label || "Frequency")
@@ -126,10 +131,11 @@ function GroupedBar({
         if (xAxis.label && showXLabels()) {
             svg.append("g")
                 .append("text")
+                .style("font-size", sizing.font.title)
                 .attr("class", "x label")
                 .attr("text-anchor", "middle")
                 .attr("x", (sizing.width + sizing.margin.X) / 2)
-                .attr("y", sizing.height + sizing.margin.Y * 1.2)
+                .attr("y", sizing.height + sizing.margin.bottom * .5)
                 .text(xAxis.label)
         }
 
@@ -140,7 +146,8 @@ function GroupedBar({
 
         const getSubgroupLabel = (v) => subGroupLabels[v] || v
 
-        g.selectAll(".y-grid")
+        g.append("g")
+        .selectAll(".y-grid")
             .data(y.ticks(ticks))
             .enter().append("line")
             .attr("class", "y-grid")
@@ -178,7 +185,7 @@ function GroupedBar({
             })
             .attr("class", d => `bar--${getSubgroupLabel(d.key).toDashedCase()}`)
             .attr("x", d => xSubgroup(d.key))
-            .attr("y", sizing.height)
+            .attr("y", y(minY))
             .attr("height", 0)
             .attr("width", xSubgroup.bandwidth())
             .append("title")
@@ -196,7 +203,7 @@ function GroupedBar({
             .transition()
             .duration(800)
             .attr("height", d => {
-                return sizing.height - y(d.val)
+                return y(minY) - y(d.val)
             })
             .attr("y", d => {
                 return y(d.val)

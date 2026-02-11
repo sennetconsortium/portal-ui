@@ -79,20 +79,24 @@ export default function CellTypeDistribution({ clId }) {
 
     const yAxis = { label: 'Cell Count', formatter: ({ y }) => formatNum(y) }
     const xAxis = {
+        rotateLabels: false,
         label: 'Organ',
         description: `Bar chart showing distribution of cell type ${clId} across organs.`
     }
 
     return (
         <VisualizationsProvider>
-            <ChartContainer
-                data={chartData}
-                chartId={'cellTypeDistribution'}
-                xAxis={xAxis}
-                yAxis={yAxis}
-                chartType={'bar'}
-                style={{ height: 600 }}
-            />
+            <div className='w-85'>
+                <ChartContainer
+                    data={chartData}
+                    chartId={'cellTypeDistribution'}
+                    xAxis={xAxis}
+                    yAxis={yAxis}
+                    chartType={'bar'}
+                    style={{ height: 420 }}
+                />
+            </div>
+            
         </VisualizationsProvider>
     )
 }

@@ -63,17 +63,12 @@ function Bar({
             });
             tempSvg.remove();
 
-            // Adjust the bottom margin and height to not cut off the labels.
-            sizing.margin.bottom = sizing.margin.bottom + maxLabelWidth * Math.sin(Math.PI / 4);
-            sizing.height = sizing.height + maxLabelWidth * Math.sin(Math.PI / 4);
+            if (xAxis.rotateLabels) {
+                // Adjust the bottom margin and height to not cut off the labels.
+                sizing.margin.bottom = sizing.margin.bottom + maxLabelWidth * Math.sin(Math.PI / 4);
+                sizing.height = sizing.height + maxLabelWidth * Math.sin(Math.PI / 4);
+            }
         }
-
-        // Declare the x (horizontal position) scale.
-        const x = d3.scaleBand()
-            .domain(names) // descending value
-            .range([sizing.margin.left, sizing.width + sizing.margin.left])
-            .padding(0.3);
-
 
         // Create the color scale.
         const colorScale = d3.scaleOrdinal(style.colorScheme || d3.schemeCategory10)
@@ -87,26 +82,30 @@ function Bar({
         // Declare the y (vertical position) scale.
         let y = yAxis.scaleLog ? d3.scaleLog()
             .domain(yDomain).nice() : d3.scaleLinear().domain(yDomain)
-
            y = y.range([sizing.height - sizing.margin.bottom, sizing.margin.top]);
 
         // Create the SVG container.
         const svg = d3.create("svg")
-            // .attr("width", sizing.width + sizing.margin.X)
-            // .attr("height", sizing.height + sizing.margin.Y)
-            .attr("viewBox", [0, 0, sizing.width + sizing.margin.X, sizing.height + (sizing.margin.bottom)])
+            .attr("viewBox", [0, 0, sizing.width + sizing.margin.X, sizing.height + sizing.margin.Y])
 
         const g = svg
             .append("g")
-            .attr("transform", `translate(${sizing.margin.left/2},${sizing.margin.top+50})`)
+            .attr("transform", `translate(${sizing.margin.left * 1.5},${sizing.margin.top})`)
 
-        g.selectAll(".y-grid")
+        // Declare the x (horizontal position) scale.
+        const x = d3.scaleBand()
+            .domain(names) // descending value
+            .range([0, sizing.width])
+            .padding(0.3);
+
+        g.append("g")
+            .selectAll(".y-grid")
             .data(y.ticks(ticks))
             .enter().append("line")
             .attr("class", "y-grid")
-            .attr("x1", sizing.margin.left)
+            .attr("x1", 0)
             .attr("y1", d => Math.ceil(y(d)))
-            .attr("x2", sizing.width + sizing.margin.left)
+            .attr("x2", sizing.width)
             .attr("y2", d => Math.ceil(y(d)))
             .style("stroke", "#eee") // Light gray
             .style("stroke-width", "1px")
@@ -125,7 +124,7 @@ function Bar({
                 return color;
             })
             .attr("y", (d) => y(yStartPos))
-            .attr("height", (d) => y(yStartPos) - y(yStartPos))
+            .attr("height", (d) => 0)
             .attr("width", x.bandwidth())
             .on("click", function (event, d) {
                 if (onSectionClick) {
@@ -135,32 +134,36 @@ function Bar({
 
     
         // Add the x-axis and label.
-        g.append("g")
+        const xAxisLabels = g.append("g")
             .attr("transform", `translate(0, ${sizing.height - sizing.margin.bottom})`)
-            .call(d3.axisBottom(x).tickSizeOuter(0))
+            .call(d3.axisBottom(x))
                 .selectAll("text")
                 .style("display", showXLabels() ? "block" : "none")
-                .style("text-anchor", "end")
                 .style("font-size", "11px")
+                
+        if (xAxis.rotateLabels) {
+            xAxisLabels.style("text-anchor", "end")
                 .attr("dx", "-0.8em")
                 .attr("dy", "0.15em")
                 .attr("transform", "rotate(-45)")
                 .text(function (d) {
                     return truncateLabel(d);
                 });
+        }
 
         // Add the y-axis and label, and remove the domain line.
         g.append("g")
-            .attr("transform", `translate(${sizing.margin.left},0)`)
+            
             .call(d3.axisLeft(y).ticks(ticks).tickFormat((y) => yAxis.formatter ? yAxis.formatter({y, maxY}) : (y).toFixed()))
 
         if (showYLabels()) {
             svg.append("g")
                 .append("text")
+                .style("font-size", sizing.font.title)
                 .attr("class", "y label")
-                .attr("text-anchor", "end")
+                .attr("text-anchor", "start")
                 .attr("y",  yAxis.labelPadding || 40)
-                .attr("x", (sizing.height / 3) * -1)
+                .attr("x", ((sizing.height+sizing.margin.bottom)/2) * -1)
                 .attr("dy", ".74em")
                 .attr("transform", "rotate(-90)")
                 .text(yAxis.label || "Frequency")
@@ -169,10 +172,11 @@ function Bar({
         if (xAxis.label && showXLabels()) {
             svg.append("g")
                 .append("text")
+                .style("font-size", sizing.font.title)
                 .attr("class", "x label")
                 .attr("text-anchor", "middle")
                 .attr("x", (sizing.width + sizing.margin.X)  / 2)
-                .attr("y", sizing.height + sizing.margin.bottom * .8)
+                .attr("y", sizing.height + sizing.margin.bottom * .5)
                 .text(xAxis.label)
         }
 

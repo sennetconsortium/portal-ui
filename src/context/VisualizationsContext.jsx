@@ -123,7 +123,7 @@ export const VisualizationsProvider = ({ children, options = {} }) => {
         let divHeight = style.height || minHeight
         const margin = { top: 10, right: 30, bottom: 40, left: 80, ...(style.margin || {}) };
             
-        const marginY = (margin.top + margin.bottom) * 2
+        const marginY = (margin.top + margin.bottom)
         const marginX = (margin.left + margin.right) * 2
         const width = divWidth - marginX,
             height = divHeight - marginY;
@@ -135,7 +135,9 @@ export const VisualizationsProvider = ({ children, options = {} }) => {
             bottom: margin.bottom,
             right: margin.right,
             left: margin.left
-        }}
+            },
+            font: style.fontSize || {title: '16px'}
+        }
     }
 
     const addHighlightToolTip = (id, highlight, chart = 'bar') => {
