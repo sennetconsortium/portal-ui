@@ -60,21 +60,21 @@ const ChartOverview = memo(({ subGroupLabels, visualizationData }) => {
         }
         const label = ops.label
     
-        const html = `<div"><span class="fs-6">${currentGroup}</span>
-            <span><em>${label}</em>: <strong>${ops.value} (${percentage(current, total)}%)</strong></span>
+        const html = `<div"><span class="fs-6 text-secondary">${currentGroup}</span>
+            <span class="fs-6"><em>${label}</em>: <strong>${ops.value} (${percentage(current, total)}%)</strong></span>
             <span><em>Other cell types</em>: <strong>${formatNum(total - current)} (${percentage(total - current, total)}%)</strong></span>
             <span><em>Total</em>: <strong>${formatNum(total)}</strong></span>
             </div>`
 
         ops.tooltip.getD3(ops.id)
-            .style('left', ops.xPos + 'px')
-            .style('top', ops.yPos - 60 + 'px')
+            .style('left', ops.xPos + 30 + 'px')
+            .style('top', ops.yPos - 30 + 'px')
             .attr('class', 'c-visualizations__tooltip c-visualizations__tooltip--multiLine')
             .html(html)
     }
 
     const yAxis = { label: "Cell Count", formatter: isPercentage ? yAxisFormatter : null, scaleLog: isLogScale, showLabels: true, ticks: {linear: 10, log: 4} }
-    const xAxis = { formatter: formatNum, label: `Organs`, showLabels: true }
+    const xAxis = { formatter: ({x}) => formatNum(x), label: `Organs`, showLabels: true }
     console.log(subGroupLabels.current)
 
     return (<VisualizationsProvider options={{ onRectClick, onSetToolTipContent }}>
