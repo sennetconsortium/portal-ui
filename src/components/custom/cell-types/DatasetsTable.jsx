@@ -8,9 +8,9 @@ import { useMemo, useState } from 'react'
 import Form from 'react-bootstrap/Form'
 import DataTable from 'react-data-table-component'
 
-function DatasetsTabGroup({ clId, cellLabel }) {
+function DatasetsTable({ clId, cellLabel }) {
     const query = {
-        size: 500,
+        size: 10000,
         _source: [
             'dataset.uuid',
             'dataset.sennet_id',
@@ -177,7 +177,7 @@ function DatasetsTabGroup({ clId, cellLabel }) {
         <div className='d-flex flex-column gap-3'>
             <Form.Select
                 aria-label='cell-type dataset filter'
-                className='w-auto'
+                style={{ width: 'fit-content' }}
                 onChange={(e) => setSelectedSubset(e.target.value)}
                 value={selectedSubset}
             >
@@ -193,4 +193,4 @@ function DatasetsTabGroup({ clId, cellLabel }) {
     )
 }
 
-export default DatasetsTabGroup
+export default DatasetsTable
