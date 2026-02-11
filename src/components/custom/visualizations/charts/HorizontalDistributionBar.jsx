@@ -128,7 +128,6 @@ function HorizontalDistributionBar({
             // enter a second time = loop subgroup per subgroup to add all rectangles
             .data(D => D.map(d => (d.key = D.key, d)))
             .join("rect")
-            
             .attr('data-value', d => {
                 return formatVal(d.data[d.key])
             })

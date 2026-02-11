@@ -136,6 +136,7 @@ export const VisualizationsProvider = ({ children, options = {} }) => {
             right: margin.right,
             left: margin.left
             },
+            isMobile: width < 500,
             font: style.fontSize || {title: '16px'}
         }
     }
@@ -143,6 +144,10 @@ export const VisualizationsProvider = ({ children, options = {} }) => {
     const svgAppend = ({xAxis, yAxis}) => {
         const showXLabels = () => xAxis.showLabels !== undefined ? xAxis.showLabels : true
         const showYLabels = () => yAxis.showLabels !== undefined ? yAxis.showLabels : true
+
+        const truncateLabel = (label) => {
+            return label.length > 30 ? label.substring(0, 27) + "..." : label;
+        }
 
         return {
             xAxis: ({g, groups, sizing}) => {
@@ -158,6 +163,17 @@ export const VisualizationsProvider = ({ children, options = {} }) => {
                     .selectAll("text")
                     .style("display", showXLabels() ? "block" : "none")
                     .style("font-size", "11px")
+
+                const rotateLabels = xAxis.rotateLabels || sizing.isMobile
+                if (rotateLabels) {
+                    xAxisLabels.style("text-anchor", "end")
+                        .attr("dx", "-0.8em")
+                        .attr("dy", "0.15em")
+                        .attr("transform", "rotate(-45)")
+                        .text(function (d) {
+                            return truncateLabel(d);
+                        });
+                }
 
                 return {x, xAxisLabels}
             },
@@ -223,6 +239,30 @@ export const VisualizationsProvider = ({ children, options = {} }) => {
                         .attr("y", sizing.height + sizing.margin.bottom * .5)
                         .text(xAxis.label)
                 }
+            },
+            adjustMargin: ({groups, sizing, rotateLabels}) => {
+                
+                if (showXLabels() && rotateLabels) {
+                    // We need to calculate the maximum label width to adjust for the label being at 45 degrees.
+                    const tempSvg = d3.select("body").append("svg").attr("class", "temp-svg").style("visibility", "hidden");
+                    let maxLabelWidth = 0;
+                    groups.forEach(name => {
+                        const truncName = truncateLabel(name);
+                        const textElement = tempSvg.append("text").text(truncName).style("font-size", "11px");
+                        const bbox = textElement.node().getBBox();
+                        if (bbox.width > maxLabelWidth) {
+                            maxLabelWidth = bbox.width;
+                        }
+                        textElement.remove();
+                    });
+                    tempSvg.remove();
+
+                    // Adjust the bottom margin and height to not cut off the labels.
+                    sizing.margin.bottom = sizing.margin.bottom + maxLabelWidth * Math.sin(Math.PI / 6);
+                    sizing.height = sizing.height + maxLabelWidth * Math.sin(Math.PI / 4);
+                    
+                }
+                return {truncateLabel}
             }
 
         }

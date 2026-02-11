@@ -28,9 +28,7 @@ function Bar({
     const colors = {}
     const chartData = useRef([])
 
-    const truncateLabel = (label) => {
-        return label.length > 30 ? label.substring(0, 27) + "..." : label;
-    }
+    
 
     const showXLabels = () => xAxis.showLabels !== undefined ? xAxis.showLabels : true
 
@@ -46,28 +44,9 @@ function Bar({
     
         // Declare the chart dimensions and margins.
         const sizing = handleSvgSizing(style, chartId, chartType)
+        const rotateLabels = xAxis.rotateLabels || sizing.isMobile
 
-        if (showXLabels()) {
-            // We need to calculate the maximum label width to adjust for the label being at 45 degrees.
-            const tempSvg = d3.select("body").append("svg").attr("class", "temp-svg").style("visibility", "hidden");
-            let maxLabelWidth = 0;
-            names.forEach(name => {
-                const truncName = truncateLabel(name);
-                const textElement = tempSvg.append("text").text(truncName).style("font-size", "11px");
-                const bbox = textElement.node().getBBox();
-                if (bbox.width > maxLabelWidth) {
-                    maxLabelWidth = bbox.width;
-                }
-                textElement.remove();
-            });
-            tempSvg.remove();
-
-            if (xAxis.rotateLabels) {
-                // Adjust the bottom margin and height to not cut off the labels.
-                sizing.margin.bottom = sizing.margin.bottom + maxLabelWidth * Math.sin(Math.PI / 4);
-                sizing.height = sizing.height + maxLabelWidth * Math.sin(Math.PI / 4);
-            }
-        }
+        svgAppend({xAxis}).adjustMargin({groups: names, sizing, rotateLabels})
 
         // Create the color scale.
         const colorScale = d3.scaleOrdinal(style.colorScheme || d3.schemeCategory10)
@@ -110,15 +89,7 @@ function Bar({
             .attr("width", x.bandwidth())
           
       
-        if (xAxis.rotateLabels) {
-            xAxisLabels.style("text-anchor", "end")
-                .attr("dx", "-0.8em")
-                .attr("dy", "0.15em")
-                .attr("transform", "rotate(-45)")
-                .text(function (d) {
-                    return truncateLabel(d);
-                });
-        }
+       
 
         svgAppend({xAxis, yAxis}).axisLabels({svg, sizing}) 
 

@@ -271,7 +271,7 @@ function DatasetsOverview({ clId }) {
             </div>
 
             {!loading ? (
-                <div className='d-flex flex-row w-100'>
+                <div className='d-lg-flex flex-row w-100'>
                     <ChartContainer
                         chartType='groupedBar'
                         containerClassName='flex-grow-1 mt-4'

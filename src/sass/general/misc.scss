@@ -39,8 +39,10 @@ p {
   float: right;
 }
 
-.w-85 {
+.w-lg-85 {
+  @include mixins.lg {
   width: 85%;
+  }
 }
 
 .tooltip-bulk-add-id {

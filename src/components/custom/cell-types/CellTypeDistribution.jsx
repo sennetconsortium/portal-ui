@@ -86,7 +86,7 @@ export default function CellTypeDistribution({ clId }) {
 
     return (
         <VisualizationsProvider>
-            <div className='w-85'>
+            <div className='w-lg-85'>
                 <ChartContainer
                     data={chartData}
                     chartId={'cellTypeDistribution'}
