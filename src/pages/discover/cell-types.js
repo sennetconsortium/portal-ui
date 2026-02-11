@@ -105,7 +105,7 @@ const ChartOverview = memo(({ subGroupLabels, visualizationData }) => {
                     onChange={changeScale} />
             </Stack>
             <span style={{width: '5%'}}>&nbsp;</span>
-            <Stack direction="row" spacing={0} sx={{ alignItems: 'center' }}>
+            {!isLogScale && <Stack direction="row" spacing={0} sx={{ alignItems: 'center' }}>
                 <span>Percentage&nbsp;</span>
                 <FormControlLabel
                     control={<Switch defaultChecked />}
@@ -117,7 +117,7 @@ const ChartOverview = memo(({ subGroupLabels, visualizationData }) => {
                         </sup>&nbsp;&nbsp;Total count
                     </span>}
                     onChange={changeTickFormat} />
-            </Stack>
+            </Stack>}
         </div>
         <ChartContainer style={{ className: 'c-visualizations--boxShadow', colorScheme: combinedColors  }} subGroupLabels={subGroupLabels.current} data={visualizationData} xAxis={xAxis} yAxis={yAxis} chartType={'stackedBar'} />
     </VisualizationsProvider>)

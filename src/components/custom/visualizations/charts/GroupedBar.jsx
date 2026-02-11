@@ -58,7 +58,7 @@ function GroupedBar({
         const svg = d3.create("svg")
             // .attr("width", sizing.width + sizing.margin.X)
             // .attr("height", sizing.height + sizing.margin.Y)
-            .attr("viewBox", [0, 0, sizing.width + sizing.margin.X, sizing.height + (sizing.margin.Y)])
+            .attr("viewBox", [0, 0, sizing.width + sizing.margin.X, sizing.height + sizing.margin.Y])
 
         const g = svg
             .append("g")
@@ -69,20 +69,6 @@ function GroupedBar({
         const subgroups = Object.keys(subGroupLabels)
 
         const groups = data.map(d => (d.group))
-
-        // Add X axis
-        const x = d3.scaleBand()
-            .domain(groups)
-            .range([0, sizing.width])
-            .padding([0.2])
-
-        g.append("g")
-            .attr("transform", `translate(0, ${sizing.height - sizing.margin.bottom})`)
-            .call(d3.axisBottom(x).tickSize(0))
-            .selectAll("text")
-            .style("display", showXLabels() ? "block" : "none")
-            .style("font-size", "11px")
-
 
         let maxY = 0;
         for (let d of data) {
@@ -109,11 +95,6 @@ function GroupedBar({
 
         g.append("g")
             .call(d3.axisLeft(y).ticks(ticks).tickFormat((y) => yAxis.formatter ? yAxis.formatter({y, maxY}) : (y).toFixed()))
-
-        var xSubgroup = d3.scaleBand()
-            .domain(subgroups)
-            .range([0, x.bandwidth()])
-            .padding([0.05])
 
         if (showYLabels()) {
             svg.append("g")
@@ -157,6 +138,25 @@ function GroupedBar({
             .attr("y2", d => Math.ceil(y(d)))
             .style("stroke", "#eee") // Light gray
             .style("stroke-width", "1px")
+
+        // Add X axis
+        const x = d3.scaleBand()
+            .domain(groups)
+            .range([0, sizing.width])
+            .padding([0.2])
+
+        g.append("g")
+            .attr("transform", `translate(0, ${sizing.height - sizing.margin.bottom})`)
+            .call(d3.axisBottom(x).tickSize(0))
+            .selectAll("text")
+            .style("display", showXLabels() ? "block" : "none")
+            .style("font-size", "11px")
+
+        var xSubgroup = d3.scaleBand()
+            .domain(subgroups)
+            .range([0, x.bandwidth()])
+            .padding([0.05])
+
 
         // Show the bars
         g.append("g")

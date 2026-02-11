@@ -82,7 +82,7 @@ function StackedBar({
             .padding([0.2])
 
         g.append("g")
-            .attr("transform", `translate(0, ${sizing.height})`)
+            .attr("transform", `translate(0, ${sizing.height - sizing.margin.bottom})`)
             .call(d3.axisBottom(x));
 
         let maxY = 0;
@@ -119,13 +119,14 @@ function StackedBar({
         const y = scaleMethod()
             .domain([minY, maxY])
             .nice()
-            .range([sizing.height, 0]);
+            .range([sizing.height - sizing.margin.bottom, sizing.margin.top]);
         g.append("g")
             .call(d3.axisLeft(y).ticks(ticks).tickFormat((y) => yAxis.formatter ? yAxis.formatter({y, maxY, totalY}) : (y).toFixed()))
 
         if (showYLabels()) {
             svg.append("g")
                 .append("text")
+                .style("font-size", sizing.font.title)
                 .attr("class", "y label")
                 .attr("text-anchor", "end")
                 .attr("y", yAxis.labelPadding || 0)
@@ -138,6 +139,7 @@ function StackedBar({
         if (xAxis.label && showXLabels()) {
             svg.append("g")
                 .append("text")
+                .style("font-size", sizing.font.title)
                 .attr("class", "x label")
                 .attr("text-anchor", "middle")
                 .attr("x", (sizing.width / 2) + sizing.margin.left)
@@ -152,7 +154,8 @@ function StackedBar({
 
         const getSubgroupLabel = (v) => subGroupLabels[v] || v
 
-        g.selectAll(".y-grid")
+        g.append("g")
+            .selectAll(".y-grid")
             .data(y.ticks(ticks))
             .enter().append("line")
             .attr("class", "y-grid")
@@ -187,7 +190,7 @@ function StackedBar({
             })
             .attr("class", d => `bar--${getSubgroupLabel(d.key).toDashedCase()}`)
             .attr("x", d => x(d.group))
-            .attr("y", sizing.height)
+            .attr("y", (sizing.height - sizing.margin.bottom))
             .attr("height", 0)
             .attr("width", x.bandwidth())
             .append("title")
@@ -205,7 +208,7 @@ function StackedBar({
             .transition()
             .duration(800)
             .attr("height", d => {
-                return sizing.height - y(d.val)
+                return (sizing.height - sizing.margin.bottom) - y(d.val)
             })
             .attr("y", d => {
                 return y(d.val)
