@@ -101,7 +101,7 @@ function VizLegend({isFilterable, title, legend, onItemClick, onItemHover, label
     }, [])
 
     return (
-        <div className={`c-vizLegend mb-4 ${!onItemClick ? 'c-legend--noHover' : ''}`}>
+        <div className={`c-vizLegend mb-4 ${!onItemClick ? 'c-vizLegend--noHover' : ''}`}>
             <div className='c-vizLegend__title'>
                 {title}
                 {legendToolTip && <SenNetPopover text={legendToolTip}>
