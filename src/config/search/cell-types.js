@@ -82,10 +82,10 @@ export const SEARCH_CELL_TYPES = {
             },
 
             // Source Human
-            'dataset.age.value': {
+            'dataset.age': {
                 label: 'Age',
                 type: 'range',
-                field: 'dataset.age.value',
+                field: 'dataset.age',
                 isExpanded: false,
                 filterType: 'any',
                 isFilterable: false,
@@ -95,13 +95,13 @@ export const SEARCH_CELL_TYPES = {
                     // Needs to check if entity_type:Source AND source_type:Human is selected
                     return true
                 },
-                isFacetVisible: doesAggregationHaveBuckets('dataset.age.value')
+                isFacetVisible: doesAggregationHaveBuckets('dataset.age')
             },
 
-            'source_metadata.race.value': {
+            'dataset.race': {
                 label: 'Race',
                 type: 'value',
-                field: 'source_metadata.race.value.keyword',
+                field: 'dataset.race.keyword',
                 isExpanded: false,
                 filterType: 'any',
                 isFilterable: false,
@@ -110,12 +110,12 @@ export const SEARCH_CELL_TYPES = {
                     // Needs to check if entity_type:Source AND source_type:Human is selected
                     return true
                 },
-                isFacetVisible: doesAggregationHaveBuckets('source_metadata.race.value')
+                isFacetVisible: doesAggregationHaveBuckets('dataset.race')
             },
-            'source_metadata.sex.value': {
+            'dataset.sex': {
                 label: 'Sex',
                 type: 'value',
-                field: 'source_metadata.sex.value.keyword',
+                field: 'dataset.sex.keyword',
                 isExpanded: false,
                 filterType: 'any',
                 isFilterable: false,
@@ -124,7 +124,7 @@ export const SEARCH_CELL_TYPES = {
                     // Needs to check if entity_type:Source AND source_type:Human is selected
                     return true
                 },
-                isFacetVisible: doesAggregationHaveBuckets('source_metadata.sex.value')
+                isFacetVisible: doesAggregationHaveBuckets('dataset.sex')
             },
         },
         disjunctiveFacets: [],
