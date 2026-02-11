@@ -177,7 +177,7 @@ function DatasetsTable({ clId, cellLabel }) {
         <div className='d-flex flex-column gap-3'>
             <Form.Select
                 aria-label='cell-type dataset filter'
-                className='w-auto'
+                style={{ width: 'fit-content' }}
                 onChange={(e) => setSelectedSubset(e.target.value)}
                 value={selectedSubset}
             >
