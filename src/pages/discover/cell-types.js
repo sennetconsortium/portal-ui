@@ -22,6 +22,8 @@ const Spinner = dynamic(() => import("../../components/custom/Spinner"))
 const ChartOverview = memo(({ subGroupLabels, visualizationData }) => {
     const [isLogScale, setIsLogScale] = useState(true)
     const [isPercentage, setIsPercentage] = useState(false)
+    const ticker = useRef(0)
+    const totalLinearTicks = 10
 
     const onRectClick = (eventData) => {
         Addon.log('onBarClick', { data: eventData })
@@ -36,8 +38,16 @@ const ChartOverview = memo(({ subGroupLabels, visualizationData }) => {
         setIsPercentage(!isPercentage)
     }
 
-    const yAxisFormatter = ({y, maxY}) => {
-        return percentage(y,  maxY) + '%'
+    const yAxisPercentageFormatter = ({y}) => {
+        if (y === 0) return '0%'
+        if (ticker.current === 0 && y !== 0) {
+            ticker.current = y * totalLinearTicks
+        }
+        return percentage(y,  ticker.current) + '%'
+    }
+
+    const yAxisTotalFormatter = ({y}) => {
+        return formatNum(y)
     }
 
     const combinedColors = d3.schemeDark2.concat(d3.schemeObservable10).concat(d3.schemePastel1).concat(d3.schemePaired);
@@ -73,7 +83,7 @@ const ChartOverview = memo(({ subGroupLabels, visualizationData }) => {
             .html(html)
     }
 
-    const yAxis = { label: "Cell Count", formatter: isPercentage ? yAxisFormatter : null, scaleLog: isLogScale, showLabels: true, ticks: {linear: 10, log: 4} }
+    const yAxis = { label: "Cell Count", formatter: isPercentage ? yAxisPercentageFormatter : yAxisTotalFormatter, scaleLog: isLogScale, showLabels: true, ticks: {linear: totalLinearTicks, log: 4} }
     const xAxis = { formatter: ({x}) => formatNum(x), label: `Organs`, showLabels: true }
     console.log(subGroupLabels.current)
 

@@ -83,7 +83,7 @@ function StackedBar({
 
         g.append("g")
             .attr("transform", `translate(0, ${sizing.height})`)
-            .call(d3.axisBottom(x).tickSizeOuter(0));
+            .call(d3.axisBottom(x));
 
         let maxY = 0;
         for (let d of data) {
@@ -118,6 +118,7 @@ function StackedBar({
         // Add Y axis
         const y = scaleMethod()
             .domain([minY, maxY])
+            .nice()
             .range([sizing.height, 0]);
         g.append("g")
             .call(d3.axisLeft(y).ticks(ticks).tickFormat((y) => yAxis.formatter ? yAxis.formatter({y, maxY, totalY}) : (y).toFixed()))
