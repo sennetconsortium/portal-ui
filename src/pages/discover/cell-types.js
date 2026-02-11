@@ -82,8 +82,8 @@ const ChartOverview = memo(({ subGroupLabels, visualizationData }) => {
             </div>`
 
         ops.tooltip.getD3(ops.id)
-            .style('left', ops.xPos + 30 + 'px')
-            .style('top', ops.yPos - 30 + 'px')
+            .style('left', ops.xPos + 40 + 'px')
+            .style('top', ops.yPos + 10 + 'px')
             .attr('class', 'c-visualizations__tooltip c-visualizations__tooltip--multiLine')
             .html(html)
     }
@@ -122,7 +122,7 @@ const ChartOverview = memo(({ subGroupLabels, visualizationData }) => {
                     onChange={changeTickFormat} />
             </Stack>}
         </div>
-        <ChartContainer style={{ className: 'c-visualizations--boxShadow', colorScheme: combinedColors  }} subGroupLabels={subGroupLabels.current} data={visualizationData} xAxis={xAxis} yAxis={yAxis} chartType={'stackedBar'} />
+        <ChartContainer style={{ className: 'c-visualizations--posInherit c-visualizations--boxShadow mt-3', colorScheme: combinedColors  }} subGroupLabels={subGroupLabels.current} data={visualizationData} xAxis={xAxis} yAxis={yAxis} chartType={'stackedBar'} />
     </VisualizationsProvider>)
 })
 
