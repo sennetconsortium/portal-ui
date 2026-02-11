@@ -33,6 +33,9 @@ const ChartOverview = memo(({ subGroupLabels, visualizationData }) => {
     }
 
     const changeScale = (e) => {
+        if (!isLogScale) {
+            setIsPercentage(false)
+        }
         setIsLogScale(!isLogScale)
     }
 
