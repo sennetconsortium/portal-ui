@@ -10,14 +10,16 @@ import { formatNum,  percentage } from "@/components/custom/js/functions";
 import { VisualizationsProvider } from "@/context/VisualizationsContext";
 import { prepareStackedData } from "@/components/custom/visualizations/charts/StackedBar";
 import { FormControlLabel, Switch } from "@mui/material";
+import Stack from '@mui/material/Stack';
 import { APP_ROUTES } from "@/config/constants";
 import { getOrganByCode } from "@/config/organs";
 import * as d3 from 'd3';
 import { Card } from "react-bootstrap";
+import SenNetPopover from "@/components/SenNetPopover";
 
-const AppNavbar = dynamic(() => import("../../components/custom/layout/AppNavbar"))
-const Header = dynamic(() => import("../../components/custom/layout/Header"))
-const Spinner = dynamic(() => import("../../components/custom/Spinner"))
+const AppNavbar = dynamic(() => import("@/components/custom/layout/AppNavbar"))
+const Header = dynamic(() => import("@/components/custom/layout/Header"))
+const Spinner = dynamic(() => import("@/components/custom/Spinner"))
 
 const ChartOverview = memo(({ subGroupLabels, visualizationData }) => {
     const [isLogScale, setIsLogScale] = useState(true)
@@ -88,8 +90,35 @@ const ChartOverview = memo(({ subGroupLabels, visualizationData }) => {
     console.log(subGroupLabels.current)
 
     return (<VisualizationsProvider options={{ onRectClick, onSetToolTipContent }}>
-        <FormControlLabel control={<Switch defaultChecked />} label="Log scale" onChange={changeScale} />
-        <FormControlLabel control={<Switch defaultChecked />} label="Total Count" onChange={changeTickFormat} />
+        <div className="d-flex">
+            <Stack direction="row" spacing={0} sx={{ alignItems: 'center' }}>
+                <span>Linear scale &nbsp;</span>
+                <FormControlLabel
+                    control={<Switch defaultChecked />}
+                    label={<span>
+                        <sup>
+                            <SenNetPopover text={<span>Toggle between linear and symmetric log scale for the counts. Symmetric log scale is useful for visualizing data with a wide range of values.</span>}>
+                                <i class="bi bi-info-circle"></i>
+                            </SenNetPopover>
+                        </sup>&nbsp;&nbsp;Log scale
+                    </span>}
+                    onChange={changeScale} />
+            </Stack>
+            <span style={{width: '5%'}}>&nbsp;</span>
+            <Stack direction="row" spacing={0} sx={{ alignItems: 'center' }}>
+                <span>Percentage&nbsp;</span>
+                <FormControlLabel
+                    control={<Switch defaultChecked />}
+                    label={<span>
+                        <sup>
+                            <SenNetPopover text={<span>Toggle between displaying data as raw counts or percentages.</span>}>
+                                <i class="bi bi-info-circle"></i>
+                            </SenNetPopover>
+                        </sup>&nbsp;&nbsp;Total count
+                    </span>}
+                    onChange={changeTickFormat} />
+            </Stack>
+        </div>
         <ChartContainer style={{ className: 'c-visualizations--boxShadow', colorScheme: combinedColors  }} subGroupLabels={subGroupLabels.current} data={visualizationData} xAxis={xAxis} yAxis={yAxis} chartType={'stackedBar'} />
     </VisualizationsProvider>)
 })
