@@ -128,7 +128,7 @@ function DatasetsTable({ clId, cellLabel }) {
             cell: (row, index, column, id) => {
                 return (
                     <span data-field='sennet_id'>
-                        <a href={`dataset?uuid=${row.uuid}`}>{row.sennetId}</a>{' '}
+                        <a href={`/dataset?uuid=${row.uuid}`}>{row.sennetId}</a>{' '}
                         <ClipboardCopy
                             text={row.sennetId}
                             title={'Copy SenNet ID {text} to clipboard'}
