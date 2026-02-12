@@ -52,13 +52,34 @@ const CellTypeDistributionAcrossOrgansTab = memo(({organ, tabData, cell}) => {
       
       ops.tooltip.getD3(ops.id)
           .html(html) 
+          .attr('data-left', ops.xPos)
           .attr('class', 'c-visualizations__tooltip c-visualizations__tooltip--flexWidth c-visualizations__tooltip--multiLine')
-          .style('left', ops.xPos + 'px')
+          .style('left', ops.xPos + 10 + 'px')
           .style('top', ops.yPos - 20 + 'px')
 
-      if ($(ops.tooltip.getSelector(ops.id)).height() > 70) {
+      const $el = $(ops.tooltip.getSelector(ops.id))
+      let height = $el.height()
+
+      if (height > 70) {
+        let targetLeft = ops.xPos - 10;
+        // position the tooltip to the far left to get a natural height based on screen width
         ops.tooltip.getD3(ops.id)
-          .style('top', ops.yPos - 60 + 'px')
+          .style('left', 0 + 'px')
+        const targetHeight = $el.height()
+
+        while (height > targetHeight) {
+          ops.tooltip.getD3(ops.id)
+            .style('left', targetLeft + 'px')
+            // move to the lef until reached natural height
+            targetLeft -= 10;
+            height = $el.height()
+        }
+
+      }
+
+      if ($el.height() > 70) {
+        ops.tooltip.getD3(ops.id)
+           .style('top', ops.yPos - 50 + 'px')
       }
           
           
