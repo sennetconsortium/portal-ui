@@ -39,6 +39,10 @@ p {
   float: right;
 }
 
+.w-65 {
+  width: 65%;
+}
+
 @include mixins.lg {
   .w-lg-85 {
     width: 85%;
