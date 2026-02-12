@@ -39,6 +39,12 @@ p {
   float: right;
 }
 
+@include mixins.lg {
+  .w-lg-85 {
+    width: 85%;
+  }
+}
+
 .tooltip-bulk-add-id {
   overflow: auto;
   max-height: 150px;

@@ -1,11 +1,12 @@
 import CellTypeDistribution from '@/components/custom/cell-types/CellTypeDistribution'
 import CellTypeDistributionAcrossOrgans from '@/components/custom/cell-types/CellTypeDistributionAcrossOrgans'
 import DatasetsOverview from '@/components/custom/cell-types/DatasetsOverview'
-import DatasetsTabGroup from '@/components/custom/cell-types/DatasetsTabGroup'
+import DatasetsTable from '@/components/custom/cell-types/DatasetsTable'
 import ViewHeader from '@/components/custom/cell-types/ViewHeader'
 import AppNavbar from '@/components/custom/layout/AppNavbar'
 import SenNetAccordion from '@/components/custom/layout/SenNetAccordion'
 import Spinner from '@/components/custom/Spinner'
+import { getCellTypesIndex } from '@/config/config'
 import AppContext from '@/context/AppContext'
 import useSearchUIQuery from '@/hooks/useSearchUIQuery'
 import dynamic from 'next/dynamic'
@@ -60,7 +61,7 @@ function ViewCellType() {
           }
         : null
 
-    const { data, loading, error } = useSearchUIQuery('cell-types', query)
+    const { data, loading, error } = useSearchUIQuery(getCellTypesIndex(), query)
 
     if (loading) {
         return <Spinner />
@@ -74,7 +75,9 @@ function ViewCellType() {
 
     return (
         <>
-            <Header title={`${clid} | ${data?.hits?.hits[0]?._source?.cell_label} | Cell Type | SenNet`}></Header>
+            <Header
+                title={`${clid} | ${data?.hits?.hits[0]?._source?.cell_label} | Cell Type | SenNet`}
+            ></Header>
 
             <AppNavbar hidden={isRegisterHidden} signoutHidden={false} />
 
@@ -175,7 +178,7 @@ function ViewCellType() {
                         <SenNetAccordion id='Datasets' title='Datasets'>
                             <Card border='0'>
                                 <Card.Body className='mx-auto w-100 mb-4'>
-                                    <DatasetsTabGroup
+                                    <DatasetsTable
                                         clId={clid}
                                         cellLabel={data?.hits?.hits[0]?._source?.cell_label}
                                     />

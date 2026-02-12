@@ -1,10 +1,11 @@
+import { getCellTypesIndex } from '@/config/config'
 import { getOrganByCode } from '@/config/organs'
 import { VisualizationsProvider } from '@/context/VisualizationsContext'
 import useSearchUIQuery from '@/hooks/useSearchUIQuery'
+import { useMemo } from 'react'
 import { formatNum } from '../js/functions'
 import Spinner from '../Spinner'
 import ChartContainer from '../visualizations/ChartContainer'
-import { useMemo } from 'react'
 
 /**
  * @typedef {object} CellTypeDistributionProps
@@ -38,9 +39,13 @@ export default function CellTypeDistribution({ clId }) {
         }
     }
 
-    const { data, loading, error } = useSearchUIQuery('cell-types', query)
+    const { data, loading, error } = useSearchUIQuery(getCellTypesIndex(), query)
 
     const chartData = useMemo(() => {
+        if (!data) {
+            return
+        }
+
         // combine buckets that are lateral organs
         const organs = {}
         data?.aggregations?.by_organ_code?.buckets?.forEach((bucket) => {
@@ -72,23 +77,26 @@ export default function CellTypeDistribution({ clId }) {
         return <div>Unable to load chart</div>
     }
 
-    const yAxis = { label: 'Cell Count', formatter: ({y}) => formatNum(y) }
+    const yAxis = { label: 'Cell Count', formatter: ({ y }) => formatNum(y) }
     const xAxis = {
-     
+        rotateLabels: false,
         label: 'Organ',
         description: `Bar chart showing distribution of cell type ${clId} across organs.`
     }
 
     return (
         <VisualizationsProvider>
-            <ChartContainer
-                data={chartData}
-                chartId={'cellTypeDistribution'}
-                xAxis={xAxis}
-                yAxis={yAxis}
-                chartType={'bar'}
-                style={{height: 600}}
-            />
+            <div className='w-lg-85'>
+                <ChartContainer
+                    data={chartData}
+                    chartId={'cellTypeDistribution'}
+                    xAxis={xAxis}
+                    yAxis={yAxis}
+                    chartType={'bar'}
+                    style={{ height: 420 }}
+                />
+            </div>
+            
         </VisualizationsProvider>
     )
 }

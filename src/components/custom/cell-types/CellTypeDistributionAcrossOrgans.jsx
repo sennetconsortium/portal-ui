@@ -1,10 +1,11 @@
+import { getCellTypesIndex } from '@/config/config'
 import { getOrganByCode } from '@/config/organs'
 import useSearchUIQuery from '@/hooks/useSearchUIQuery'
-import { useEffect, useState, useRef, memo } from 'react'
+import Image from 'next/image'
+import { memo, useEffect, useRef, useState } from 'react'
 import Nav from 'react-bootstrap/Nav'
 import Tab from 'react-bootstrap/Tab'
 import Spinner from '../Spinner'
-import Image from 'next/image'
 
 import CellTypeDistributionAcrossOrgansTab from './CellTypeDistributionAcrossOrgansTab'
 
@@ -105,7 +106,7 @@ const CellTypeDistributionAcrossOrgans = memo(({ cell }) => {
     }
 
     const [selectedTab, setSelectedTab] = useState(null)
-    const { data, loading, error } = useSearchUIQuery('cell-types', query)
+    const { data, loading, error } = useSearchUIQuery(getCellTypesIndex(), query)
     const query2 = JSON.parse(JSON.stringify(query))
     query2.query = { match_all: {} }
     query2.aggs.by_organ_code.aggs.by_cell_label.aggs = {
@@ -117,7 +118,7 @@ const CellTypeDistributionAcrossOrgans = memo(({ cell }) => {
         }
     }
 
-    const otherCellTypes = useSearchUIQuery('cell-types', query2)
+    const otherCellTypes = useSearchUIQuery(getCellTypesIndex(), query2)
 
     useEffect(() => {
         if (!data || selectedTab) {

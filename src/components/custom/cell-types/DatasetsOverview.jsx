@@ -1,9 +1,10 @@
+import Spinner from '@/components/custom/Spinner'
+import { getCellTypesIndex } from '@/config/config'
 import { VisualizationsProvider } from '@/context/VisualizationsContext'
 import { fetchSearchAPIEntities } from '@/lib/services'
 import { Object } from 'core-js'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Form } from 'react-bootstrap'
-import Spinner from '../Spinner'
 import ChartContainer from '../visualizations/ChartContainer'
 import VizLegend from '../visualizations/VizLegend'
 
@@ -62,16 +63,18 @@ const ageBins = [
 const fieldMap = {
     age: 'dataset.age',
     race: 'dataset.race.keyword',
-    sex: 'dataset.sex.keyword'
+    sex: 'dataset.sex.keyword',
+    organ: 'organs.term.keyword'
 }
 
 const yAxisMap = {
     datasets: 'dataset.uuid.keyword',
-    organs: 'organs.term.keyword'
+    sources: 'source_uuids.keyword'
 }
 
 function DatasetsOverview({ clId }) {
     const [data, setData] = useState(null)
+    const [counts, setCounts] = useState(null)
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState()
     const [selectedXAxis, setSelectedXAxis] = useState('age')
@@ -106,6 +109,16 @@ function DatasetsOverview({ clId }) {
                     }
                 },
                 aggs: {
+                    dataset_count: {
+                        cardinality: {
+                            field: 'dataset.uuid.keyword'
+                        }
+                    },
+                    source_count: {
+                        cardinality: {
+                            field: 'source_uuids.keyword'
+                        }
+                    },
                     compare_by: {
                         aggs: {
                             x_axis: {
@@ -149,8 +162,12 @@ function DatasetsOverview({ clId }) {
             }
 
             try {
-                const res = await fetchSearchAPIEntities(query, 'cell-types')
+                const res = await fetchSearchAPIEntities(query, getCellTypesIndex())
                 setData(res)
+                setCounts({
+                    datasets: res.aggregations.dataset_count.value,
+                    sources: res.aggregations.source_count.value
+                })
             } catch (err) {
                 setError(err)
             } finally {
@@ -229,7 +246,7 @@ function DatasetsOverview({ clId }) {
                     >
                         {Object.keys(yAxisMap).map((key) => (
                             <option key={key} value={key}>
-                                {titalize(key)}
+                                {`${titalize(key)} (${counts[key]})`}
                             </option>
                         ))}
                     </Form.Select>
@@ -254,10 +271,10 @@ function DatasetsOverview({ clId }) {
             </div>
 
             {!loading ? (
-                <div className='d-flex flex-row w-100'>
+                <div className='d-lg-flex flex-row w-100'>
                     <ChartContainer
                         chartType='groupedBar'
-                        containerClassName='flex-grow-1'
+                        containerClassName='flex-grow-1 mt-4'
                         data={chartData.groups}
                         setLegend={setLegend}
                         subGroupLabels={chartData.labels}
@@ -269,7 +286,11 @@ function DatasetsOverview({ clId }) {
                             formatter: ({ y, maxY }) => (y % 1 === 0 ? y : '')
                         }}
                     />
-                    <VizLegend legend={legend} legendToolTip={null} />
+                    <VizLegend
+                        legend={legend}
+                        legendToolTip={null}
+                        title={`${titalize(selectedYAxis)} (${counts[selectedYAxis]} total)`}
+                    />
                 </div>
             ) : (
                 <Spinner />

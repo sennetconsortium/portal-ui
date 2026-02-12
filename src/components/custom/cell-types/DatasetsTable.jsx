@@ -1,16 +1,16 @@
 import ClipboardCopy from '@/components/ClipboardCopy'
 import Spinner from '@/components/custom/Spinner'
+import { getCellTypesIndex } from '@/config/config'
 import { getOrganByCode } from '@/config/organs'
 import useSearchUIQuery from '@/hooks/useSearchUIQuery'
 import Image from 'next/image'
-import { useMemo, useRef, useState } from 'react'
-import Nav from 'react-bootstrap/Nav'
-import Tab from 'react-bootstrap/Tab'
+import { useMemo, useState } from 'react'
+import Form from 'react-bootstrap/Form'
 import DataTable from 'react-data-table-component'
 
-function DatasetsTabGroup({ clId, cellLabel }) {
+function DatasetsTable({ clId, cellLabel }) {
     const query = {
-        size: 500,
+        size: 10000,
         _source: [
             'dataset.uuid',
             'dataset.sennet_id',
@@ -26,18 +26,17 @@ function DatasetsTabGroup({ clId, cellLabel }) {
             }
         }
     }
-    const allTabKey = 'all'
+    const allKey = 'all'
 
-    const { data, loading, error } = useSearchUIQuery('cell-types', query)
-    const [selectedTab, setSelectedTab] = useState(allTabKey)
-    const organCodes = useRef({})
+    const { data, loading, error } = useSearchUIQuery(getCellTypesIndex(), query)
+    const [selectedSubset, setSelectedSubset] = useState(allKey)
 
     const tabTitles = useMemo(() => {
         const hits = data?.hits?.hits
         if (!cellLabel || !hits)
             return [
                 {
-                    key: allTabKey,
+                    key: allKey,
                     title: cellLabel
                 }
             ]
@@ -55,24 +54,33 @@ function DatasetsTabGroup({ clId, cellLabel }) {
             }
         }
 
-        // code by label
-        for (const hit of hits) {
-            for (const o of hit._source.organs) {
-                organCodes.current[o.category] = o.code
-            }
-        }
-
         // Build titles for tabs
-        const titles = [{ key: allTabKey, title: `${titleCellLabel} (${countTotal})` }]
+        const titles = [{ key: allKey, title: `${titleCellLabel} (${countTotal})` }]
         for (const [organLabel, organCount] of countByOrgan.entries()) {
             titles.push({
                 key: organLabel,
-                title: `${titleCellLabel} in ${organLabel} (${organCount})`,
-                icon: getOrganByCode(organCodes.current[organLabel])?.icon
+                title: `${titleCellLabel} in ${organLabel} (${organCount})`
             })
         }
 
         return titles
+    }, [cellLabel, data])
+
+    const organIcons = useMemo(() => {
+        const hits = data?.hits?.hits
+        if (!cellLabel || !hits) {
+            return {}
+        }
+
+        // code by label
+        const iconsByLabel = {}
+        for (const hit of hits) {
+            for (const o of hit._source.organs) {
+                iconsByLabel[o.category] = getOrganByCode(o.code)?.icon
+            }
+        }
+
+        return iconsByLabel
     }, [cellLabel, data])
 
     const allData = useMemo(() => {
@@ -99,12 +107,12 @@ function DatasetsTabGroup({ clId, cellLabel }) {
         if (!allData) {
             return null
         }
-        if (selectedTab === 'all') {
+        if (selectedSubset === 'all') {
             return allData
         }
 
-        return allData.filter((row) => row.organLabels.includes(selectedTab))
-    }, [allData, selectedTab])
+        return allData.filter((row) => row.organLabels.includes(selectedSubset))
+    }, [allData, selectedSubset])
 
     if (loading) {
         return <Spinner />
@@ -140,12 +148,7 @@ function DatasetsTabGroup({ clId, cellLabel }) {
                     list.push(
                         <span key={o}>
                             {o} &nbsp;
-                            <Image
-                                alt={''}
-                                src={getOrganByCode(organCodes.current[o])?.icon}
-                                width={16}
-                                height={16}
-                            />
+                            <Image alt={''} src={organIcons[o]} width={16} height={16} />
                             &nbsp;
                         </span>
                     )
@@ -171,40 +174,23 @@ function DatasetsTabGroup({ clId, cellLabel }) {
     ]
 
     return (
-        <Tab.Container activeKey={selectedTab} onSelect={(k) => setSelectedTab(k)}>
-            <Nav variant='pills' className='overflow-auto align-items-center gap-2'>
+        <div className='d-flex flex-column gap-3'>
+            <Form.Select
+                aria-label='cell-type dataset filter'
+                style={{ width: 'fit-content' }}
+                onChange={(e) => setSelectedSubset(e.target.value)}
+                value={selectedSubset}
+            >
                 {tabTitles.map((title) => (
-                    <Nav.Item key={title.key}>
-                        <Nav.Link className='tabHeader' eventKey={title.key}>
-                            <span>{title.title}</span>&nbsp;
-                            {title.icon && (
-                                <Image
-                                    className='tabHeader__organImg'
-                                    alt={''}
-                                    src={title.icon}
-                                    width={16}
-                                    height={16}
-                                />
-                            )}
-                        </Nav.Link>
-                    </Nav.Item>
+                    <option key={title.key} value={title.key}>
+                        {title.title}
+                    </option>
                 ))}
-            </Nav>
+            </Form.Select>
 
-            <Tab.Content>
-                {tabTitles.map((title) => (
-                    <Tab.Pane key={title.key} className='mt-4' eventKey={title.key}>
-                        <DataTable
-                            columns={columns}
-                            data={tabData || []}
-                            fixedHeader={true}
-                            pagination
-                        />
-                    </Tab.Pane>
-                ))}
-            </Tab.Content>
-        </Tab.Container>
+            <DataTable columns={columns} data={tabData || []} fixedHeader={true} pagination />
+        </div>
     )
 }
 
-export default DatasetsTabGroup
+export default DatasetsTable

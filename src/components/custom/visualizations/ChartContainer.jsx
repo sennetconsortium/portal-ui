@@ -1,7 +1,6 @@
 import React, { memo } from 'react'
 import Bar from './charts/Bar'
 import StackedBar from './charts/StackedBar'
-import HorizontalStackedBar from './charts/HorizontalStackedBar'
 import GroupedBar from './charts/GroupedBar'
 import HorizontalDistributionBar from './charts/HorizontalDistributionBar'
 import { cls } from '@/components/custom/js/functions'
@@ -21,8 +20,7 @@ const ChartContainer = memo(({children, containerClassName, ...otherProps}) => {
     bar: Bar,
     groupedBar: GroupedBar,
     stackedBar: StackedBar,
-    horizontalDistributionBar: HorizontalDistributionBar,
-    horizontalStackedBar: HorizontalStackedBar
+    horizontalDistributionBar: HorizontalDistributionBar
   }
   const DisplayChart = charts[otherProps.chartType]
   if (!DisplayChart) return <>Invalid chart</>

@@ -20,7 +20,7 @@ const CellTypeDistributionAcrossOrgansLayout = memo(({ children, organ, tabData,
     setRefresh(new Date().getTime())
   }, [tabData])
 
-  
+
   const onLegendItemClick = (_cell) => {
     if (cell.cellIds[_cell.label]) {
       window.location = `/cell-types/${cell.cellIds[_cell.label]}`
@@ -51,7 +51,7 @@ const CellTypeDistributionAcrossOrgansLayout = memo(({ children, organ, tabData,
           <code> {percentage(tabData[organ._id].currentCell, tabData[organ._id].cells)}%</code> of total</p>
         </Col>
         <Col>
-          
+
           <VizLegend title={<h3 className='fs-6'>Other Cell Types</h3>} legendToolTip={'Clicking on a legend item redirects to the specific cell type page.'} isFilterable={true} onItemHover={onLegendItemHover} labelValueFormatter={handleLabelValueFormatter} excludedValues={[cell.label]} legendId={organ._id} legend={legend} onItemClick={onLegendItemClick} />
         </Col>
       </Row>
