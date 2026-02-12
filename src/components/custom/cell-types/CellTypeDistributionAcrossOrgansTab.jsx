@@ -42,8 +42,6 @@ const CellTypeDistributionAcrossOrgansTab = memo(({organ, tabData, cell}) => {
       }
       const label = ops.label
 
-
-      
       const html = `<div">
       <span class="fs-6"><em>${label}</em>: <strong>${ops.value} (${percentage(current, total)}%)</strong></span>
       <span><em>Other cell types</em>: <strong>${formatNum(total - current)} (${percentage(total - current, total)}%)</strong></span>
@@ -76,13 +74,7 @@ const CellTypeDistributionAcrossOrgansTab = memo(({organ, tabData, cell}) => {
         }
 
       }
-
-      if ($el.height() > 70) {
-        ops.tooltip.getD3(ops.id)
-           .style('top', ops.yPos - 50 + 'px')
-      }
-          
-          
+   
   }
 
   const onRectClick = (eventData) => {
