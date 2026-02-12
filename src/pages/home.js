@@ -83,7 +83,7 @@ function ViewHome({children}) {
                                 <p> Explore annotated cell types across SenNet datasets, with insights into their anatomical distribution and associated biomarkers. 
                                     Visualize and compare cell type distribution across organs using interactive plots, and find datasets relevant to the cell type..
                                 </p>
-                                    <Row className="smcHolder__footer w-lg-50">
+                                    <Row className="smcHolder__footer smcHolder__footer--lgQtr">
                                         <Col>
                                             <Button variant="outline-primary fs-7" className={'w-100'}
                                                 href={'/discover/cell-types'}>Overview</Button></Col>
