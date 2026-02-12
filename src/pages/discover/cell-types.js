@@ -24,8 +24,6 @@ const Spinner = dynamic(() => import("@/components/custom/Spinner"))
 const ChartOverview = memo(({ subGroupLabels, visualizationData }) => {
     const [isLogScale, setIsLogScale] = useState(true)
     const [isPercentage, setIsPercentage] = useState(false)
-    const ticker = useRef(0)
-    const totalLinearTicks = 10
 
     const onRectClick = (eventData) => {
         Addon.log('onBarClick', { data: eventData })
@@ -33,9 +31,6 @@ const ChartOverview = memo(({ subGroupLabels, visualizationData }) => {
     }
 
     const changeScale = (e) => {
-        if (!isLogScale) {
-            setIsPercentage(false)
-        }
         setIsLogScale(!isLogScale)
     }
 
@@ -43,12 +38,11 @@ const ChartOverview = memo(({ subGroupLabels, visualizationData }) => {
         setIsPercentage(!isPercentage)
     }
 
-    const yAxisPercentageFormatter = ({y}) => {
+    const yAxisPercentageFormatter = ({y, tickValues}) => {
         if (y === 0) return '0%'
-        if (ticker.current === 0 && y !== 0) {
-            ticker.current = y * totalLinearTicks
-        }
-        return percentage(y,  ticker.current) + '%'
+        const perc = (y/ tickValues[tickValues.length - 1]) * 100
+        const fixed = perc < 1 ? 3 : 0
+        return perc.toFixed(fixed) + '%'
     }
 
     const yAxisTotalFormatter = ({y}) => {
@@ -88,7 +82,7 @@ const ChartOverview = memo(({ subGroupLabels, visualizationData }) => {
             .html(html)
     }
 
-    const yAxis = { label: "Cell Count", formatter: isPercentage ? yAxisPercentageFormatter : yAxisTotalFormatter, scaleLog: isLogScale, showLabels: true, ticks: {linear: totalLinearTicks, log: 4} }
+    const yAxis = { label: "Cell Count", formatter: isPercentage ? yAxisPercentageFormatter : yAxisTotalFormatter, scaleLog: isLogScale, showLabels: true, ticks: {linear: 10, log: 4} }
     const xAxis = { formatter: ({x}) => formatNum(x), label: `Organs`, showLabels: true }
     console.log(subGroupLabels.current)
 
@@ -108,7 +102,7 @@ const ChartOverview = memo(({ subGroupLabels, visualizationData }) => {
                     onChange={changeScale} />
             </Stack>
             <span style={{width: '5%'}}>&nbsp;</span>
-            {!isLogScale && <Stack direction="row" spacing={0} sx={{ alignItems: 'center' }}>
+            <Stack direction="row" spacing={0} sx={{ alignItems: 'center' }}>
                 <span>Percentage&nbsp;</span>
                 <FormControlLabel
                     control={<Switch defaultChecked />}
@@ -120,7 +114,7 @@ const ChartOverview = memo(({ subGroupLabels, visualizationData }) => {
                         </sup>&nbsp;&nbsp;Total count
                     </span>}
                     onChange={changeTickFormat} />
-            </Stack>}
+            </Stack>
         </div>
         <ChartContainer style={{ className: 'c-visualizations--posInherit c-visualizations--boxShadow mt-3', colorScheme: combinedColors  }} subGroupLabels={subGroupLabels.current} data={visualizationData} xAxis={xAxis} yAxis={yAxis} chartType={'stackedBar'} />
     </VisualizationsProvider>)

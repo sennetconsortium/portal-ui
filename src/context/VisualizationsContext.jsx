@@ -189,16 +189,18 @@ export const VisualizationsProvider = ({ children, options = {} }) => {
                 const scaleMethod = yAxis.scaleLog ? d3.scaleLog : d3.scaleLinear
                 const minY = yAxis.scaleLog ? 1 : 0
                 const totalY = getTotalY(data)
-
+                
                 // Add Y axis
                 const y = scaleMethod()
                     .domain([minY, maxY])
                     .nice()
                     .range([sizing.height - sizing.margin.bottom, sizing.margin.top]);
+                
+                const tickValues = y.ticks(ticks)
                 g.append("g")
-                    .call(d3.axisLeft(y).ticks(ticks).tickFormat((y) => yAxis.formatter ? yAxis.formatter({ y, maxY, totalY }) : (y).toFixed()))
+                    .call(d3.axisLeft(y).ticks(ticks).tickFormat((y) => yAxis.formatter ? yAxis.formatter({ y, maxY, totalY, tickValues }) : (y).toFixed()))
 
-                return {y, minY, ticks, totalY}
+                return {y, minY, ticks, totalY, tickValues}
             },
             grid: ({g, y, hideGrid, ticks, sizing}) => {
                 if (!hideGrid) {
