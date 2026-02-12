@@ -289,7 +289,7 @@ function DatasetsOverview({ clId }) {
                     <VizLegend
                         legend={legend}
                         legendToolTip={null}
-                        title={`${titalize(selectedYAxis)} (${counts[selectedYAxis]} total)`}
+                        title={`${titalize(selectedCompareBy)} - ${titalize(selectedYAxis)} (${counts[selectedYAxis]} total)`}
                     />
                 </div>
             ) : (
