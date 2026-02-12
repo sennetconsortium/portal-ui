@@ -24,6 +24,17 @@ const CellTypeDistributionAcrossOrgansTab = memo(({organ, tabData, cell}) => {
     return _colorScale(d[0].data[d.key] / maxY)
   }
 
+  const getDistanceBetweenElements = (a, b) => {
+    const aPosition = a.getBoundingClientRect()
+    const { top, left, width} = b.getBoundingClientRect();
+    const bPosition = {
+      x: left + (width / 2),
+      top
+    }
+
+    return Math.hypot(aPosition.left - bPosition.x, aPosition.bottom - bPosition.top)
+  }
+
   const onSetToolTipContent = (ops) => {
       let total = 0
       let current = 0
@@ -47,12 +58,12 @@ const CellTypeDistributionAcrossOrgansTab = memo(({organ, tabData, cell}) => {
       <span><em>Other cell types</em>: <strong>${formatNum(total - current)} (${percentage(total - current, total)}%)</strong></span>
       <span><em>Total</em>: <strong>${formatNum(total)}</strong></span>
       </div>`
-      
+
       ops.tooltip.getD3(ops.id)
           .html(html) 
           .attr('data-left', ops.xPos)
           .attr('class', 'c-visualizations__tooltip c-visualizations__tooltip--flexWidth c-visualizations__tooltip--multiLine')
-          .style('left', ops.xPos + 10 + 'px')
+          .style('left', ops.xPos - 40 + 'px')
           .style('top', ops.yPos - 20 + 'px')
 
       const $el = $(ops.tooltip.getSelector(ops.id))
@@ -74,6 +85,10 @@ const CellTypeDistributionAcrossOrgansTab = memo(({organ, tabData, cell}) => {
         }
 
       }
+
+      const distance = getDistanceBetweenElements($el[0], ops.e.currentTarget)
+      $el[0].style.setProperty('--tooltip-left', distance - $(ops.e.currentTarget).width() * .3   + 'px')
+      console.log(distance)
    
   }
 

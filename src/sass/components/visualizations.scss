@@ -11,6 +11,10 @@
 	transform: translateX(-50%);
 }
 
+:root {
+  --tooltip-left: 1px;
+}
+
 .c-visualizations {
 	&__dropdownContainer {
 		display: flex;
@@ -106,11 +110,13 @@
 
 	&--tooltipHasArrow {
 		.c-visualizations__tooltip {
-			span {
+			span:last-child {
 				position: relative;
 
 				&:after {
 					@include visualization-tooltipArrow();
+					top: 24px;
+					left: var(--tooltip-left);
 				}
 			}
 		}
