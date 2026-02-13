@@ -140,14 +140,14 @@ const SearchTypeButton = ({ title }) => {
         for (let b in validButtons) {
             let condition = onCondition(b)
             if (!eq(title, b) && condition.canShow) {
-                className = eq(b, 'files') && onCondition('more').canShow ? 'w-75' : 'w-100'
+                className = eq(b, 'files') && onCondition('more').canShow ? 'w-65' : 'w-100'
                 res.push (
                     <div key={b} className="searchType__wrap">
                     {!eq(b, 'more') && <a key={b} className={`btn btn-outline-primary rounded-0 ${className} js-searchType mt-2`}
                        href={`${validButtons[b]}${condition.entity ? `?addFilters=entity_type=${condition.entity}` : ''}`}>
                         Search {b}
                     </a>}
-                    {eq(className, 'w-75') && <span 
+                    {eq(className, 'w-65') && <span 
                         role="button"
                         onClick={handleMoreMenuClick}
                         aria-controls={'searchTypes-more-menu'}

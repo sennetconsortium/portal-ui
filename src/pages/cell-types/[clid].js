@@ -89,6 +89,18 @@ function ViewCellType() {
                             className='collapse collapse-horizontal sticky-top custom-sticky'
                         >
                             <ul id='sidebar-nav' className='nav list-group rounded-0 text-sm-start'>
+                                {/* Description */}
+                                <li className='nav-item'>
+                                    <a
+                                        href='#Description'
+                                        className='nav-link '
+                                        data-bs-parent='#sidebar'
+                                    >
+                                        Description
+                                    </a>
+                                </li>
+
+                                {/* Cell Type Distribution */}
                                 <li className='nav-item'>
                                     <a
                                         href='#CellTypeDistribution'
@@ -96,6 +108,39 @@ function ViewCellType() {
                                         data-bs-parent='#sidebar'
                                     >
                                         Cell Type Distribution
+                                    </a>
+                                </li>
+
+                                {/* Cell Type Distribution Across Organs */}
+                                <li className='nav-item'>
+                                    <a
+                                        href='#CellTypeDistributionAcrossOrgans'
+                                        className='nav-link '
+                                        data-bs-parent='#sidebar'
+                                    >
+                                        Cell Type Distribution Across Organs
+                                    </a>
+                                </li>
+
+                                {/* Datasets Overview */}
+                                <li className='nav-item'>
+                                    <a
+                                        href='#DatasetsOverview'
+                                        className='nav-link '
+                                        data-bs-parent='#sidebar'
+                                    >
+                                        Datasets Overview
+                                    </a>
+                                </li>
+
+                                {/* Datasets Table */}
+                                <li className='nav-item'>
+                                    <a
+                                        href='#Datasets'
+                                        className='nav-link '
+                                        data-bs-parent='#sidebar'
+                                    >
+                                        Datasets
                                     </a>
                                 </li>
                             </ul>

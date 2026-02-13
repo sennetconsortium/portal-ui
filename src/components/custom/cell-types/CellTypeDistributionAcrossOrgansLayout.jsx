@@ -31,7 +31,7 @@ const CellTypeDistributionAcrossOrgansLayout = memo(({ children, organ, tabData,
     const chartType = 'horizontalDistributionBar'
     const $el = $(`${getChartSelector(organ._id, chartType)} .bar--${_cell.label.toDashedCase()}`)
 
-    setToolTipContent({id: organ._id, label: _cell.label, d: {data: {group: organ.label}}, value: _cell.value, xPos: $el.attr('x'), yPos: 0}).style('opacity', 1)
+    setToolTipContent({id: organ._id, label: _cell.label, d: {data: {group: organ.label}}, value: _cell.value, e: {currentTarget: $el[0]}, xPos: $el.attr('x'), yPos: 0}).style('opacity', 1)
 
   }
 

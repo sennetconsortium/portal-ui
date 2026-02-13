@@ -3,7 +3,7 @@ import CellTypeDistributionAcrossOrgansLayout from './CellTypeDistributionAcross
 import { VisualizationsProvider } from '@/context/VisualizationsContext'
 import ChartContainer from '../visualizations/ChartContainer'
 import { formatNum, percentage } from '../js/functions'
-import { prepareStackedData } from '../visualizations/charts/StackedBar'
+import { prepareOverlapData } from '../visualizations/charts/OverlapBar'
 import * as d3 from 'd3';
 
 /**
@@ -24,6 +24,17 @@ const CellTypeDistributionAcrossOrgansTab = memo(({organ, tabData, cell}) => {
     return _colorScale(d[0].data[d.key] / maxY)
   }
 
+  const getDistanceBetweenElements = (a, b) => {
+    const aPosition = a.getBoundingClientRect()
+    const { top, left, width} = b.getBoundingClientRect();
+    const bPosition = {
+      x: left + (width / 2),
+      top
+    }
+
+    return Math.hypot(aPosition.left - bPosition.x, aPosition.bottom - bPosition.top)
+  }
+
   const onSetToolTipContent = (ops) => {
       let total = 0
       let current = 0
@@ -42,26 +53,44 @@ const CellTypeDistributionAcrossOrgansTab = memo(({organ, tabData, cell}) => {
       }
       const label = ops.label
 
-
-      
       const html = `<div">
       <span class="fs-6"><em>${label}</em>: <strong>${ops.value} (${percentage(current, total)}%)</strong></span>
       <span><em>Other cell types</em>: <strong>${formatNum(total - current)} (${percentage(total - current, total)}%)</strong></span>
       <span><em>Total</em>: <strong>${formatNum(total)}</strong></span>
       </div>`
-      
+
       ops.tooltip.getD3(ops.id)
           .html(html) 
+          .attr('data-left', ops.xPos)
           .attr('class', 'c-visualizations__tooltip c-visualizations__tooltip--flexWidth c-visualizations__tooltip--multiLine')
-          .style('left', ops.xPos + 'px')
+          .style('left', ops.xPos - 40 + 'px')
           .style('top', ops.yPos - 20 + 'px')
 
-      if ($(ops.tooltip.getSelector(ops.id)).height() > 70) {
+      const $el = $(ops.tooltip.getSelector(ops.id))
+      let height = $el.height()
+
+      if (height > 70) {
+        let targetLeft = ops.xPos - 10;
+        // position the tooltip to the far left to get a natural height based on screen width
         ops.tooltip.getD3(ops.id)
-          .style('top', ops.yPos - 60 + 'px')
+          .style('left', 0 + 'px')
+        const targetHeight = $el.height()
+
+        while (height > targetHeight) {
+          ops.tooltip.getD3(ops.id)
+            .style('left', targetLeft + 'px')
+            // move to the lef until reached natural height
+            targetLeft -= 10;
+            height = $el.height()
+        }
+
       }
-          
-          
+
+      const borderRadiusOnTooltipDiv = 5
+      const distance = getDistanceBetweenElements($el[0], ops.e.currentTarget)
+      $el[0].style.setProperty('--tooltip-left', distance - borderRadiusOnTooltipDiv - ($(ops.e.currentTarget).width() * .1)   + 'px')
+      console.log(distance)
+   
   }
 
   const onRectClick = (eventData) => {
@@ -69,7 +98,7 @@ const CellTypeDistributionAcrossOrgansTab = memo(({organ, tabData, cell}) => {
     window.location = `/cell-types/${cell.cellIds[eventData.d.key]}`
   }
 
-  const visualizationData = prepareStackedData(tabData[organ._id].data, false)
+  const visualizationData = prepareOverlapData(tabData[organ._id].data, false)
 
   return (
     <div>

@@ -10,7 +10,6 @@ function Bar({
     data = [],
     chartId = 'bar',
     reload = false,
-    onSectionClick,
     style = {},
     yAxis = {},
     xAxis = {},
@@ -22,15 +21,12 @@ function Bar({
         toolTipHandlers,
         handleSvgSizing,
         svgAppend,
+        tooltipValFormatter,
         appendTooltip } = useContext(VisualizationsContext)
 
     const chartType = 'bar'
     const colors = {}
     const chartData = useRef([])
-
-    
-
-    const showXLabels = () => xAxis.showLabels !== undefined ? xAxis.showLabels : true
 
     const buildChart = () => {
         let names 
@@ -67,7 +63,8 @@ function Bar({
 
         // Add the y-axis and label, and remove the domain line.
         const {y, minY, ticks} = svgAppend({}).yAxis({data, g, yAxis, sizing, maxY})
-        
+
+        const _tooltipValFormatter = (ops) => tooltipValFormatter({...ops, xAxis})
 
         svgAppend({}).grid({g, y, hideGrid: yAxis.hideGrid, ticks, sizing})
 
@@ -78,18 +75,15 @@ function Bar({
             .join("rect")
             .attr("class", d => `bar--${d.label?.toDashedCase()}`)
             .attr("x", (d) => x(d.label))
-            .attr('data-value', (d) => yAxis.formatter ? yAxis.formatter({y: d.value}) : d.value)
+            .attr('data-value', (d) => _tooltipValFormatter({d, v: d.value}))
             .attr("fill", function (d) {
                 const color = style.colorScale  ? style.colorScale({d, maxY, column}) : colorScale(d.label)
-                colors[d.label] = { color, value: yAxis.formatter ? yAxis.formatter({y: d.value}) : d.value, label: d.label };
+                colors[d.label] = { color, value: _tooltipValFormatter({d, v: d.value}), label: d.label };
                 return color;
             })
             .attr("y", (d) => y(minY))
             .attr("height", (d) => 0)
             .attr("width", x.bandwidth())
-          
-      
-       
 
         svgAppend({xAxis, yAxis}).axisLabels({svg, sizing}) 
 
@@ -126,7 +120,6 @@ function Bar({
             chartData.current = Array.from(data)
             updateChart()
         }
-
     }, [data])
 
     useEffect(() => {
@@ -134,9 +127,8 @@ function Bar({
     }, [filters, yAxis])
 
     useEffect(() => {
-        addEventListener("resize", (event) => {
-            updateChart()
-        })
+        window.addEventListener('resize', updateChart);
+        return () => window.removeEventListener('resize', updateChart);
     }, [])
 
     return (

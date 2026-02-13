@@ -1,13 +1,10 @@
-import {createContext, useContext, useEffect, useRef} from "react";
-import AppContext from "./AppContext";
+import {createContext, useRef} from "react";
 import * as d3 from "d3";
 import { eq } from "@/components/custom/js/functions";
 
 const VisualizationsContext = createContext({})
 
 export const VisualizationsProvider = ({ children, options = {} }) => {
-
-    const { _t, authorized, isUnauthorized, router} = useContext(AppContext)
 
     const chartId = useRef('main')
     const selectors = {
@@ -141,6 +138,8 @@ export const VisualizationsProvider = ({ children, options = {} }) => {
         }
     }
 
+    const tooltipValFormatter = ({d, v, xAxis}) => xAxis.tooltipValFormatter ? xAxis.tooltipValFormatter({d, v}) : v
+
     const svgAppend = ({xAxis, yAxis}) => {
         const showXLabels = () => xAxis.showLabels !== undefined ? xAxis.showLabels : true
         const showYLabels = () => yAxis.showLabels !== undefined ? yAxis.showLabels : true
@@ -156,7 +155,11 @@ export const VisualizationsProvider = ({ children, options = {} }) => {
                     .range([0, sizing.width])
                     .padding([xAxis.barPadding || 0.2])
         
-                const axis = xAxis.tickSize !== undefined ? d3.axisBottom(x).tickSize(xAxis.tickSize) : d3.axisBottom(x)
+                let axis = xAxis.tickSize !== undefined ? d3.axisBottom(x).tickSize(xAxis.tickSize) : d3.axisBottom(x)
+                if (xAxis.formatter) {
+                    axis.tickFormat((_x) => xAxis.formatter({x: _x}))
+                }
+
                 const xAxisLabels = g.append("g")
                     .attr("transform", `translate(0, ${sizing.height - sizing.margin.bottom})`)
                     .call(axis)
@@ -187,18 +190,20 @@ export const VisualizationsProvider = ({ children, options = {} }) => {
 
                 const ticks = yAxis.scaleLog || yAxis.ticks ? getTicks() || 5 : undefined
                 const scaleMethod = yAxis.scaleLog ? d3.scaleLog : d3.scaleLinear
-                const minY = yAxis.scaleLog ? 1 : 0
+                const minY = yAxis.minY || (yAxis.scaleLog ? 1 : 0)
                 const totalY = getTotalY(data)
-
+                
                 // Add Y axis
                 const y = scaleMethod()
-                    .domain([minY, maxY])
+                    .domain([minY, yAxis.maxY || maxY])
                     .nice()
                     .range([sizing.height - sizing.margin.bottom, sizing.margin.top]);
+                
+                const tickValues = y.ticks(ticks)
                 g.append("g")
-                    .call(d3.axisLeft(y).ticks(ticks).tickFormat((y) => yAxis.formatter ? yAxis.formatter({ y, maxY, totalY }) : (y).toFixed()))
+                    .call(d3.axisLeft(y).ticks(ticks).tickFormat((y) => yAxis.formatter ? yAxis.formatter({ y, maxY, totalY, tickValues }) : (y).toFixed()))
 
-                return {y, minY, ticks, totalY}
+                return {y, minY, ticks, totalY, tickValues}
             },
             grid: ({g, y, hideGrid, ticks, sizing}) => {
                 if (!hideGrid) {
@@ -327,7 +332,8 @@ export const VisualizationsProvider = ({ children, options = {} }) => {
                 setToolTipContent,
                 getTotalY,
                 svgAppend,
-                selectors
+                tooltipValFormatter,
+                selectors,
             }}
         >
         {children}
