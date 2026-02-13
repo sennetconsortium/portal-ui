@@ -30,16 +30,45 @@ const CellTypeDistributionAcrossOrgans = memo(({ cell }) => {
             }
         },
         aggs: {
-            by_organ_code: {
+            by_organ_category: {
                 terms: {
-                    field: 'organs.code.keyword',
-                    size: 50
+                    field: "organs.category.keyword",
+                    size: 100
                 },
                 aggs: {
+                    total_unique_cell_types: {
+                        cardinality: {
+                            field: "cl_id.keyword",
+                            precision_threshold: 40000
+                        }
+                    },
+                    total_cell_count: {
+                        sum: {
+                            field: "cell_count"
+                        }
+                    },
+                    details: {
+                        top_hits: {
+                            size: 1,
+                            _source: {
+                                include: [
+                                    "cl_id",
+                                    "organs.code"
+                                ]
+                            }
+                        }
+                    },
                     by_cell_label: {
                         terms: {
-                            field: 'cell_label.keyword',
-                            size: 10000,
+                            field: "cell_label.keyword",
+                            size: 1000
+                        },
+                        aggs: {
+                            total_cell_count: {
+                                sum: {
+                                    field: "cell_count"
+                                }
+                            }
                         }
                     }
                 }
@@ -48,23 +77,20 @@ const CellTypeDistributionAcrossOrgans = memo(({ cell }) => {
     }
 
     function getOrganData(data) {
-        let _dict = {}
-        let label
-        for (let o of data?.aggregations?.by_organ_code?.buckets) {
-            label = getOrganByCode(o.key)?.label
-            if (_dict[label]) {
-                _dict[label].codes.push(o.key)
-            } else {
-                _dict[label] = {
-                    _id: label.toCamelCase(),
-                    codes: [o.key],
-                    label,
-                    icon: getOrganByCode(o.key)?.icon
-                }
-            }
-        }
-        return Object.values(_dict)
-    }
+        let results = []
+        let label, code
+        for (let o of data?.aggregations?.by_organ_category?.buckets) {
+            label = o.key
+            code = o.details.hits.hits[0]?._source.organs[0].code
+            results.push({
+                _id: label.toCamelCase(),
+                code,
+                label,
+                cellCount: o.total_cell_count.value,
+                icon: getOrganByCode(code)?.icon
+            })
+        return results
+    }}
 
     const [tabData, setTabData] = useState(null)
     const cellIds = useRef({})
@@ -73,34 +99,23 @@ const CellTypeDistributionAcrossOrgans = memo(({ cell }) => {
         let cells = 0, types = 0, currentCell = 0
         let empty = { data: [], cells, types, currentCell }
         if (!otherCellTypes?.data) return empty
-        let organData = []
-        for (let code of _organ.codes) {
-            let _data = otherCellTypes?.data?.aggregations?.by_organ_code?.buckets?.find(
-                (o) => o.key === code
-            )
-            organData = [...organData, _data]
-        }
+        let organData = otherCellTypes?.data?.aggregations?.by_organ_category?.buckets?.find(
+            (o) => o.key === _organ.label
+        )
 
         if (!organData) return empty
 
         let _barData = { group: _organ.label }
 
-
-        for (let od of organData) {
-            od.by_cell_label.buckets.map((b) => {
-                if (b.key === cell.label) {
-                    currentCell += b.doc_count
-                }
-                if (_barData[b.key]) {
-                    _barData[b.key] += b.doc_count
-                } else {
-                    _barData[b.key] = b.doc_count
-                }
-                cellIds.current[b.key] = b.by_cell_id.buckets[0]?.key
-            })
-            cells += od.doc_count
-            types += od.by_cell_label.buckets.length
-        }
+        organData.by_cell_label.buckets.map((b) => {
+            if (b.key === cell.label) {
+                currentCell += b.total_cell_count.value
+            }
+            _barData[b.key] = b.total_cell_count.value
+            cellIds.current[b.key] = organData.details.hits.hits[0]?._source.cl_id
+        })
+        cells += organData.total_cell_count.value
+        types += organData.total_unique_cell_types.value
 
         return { data: [_barData], cells, types, currentCell }
     }
@@ -109,14 +124,6 @@ const CellTypeDistributionAcrossOrgans = memo(({ cell }) => {
     const { data, loading, error } = useSearchUIQuery(getCellTypesIndex(), query)
     const query2 = JSON.parse(JSON.stringify(query))
     query2.query = { match_all: {} }
-    query2.aggs.by_organ_code.aggs.by_cell_label.aggs = {
-        by_cell_id: {
-            terms: {
-                field: 'cl_id.keyword',
-                size: 10000,
-            }
-        }
-    }
 
     const otherCellTypes = useSearchUIQuery(getCellTypesIndex(), query2)
 
