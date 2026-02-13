@@ -87,7 +87,7 @@ const CellTypeDistributionAcrossOrgans = memo(({ cell }) => {
                 code,
                 label,
                 cellCount: o.total_cell_count.value,
-                icon: getOrganByCode(o.key)?.icon
+                icon: getOrganByCode(code)?.icon
             })
         return results
     }}
