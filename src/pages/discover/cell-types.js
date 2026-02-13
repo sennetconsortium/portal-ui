@@ -89,12 +89,12 @@ const ChartOverview = memo(({ subGroupLabels, data, setVisualizationData }) => {
 
         ops.tooltip.getD3(ops.id)
             .style('left', ops.xPos + 40 + 'px')
-            .style('top', ops.yPos + 10 + 'px')
+            .style('top', ops.yPos + 30 + 'px')
             .attr('class', 'c-visualizations__tooltip c-visualizations__tooltip--multiLine')
             .html(html)
     }
 
-    const yAxis = { label: "Cell Count", maxY: isPercentage ? 1 : undefined, minY: isPercentage || isLogScale ? 0.00001 : (0), formatter: isPercentage ? yAxisPercentageFormatter : yAxisTotalFormatter, scaleLog: isLogScale, showLabels: true, ticks: {linear: 10, log: 4} }
+    const yAxis = { label: `Cell ${isPercentage ? 'Percentage' : 'Count'}`, maxY: isPercentage ? 1 : undefined, minY: isPercentage || isLogScale ? 0.00001 : (0), formatter: isPercentage ? yAxisPercentageFormatter : yAxisTotalFormatter, scaleLog: isLogScale, showLabels: true, ticks: {linear: 10, log: 4} }
     const xAxis = { formatter: ({x}) => formatNum(x), label: `Organs`, showLabels: true }
 
     return (<VisualizationsProvider options={{ onRectClick, onSetToolTipContent }}>
