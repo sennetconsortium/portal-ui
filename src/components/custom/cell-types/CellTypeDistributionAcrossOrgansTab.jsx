@@ -88,7 +88,7 @@ const CellTypeDistributionAcrossOrgansTab = memo(({organ, tabData, cell}) => {
 
       const borderRadiusOnTooltipDiv = 5
       const distance = getDistanceBetweenElements($el[0], ops.e.currentTarget)
-      $el[0].style.setProperty('--tooltip-left', distance - borderRadiusOnTooltipDiv - ($(ops.e.currentTarget).width() * .2)   + 'px')
+      $el[0].style.setProperty('--tooltip-left', distance - borderRadiusOnTooltipDiv - ($(ops.e.currentTarget).width() * .1)   + 'px')
       console.log(distance)
    
   }

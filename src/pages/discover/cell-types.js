@@ -18,18 +18,11 @@ import SenNetPopover from "@/components/SenNetPopover";
 
 const AppNavbar = dynamic(() => import("@/components/custom/layout/AppNavbar"))
 const Header = dynamic(() => import("@/components/custom/layout/Header"))
-// const Spinner = dynamic(() => import("@/components/custom/Spinner"))
+const Spinner = dynamic(() => import("@/components/custom/Spinner"))
 
 const ChartOverview = memo(({ subGroupLabels, data, setVisualizationData }) => {
     const [isLogScale, setIsLogScale] = useState(false)
     const [isPercentage, setIsPercentage] = useState(false)
-    const [_, setRefresh] = useState(null)
-
-    useEffect(() => {
-        const handleResize = () => setRefresh(new Date().getTime())
-        window.addEventListener('resize', handleResize)
-        return () => window.removeEventListener('resize', handleResize)
-    }, [])
 
     const onRectClick = (eventData) => {
         Addon.log('onBarClick', { data: eventData })
@@ -127,10 +120,11 @@ const ChartOverview = memo(({ subGroupLabels, data, setVisualizationData }) => {
                     onChange={changeTickFormat} />
             </Stack>
         </div>
-        <ChartContainer style={{ className: 'c-visualizations--posInherit c-visualizations--boxShadow mt-3', colorScheme: combinedColors  }} 
+        {data.visualizationData.length <= 0 && <Spinner /> }
+        {data.visualizationData.length && <ChartContainer style={{ className: 'c-visualizations--posInherit c-visualizations--boxShadow mt-3', colorScheme: combinedColors  }} 
         subGroupLabels={subGroupLabels.current} 
         data={data.visualizationData} 
-        xAxis={xAxis} yAxis={yAxis} chartType={'stackedBar'} />
+        xAxis={xAxis} yAxis={yAxis} chartType={'stackedBar'} />}
     </VisualizationsProvider>)
 })
 
