@@ -8,7 +8,7 @@ import ChartContainer from "@/components/custom/visualizations/ChartContainer";
 import { getDistinctOrgansAndCellTypes } from "@/lib/services";
 import { formatNum,  percentage } from "@/components/custom/js/functions";
 import { VisualizationsProvider } from "@/context/VisualizationsContext";
-import { prepareStackedData } from "@/components/custom/visualizations/charts/StackedBar";
+import { prepareOverlapData } from "@/components/custom/visualizations/charts/OverlapBar";
 import { FormControlLabel, Switch } from "@mui/material";
 import Stack from '@mui/material/Stack';
 import { APP_ROUTES } from "@/config/constants";
@@ -21,7 +21,7 @@ const AppNavbar = dynamic(() => import("@/components/custom/layout/AppNavbar"))
 const Header = dynamic(() => import("@/components/custom/layout/Header"))
 const Spinner = dynamic(() => import("@/components/custom/Spinner"))
 
-const ChartOverview = memo(({ subGroupLabels, visualizationData }) => {
+const ChartOverview = memo(({ subGroupLabels, data, setVisualizationData }) => {
     const [isLogScale, setIsLogScale] = useState(true)
     const [isPercentage, setIsPercentage] = useState(false)
 
@@ -35,18 +35,30 @@ const ChartOverview = memo(({ subGroupLabels, visualizationData }) => {
     }
 
     const changeTickFormat = (e) => {
+        if (!isPercentage) {
+            setVisualizationData(data.percentageData.current)
+        } else {
+            setVisualizationData(data.countData.current)
+        }
         setIsPercentage(!isPercentage)
     }
 
-    const yAxisPercentageFormatter = ({y, tickValues}) => {
-        if (y === 0) return '0%'
-        const perc = (y/ tickValues[tickValues.length - 1]) * 100
+    // const yAxisPercentageFormatter = ({y, tickValues}) => {
+    //     if (y === 0) return '0%'
+    //     const perc = (y/ tickValues[tickValues.length - 1]) * 100
+    //     const fixed = perc < 1 ? 3 : 0
+    //     return perc.toFixed(fixed) + '%'
+    // }
+
+    const yAxisPercentageFormatter = ({y}) => {
+        
+        const perc = y * 100
         const fixed = perc < 1 ? 3 : 0
         return perc.toFixed(fixed) + '%'
     }
 
     const yAxisTotalFormatter = ({y}) => {
-        return formatNum(y)
+        return y > 999 ? formatNum(y) : y
     }
 
     const combinedColors = d3.schemeDark2.concat(d3.schemeObservable10).concat(d3.schemePastel1).concat(d3.schemePaired);
@@ -54,8 +66,9 @@ const ChartOverview = memo(({ subGroupLabels, visualizationData }) => {
     const onSetToolTipContent = (ops) => {
         let total = 0
         let current = 0
-        let currentGroup = ops.d?.group
-        for (let d of visualizationData) {
+        
+        let currentGroup = ops.d?.data?.group
+        for (let d of data.countData.current) {
             if (d.group === currentGroup) {
                 for (let c in d) {
                     if (c !== 'group') {
@@ -82,12 +95,12 @@ const ChartOverview = memo(({ subGroupLabels, visualizationData }) => {
             .html(html)
     }
 
-    const yAxis = { label: "Cell Count", formatter: isPercentage ? yAxisPercentageFormatter : yAxisTotalFormatter, scaleLog: isLogScale, showLabels: true, ticks: {linear: 10, log: 4} }
+    const yAxis = { label: "Cell Count", maxY: isPercentage ? 1 : undefined, minY: isPercentage || isLogScale ? 0.00001 : (0), formatter: isPercentage ? yAxisPercentageFormatter : yAxisTotalFormatter, scaleLog: isLogScale, showLabels: true, ticks: {linear: 10, log: 4} }
     const xAxis = { formatter: ({x}) => formatNum(x), label: `Organs`, showLabels: true }
     console.log(subGroupLabels.current)
 
     return (<VisualizationsProvider options={{ onRectClick, onSetToolTipContent }}>
-        <div className="d-flex">
+        <div className="d-flex mb-5">
             <Stack direction="row" spacing={0} sx={{ alignItems: 'center' }}>
                 <span>Linear scale &nbsp;</span>
                 <FormControlLabel
@@ -95,7 +108,7 @@ const ChartOverview = memo(({ subGroupLabels, visualizationData }) => {
                     label={<span>
                         <sup>
                             <SenNetPopover text={<span>Toggle between linear and symmetric log scale for the counts. Symmetric log scale is useful for visualizing data with a wide range of values.</span>}>
-                                <i class="bi bi-info-circle"></i>
+                                <i className="bi bi-info-circle"></i>
                             </SenNetPopover>
                         </sup>&nbsp;&nbsp;Log scale
                     </span>}
@@ -109,14 +122,17 @@ const ChartOverview = memo(({ subGroupLabels, visualizationData }) => {
                     label={<span>
                         <sup>
                             <SenNetPopover text={<span>Toggle between displaying data as raw counts or percentages.</span>}>
-                                <i class="bi bi-info-circle"></i>
+                                <i className="bi bi-info-circle"></i>
                             </SenNetPopover>
                         </sup>&nbsp;&nbsp;Total count
                     </span>}
                     onChange={changeTickFormat} />
             </Stack>
         </div>
-        <ChartContainer style={{ className: 'c-visualizations--posInherit c-visualizations--boxShadow mt-3', colorScheme: combinedColors  }} subGroupLabels={subGroupLabels.current} data={visualizationData} xAxis={xAxis} yAxis={yAxis} chartType={'stackedBar'} />
+        <ChartContainer style={{ className: 'c-visualizations--posInherit c-visualizations--boxShadow mt-3', margin: {bottom: 100}, colorScheme: combinedColors  }} 
+        subGroupLabels={subGroupLabels.current} 
+        data={data.visualizationData} 
+        xAxis={xAxis} yAxis={yAxis} chartType={'stackedBar'} />
     </VisualizationsProvider>)
 })
 
@@ -125,30 +141,75 @@ function CellTypes() {
     const subGroupLabels = useRef({})
 
     const [visualizationData, setVisualizationData] = useState([])
+    const percentageData = useRef([])
+    const countData = useRef([])
+
     const formatData = (data) => {
         let dict = {}
         let results = []
         let cellTypes = {}
         let result
-        let cellId, organ
+        let cellId, organ, hasOrgan
         for (let d of data) {
             cellTypes = {}
+            hasOrgan = false
 
             organ = getOrganByCode(d.code)?.label
+            if (dict[organ]) {
+                hasOrgan = true
+            }
             result = dict[organ] || {}
             for (const cellType of d.cellTypes) {
                 cellId = cellType.cell_id.hits?.hits[0]?._source?.cl_id
                 cellTypes[cellId] = cellType.total_cell_count.value + (result[cellId] || 0)
                 subGroupLabels.current[cellId] = cellType.key
             }
-
-            results.push({
+            dict[organ] = {
                 group: organ,
                 ...cellTypes
-            })
+            }
+
+            if (hasOrgan) {
+                for (let i = 0; i < results.length; i++) {
+                    if (results[i].group === organ) {
+                        results[i] = dict[organ]
+                    }
+                }
+            } else {
+                results.push(dict[organ])
+            }
+        
+        }
+        countData.current = results
+
+        let groupTotals = {}
+        for (const r of results) {
+            groupTotals[r.group] = 0
+            for (const k in r) {
+                if ( k !== 'group') {
+                    groupTotals[r.group] += r[k]
+                }
+            }
+        
         }
 
-        setVisualizationData(prepareStackedData(results))
+        let percentage = []
+        let row
+        for (const r of results) {
+            row = {}
+            for (const k in r) {
+                if (k !== 'group') {
+                    row[k] = (r[k] / groupTotals[r.group])
+                } else {
+                    row[k] = r[k]
+                }
+            }
+            percentage.push(row)
+        }
+        percentageData.current = percentage
+    
+        Addon.log('Data', {data: {percentageData, countData, groupTotals}})
+        setVisualizationData(countData.current)
     }
     useEffect(() => {
         getDistinctOrgansAndCellTypes().then((data) => {
@@ -180,7 +241,7 @@ function CellTypes() {
                     Visualize and compare cell type distribution across organs using interactive plots, and find datasets relevant to the cell type.</p>
                 <Card>
                     <Card.Body>
-                        <div className="p-4"><ChartOverview subGroupLabels={subGroupLabels} visualizationData={visualizationData} /></div>
+                        <div className="p-4"><ChartOverview subGroupLabels={subGroupLabels} setVisualizationData={setVisualizationData} data={{visualizationData, countData, percentageData}} /></div>
                     </Card.Body>
                 </Card>
             </Container>

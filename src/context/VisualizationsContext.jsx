@@ -187,12 +187,12 @@ export const VisualizationsProvider = ({ children, options = {} }) => {
 
                 const ticks = yAxis.scaleLog || yAxis.ticks ? getTicks() || 5 : undefined
                 const scaleMethod = yAxis.scaleLog ? d3.scaleLog : d3.scaleLinear
-                const minY = yAxis.scaleLog ? 1 : 0
+                const minY = yAxis.minY || (yAxis.scaleLog ? 1 : 0)
                 const totalY = getTotalY(data)
                 
                 // Add Y axis
                 const y = scaleMethod()
-                    .domain([minY, maxY])
+                    .domain([minY, yAxis.maxY || maxY])
                     .nice()
                     .range([sizing.height - sizing.margin.bottom, sizing.margin.top]);
                 

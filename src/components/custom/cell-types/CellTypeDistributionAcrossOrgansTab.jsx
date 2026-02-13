@@ -3,7 +3,7 @@ import CellTypeDistributionAcrossOrgansLayout from './CellTypeDistributionAcross
 import { VisualizationsProvider } from '@/context/VisualizationsContext'
 import ChartContainer from '../visualizations/ChartContainer'
 import { formatNum, percentage } from '../js/functions'
-import { prepareStackedData } from '../visualizations/charts/StackedBar'
+import { prepareOverlapData } from '../visualizations/charts/OverlapBar'
 import * as d3 from 'd3';
 
 /**
@@ -97,7 +97,7 @@ const CellTypeDistributionAcrossOrgansTab = memo(({organ, tabData, cell}) => {
     window.location = `/cell-types/${cell.cellIds[eventData.d.key]}`
   }
 
-  const visualizationData = prepareStackedData(tabData[organ._id].data, false)
+  const visualizationData = prepareOverlapData(tabData[organ._id].data, false)
 
   return (
     <div>

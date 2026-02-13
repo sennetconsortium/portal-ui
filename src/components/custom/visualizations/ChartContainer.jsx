@@ -1,7 +1,8 @@
 import React, { memo } from 'react'
 import Bar from './charts/Bar'
-import StackedBar from './charts/StackedBar'
+import OverlapBar from './charts/OverlapBar'
 import GroupedBar from './charts/GroupedBar'
+import StackedBar from './charts/StackedBar'
 import HorizontalDistributionBar from './charts/HorizontalDistributionBar'
 import { cls } from '@/components/custom/js/functions'
 
@@ -20,6 +21,7 @@ const ChartContainer = memo(({children, containerClassName, ...otherProps}) => {
     bar: Bar,
     groupedBar: GroupedBar,
     stackedBar: StackedBar,
+    overlapBar: OverlapBar,
     horizontalDistributionBar: HorizontalDistributionBar
   }
   const DisplayChart = charts[otherProps.chartType]
