@@ -1,0 +1,168 @@
+import SearchAPIConnector from 'search-ui/packages/search-api-connector';
+import {
+    doesAggregationHaveBuckets,
+    getAuth,
+    getCellTypesIndex,
+    getSearchEndPoint,
+} from '../config';
+
+const connector = new SearchAPIConnector({
+    indexName: getCellTypesIndex(),
+    indexUrl: getSearchEndPoint(),
+    accessToken: getAuth(),
+    beforeSearchCall: (queryOptions, next) => {
+
+        queryOptions.collapse =  {
+            field : "cl_id.keyword",
+                inner_hits: {
+                name: "cellTypes",
+                    size: queryOptions.size,
+                    sort: [{ "cl_id.keyword": "asc" }]
+            },
+            max_concurrent_group_searches: 4
+        };
+
+        // append additional aggregations needs for the table
+        const aggs = queryOptions.aggs || {};
+        aggs.total_cell_types = {
+            cardinality: {
+                field: "cl_id.keyword"
+            }
+        };
+        aggs.group_organs_by_cell_type = {
+            terms: {
+                field: "cl_id.keyword",
+                size: 10000
+            },
+            aggs: {
+                organs: {
+                    terms: {
+                        field: "organs.code.keyword",
+                        size: 1000
+                    }
+                }
+            }
+        };
+
+        queryOptions.aggs = aggs;
+
+        return next(queryOptions)
+    }
+})
+
+export const SEARCH_CELL_TYPES = {
+    alwaysSearchOnInitialLoad: true,
+    searchQuery: {
+        excludeFilters: [
+
+        ],
+        facets: {
+            'cell_label': {
+                label: 'Cell Type',
+                type: 'value',
+                field: 'cell_label.keyword',
+                filterType: 'any',
+                isExpanded: false,
+                isFilterable: false,
+                facetType: 'term',
+                // isAggregationActive: doesTermFilterContainValues('entity_type', ['Dataset']),
+                // isFacetVisible: doesAggregationHaveBuckets('sources.source_type')
+            },
+            'organs.code': {
+                label: 'Organ',
+                type: 'value',
+                field: 'organs.code.keyword',
+                isExpanded: false,
+                filterType: 'any',
+                isFilterable: false,
+                facetType: 'term',
+                groupByField: 'organs.code.keyword',
+                // isAggregationActive: true,
+                // isFacetVisible: doesAggregationHaveBuckets('dataset_type')
+            },
+
+            // Source Human
+            'dataset.age': {
+                label: 'Age',
+                type: 'range',
+                field: 'dataset.age',
+                isExpanded: false,
+                filterType: 'any',
+                isFilterable: false,
+                facetType: 'histogram',
+                aggregationInterval: 1,
+                isAggregationActive: (filters) => {
+                    // Needs to check if entity_type:Source AND source_type:Human is selected
+                    return true
+                },
+                isFacetVisible: doesAggregationHaveBuckets('dataset.age')
+            },
+
+            'dataset.race': {
+                label: 'Race',
+                type: 'value',
+                field: 'dataset.race.keyword',
+                isExpanded: false,
+                filterType: 'any',
+                isFilterable: false,
+                facetType: 'term',
+                isAggregationActive: (filters) => {
+                    // Needs to check if entity_type:Source AND source_type:Human is selected
+                    return true
+                },
+                isFacetVisible: doesAggregationHaveBuckets('dataset.race')
+            },
+            'dataset.sex': {
+                label: 'Sex',
+                type: 'value',
+                field: 'dataset.sex.keyword',
+                isExpanded: false,
+                filterType: 'any',
+                isFilterable: false,
+                facetType: 'term',
+                isAggregationActive: (filters) => {
+                    // Needs to check if entity_type:Source AND source_type:Human is selected
+                    return true
+                },
+                isFacetVisible: doesAggregationHaveBuckets('dataset.sex')
+            },
+        },
+        disjunctiveFacets: [],
+        conditionalFacets: {},
+        search_fields: {
+            'cell_label^2': {type: 'value'},
+            'cl_id^2': {type: 'value'},
+            'cell_definition^3': {type: 'value'},
+            //'organs.type': {type: 'value'},
+            all_text: {type: 'value'},
+        },
+        source_fields: [
+            'dataset',
+            'organs',
+            'cell_label',
+            'cell_definition',
+            'cl_id',
+            'cell_count' ,
+            'source_metadata'
+
+        ],
+        // Moving this configuration into `searchQuery` so the config inside search-tools can read this
+        trackTotalHits: true,
+    },
+    initialState: {
+        current: 1,
+        resultsPerPage: 20,
+        sortList: [{
+            field: 'dataset.uuid.keyword',
+            direction: 'desc'
+        }]
+    },
+    urlPushDebounceLength: 100,
+    trackUrlState: true,
+    apiConnector: connector,
+    hasA11yNotifications: true,
+    a11yNotificationMessages: {
+        searchResults: ({start, end, totalResults, searchTerm}) =>
+            `Searching for '${searchTerm}'. Showing ${start} to ${end} results out of ${totalResults}.`,
+    },
+}

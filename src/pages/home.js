@@ -19,6 +19,9 @@ function ViewHome({children}) {
     const {isRegisterHidden, deleteTutorialCookies, cache} = useContext(AppContext)
 
     useEffect(() => {
+        setTimeout(() => {
+            $('.highlighted').addClass('is-paused')
+        }, 5000)
     }, [])
 
     const SiteMapCard = ({title, body, children, onClick, hover}) => {
@@ -65,6 +68,32 @@ function ViewHome({children}) {
                                     and
                                     classifications for senescent cells.</p>
                             </Card.Body>
+                        </Card>
+                    </section>
+
+                    <section aria-label={'Search By Cell Types'} className='sui-layout-body__inner'>
+                        <Card className='mt-4 highlighted'>
+                            <div className='p-3 card-content bg-white'>
+                                <Card.Title><div className='d-flex d-flex-row justify-space-between'>
+                                 <img src='/static/cell-type.svg' width='50' alt /> &nbsp;<h2>Search By Cell Types</h2>
+                            </div>
+                            
+                            </Card.Title>
+                            <Card.Body>
+                                <p> Explore annotated cell types across SenNet datasets, with insights into their anatomical distribution and associated biomarkers. 
+                                    Visualize and compare cell type distribution across organs using interactive plots, and find datasets relevant to the cell type..
+                                </p>
+                                    <Row className="smcHolder__footer smcHolder__footer--lgQtr">
+                                        <Col>
+                                            <Button variant="outline-primary fs-7" className={'w-100'}
+                                                href={'/discover/cell-types'}>Overview</Button></Col>
+                                        <Col>
+                                            <Button variant="outline-primary fs-7" className={'w-100'}
+                                                href={'/search/cell-types'}>Search Cell Types</Button></Col>
+                                    </Row>
+                                
+                            </Card.Body>
+                            </div>
                         </Card>
                     </section>
 

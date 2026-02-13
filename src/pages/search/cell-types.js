@@ -1,21 +1,22 @@
 import dynamic from "next/dynamic";
-import React, {useContext} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import {ErrorBoundary, SearchBox} from "@elastic/react-search-ui";
 import {Layout} from "@elastic/react-search-ui-views";
 import {APP_TITLE} from "@/config/config";
-import {SEARCH_ENTITIES} from "@/config/search/entities"
-import CustomClearSearchBox from "@/components/custom/layout/CustomClearSearchBox";
+import CustomClearSearchBox from "../../components/custom/layout/CustomClearSearchBox";
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
 import AppContext from "@/context/AppContext";
 import SelectedFilters from "@/components/custom/layout/SelectedFilters";
 import {getUBKGFullName} from "@/components/custom/js/functions";
-import {TableResultsEntities} from "@/components/custom/TableResultsEntities";
+import SenNetAlert from "@/components/SenNetAlert";
+import { TableResultsCellTypes } from "@/components/custom/TableResultsCellTypes";
+import { SEARCH_CELL_TYPES } from "@/config/search/cell-types";
+import { getDistinctDatasetsUnderCellTypes } from "@/lib/services";
 
 const AppFooter = dynamic(() => import("@/components/custom/layout/AppFooter"))
 const AppNavbar = dynamic(() => import("@/components/custom/layout/AppNavbar"))
-const AppTutorial = dynamic(() => import("@/components/custom/layout/AppTutorial"))
 const BodyContent = dynamic(() => import("@/components/custom/search/BodyContent"))
 const FacetsContent = dynamic(() => import("@/components/custom/search/FacetsContent"))
 const Header = dynamic(() => import("@/components/custom/layout/Header"))
@@ -23,10 +24,11 @@ const InvalidToken = dynamic(() => import("@/components/custom/layout/InvalidTok
 const SearchTypeButton = dynamic(() => import("@/components/custom/search/SearchTypeButton"))
 const SearchUIContainer = dynamic(() => import("@/search-ui/components/core/SearchUIContainer"))
 const SelectedFacets = dynamic(() => import("@/components/custom/search/SelectedFacets"))
-const SenNetBanner = dynamic(() => import("@/components/SenNetBanner"))
 const Spinner = dynamic(() => import("@/components/custom/Spinner"))
+const SenNetBanner = dynamic(() => import("@/components/SenNetBanner"))
 
-function SearchEntities() {
+
+function SearchCellTypes() {
     const {
         _t,
         logout,
@@ -44,6 +46,23 @@ function SearchEntities() {
     function handleSearchFormSubmit(event, onSubmit) {
         onSubmit(event)
     }
+
+    const getFacetName = (term) => {
+        return term.length ? getUBKGFullName(term) : 'None'
+    }
+
+    const [uniqueDatasets, setUniqueDatasets] = useState(0)
+
+    const getUniqueDatasets = () => {
+        getDistinctDatasetsUnderCellTypes().then(count => {
+            setUniqueDatasets(count || 0)
+        })
+    }
+
+    useEffect(() => {
+        getUniqueDatasets()
+    }, [])
+
 
     if (validatingToken() || isAuthorizing()) {
         return <Spinner/>
@@ -66,15 +85,18 @@ function SearchEntities() {
             <>
                 <Header title={APP_TITLE}/>
 
-                <SearchUIContainer config={SEARCH_ENTITIES} name='entities' authState={authState}>
+                <SearchUIContainer config={SEARCH_CELL_TYPES} name='cellTypes' authState={authState}>
                     <AppNavbar hidden={isRegisterHidden}/>
-                    <ErrorBoundary className={'js-app--searchErrorBoundary'} data-components={getStringifiedComponents()}>
+                    <ErrorBoundary className={'js-app--searchErrorBoundary'}
+                                   data-components={getStringifiedComponents()}>
                         <Layout
                             header={
                                 <>
                                     <div className="search-box-header js-gtm--search">
                                         <SenNetBanner name={'default'}/>
-                                        <AppTutorial/>
+                                        <SenNetAlert variant="info" text={<span>This searches across <code>{uniqueDatasets}</code> RNAseq datasets from Human sources</span>} />
+                                        
+
                                         <SearchBox
                                             view={({onChange, value, onSubmit}) => (
                                                 <Form onSubmit={e => handleSearchFormSubmit(e, onSubmit)}>
@@ -83,7 +105,7 @@ function SearchEntities() {
                                                             <Form.Control
                                                                 value={value}
                                                                 onChange={(e) => onChange(e.currentTarget.value)}
-                                                                className="right-border-none form-control form-control-lg rounded-0"
+                                                                className="right-border-none form-control form-control-lg rounded-1"
                                                                 placeholder="Search"
                                                                 autoFocus={false}
                                                             />
@@ -91,7 +113,7 @@ function SearchEntities() {
                                                                 className={"transparent"}><i
                                                                 className="bi bi-search"></i></InputGroup.Text>
                                                             <Button variant="outline-primary"
-                                                                    className={"rounded-0"}
+                                                                    className={"rounded-1"}
                                                                     onClick={e => handleSearchFormSubmit(e, onSubmit)}>{_t('Search')}</Button>
                                                         </InputGroup>
                                                     </Form.Group>
@@ -100,24 +122,24 @@ function SearchEntities() {
                                         />
                                     </div>
                                     <div className='sui-filters-summary'>
-                                        <SelectedFacets searchContext={'entities'} />
+                                        <SelectedFacets searchContext={'cellTypes'}/>
                                     </div>
                                 </>
                             }
                             sideContent={
-                                <div data-js-ada='facets' className="sui-facets--entities">
+                                <div data-js-ada='facets'>
                                     <CustomClearSearchBox/>
 
-                                    <SearchTypeButton title='Entities'/>
+                                    <SearchTypeButton title='Metadata'/>
 
 
                                     <SelectedFilters/>
 
-                                    <FacetsContent transformFunction={getUBKGFullName}/>
+                                    <FacetsContent transformFunction={getFacetName}/>
                                 </div>
                             }
                             bodyContent={
-                                <BodyContent view={TableResultsEntities}/>
+                                <BodyContent view={TableResultsCellTypes}/>
                             }
                         />
                     </ErrorBoundary>
@@ -129,4 +151,4 @@ function SearchEntities() {
     }
 }
 
-export default SearchEntities
+export default SearchCellTypes

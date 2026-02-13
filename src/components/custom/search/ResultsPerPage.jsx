@@ -4,7 +4,7 @@ import Select from 'react-select'
 
 export const handleTableControls = () => {
     try {
-        handleCheckAll()
+        //handleCheckAll()
     } catch (e) {
         console.error(e)
     }

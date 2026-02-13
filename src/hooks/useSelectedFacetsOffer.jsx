@@ -1,0 +1,73 @@
+import { useEffect, useState, useRef } from 'react'
+import { useRouter } from 'next/router'
+import {toast} from "react-toastify";
+import {
+    eq
+} from '@/components/custom/js/functions'
+import { APP_ROUTES } from '@/config/constants';
+
+function useSelectedFacetsOffer({filters}) {
+  const router = useRouter()
+  const fromCellTypeQuery = useRef(false)
+
+  const hasOffered = useRef({})
+
+  const _isDatasetFilter = (f) => eq(f.field, 'entity_type') && f.values.contains('dataset')
+
+  const offerSearchByCellTypes = () => {
+    hasOffered.current['searchByCellTypes'] = true
+    toast(<>With these search filters, you can now <a href={APP_ROUTES.search + '/cell-types'}>search the cell types</a>.</>, {
+      toastId: 'searchByCellOffer',
+      className: 'Toastify__toast-center-left',
+      position: "top-left",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: false,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    })
+    
+  }
+
+  const determineOffers = () => {
+    if (filters.length) {
+      let offerpoints = {
+        searchByCellTypes: 0
+      }
+      for (let f of filters) {
+        if (_isDatasetFilter(f)) {
+          offerpoints.searchByCellTypes += 1
+        }
+        if (eq(f.field, 'sources.source_type') && eq(f.values[0], 'human')) {
+          offerpoints.searchByCellTypes += 1
+        }
+
+        if (eq(f.field, 'dataset_type') && ['transcriptomics', 'rnaseq'].contains(f.values[0])) {
+          offerpoints.searchByCellTypes += 1
+        }
+      }
+      
+      if (offerpoints.searchByCellTypes === 3) {
+        if (!fromCellTypeQuery.current) {
+          // TODO: add !hasOffered.current['searchByCellTypes'] after feature has been established
+          offerSearchByCellTypes()
+        }
+      }
+    }
+  }
+
+  useEffect(() => {
+    if (!router.isReady) return
+    fromCellTypeQuery.current = router.query.fct
+  }, [router.isReady, router.query])
+
+  useEffect(() => {
+    determineOffers()
+  }, [filters])
+
+  return {}
+}
+
+export default useSelectedFacetsOffer

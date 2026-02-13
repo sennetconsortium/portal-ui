@@ -1,0 +1,344 @@
+import {createContext, useRef} from "react";
+import * as d3 from "d3";
+import { eq } from "@/components/custom/js/functions";
+
+const VisualizationsContext = createContext({})
+
+export const VisualizationsProvider = ({ children, options = {} }) => {
+
+    const chartId = useRef('main')
+    const selectors = {
+        base: 'c-visualizations__'
+    }
+
+    const getSubgroupLabels = (data, labels) => {
+        if (Object.keys(labels).length) return labels
+        let groups = {}
+        for (let d of data) {
+            for (let k in d) {
+                if (k !== 'group') {
+                    groups[k] = k
+                }
+            }
+        }
+        return groups
+    }
+
+    const getChartSelector = (chartId, chart = 'bar', withHash = true) => `${withHash ? '#' : ''}${selectors.base}${chart}--${chartId}`
+
+    const appendDiv = (id, divName, chart = 'bar', index = '') => {
+        d3.select(getChartSelector(id, chart))
+            .insert('div')
+            .attr('id', `${selectors.base}${divName}--${id}${index}`)
+            .style('opacity', 0)
+            .attr('class', `${selectors.base}${divName}`)
+    }
+
+    const appendTooltip = (id, chart = 'bar') => {
+        chartId.current = id
+        appendDiv(id, 'tooltip', chart)
+    }
+
+    const getTotalY = (data) => {
+        const totalY = data.reduce((sum, row) => {
+            let currentSum = 0
+            for (const k in row) {
+                if (k !== 'group') {
+                    currentSum += row[k]
+                }
+            }
+            return sum + currentSum;
+        }, 0);
+        return totalY
+    }
+
+    const getTooltipSelector = (id) => `#${selectors.base}tooltip--${id}`
+
+    const getTooltip = (id) => d3.select(getTooltipSelector(id))
+
+    const handleLineLabel = (id, e, v) => {
+        const $element = $(getTooltipSelector(id)).parent()
+        const type = $element.attr('data-type')
+        if (eq(type, 'line')) {
+            const lineName = e.currentTarget.getAttribute('data-linename')
+            d3.select(`.line--${lineName}`).style('opacity', v)
+        }
+    }
+
+    const buildTooltip = (id, chart, e, d) => {
+        const $element = $(getTooltipSelector(id)).parent()
+        const marginY = 40 // add a margin to prevent chrome flickering due to overlapping with tooltip
+        const label = (e.currentTarget?.getAttribute('data-label')) || d.label || d.data?.label
+        const value = (e.currentTarget?.getAttribute('data-value')) || d.value || d.data?.value
+        const rect = $element[0]?.getBoundingClientRect()
+
+        const xPos = e.clientX - rect.left
+        const yPos = e.clientY - rect.top - marginY
+
+        handleLineLabel(id, e, '1')
+
+        setToolTipContent({id, label, value, xPos, yPos, e, d, chart})
+    }
+
+    const setToolTipContent = ({id, label, value, xPos, yPos, e, d, chart}) => {
+        if (options.onSetToolTipContent) {
+            options.onSetToolTipContent({tooltip: {getD3: getTooltip, getSelector: getTooltipSelector }, 
+                id, label, value, xPos, yPos, e, d, 
+                chart})
+        } else {
+            getTooltip(id)
+                .html(`<span><em>${label}</em>: <strong>${value}</strong></span>`)
+                .style('left', xPos + 'px')
+                .style('top', yPos + 'px')
+        }
+        return getTooltip(id)
+    }
+
+    const visibleTooltip = (id, chart, e, d) => {
+        getTooltip(id)
+            .style('opacity', 1)
+        d3.select(this)
+            .style('opacity', 0.9)
+            .style('cursor', 'pointer')
+    }
+
+    const handleSvgSizing = (style, chartId, chart = 'bar') => {
+        let $parent = $(getChartSelector(chartId, chart))
+        let divWidth = $parent.width()
+        let i = 0
+        
+        while (divWidth <= 0 && i < 10) {
+            $parent = $parent.parent()
+            divWidth = $parent.width()
+            i++
+        }
+
+        const minWidth = style.minWidth || divWidth
+        const minHeight = style.minHeight || 420
+
+        divWidth = style.width || minWidth
+        let divHeight = style.height || minHeight
+        const margin = { top: 10, right: 30, bottom: 40, left: 80, ...(style.margin || {}) };
+            
+        const marginY = (margin.top + margin.bottom)
+        const marginX = (margin.left + margin.right) * 2
+        const width = divWidth - marginX,
+            height = divHeight - marginY;
+
+        return {width, height, margin: {
+            Y: marginY,
+            X: marginX,
+            top: margin.top,
+            bottom: margin.bottom,
+            right: margin.right,
+            left: margin.left
+            },
+            isMobile: width < 500,
+            font: style.fontSize || {title: '16px'}
+        }
+    }
+
+    const tooltipValFormatter = ({d, v, xAxis}) => xAxis.tooltipValFormatter ? xAxis.tooltipValFormatter({d, v}) : v
+
+    const svgAppend = ({xAxis, yAxis}) => {
+        const showXLabels = () => xAxis.showLabels !== undefined ? xAxis.showLabels : true
+        const showYLabels = () => yAxis.showLabels !== undefined ? yAxis.showLabels : true
+
+        const truncateLabel = (label) => {
+            return label.length > 30 ? label.substring(0, 27) + "..." : label;
+        }
+
+        return {
+            xAxis: ({g, groups, sizing}) => {
+                const x = d3.scaleBand()
+                    .domain(groups)
+                    .range([0, sizing.width])
+                    .padding([xAxis.barPadding || 0.2])
+        
+                let axis = xAxis.tickSize !== undefined ? d3.axisBottom(x).tickSize(xAxis.tickSize) : d3.axisBottom(x)
+                if (xAxis.formatter) {
+                    axis.tickFormat((_x) => xAxis.formatter({x: _x}))
+                }
+
+                const xAxisLabels = g.append("g")
+                    .attr("transform", `translate(0, ${sizing.height - sizing.margin.bottom})`)
+                    .call(axis)
+                    .selectAll("text")
+                    .style("display", showXLabels() ? "block" : "none")
+                    .style("font-size", "11px")
+
+                const rotateLabels = xAxis.rotateLabels || sizing.isMobile
+                if (rotateLabels) {
+                    xAxisLabels.style("text-anchor", "end")
+                        .attr("dx", "-0.8em")
+                        .attr("dy", "0.15em")
+                        .attr("transform", "rotate(-45)")
+                        .text(function (d) {
+                            return truncateLabel(d);
+                        });
+                }
+
+                return {x, xAxisLabels}
+            },
+            yAxis: ({data, g, yAxis, sizing, maxY}) => {
+                const getTicks = () => {
+                    if (typeof yAxis.ticks === 'object') {
+                        return yAxis.scaleLog ? yAxis.ticks.log : yAxis.ticks.linear
+                    }
+                    return yAxis.ticks
+                }
+
+                const ticks = yAxis.scaleLog || yAxis.ticks ? getTicks() || 5 : undefined
+                const scaleMethod = yAxis.scaleLog ? d3.scaleLog : d3.scaleLinear
+                const minY = yAxis.minY || (yAxis.scaleLog ? 1 : 0)
+                const totalY = getTotalY(data)
+                
+                // Add Y axis
+                const y = scaleMethod()
+                    .domain([minY, yAxis.maxY || maxY])
+                    .nice()
+                    .range([sizing.height - sizing.margin.bottom, sizing.margin.top]);
+                
+                const tickValues = y.ticks(ticks)
+                g.append("g")
+                    .call(d3.axisLeft(y).ticks(ticks).tickFormat((y) => yAxis.formatter ? yAxis.formatter({ y, maxY, totalY, tickValues }) : (y).toFixed()))
+
+                return {y, minY, ticks, totalY, tickValues}
+            },
+            grid: ({g, y, hideGrid, ticks, sizing}) => {
+                if (!hideGrid) {
+                    g.append("g")
+                        .selectAll(".y-grid")
+                            .data(y.ticks(ticks))
+                            .enter().append("line")
+                            .attr("class", "y-grid")
+                            .attr("x1", 0)
+                            .attr("y1", d => Math.ceil(y(d)))
+                            .attr("x2", sizing.width)
+                            .attr("y2", d => Math.ceil(y(d)))
+                            .style("stroke", "#eee") // Light gray
+                            .style("stroke-width", "1px")
+                }
+            },
+            axisLabels: ({svg, sizing}) => {
+                if (showYLabels()) {
+                    svg.append("g")
+                        .append("text")
+                        .style("font-size", sizing.font.title)
+                        .attr("class", "y label")
+                        .attr("text-anchor", "start")
+                        .attr("y", yAxis.labelPadding || 40)
+                        .attr("x", ((sizing.height + sizing.margin.bottom) / 2) * -1)
+                        .attr("dy", ".74em")
+                        .attr("transform", "rotate(-90)")
+                        .text(yAxis.label || "Frequency")
+                }
+
+                if (xAxis.label && showXLabels()) {
+                    svg.append("g")
+                        .append("text")
+                        .style("font-size", sizing.font.title)
+                        .attr("class", "x label")
+                        .attr("text-anchor", "middle")
+                        .attr("x", (sizing.width / 2) + sizing.margin.left)
+                        .attr("y", sizing.height + sizing.margin.bottom * .5)
+                        .text(xAxis.label)
+                }
+            },
+            adjustMargin: ({groups, sizing, rotateLabels}) => {
+                
+                if (showXLabels() && rotateLabels) {
+                    // We need to calculate the maximum label width to adjust for the label being at 45 degrees.
+                    const tempSvg = d3.select("body").append("svg").attr("class", "temp-svg").style("visibility", "hidden");
+                    let maxLabelWidth = 0;
+                    groups.forEach(name => {
+                        const truncName = truncateLabel(name);
+                        const textElement = tempSvg.append("text").text(truncName).style("font-size", "11px");
+                        const bbox = textElement.node().getBBox();
+                        if (bbox.width > maxLabelWidth) {
+                            maxLabelWidth = bbox.width;
+                        }
+                        textElement.remove();
+                    });
+                    tempSvg.remove();
+
+                    // Adjust the bottom margin and height to not cut off the labels.
+                    sizing.margin.bottom = sizing.margin.bottom + maxLabelWidth * Math.sin(Math.PI / 6);
+                    sizing.height = sizing.height + maxLabelWidth * Math.sin(Math.PI / 4);
+                    
+                }
+                return {truncateLabel}
+            }
+
+        }
+    }
+
+    const addHighlightToolTip = (id, highlight, chart = 'bar') => {
+        let rect, xPos
+        let name = 'highlight'
+        
+        $(`${getChartSelector(id, chart)} .bar--highlighted`).each(function(index, element) {
+            appendDiv(id, name, chart, index)
+            rect = element?.getBoundingClientRect()
+
+            xPos = Number($(element).attr('x')) - 5
+            d3.select(`#${selectors.base}${name}--${id}${index}`)
+                .html(`<em class="fs-6">${highlight}</strong>`)
+                .style('left', xPos + 'px')
+                .style('opacity', 1)
+                .style('top', '20px')
+        })
+    }
+
+    const toolTipHandlers = (id, chart = 'bar') => {
+        return {
+            click: function (e, d) {
+                if (options.onRectClick) {
+                    options.onRectClick({id, chart, e, d})
+                }
+            },
+            mouseover: function (e, d) {
+                visibleTooltip(id, chart, e, d)
+            },
+            mouseenter: function (e, d) {
+                e.stopPropagation()
+                visibleTooltip(id, chart, e, d)
+                buildTooltip(id, chart, e, d)
+            },
+            mousemove: function (e, d) {
+                buildTooltip(id, chart, e, d)
+            },
+            mouseleave: function (e, d) {
+                e.stopPropagation()
+                handleLineLabel(id, e, '0')
+                getTooltip(id)
+                    .style('opacity', 0)
+                d3.select(this)
+                    .style('opacity', 1)
+            }
+        };
+    }
+   
+    return (
+        <VisualizationsContext.Provider
+            value={{
+                getChartSelector,
+                toolTipHandlers,
+                appendTooltip,
+                addHighlightToolTip,
+                getSubgroupLabels,
+                handleSvgSizing,
+                toolTipHandlers,
+                setToolTipContent,
+                getTotalY,
+                svgAppend,
+                tooltipValFormatter,
+                selectors,
+            }}
+        >
+        {children}
+    </VisualizationsContext.Provider>
+    )
+}
+
+export default VisualizationsContext

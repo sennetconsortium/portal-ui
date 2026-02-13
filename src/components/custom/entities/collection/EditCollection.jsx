@@ -440,7 +440,7 @@ export default function EditCollection({collectionType='Collection', entitiesTab
                                                                         className='tooltip-close'
                                                                         onClick={() => {
                                                                             setBulkPopover(false)
-                                                                        }}><i class="bi bi-x"></i>
+                                                                        }}><i className="bi bi-x"></i>
                                                     </span>
                                                              <div
                                                                  className={'tooltip-content tooltip-bulk-add-id'}>{bulkErrorMessage}</div>

@@ -102,21 +102,46 @@ function SelectedFacets() {
         )
     }
 
+    const buildListValuesFacetChip = (filter) => {
+        const field = filter.field 
+        const value = filter.values.join(', ')
+        return (
+            <Chip
+                key={`${field}_${formatVal(value)}`}
+                className={`${getSelector('chipToggle', field, value)} sui-chipToggle--static`}
+                label={
+                    <>
+                        {' '}
+                        <span className='chip-title'>{field}</span>:{' '}
+                        <span className='chip-value'>{value}</span>
+                    </>
+                }
+                variant='outlined'
+                onDelete={(e) => filter.values.map(v => removeFilter(field, v))}
+            />
+        )
+    }
+
     return (
         <div className={`c-SelectedFacets`}>
             {filters.reduce((acc, filter) => {
                 const facet = findFacet(filter.field)
-                for (const value of filter.values) {
-                    switch (facet?.facetType) {
-                    case 'daterange':
-                    case 'histogram':
-                        acc.push(...buildRangeFacetChip(filter, facet, value))
-                        break;
-                    default:
-                        acc.push(buildValueFacetChip(filter, facet, value))
-                        break;
+                if (facet?.facetChipType) {
+                    acc.push(buildListValuesFacetChip(filter))
+                } else {
+                    for (const value of filter.values) {
+                        switch (facet?.facetType) {
+                            case 'daterange':
+                            case 'histogram':
+                                acc.push(...buildRangeFacetChip(filter, facet, value))
+                                break;
+                            default:
+                                acc.push(buildValueFacetChip(filter, facet, value))
+                                break;
+                        }
                     }
                 }
+                
                 return acc
             }, [])}
         </div>
