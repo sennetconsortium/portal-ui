@@ -21,7 +21,7 @@ const Header = dynamic(() => import("@/components/custom/layout/Header"))
 // const Spinner = dynamic(() => import("@/components/custom/Spinner"))
 
 const ChartOverview = memo(({ subGroupLabels, data, setVisualizationData }) => {
-    const [isLogScale, setIsLogScale] = useState(true)
+    const [isLogScale, setIsLogScale] = useState(false)
     const [isPercentage, setIsPercentage] = useState(false)
     const [_, setRefresh] = useState(null)
 
@@ -100,15 +100,15 @@ const ChartOverview = memo(({ subGroupLabels, data, setVisualizationData }) => {
     return (<VisualizationsProvider options={{ onRectClick, onSetToolTipContent }}>
         <div className="d-flex mb-5">
             <Stack direction="row" spacing={0} sx={{ alignItems: 'center' }}>
-                <span>Linear scale &nbsp;</span>
+                <span>Log scale &nbsp;</span>
                 <FormControlLabel
-                    control={<Switch defaultChecked />}
+                    control={<Switch defaultChecked={!isLogScale} />}
                     label={<span>
                         <sup>
                             <SenNetPopover text={<span>Toggle between linear and symmetric log scale for the counts. Symmetric log scale is useful for visualizing data with a wide range of values.</span>}>
                                 <i className="bi bi-info-circle"></i>
                             </SenNetPopover>
-                        </sup>&nbsp;&nbsp;Log scale
+                        </sup>&nbsp;&nbsp;Linear scale
                     </span>}
                     onChange={changeScale} />
             </Stack>
@@ -116,7 +116,7 @@ const ChartOverview = memo(({ subGroupLabels, data, setVisualizationData }) => {
             <Stack direction="row" spacing={0} sx={{ alignItems: 'center' }}>
                 <span>Percentage&nbsp;</span>
                 <FormControlLabel
-                    control={<Switch defaultChecked />}
+                    control={<Switch defaultChecked={!isPercentage} />}
                     label={<span>
                         <sup>
                             <SenNetPopover text={<span>Toggle between displaying data as raw counts or percentages.</span>}>
