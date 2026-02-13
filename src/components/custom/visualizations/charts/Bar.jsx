@@ -134,9 +134,8 @@ function Bar({
     }, [filters, yAxis])
 
     useEffect(() => {
-        addEventListener("resize", (event) => {
-            updateChart()
-        })
+        window.addEventListener('resize', updateChart);
+        return () => window.removeEventListener('resize', updateChart);
     }, [])
 
     return (
