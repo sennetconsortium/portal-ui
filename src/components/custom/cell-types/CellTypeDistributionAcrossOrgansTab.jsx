@@ -54,7 +54,7 @@ const CellTypeDistributionAcrossOrgansTab = memo(({organ, tabData, cell}) => {
       const label = ops.label
 
       const html = `<div">
-      <span class="fs-6"><em>${label}</em>: <strong>${ops.value} (${percentage(current, total)}%)</strong></span>
+      <span class="fs-6"><em>${label}</em>: <strong>${formatNum(current)} (${percentage(current, total)}%)</strong></span>
       <span><em>Other cell types</em>: <strong>${formatNum(total - current)} (${percentage(total - current, total)}%)</strong></span>
       <span><em>Total</em>: <strong>${formatNum(total)}</strong></span>
       </div>`
