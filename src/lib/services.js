@@ -810,7 +810,8 @@ export const getDistinctOrgansAndCellTypes = async () => {
                 aggs: {
                     group_by_cell_label: {
                         terms: {
-                            field: "cell_label.keyword"
+                            field: "cell_label.keyword",
+                            size: 10000
                         },
                         aggs: {
                             cell_id: {top_hits: {size: 1, _source: {include: ['cl_id']}}},
