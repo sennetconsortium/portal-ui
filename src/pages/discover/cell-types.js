@@ -166,7 +166,8 @@ function CellTypes() {
             }
             dict[organ] = {
                 group: organ,
-                ...cellTypes
+                ...result, // add previous entries
+                ...cellTypes // get new entries and overwrite previous ones
             }
 
             if (hasOrgan) {
@@ -208,7 +209,7 @@ function CellTypes() {
         }
         percentageData.current = percentage
     
-        Addon.log('Data', {data: {percentageData, countData, groupTotals}})
+        Addon.log('Celltypes overview data', {data: {percentageData, countData, groupTotals, subGroupLabels}})
         setVisualizationData(countData.current)
     }
     useEffect(() => {
