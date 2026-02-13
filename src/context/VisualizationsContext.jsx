@@ -1,13 +1,10 @@
-import {createContext, useContext, useEffect, useRef} from "react";
-import AppContext from "./AppContext";
+import {createContext, useRef} from "react";
 import * as d3 from "d3";
 import { eq } from "@/components/custom/js/functions";
 
 const VisualizationsContext = createContext({})
 
 export const VisualizationsProvider = ({ children, options = {} }) => {
-
-    const { _t, authorized, isUnauthorized, router} = useContext(AppContext)
 
     const chartId = useRef('main')
     const selectors = {

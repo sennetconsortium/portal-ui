@@ -169,18 +169,17 @@ function StackedBar({
         $(getChartSelector(chartId, chartType)).html('')
         appendTooltip(chartId, chartType)
         $(getChartSelector(chartId, chartType)).append(buildChart())
-        // if (style.highlight) {
-        //   setTimeout(() => {
-        //     addHighlightToolTip(chartId, style.highlight, chartType)
-        //   }, 1000)
-        // }
+        if (style.highlight) {
+          setTimeout(() => {
+            addHighlightToolTip(chartId, style.highlight, chartType)
+          }, 1000)
+        }
         if (setLegend) {
             setLegend(colors.current)
         }
     }
 
     useEffect(() => {
-        console.log('Data changed', data)
         if (reload || chartData.current.length !== data.length || !hasLoaded.current) {
             hasLoaded.current = true
             chartData.current = Array.from(data)
@@ -194,10 +193,8 @@ function StackedBar({
     }, [filters, yAxis])
 
     useEffect(() => {
-        addEventListener("resize", (e) => {
-            console.log('Data', chartData.current, data)
-            updateChart()
-        })
+        window.addEventListener('resize', updateChart);
+        return () => window.removeEventListener('resize', updateChart);
     }, [])
 
     return (

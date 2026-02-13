@@ -8,7 +8,6 @@ import ChartContainer from "@/components/custom/visualizations/ChartContainer";
 import { getDistinctOrgansAndCellTypes } from "@/lib/services";
 import { formatNum,  percentage } from "@/components/custom/js/functions";
 import { VisualizationsProvider } from "@/context/VisualizationsContext";
-import { prepareOverlapData } from "@/components/custom/visualizations/charts/OverlapBar";
 import { FormControlLabel, Switch } from "@mui/material";
 import Stack from '@mui/material/Stack';
 import { APP_ROUTES } from "@/config/constants";
@@ -19,11 +18,18 @@ import SenNetPopover from "@/components/SenNetPopover";
 
 const AppNavbar = dynamic(() => import("@/components/custom/layout/AppNavbar"))
 const Header = dynamic(() => import("@/components/custom/layout/Header"))
-const Spinner = dynamic(() => import("@/components/custom/Spinner"))
+// const Spinner = dynamic(() => import("@/components/custom/Spinner"))
 
 const ChartOverview = memo(({ subGroupLabels, data, setVisualizationData }) => {
     const [isLogScale, setIsLogScale] = useState(true)
     const [isPercentage, setIsPercentage] = useState(false)
+    const [_, setRefresh] = useState(null)
+
+    useEffect(() => {
+        const handleResize = () => setRefresh(new Date().getTime())
+        window.addEventListener('resize', handleResize)
+        return () => window.removeEventListener('resize', handleResize)
+    }, [])
 
     const onRectClick = (eventData) => {
         Addon.log('onBarClick', { data: eventData })
@@ -43,15 +49,7 @@ const ChartOverview = memo(({ subGroupLabels, data, setVisualizationData }) => {
         setIsPercentage(!isPercentage)
     }
 
-    // const yAxisPercentageFormatter = ({y, tickValues}) => {
-    //     if (y === 0) return '0%'
-    //     const perc = (y/ tickValues[tickValues.length - 1]) * 100
-    //     const fixed = perc < 1 ? 3 : 0
-    //     return perc.toFixed(fixed) + '%'
-    // }
-
     const yAxisPercentageFormatter = ({y}) => {
-        
         const perc = y * 100
         const fixed = perc < 1 ? 3 : 0
         return perc.toFixed(fixed) + '%'
@@ -97,7 +95,6 @@ const ChartOverview = memo(({ subGroupLabels, data, setVisualizationData }) => {
 
     const yAxis = { label: "Cell Count", maxY: isPercentage ? 1 : undefined, minY: isPercentage || isLogScale ? 0.00001 : (0), formatter: isPercentage ? yAxisPercentageFormatter : yAxisTotalFormatter, scaleLog: isLogScale, showLabels: true, ticks: {linear: 10, log: 4} }
     const xAxis = { formatter: ({x}) => formatNum(x), label: `Organs`, showLabels: true }
-    console.log(subGroupLabels.current)
 
     return (<VisualizationsProvider options={{ onRectClick, onSetToolTipContent }}>
         <div className="d-flex mb-5">
