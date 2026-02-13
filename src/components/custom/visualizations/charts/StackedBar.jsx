@@ -22,6 +22,7 @@ function StackedBar({
         addHighlightToolTip,
         handleSvgSizing,
         svgAppend,
+        tooltipValFormatter,
         appendTooltip } = useContext(VisualizationsContext)
 
 
@@ -80,8 +81,7 @@ function StackedBar({
 
         // color palette = one color per subgroup
         const colorScale = d3.scaleOrdinal(style.colorScheme || d3.schemeCategory10)
-
-        const formatVal = (x) => xAxis.formatter ? xAxis.formatter({x}) : x
+        const _tooltipValFormatter = (ops) => tooltipValFormatter({...ops, xAxis})
 
         const getSubgroupLabel = (v) => subGroupLabels[v] || v
       
@@ -95,7 +95,7 @@ function StackedBar({
               .attr("fill", d => {
                 const color = style.colorScale  ? style.colorScale({d, maxY}) : colorScale(d.key)
                 const label = getSubgroupLabel(d.key)
-                colors.current[label] = { color, label, value: formatVal(getSubGroupSum(d.key)) }
+                colors.current[label] = { color, label, value: _tooltipValFormatter({d, v: getSubGroupSum(d.key)}) }
                 return color
             })
             .selectAll("rect")
@@ -103,7 +103,7 @@ function StackedBar({
             .data(D => D.map(d => (d.key = D.key, d)))
             .join("rect")
             .attr('data-value', d => {
-                return formatVal(d.data[d.key])
+                return _tooltipValFormatter({d, v: d.data[d.key]})
             })
             .attr('data-label', d => {
                 return getSubgroupLabel(d.key)
@@ -118,7 +118,7 @@ function StackedBar({
             .attr("width", x.bandwidth() )
             .append("title")
             .text(d => {
-                return `${d.data.group}\n${getSubgroupLabel(d.key)}: ${formatVal(d.data[d.key])}`
+                return `${d.data.group}\n${getSubgroupLabel(d.key)}: ${_tooltipValFormatter({d, v: d.data[d.key]})}`
             })
 
         svg.selectAll("rect")

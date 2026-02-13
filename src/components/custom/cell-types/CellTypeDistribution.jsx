@@ -81,7 +81,8 @@ export default function CellTypeDistribution({ clId }) {
     const xAxis = {
         rotateLabels: false,
         label: 'Organ',
-        description: `Bar chart showing distribution of cell type ${clId} across organs.`
+        description: `Bar chart showing distribution of cell type ${clId} across organs.`,
+        tooltipValFormatter: ({v}) => formatNum(v)
     }
 
     return (

@@ -138,6 +138,8 @@ export const VisualizationsProvider = ({ children, options = {} }) => {
         }
     }
 
+    const tooltipValFormatter = ({d, v, xAxis}) => xAxis.tooltipValFormatter ? xAxis.tooltipValFormatter({d, v}) : v
+
     const svgAppend = ({xAxis, yAxis}) => {
         const showXLabels = () => xAxis.showLabels !== undefined ? xAxis.showLabels : true
         const showYLabels = () => yAxis.showLabels !== undefined ? yAxis.showLabels : true
@@ -153,7 +155,11 @@ export const VisualizationsProvider = ({ children, options = {} }) => {
                     .range([0, sizing.width])
                     .padding([xAxis.barPadding || 0.2])
         
-                const axis = xAxis.tickSize !== undefined ? d3.axisBottom(x).tickSize(xAxis.tickSize) : d3.axisBottom(x)
+                let axis = xAxis.tickSize !== undefined ? d3.axisBottom(x).tickSize(xAxis.tickSize) : d3.axisBottom(x)
+                if (xAxis.formatter) {
+                    axis.tickFormat((_x) => xAxis.formatter({x: _x}))
+                }
+
                 const xAxisLabels = g.append("g")
                     .attr("transform", `translate(0, ${sizing.height - sizing.margin.bottom})`)
                     .call(axis)
@@ -326,7 +332,8 @@ export const VisualizationsProvider = ({ children, options = {} }) => {
                 setToolTipContent,
                 getTotalY,
                 svgAppend,
-                selectors
+                tooltipValFormatter,
+                selectors,
             }}
         >
         {children}

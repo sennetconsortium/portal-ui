@@ -34,6 +34,7 @@ function OverlapBar({
         getSubgroupLabels,
         handleSvgSizing,
         svgAppend,
+        tooltipValFormatter,
         appendTooltip } = useContext(VisualizationsContext)
 
 
@@ -51,7 +52,6 @@ function OverlapBar({
     }
 
     const buildChart = () => {
-        console.log('Stackedchart', data)
 
         const sizing = handleSvgSizing(style, chartId, chartType)
 
@@ -95,7 +95,7 @@ function OverlapBar({
         // color palette = one color per subgroup
         const colorScale = d3.scaleOrdinal(style.colorScheme || d3.schemeCategory10)
 
-        const formatVal = (x) => xAxis.formatter ? xAxis.formatter({x}) : x
+        const _tooltipValFormatter = (ops) => tooltipValFormatter({...ops, xAxis})
 
         const getSubgroupLabel = (v) => subGroupLabels[v] || v
 
@@ -117,11 +117,11 @@ function OverlapBar({
             .attr("fill", d => {
                 const color = style.colorScale  ? style.colorScale({d, maxY}) : colorScale(d.key)
                 const label = getSubgroupLabel(d.key)
-                colors.current[label] = { color, label, value: formatVal(getSubGroupSum(d.key)) }
+                colors.current[label] = { color, label, value: _tooltipValFormatter({d, v: getSubGroupSum(d.key)}) }
                 return color
             })
             .attr('data-value', d => {
-                return formatVal(d.val)
+                return _tooltipValFormatter({d, v: d.val})
             })
             .attr('data-label', d => {
                 return getSubgroupLabel(d.key)
@@ -133,7 +133,7 @@ function OverlapBar({
             .attr("width", x.bandwidth())
             .append("title")
             .text(d => {
-                return `${d.group}\n${getSubgroupLabel(d.key)}: ${formatVal(d.val)}`
+                return `${d.group}\n${getSubgroupLabel(d.key)}: ${_tooltipValFormatter({d, v: d.val})}`
             })
 
         svg.selectAll("rect")
