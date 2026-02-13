@@ -88,7 +88,7 @@ const ChartOverview = memo(({ subGroupLabels, data, setVisualizationData }) => {
     }
 
     const yAxis = { label: `Cell ${isPercentage ? 'Percentage' : 'Count'}`, maxY: isPercentage ? 1 : undefined, minY: isPercentage || isLogScale ? 0.00001 : (0), formatter: isPercentage ? yAxisPercentageFormatter : yAxisTotalFormatter, scaleLog: isLogScale, showLabels: true, ticks: {linear: 10, log: 4} }
-    const xAxis = { formatter: ({x}) => formatNum(x), label: `Organs`, showLabels: true }
+    const xAxis = { label: `Organs`, showLabels: true }
 
     return (<VisualizationsProvider options={{ onRectClick, onSetToolTipContent }}>
         <div className="d-flex mb-5">
