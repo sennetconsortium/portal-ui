@@ -48,30 +48,13 @@ function StackedBar({
 
         const g = svg
             .append("g")
-            .attr("transform", `translate(40,${sizing.margin.top})`)
+            .attr("transform", `translate(${sizing.margin.left * 1.5},${sizing.margin.top})`)
     
         subGroupLabels = getSubgroupLabels(data, subGroupLabels)
 
         const subgroups = Object.keys(subGroupLabels)
 
         const groups = data.map(d => (d?.group))
-
-        // Add x axis
-        const x = d3.scaleBand()
-            .domain(groups)
-            .range([sizing.margin.left, sizing.width])
-            .padding(0.1)
-
-        
-        const getTicks = () => {
-          if (typeof yAxis.ticks === 'object') {
-            return yAxis.scaleLog ? yAxis.ticks.log : yAxis.ticks.linear
-          }
-          return yAxis.ticks
-        }
-        
-        const ticks = yAxis.scaleLog || yAxis.ticks ? getTicks() || 5 : undefined
-        const scaleMethod = yAxis.scaleLog ? d3.scaleLog : d3.scaleLinear
 
         const minY = yAxis.minY || (yAxis.scaleLog ? 1 : 0)
 
@@ -85,18 +68,15 @@ function StackedBar({
 
         const maxY = d3.max(stackedSeries, d => d3.max(d, d => d[1]))
 
-        //Add Y axis
-        const y = scaleMethod()
-            .domain([minY, d3.max(stackedSeries, d => d3.max(d, d => d[1]))])
-            //.nice()
-            .range([sizing.height, 0]);
-            
-        g.append("g")
-            .attr('class', 'y-axis')
-            .attr("transform", `translate(${sizing.margin.left}, 0)`)
-            .call(d3.axisLeft(y).ticks(ticks).tickFormat((y) => yAxis.formatter ? yAxis.formatter({ y, maxY }) : (y).toFixed()))
+        // Add Y axis
+        const {y, ticks} = svgAppend({}).yAxis({data, g, yAxis, sizing, maxY})
 
         svgAppend({xAxis, yAxis}).axisLabels({svg, sizing})   
+
+        svgAppend({}).grid({g, y, hideGrid: yAxis.hideGrid, ticks, sizing})
+
+        // Add X axis
+        const {x} = svgAppend({xAxis}).xAxis({g, groups, sizing})
 
         // color palette = one color per subgroup
         const colorScale = d3.scaleOrdinal(style.colorScheme || d3.schemeCategory10)
@@ -104,8 +84,6 @@ function StackedBar({
         const formatVal = (x) => xAxis.formatter ? xAxis.formatter({x}) : x
 
         const getSubgroupLabel = (v) => subGroupLabels[v] || v
-
-        //svgAppend({}).grid({g, y, hideGrid: yAxis.hideGrid, ticks, sizing})
       
         // Show the bars
         g.append("g")
@@ -157,10 +135,6 @@ function StackedBar({
             })
             .attr("height", d => y(d[0] || minY) - y(d[1]))
           
-        g.append("g")
-        .attr("transform", `translate(0,${sizing.height})`)
-            .attr("class", `y-axis`)
-            .call(d3.axisBottom(x));
 
         return svg.node();
     }

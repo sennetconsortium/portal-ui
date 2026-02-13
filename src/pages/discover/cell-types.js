@@ -50,6 +50,7 @@ const ChartOverview = memo(({ subGroupLabels, data, setVisualizationData }) => {
     }
 
     const yAxisPercentageFormatter = ({y}) => {
+        if (y === 0) return '0%';
         const perc = y * 100
         const fixed = perc < 1 ? 3 : 0
         return perc.toFixed(fixed) + '%'
@@ -126,7 +127,7 @@ const ChartOverview = memo(({ subGroupLabels, data, setVisualizationData }) => {
                     onChange={changeTickFormat} />
             </Stack>
         </div>
-        <ChartContainer style={{ className: 'c-visualizations--posInherit c-visualizations--boxShadow mt-3', margin: {bottom: 100}, colorScheme: combinedColors  }} 
+        <ChartContainer style={{ className: 'c-visualizations--posInherit c-visualizations--boxShadow mt-3', colorScheme: combinedColors  }} 
         subGroupLabels={subGroupLabels.current} 
         data={data.visualizationData} 
         xAxis={xAxis} yAxis={yAxis} chartType={'stackedBar'} />
