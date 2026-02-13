@@ -82,7 +82,6 @@ function StackedBar({
           })
 
         const stackedSeries = stackGen(data)
-        console.log(stackedSeries, data)
 
         const maxY = d3.max(stackedSeries, d => d3.max(d, d => d[1]))
 
@@ -135,7 +134,7 @@ function StackedBar({
             
             .attr("x", d => x(d.data.group))
             .attr("y", d => {
-              return y(d[1])
+              return y(minY)
             })
             .attr("height", 0)
             .attr("width", x.bandwidth() )
@@ -153,6 +152,9 @@ function StackedBar({
         svg.selectAll("rect")
             .transition()
             .duration(800)
+            .attr("y", d => {
+              return y(d[1])
+            })
             .attr("height", d => y(d[0] || minY) - y(d[1]))
           
         g.append("g")
@@ -167,17 +169,18 @@ function StackedBar({
         $(getChartSelector(chartId, chartType)).html('')
         appendTooltip(chartId, chartType)
         $(getChartSelector(chartId, chartType)).append(buildChart())
-        if (style.highlight) {
-          setTimeout(() => {
-            addHighlightToolTip(chartId, style.highlight, chartType)
-          }, 1000)
-        }
+        // if (style.highlight) {
+        //   setTimeout(() => {
+        //     addHighlightToolTip(chartId, style.highlight, chartType)
+        //   }, 1000)
+        // }
         if (setLegend) {
             setLegend(colors.current)
         }
     }
 
     useEffect(() => {
+        console.log('Data changed', data)
         if (reload || chartData.current.length !== data.length || !hasLoaded.current) {
             hasLoaded.current = true
             chartData.current = Array.from(data)
@@ -191,8 +194,8 @@ function StackedBar({
     }, [filters, yAxis])
 
     useEffect(() => {
-        addEventListener("resize", (event) => {
-          console.log('rs', data)
+        addEventListener("resize", (e) => {
+            console.log('Data', chartData.current, data)
             updateChart()
         })
     }, [])
