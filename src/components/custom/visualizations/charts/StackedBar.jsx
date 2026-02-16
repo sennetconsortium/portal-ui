@@ -134,7 +134,7 @@ function StackedBar({
               return y(d[1])
             })
             .attr("height", d => {
-                const x = d[0] == minY ? minRange : y(d[0] || minY)
+                const x = d[0] == _minY ? minRange : y(d[0] || minY)
                 return x - y(d[1])
             })
           
