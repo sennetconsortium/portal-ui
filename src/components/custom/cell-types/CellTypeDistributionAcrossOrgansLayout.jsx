@@ -36,18 +36,18 @@ const CellTypeDistributionAcrossOrgansLayout = memo(({ children, organ, tabData,
   }
 
   const handleLabelValueFormatter = (_cell) => {
-    return <><code>{_cell.value}</code> cells, <code>{percentage(_cell.value, tabData[organ._id].cells)}</code>% of total </>
+    return <><code>{formatNum(_cell.value)}</code> cells, <code>{percentage(_cell.value, tabData[organ._id].cells)}</code>% of total </>
   }
 
   return (
     <div>
       {children}
-      <p>Indexed {organ.label} datasets contain {formatNum(tabData[organ._id].cells)} cells in {formatNum(tabData[organ._id].types)} cell types.</p>
+      <p>Indexed <code className='fs-6'>{organ.label}</code> datasets contain <strong>{formatNum(tabData[organ._id].cells)}</strong> cells in <strong>{formatNum(tabData[organ._id].types)}</strong> cell types.</p>
       <Row>
         <Col>
           <h3 className='fs-6'>Targeted Cell Type</h3>
           <p><span className='badge badge-info fs-6'>{cell.label}</span> &nbsp;
-          <code>{tabData[organ._id].currentCell}</code> cells,&nbsp;
+          <code>{formatNum(tabData[organ._id].currentCell)}</code> cells,&nbsp;
           <code> {percentage(tabData[organ._id].currentCell, tabData[organ._id].cells)}%</code> of total</p>
         </Col>
         <Col>

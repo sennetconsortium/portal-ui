@@ -121,7 +121,7 @@ const ChartOverview = memo(({ subGroupLabels, data, setVisualizationData }) => {
             </Stack>
         </div>
         {data.visualizationData.length <= 0 && <Spinner /> }
-        {data.visualizationData.length && <ChartContainer style={{ className: 'c-visualizations--posInherit c-visualizations--boxShadow mt-3', colorScheme: combinedColors  }} 
+        {data.visualizationData.length > 0 && <ChartContainer style={{ className: 'c-visualizations--posInherit c-visualizations--boxShadow mt-3', colorScheme: combinedColors  }} 
         subGroupLabels={subGroupLabels.current} 
         data={data.visualizationData} 
         xAxis={xAxis} yAxis={yAxis} chartType={'stackedBar'} />}
