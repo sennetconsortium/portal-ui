@@ -49,7 +49,6 @@ function Bar({
 
         // Bar must have a minimum height to be able to click. 2% of the max value seems good
         const maxY = d3.max(data, (d) => d.value)
-        const minBarPx = 5
 
         // Create the SVG container.
         const svg = d3.create("svg")
@@ -63,7 +62,7 @@ function Bar({
         const {x, xAxisLabels} = svgAppend({xAxis}).xAxis({g, groups: names, sizing})
 
         // Add the y-axis and label, and remove the domain line.
-        const {y, minY, ticks} = svgAppend({}).yAxis({data, g, yAxis, sizing, maxY})
+        const {y, minY, ticks, minRange} = svgAppend({}).yAxis({data, g, yAxis, sizing, maxY})
 
         const _tooltipValFormatter = (ops) => tooltipValFormatter({...ops, xAxis})
 
@@ -92,17 +91,8 @@ function Bar({
         svg.selectAll("rect")
             .transition()
             .duration(800)
-            .attr("y", (d) => {
-                const actualTop = y(d.value)
-                const actualHeight = y(minY) - actualTop
-                const h = Math.max(minBarPx, actualHeight)
-                return actualTop - (h - actualHeight)
-            })
-            .attr("height", function (d) {
-                const actualTop = y(d.value)
-                const actualHeight = y(minY) - actualTop
-                return Math.max(minBarPx, actualHeight)
-            })
+            .attr("y", (d) => y(d.value))
+            .attr("height", function (d) { return minRange - y(d.value); })
             .delay(function (d, i) { return (i * 100) })
 
         svg.selectAll("rect")
