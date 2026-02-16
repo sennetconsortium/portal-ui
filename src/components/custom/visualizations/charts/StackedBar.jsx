@@ -70,7 +70,7 @@ function StackedBar({
         const maxY = d3.max(stackedSeries, d => d3.max(d, d => d[1]))
 
         // Add Y axis
-        const {y, ticks} = svgAppend({}).yAxis({data, g, yAxis, sizing, maxY})
+        const {y, ticks, minRange} = svgAppend({}).yAxis({data, g, yAxis, sizing, maxY})
 
         svgAppend({xAxis, yAxis}).axisLabels({svg, sizing})   
 
@@ -133,7 +133,10 @@ function StackedBar({
             .attr("y", d => {
               return y(d[1])
             })
-            .attr("height", d => y(d[0] || minY) - y(d[1]))
+            .attr("height", d => {
+                const x = d[0] == minY ? minRange : y(d[0] || minY)
+                return x - y(d[1])
+            })
           
 
         return svg.node();
