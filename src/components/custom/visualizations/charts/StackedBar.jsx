@@ -57,12 +57,12 @@ function StackedBar({
 
         const groups = data.map(d => (d?.group))
 
-        const minY = yAxis.minY || (yAxis.scaleLog ? 1 : 0)
+        const _minY = yAxis.minY || (yAxis.scaleLog ? 1 : 0)
 
         const stackGen = d3.stack()
           .keys(subgroups)
           .value((d, k) => {
-            return +d[k] || minY
+            return +d[k] || _minY
           })
 
         const stackedSeries = stackGen(data)
@@ -70,7 +70,7 @@ function StackedBar({
         const maxY = d3.max(stackedSeries, d => d3.max(d, d => d[1]))
 
         // Add Y axis
-        const {y, ticks, minRange} = svgAppend({}).yAxis({data, g, yAxis, sizing, maxY})
+        const {y, ticks, minY, minRange} = svgAppend({}).yAxis({data, g, yAxis, sizing, maxY})
 
         svgAppend({xAxis, yAxis}).axisLabels({svg, sizing})   
 
