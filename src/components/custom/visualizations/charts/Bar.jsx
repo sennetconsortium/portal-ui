@@ -29,7 +29,7 @@ function Bar({
     const chartData = useRef([])
 
     const buildChart = () => {
-        let names 
+        let names
         if (xAxis.noSortLabels) {
             names = data.map((d) => d.label)
         } else {
@@ -37,7 +37,7 @@ function Bar({
             const groups = d3.groupSort(data, ([d]) => -d.value, (d) => d.label);
             names = groups.map((g) => g)
         }
-    
+
         // Declare the chart dimensions and margins.
         const sizing = handleSvgSizing(style, chartId, chartType)
         const rotateLabels = xAxis.rotateLabels || sizing.isMobile
@@ -49,6 +49,7 @@ function Bar({
 
         // Bar must have a minimum height to be able to click. 2% of the max value seems good
         const maxY = d3.max(data, (d) => d.value)
+        const minBarPx = 5
 
         // Create the SVG container.
         const svg = d3.create("svg")
@@ -85,14 +86,23 @@ function Bar({
             .attr("height", (d) => 0)
             .attr("width", x.bandwidth())
 
-        svgAppend({xAxis, yAxis}).axisLabels({svg, sizing}) 
+        svgAppend({xAxis, yAxis}).axisLabels({svg, sizing})
 
         // Animation
         svg.selectAll("rect")
             .transition()
             .duration(800)
-            .attr("y", (d) => y(d.value))
-            .attr("height", function (d) { return y(minY) - y(d.value); })
+            .attr("y", (d) => {
+                const actualTop = y(d.value)
+                const actualHeight = y(minY) - actualTop
+                const h = Math.max(minBarPx, actualHeight)
+                return actualTop - (h - actualHeight)
+            })
+            .attr("height", function (d) {
+                const actualTop = y(d.value)
+                const actualHeight = y(minY) - actualTop
+                return Math.max(minBarPx, actualHeight)
+            })
             .delay(function (d, i) { return (i * 100) })
 
         svg.selectAll("rect")
