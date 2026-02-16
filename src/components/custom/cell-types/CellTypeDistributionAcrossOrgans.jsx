@@ -89,8 +89,9 @@ const CellTypeDistributionAcrossOrgans = memo(({ cell }) => {
                 cellCount: o.total_cell_count.value,
                 icon: getOrganByCode(code)?.icon
             })
+        }
         return results
-    }}
+    }
 
     const [tabData, setTabData] = useState(null)
     const cellIds = useRef({})
