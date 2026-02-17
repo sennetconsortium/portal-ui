@@ -190,6 +190,22 @@ export const SEARCH_ENTITIES = {
                 ],
                 isFacetVisible: doesAggregationHaveBuckets('origin_samples.organ')
             },
+            'cell_types.cell_label': {
+                label: 'Cell Type',
+                type: 'value',
+                field: 'cell_types.cell_label.keyword',
+                filterType: 'any',
+                isExpanded: false,
+                isFilterable: false,
+                facetType: 'term',
+                isAggregationActive: (filters) => {
+                    const hasDataset = doesTermFilterContainValues('entity_type', ['Dataset'])
+                    const hasHuman = doesTermFilterContainValues('sources.source_type', ['Human'])
+                    const hasDatasetType = doesTermFilterContainValues('dataset_type', ['RNAseq'])
+                    return hasDataset(filters) && hasHuman(filters) && hasDatasetType(filters)
+                },
+                isFacetVisible: doesAggregationHaveBuckets('cell_types.cell_label')
+            },
             // Used for when 'Dataset/Sample' is selected to show related sources
             'source.source_type': {
                 label: 'Source Type',
