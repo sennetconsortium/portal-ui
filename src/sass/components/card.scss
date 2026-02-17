@@ -17,33 +17,3 @@
 .card-body {
   padding: 0 !important;
 }
-
-.highlighted {
-  position: relative;
-  z-index: 1;
-  overflow: hidden;
-  padding: 2px !important;
-  &.is-paused {
-    &::before {
-      content: none;
-    }
-  }
-}
-.highlighted::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: conic-gradient(#ebb5c8, #ffff00, #a556d9, #5f1eec, #e379f4, #eb75eb, #b819b8);
-  background-size: 200% 200%; 
-  border-radius: inherit;
-  z-index: -1; 
-  animation: border-spin 4s linear infinite; 
-}
-
-@keyframes border-spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
