@@ -1,6 +1,6 @@
 {
   "name": "portal-ui",
-  "version": "1.11.3",
+  "version": "1.11.5",
   "private": true,
   "watch": {
     "plugins": "./components/custom/js/addons/plugins*.js"
@@ -50,6 +50,6 @@
     "npm-run-all": "^4.1.5",
     "npm-watch": "^0.13.0",
     "sass": "^1.86.0",
-    "vitessce": "^3.8.13"
+    "vitessce": "^3.9.0"
   }
 }

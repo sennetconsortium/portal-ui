@@ -16,7 +16,8 @@ export const SenPopoverOptions = {
     },
     triggers: {
         click: 'click',
-        hover: 'hover'
+        hover: 'hover',
+        always: 'always',
     }
 
 }
@@ -47,10 +48,11 @@ function SenNetPopover({children, text, placement = SenPopoverOptions.placement.
     }
 
     const isClickTrigger = eq(trigger, SenPopoverOptions.triggers.click)
+    const isAlwaysTrigger = eq(trigger, SenPopoverOptions.triggers.always)
 
-    const disableHover = isClickTrigger ? true : undefined
+    const disableHover = isClickTrigger || isAlwaysTrigger ? true : undefined
 
-    const popover = <Tooltip open={isClickTrigger ? (show || showTooltip) : undefined}
+    const popover = <Tooltip open={isAlwaysTrigger ? true : (isClickTrigger ? (show || showTooltip) : undefined)}
                                   onClose={isClickTrigger ? handleTooltipClose : undefined}
                                   classes={{ popper: 'snPopover' }}
                                   disableFocusListener={disableHover}

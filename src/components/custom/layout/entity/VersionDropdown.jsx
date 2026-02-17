@@ -2,19 +2,23 @@ import {useContext, useEffect, useState} from 'react'
 import PropTypes from 'prop-types'
 import Dropdown from 'react-bootstrap/Dropdown'
 import AppContext from "../../../../context/AppContext";
-import {getEntityEndPoint} from "../../../../config/config";
-import {getEntityViewUrl} from "../../js/functions";
+import {getEntityViewUrl, getHeaders} from "../../js/functions";
+import SenNetPopover, {SenPopoverOptions} from "@/components/SenNetPopover";
+import {getEntityEndPoint} from "@/config/config";
 
 function VersionDropdown({className = '', data}) {
 
-    const {_t, cache } = useContext(AppContext)
+    const {_t, cache} = useContext(AppContext)
     const [revisions, setRevisions] = useState([])
     const [isBusy, setIsBusy] = useState(false)
 
     useEffect(() => {
         const fetchRevisions = async () => {
             setIsBusy(true)
-            let response = await fetch(getEntityEndPoint() + `datasets/${data.uuid}/revisions?include_dataset=true`)
+            let response = await fetch(getEntityEndPoint() + `datasets/${data.uuid}/revisions?include_dataset=true`, {
+                method: 'GET',
+                headers: getHeaders()
+            })
             if (response.ok) {
                 let json = await response.json()
                 setRevisions(json)
@@ -51,20 +55,31 @@ function VersionDropdown({className = '', data}) {
         }
     }
 
-    if (isBusy || (!isBusy && revisions.length <= 0)) {
+    const getMostRecentRevision = () => {
+        return revisions[0]['revision_number']
+    }
+
+    if (isBusy || (!isBusy && revisions.length <= 1)) {
         return <></>
     }
 
     return (
-        <Dropdown className={className}>
-            <Dropdown.Toggle  id="dropdown-basic">
-                Version {getActiveRevision()}
-            </Dropdown.Toggle>
+        <SenNetPopover
+            placement={SenPopoverOptions.placement.top}
+            trigger={'always'}
+            text={getMostRecentRevision() !== getActiveRevision() ? 'This is not the most recent version of this dataset.' : ''}
+        >
+            <Dropdown className={className}>
+                <Dropdown.Toggle id="dropdown-basic"
+                                 variant={getMostRecentRevision() !== getActiveRevision() ? 'danger' : 'primary'}>
+                    Version {getActiveRevision()}
+                </Dropdown.Toggle>
 
-            <Dropdown.Menu>
-                {buildRevisions()}
-            </Dropdown.Menu>
-        </Dropdown>
+                <Dropdown.Menu>
+                    {buildRevisions()}
+                </Dropdown.Menu>
+            </Dropdown>
+        </SenNetPopover>
     )
 }
 

@@ -29,7 +29,7 @@ const EntityViewHeaderButtons = ({entity, data, hasWritePrivilege}) => {
                             variant="outline-primary rounded-0"><i className="bi bi-filetype-json"></i></Button>
                 </SenNetPopover>
 
-                {eq(entity, cache.entities.dataset) && eq(data.status, 'published') &&
+                {eq(entity, cache.entities.dataset) && (eq(data.status, 'published') || eq(data.status, 'qa'))  &&
                     <VersionDropdown className='ms-2' data={data}/>
                 }
             </Stack>
