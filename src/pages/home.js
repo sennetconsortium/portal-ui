@@ -20,7 +20,7 @@ function ViewHome({children}) {
 
     useEffect(() => {
         setTimeout(() => {
-            $('.highlighted').addClass('is-paused')
+            $('.smc--highlighted').addClass('is-paused')
         }, 5000)
     }, [])
 
@@ -72,7 +72,7 @@ function ViewHome({children}) {
                     </section>
 
                     <section aria-label={'Search By Cell Types'} className='sui-layout-body__inner'>
-                        <Card className='mt-4 highlighted'>
+                        <Card className='mt-4 smc--highlighted'>
                             <div className='p-3 card-content bg-white'>
                                 <Card.Title><div className='d-flex d-flex-row justify-space-between'>
                                  <img src='/static/cell-type.svg' width='50' alt /> &nbsp;<h2>Search By Cell Types</h2>
