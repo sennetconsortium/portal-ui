@@ -11,9 +11,10 @@ import AppContext from "@/context/AppContext";
 import SelectedFilters from "@/components/custom/layout/SelectedFilters";
 import {getUBKGFullName} from "@/components/custom/js/functions";
 import SenNetAlert from "@/components/SenNetAlert";
-import { TableResultsCellTypes } from "@/components/custom/TableResultsCellTypes";
-import { SEARCH_CELL_TYPES } from "@/config/search/cell-types";
-import { getDistinctDatasetsUnderCellTypes } from "@/lib/services";
+import {TableResultsCellTypes} from "@/components/custom/TableResultsCellTypes";
+import {SEARCH_CELL_TYPES} from "@/config/search/cell-types";
+import {getDistinctDatasetsUnderCellTypes} from "@/lib/services";
+import SenNetPopover from "@/components/SenNetPopover";
 
 const AppFooter = dynamic(() => import("@/components/custom/layout/AppFooter"))
 const AppNavbar = dynamic(() => import("@/components/custom/layout/AppNavbar"))
@@ -94,8 +95,15 @@ function SearchCellTypes() {
                                 <>
                                     <div className="search-box-header js-gtm--search">
                                         <SenNetBanner name={'default'}/>
-                                        <SenNetAlert variant="info" text={<span>This searches across <code>{uniqueDatasets}</code> RNAseq datasets from Human sources</span>} />
-                                        
+                                        <SenNetAlert variant="info"
+                                                     text={<span>This searches across <code>{uniqueDatasets}</code> RNAseq published datasets from Human sources
+                                        <SenNetPopover
+                                            text='This information comes from non-bulk RNAseq datasets where both the primary and derived datasets are published. '
+                                            trigger={'hover'}
+                                            className={`popover-cell-types-overview`}>
+                                         <i className="ms-1 bi bi-question-circle-fill"></i>
+                                        </SenNetPopover>
+                                        </span>}/>
 
                                         <SearchBox
                                             view={({onChange, value, onSubmit}) => (
