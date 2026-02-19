@@ -1,8 +1,12 @@
+import dynamic from "next/dynamic";
 import React, {Fragment, useContext, useEffect, useState} from 'react';
 import {fetchGlobusFilepath} from "@/lib/services";
 import SenNetAccordion from "../../layout/SenNetAccordion";
 import Card from 'react-bootstrap/Card';
-import DataTable from "react-data-table-component";
+
+const DataTable = dynamic(() => import('react-data-table-component'), {
+  ssr: false,
+});
 import {formatByteSize} from "../../js/functions";
 import SenNetPopover from "../../../SenNetPopover";
 import {getAssetsEndpoint, getAuth, RESULTS_PER_PAGE} from "@/config/config";

@@ -1,10 +1,15 @@
+import dynamic from "next/dynamic";
 import {createContext, useContext, useEffect, useRef, useState} from "react";
 import {getDatasetsByIds, getTransferAuthJsonHeaders, parseJson} from "@/lib/services";
 import {getIngestEndPoint} from "@/config/config";
 import {APP_ROUTES} from "@/config/constants";
 import LnkIc from "@/components/custom/layout/LnkIc";
 import {getStatusColor, getStatusDefinition,} from "@/components/custom/js/functions"
-import DataTable from "react-data-table-component";
+
+const DataTable = dynamic(() => import('react-data-table-component'), {
+  ssr: false,
+});
+
 import SenNetPopover from "@/components/SenNetPopover";
 import AppContext from "@/context/AppContext";
 

@@ -1,3 +1,4 @@
+import dynamic from "next/dynamic";
 import React, {useContext} from 'react';
 import {
     displayBodyHeader,
@@ -11,7 +12,10 @@ import {
 import ClipboardCopy from "@/components/ClipboardCopy";
 import AppContext from "@/context/AppContext";
 import useAutoHideColumns from "@/hooks/useAutoHideColumns";
-import DataTable from "react-data-table-component";
+
+const DataTable = dynamic(() => import('react-data-table-component'), {
+  ssr: false,
+});
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
 import {RESULTS_PER_PAGE} from "@/config/config";

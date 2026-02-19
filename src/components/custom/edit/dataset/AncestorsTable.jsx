@@ -1,3 +1,4 @@
+import dynamic from "next/dynamic";
 import React from 'react';
 import {
     getStatusColor,
@@ -7,7 +8,10 @@ import {
 import Button from 'react-bootstrap/Button';
 import SenNetPopover from '@/components/SenNetPopover';
 import ClipboardCopy from '@/components/ClipboardCopy';
-import DataTable from 'react-data-table-component';
+
+const DataTable = dynamic(() => import('react-data-table-component'), {
+  ssr: false,
+});
 import log from 'loglevel'
 import useAutoHideColumns from "@/hooks/useAutoHideColumns";
 import {formatOrganRow} from "@/components/custom/TableResultsEntities";

@@ -1,5 +1,9 @@
+import dynamic from "next/dynamic";
 import PropTypes from 'prop-types'
-import DataTable from 'react-data-table-component'
+
+const DataTable = dynamic(() => import('react-data-table-component'), {
+  ssr: false,
+});
 import SenNetAccordion from "@/components/custom/layout/SenNetAccordion";
 import {eq} from "@/components/custom/js/functions";
 

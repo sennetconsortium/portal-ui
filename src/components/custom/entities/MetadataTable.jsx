@@ -1,7 +1,11 @@
+import dynamic from "next/dynamic";
 import React from 'react';
 import {Container, Row} from 'react-bootstrap'
 import {createDownloadUrl, tableDataToTSV} from '../js/functions';
-import DataTable from 'react-data-table-component';
+
+const DataTable = dynamic(() => import('react-data-table-component'), {
+  ssr: false,
+});
 import useDataTableSearch from '@/hooks/useDataTableSearch';
 import GroupedDataTable from './GroupedDataTable';
 import SenNetPopover from '@/components/SenNetPopover';

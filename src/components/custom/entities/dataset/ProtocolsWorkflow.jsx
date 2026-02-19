@@ -1,9 +1,13 @@
+import dynamic from "next/dynamic";
 import React, {useContext, useEffect, useState} from 'react'
 import PropTypes from 'prop-types'
 import SenNetSuspense from "@/components/SenNetSuspense";
 import SenNetAccordion from "@/components/custom/layout/SenNetAccordion";
 import {eq, getDatasetTypeDisplay} from "@/components/custom/js/functions";
-import DataTable from "react-data-table-component";
+
+const DataTable = dynamic(() => import('react-data-table-component'), {
+  ssr: false,
+});
 import {ShimmerTable, ShimmerText} from "react-shimmer-effects";
 import LnkIc from "@/components/custom/layout/LnkIc";
 import useAutoHideColumns from "@/hooks/useAutoHideColumns";
