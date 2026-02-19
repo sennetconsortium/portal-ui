@@ -1,35 +1,540 @@
-"use strict";function _defineProperty(a,b,c){return(b=_toPropertyKey(b))in a?Object.defineProperty(a,b,{value:c,enumerable:!0,configurable:!0,writable:!0}):a[b]=c,a}function _toPropertyKey(a){var b=_toPrimitive(a,"string");return"symbol"==typeof b?b:b+""}function _toPrimitive(a,b){if("object"!=typeof a||!a)return a;var c=a[Symbol.toPrimitive];if(void 0!==c){var d=c.call(a,b||"default");if("object"!=typeof d)return d;throw new TypeError("@@toPrimitive must return a primitive value.")}return("string"===b?String:Number)(a)}// Base class that should be an entry before the other plugins.
-class Addon{constructor(a,b){_defineProperty(this,"route",void 0),this.el=$(a),this.app=b.app,this.data=b.data,this.user={},this.router=b.router,this.entities=b.entities,this.st=null,b.data&&b.data.user&&(this.user=JSON.parse(b.data.user)),Addon.log(`Addons args of ${b.app}:`,{color:"aqua",data:{el:a,args:b}}),this.keycodes={enter:"Enter",esc:"Escape"}}handleKeydown(a,b){this.currentTarget(a).trigger(b),this.currentTarget(a).focus()}onKeydownEnter(a,b,c="click"){this.el.on("keydown",`${a}`,(a=>{this.isEnter(a)&&(clearTimeout(this.st),this.st=setTimeout((()=>{b?b(a):this.handleKeydown(a,c)}).bind(this),100))}).bind(this))}currentTarget(a){return $(a.currentTarget)}/**
-     * Prevents bubbling of javascript event to parent
-     * @param {*} e Javascript event
-     */stop(a){a.stopPropagation()}/**
-     * Determines whether a keydown/keypress operation is of Enter/13
-     * @param {object} e Event
-     * @returns {boolean}
-     */isEnter(a){return a.code===this.keycodes.enter}isEsc(a){return a.code===this.keycodes.esc}static observeMutations(a,b){const c=new MutationObserver(()=>{for(let c in a)document.querySelectorAll(`[class*='js-${c}--'], [data-js-${c}], .js-app--${c}`).forEach(d=>{$(d).data(c)||$(d).data(c,new a[c](d,{app:c,...b}))})});c.observe(document.body,{childList:!0,subtree:!0})}static isLocal(){return-1!==location.host.indexOf("localhost")||-1!==location.host.indexOf(".dev")}static log(a,b){b=b||{};let{fn:c,color:d,data:e}=b;c=c||"log",d=d||"#bada55",e=e||"",Addon.isLocal()&&console[c](`%c ${a}`,`background: #222; color: ${d}`,e)}log(a,b="log"){Addon.log(a,{fn:b})}}
-"use strict";/**
+// Base class that should be an entry before the other plugins.
+class Addon {
+  route;
+  constructor(el, args) {
+    this.el = $(el);
+    this.app = args.app;
+    this.data = args.data;
+    this.user = {};
+    this.router = args.router;
+    this.entities = args.entities;
+    this.st = null;
+    if (args.data && args.data.user) {
+      this.user = JSON.parse(args.data.user);
+    }
+    Addon.log(`Addons args of ${args.app}:`, {
+      color: 'aqua',
+      data: {
+        el,
+        args
+      }
+    });
+    this.keycodes = {
+      enter: 'Enter',
+      esc: 'Escape'
+    };
+  }
+  handleKeydown(e, trigger) {
+    this.currentTarget(e).trigger(trigger);
+    this.currentTarget(e).focus();
+  }
+  onKeydownEnter(sel, cb, trigger = 'click') {
+    this.el.on('keydown', `${sel}`, (e => {
+      if (this.isEnter(e)) {
+        clearTimeout(this.st);
+        this.st = setTimeout((() => {
+          cb ? cb(e) : this.handleKeydown(e, trigger);
+        }).bind(this), 100);
+      }
+    }).bind(this));
+  }
+  currentTarget(e) {
+    return $(e.currentTarget);
+  }
+  /**
+   * Prevents bubbling of javascript event to parent
+   * @param {*} e Javascript event
+   */
+  stop(e) {
+    e.stopPropagation();
+  }
+
+  /**
+   * Determines whether a keydown/keypress operation is of Enter/13
+   * @param {object} e Event
+   * @returns {boolean}
+   */
+  isEnter(e) {
+    return e.code === this.keycodes.enter;
+  }
+  isEsc(e) {
+    return e.code === this.keycodes.esc;
+  }
+  static observeMutations(apps, args) {
+    const initAddon = () => {
+      for (let app in apps) {
+        document.querySelectorAll(`[class*='js-${app}--'], [data-js-${app}], .js-app--${app}`).forEach(el => {
+          if (!$(el).data(app)) {
+            $(el).data(app, new apps[app](el, {
+              app,
+              ...args
+            }));
+          }
+        });
+      }
+    };
+    const observer = new MutationObserver(initAddon);
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true
+    });
+  }
+  static isLocal() {
+    return location.host.indexOf('localhost') !== -1 || location.host.indexOf('.dev') !== -1;
+  }
+  static log(msg, ops) {
+    ops = ops || {};
+    let {
+      fn,
+      color,
+      data
+    } = ops;
+    fn = fn || 'log';
+    color = color || '#bada55';
+    data = data || '';
+    if (Addon.isLocal()) {
+      console[fn](`%c ${msg}`, `background: #222; color: ${color}`, data);
+    }
+  }
+  log(msg, fn = 'log') {
+    Addon.log(msg, {
+      fn
+    });
+  }
+}
+/**
  * This adds web accessibility functionality to
  * elements.
- */class Ada extends Addon{constructor(a,b){super(a,b),this._el=this.el.data(`js-${this.app}`),this[this._el]?this[this._el]():this.events()}tableResults(){const a=this.el.data("ada-data");this.el.find(a.tabIndex).attr("tabindex",0),this.events(a.tabIndex,a.trigger)}facets(){Addon.log("Ada > Facets"),this.onKeydownEnter(".sui-facet__title, .sui-select__control"),this.onKeydownEnter(".sui-multi-checkbox-facet__checkbox",(a=>{this.currentTarget(a).parent().trigger("click"),this.currentTarget(a).focus()}).bind(this))}modal(){$(window).on("keydown",(a=>{Addon.log("Ada > Modal"),this.isEsc(a)&&$(".modal-footer .btn").eq(0).click()}).bind(this))}events(a,b){a=a||this._el,this.el.on("keydown",`${a}`,(a=>{if(this.isEnter(a)){const c=b?this.currentTarget(a).find(b):this.currentTarget(a);c.click()}}).bind(this))}}
-"use strict";/**
+ */
+class Ada extends Addon {
+  constructor(el, args) {
+    super(el, args);
+    this._el = this.el.data(`js-${this.app}`);
+    if (this[this._el]) {
+      this[this._el]();
+    } else {
+      this.events();
+    }
+  }
+  tableResults() {
+    const data = this.el.data('ada-data');
+    this.el.find(data.tabIndex).attr('tabindex', 0);
+    this.events(data.tabIndex, data.trigger);
+  }
+  facets() {
+    Addon.log('Ada > Facets');
+    this.onKeydownEnter('.sui-facet__title, .sui-select__control');
+    this.onKeydownEnter('.sui-multi-checkbox-facet__checkbox', (e => {
+      this.currentTarget(e).parent().trigger('click');
+      this.currentTarget(e).focus();
+    }).bind(this));
+  }
+  modal() {
+    $(window).on('keydown', (e => {
+      Addon.log('Ada > Modal');
+      if (this.isEsc(e)) {
+        $('.modal-footer .btn').eq(0).click();
+      }
+    }).bind(this));
+  }
+  events(sel, sel2) {
+    sel = sel || this._el;
+    this.el.on('keydown', `${sel}`, (e => {
+      if (this.isEnter(e)) {
+        const $el = sel2 ? this.currentTarget(e).find(sel2) : this.currentTarget(e);
+        $el.click();
+      }
+    }).bind(this));
+  }
+}
+/**
  * Trigger a custom event.
  * Useful when dealing with mutations in DOM
- */class AppEvent extends Addon{constructor(a,b){super(a,b);const c=this.el.attr("data-js-appevent");this.log(`AppEvent ${c}`);const d=new CustomEvent(c,{detail:{el:a,name:c}});document.dispatchEvent(d)}}
-"use strict";/**
+ */
+class AppEvent extends Addon {
+  constructor(el, args) {
+    super(el, args);
+    const ev = this.el.attr('data-js-appevent');
+    this.log(`AppEvent ${ev}`);
+    const event = new CustomEvent(ev, {
+      detail: {
+        el,
+        name: ev
+      }
+    });
+    document.dispatchEvent(event);
+  }
+}
+/**
  * Sends user events on various components to the app's GTM container.
- */class GoogleTagManager extends Addon{constructor(a,b){super(a,b),this.sel={facets:{title:".sui-facet__title"}},this.extractEvent(),this.modules()}extractEvent(){null!=this.el&&this.el.length&&(this.el[0].classList.forEach((a=>{-1!==a.indexOf(this.app)&&(this.event=a.split("--")[1])}).bind(this)),this.log(`Google Tag manager ... ${this.event}`))}modules(){switch(this.event){case"search":this.search();break;case"facets":this.facets();break;case"dateFacets":this.dateFacets();break;case"results":this.results();break;case"download":this.download();break;default:// As these facets can be conditional
-this.numericFacets(),this.page(),this.cta(),this.links()}}handleSearch(a){const b=this.currentTarget(a).parent().find("#search").val();this.gtm({keywords:b})}search(){this.el.on("click","button",(a=>{this.handleSearch(a)}).bind(this)),this.el.on("keydown","button, input",(a=>{this.isEnter(a)&&this.handleSearch(a)}).bind(this))}handleFacets(a){const b=$(a.target).parent().find(".sui-multi-checkbox-facet__input-text").text();this.gtm({group:this.group,label:b,trail:`${this.group}.${b}`})}handleDateFacets(){// const label = this.currentTarget(e).val()
-this.event="facets",this.gtm({group:this.group,label:this.subGroup,trail:`${this.group}.${this.subGroup}`})}handleNumericFacets(a){this.event="facets";let b=this.currentTarget(a).find("input").val();this.gtm({group:this.group,label:b,trail:`${this.group}.${b}`})}storeLoaded(a){return GoogleTagManager.storeLoaded(a)}static storeLoaded(a){const b=$("body");return b.data(a)?null:(b.attr(`data-${a}`,!0),`.js-gtm--${a}`)}facets(){const a=this.storeLoaded("facets");if(!a)return;const b="sui-multi-checkbox-facet__",c=document.querySelector("body");c.addEventListener("click",(c=>{const d=c.target;(d.classList.contains(`${b}checkbox`)||d.classList.contains(`${b}option-input-wrapper`))&&(this.group=$(d).parents(a).parent().find(this.sel.facets.title).text(),this.handleFacets(c))}).bind(this),!0)}dateFacets(){this.group=this.el.parent().find(this.sel.facets.title).text(),this.subGroup=this.el.find(".sui-multi-checkbox-facet").text(),this.el.on("change","input",(a=>{this.stop(a),this.handleDateFacets(a)}).bind(this))}static dispatch(a){if("numericFacets"===a.key){const b=GoogleTagManager.storeLoaded(a.key);$(`${b} .MuiSlider-thumb`).trigger(a.key)}}numericFacets(){const a=this.storeLoaded("numericFacets");a&&$("body").on("numericFacets",`${a} .MuiSlider-thumb`,(b=>{this.stop(b);const c=this.currentTarget(b);let d=c.attr("data-val"),e=c.find("input").val();// on DOMSubtreeModified, multiple triggers for same value, so only gtm once
-d!==e&&(c.attr("data-val",e),this.group=this.currentTarget(b).parents(a).parent().parent().find(this.sel.facets.title).text(),this.handleNumericFacets(b))}).bind(this))}handleResults(a){const b=this.currentTarget(a),c=["sennet_id","entity_type","lab_id","group_name"],d={};for(let e=0;e<c.length;e++)d[c[e]]=b.parent().find(`[data-field="${c[e]}"]`).text().trim();this.gtm(d)}results(){this.el.on("click",".rdt_TableBody .rdt_TableCell:not(div[data-column-id=\"1\"])",(a=>{this.handleResults(a)}).bind(this))}handleDownload(a){this.event="cta";const b=this.currentTarget(a).text();this.gtm({action:"download",label:b})}download(){this.el.on("click","a",(a=>{this.handleDownload(a)}).bind(this))}getPath(){const a=window.location.pathname+window.location.search;return 70<a.length?window.location.pathname:a}handleLinks(a){this.event="links";const b=this.currentTarget(a),c=b.text()||b.attr("aria-label")||b.attr("alt");c!==void 0&&this.gtm({link:c})}links(){$("body").on("click","a",(a=>{this.stop(a),this.handleLinks(a)}).bind(this))}handleCta(a){const b=this.currentTarget(a),c=b.attr("class");this.event="cta";let d;const e=["json","submit","login","save","revert","validate","reorganize","process"];if(c)for(let a=0;a<e.length;a++)c.includes(e[a])&&(d=e[a]);if(d){let a={};a=this.entityPage(a,!1);let b=a.action||null;a={...a,action:b?`${d}.${b}`:d,uuid:this.getUuid()},this.gtm(a)}}cta(){$("body").on("click","[role=\"button\"], .btn, button",(a=>{this.handleCta(a)}).bind(this))}page(){this.event="page";this.entityPage({data:"view"})}getUuid(){const a=this.router.asPath.split("uuid=");// Fully fetch the uuid, split(&)[0] in case more params follow
-return a.length&&1<a.length?this.router.asPath.split("uuid=")[1].split("&")[0]:null}entityPage(a,b=!0){const c=Object.keys(this.entities);let d=-1;for(let e=0;e<c.length;e++)this.router.route.includes(c[e])&&(d=e);if(-1!==d){a.entity=this.entities[c[d]];const e=["register","edit"];for(let b of e)if(-1!==window.location.href.indexOf(b)){a.action=b;break}a.uuid=this.getUuid(),b&&(this.gtm(a),this.event="entity",this.gtm(a))}else b&&this.gtm(a);return a}getPerson(a=!1){const b=this.user.email;let c;return b&&(c=a?btoa(b.replace("@","*")):`${b.split("@")[0]}***`),c}gtm(a){let b={event:this.event,path:this.getPath(),person:this.getPerson(),user_id:this.getPerson(!0),globus_id:this.user.globus_id,session:this.user.email!==void 0,...a};Addon.log(`GTM, ${this.event} event ...`,{color:"pink",data:b}),dataLayer.push(b)}}
-"use strict";/**
+ */
+class GoogleTagManager extends Addon {
+  constructor(el, args) {
+    super(el, args);
+    this.sel = {
+      facets: {
+        title: '.sui-facet__title'
+      }
+    };
+    this.extractEvent();
+    this.modules();
+  }
+  extractEvent() {
+    if (this.el == null || !this.el.length) return;
+    this.el[0].classList.forEach((val => {
+      if (val.indexOf(this.app) !== -1) {
+        this.event = val.split('--')[1];
+      }
+    }).bind(this));
+    this.log(`Google Tag manager ... ${this.event}`);
+  }
+  modules() {
+    switch (this.event) {
+      case 'search':
+        this.search();
+        break;
+      case 'facets':
+        this.facets();
+        break;
+      case 'dateFacets':
+        this.dateFacets();
+        break;
+      case 'results':
+        this.results();
+        break;
+      case 'download':
+        this.download();
+        break;
+      default:
+        this.numericFacets(); // As these facets can be conditional
+        this.page();
+        this.cta();
+        this.links();
+    }
+  }
+  handleSearch(e) {
+    const keywords = this.currentTarget(e).parent().find('#search').val();
+    this.gtm({
+      keywords
+    });
+  }
+  search() {
+    this.el.on('click', 'button', (e => {
+      this.handleSearch(e);
+    }).bind(this));
+    this.el.on('keydown', 'button, input', (e => {
+      if (this.isEnter(e)) this.handleSearch(e);
+    }).bind(this));
+  }
+  handleFacets(e) {
+    const label = $(e.target).parent().find('.sui-multi-checkbox-facet__input-text').text();
+    this.gtm({
+      group: this.group,
+      label,
+      trail: `${this.group}.${label}`
+    });
+  }
+  handleDateFacets(e) {
+    // const label = this.currentTarget(e).val()
+    this.event = 'facets';
+    this.gtm({
+      group: this.group,
+      label: this.subGroup,
+      trail: `${this.group}.${this.subGroup}`
+    });
+  }
+  handleNumericFacets(e) {
+    this.event = 'facets';
+    let label = this.currentTarget(e).find('input').val();
+    this.gtm({
+      group: this.group,
+      label,
+      trail: `${this.group}.${label}`
+    });
+  }
+  storeLoaded(key) {
+    return GoogleTagManager.storeLoaded(key);
+  }
+  static storeLoaded(key) {
+    const $body = $('body');
+    if ($body.data(key)) return null;
+    $body.attr(`data-${key}`, true);
+    return `.js-gtm--${key}`;
+  }
+  facets() {
+    const sel = this.storeLoaded('facets');
+    if (!sel) return;
+    const pre = 'sui-multi-checkbox-facet__';
+    const body = document.querySelector('body');
+    body.addEventListener('click', (e => {
+      const el = e.target;
+      if (el.classList.contains(`${pre}checkbox`) || el.classList.contains(`${pre}option-input-wrapper`)) {
+        this.group = $(el).parents(sel).parent().find(this.sel.facets.title).text();
+        this.handleFacets(e);
+      }
+    }).bind(this), true);
+  }
+  dateFacets() {
+    this.group = this.el.parent().find(this.sel.facets.title).text();
+    this.subGroup = this.el.find('.sui-multi-checkbox-facet').text();
+    this.el.on('change', 'input', (e => {
+      this.stop(e);
+      this.handleDateFacets(e);
+    }).bind(this));
+  }
+  static dispatch(results) {
+    if (results.key === 'numericFacets') {
+      const sel = GoogleTagManager.storeLoaded(results.key);
+      $(`${sel} .MuiSlider-thumb`).trigger(results.key);
+    }
+  }
+  numericFacets() {
+    const sel = this.storeLoaded('numericFacets');
+    if (!sel) return;
+    $('body').on('numericFacets', `${sel} .MuiSlider-thumb`, (e => {
+      this.stop(e);
+      const $el = this.currentTarget(e);
+      let val = $el.attr('data-val');
+      let ioVal = $el.find('input').val();
+      // on DOMSubtreeModified, multiple triggers for same value, so only gtm once
+      if (val !== ioVal) {
+        $el.attr('data-val', ioVal);
+        this.group = this.currentTarget(e).parents(sel).parent().parent().find(this.sel.facets.title).text();
+        this.handleNumericFacets(e);
+      }
+    }).bind(this));
+  }
+  handleResults(e) {
+    const td = this.currentTarget(e);
+    const th = ['sennet_id', 'entity_type', 'lab_id', 'group_name'];
+    const data = {};
+    for (let i = 0; i < th.length; i++) {
+      data[th[i]] = td.parent().find(`[data-field="${th[i]}"]`).text().trim();
+    }
+    this.gtm(data);
+  }
+  results() {
+    this.el.on('click', '.rdt_TableBody .rdt_TableCell:not(div[data-column-id="1"])', (e => {
+      this.handleResults(e);
+    }).bind(this));
+  }
+  handleDownload(e) {
+    this.event = 'cta';
+    const action = 'download';
+    const label = this.currentTarget(e).text();
+    this.gtm({
+      action,
+      label
+    });
+  }
+  download() {
+    this.el.on('click', 'a', (e => {
+      this.handleDownload(e);
+    }).bind(this));
+  }
+  getPath() {
+    const path = window.location.pathname + window.location.search;
+    return path.length > 70 ? window.location.pathname : path;
+  }
+  handleLinks(e) {
+    this.event = 'links';
+    const $el = this.currentTarget(e);
+    const link = $el.text() || $el.attr('aria-label') || $el.attr('alt');
+    if (link !== undefined) {
+      this.gtm({
+        link
+      });
+    }
+  }
+  links() {
+    $('body').on('click', 'a', (e => {
+      this.stop(e);
+      this.handleLinks(e);
+    }).bind(this));
+  }
+  handleCta(e) {
+    const $el = this.currentTarget(e);
+    const className = $el.attr('class');
+    this.event = 'cta';
+    let action;
+    const actions = ['json', 'submit', 'login', 'save', 'revert', 'validate', 'reorganize', 'process'];
+    if (className) {
+      for (let i = 0; i < actions.length; i++) {
+        if (className.includes(actions[i])) {
+          action = actions[i];
+        }
+      }
+    }
+    if (action) {
+      let data = {};
+      data = this.entityPage(data, false);
+      let action2 = data.action || null;
+      data = {
+        ...data,
+        action: action2 ? `${action}.${action2}` : action,
+        uuid: this.getUuid()
+      };
+      this.gtm(data);
+    }
+  }
+  cta() {
+    $('body').on('click', '[role="button"], .btn, button', (e => {
+      this.handleCta(e);
+    }).bind(this));
+  }
+  page() {
+    this.event = 'page';
+    let data = {
+      data: 'view'
+    };
+    this.entityPage(data);
+  }
+  getUuid() {
+    const uuid = this.router.asPath.split('uuid=');
+    // Fully fetch the uuid, split(&)[0] in case more params follow
+    return uuid.length && uuid.length > 1 ? this.router.asPath.split('uuid=')[1].split('&')[0] : null;
+  }
+  entityPage(data, send = true) {
+    const entities = Object.keys(this.entities);
+    let pos = -1;
+    for (let i = 0; i < entities.length; i++) {
+      if (this.router.route.includes(entities[i])) pos = i;
+    }
+    if (pos !== -1) {
+      data.entity = this.entities[entities[pos]];
+      const actions = ['register', 'edit'];
+      for (let action of actions) {
+        if (window.location.href.indexOf(action) !== -1) {
+          data.action = action;
+          break;
+        }
+      }
+      data.uuid = this.getUuid();
+      if (send) {
+        this.gtm(data); // push Page view
+        this.event = 'entity';
+        this.gtm(data); // push Entity Page view
+      }
+    } else {
+      if (send) this.gtm(data); // push Page view
+    }
+    return data;
+  }
+  getPerson(bto = false) {
+    const id = this.user.email;
+    let result;
+    if (id) {
+      result = bto ? btoa(id.replace('@', '*')) : `${id.split('@')[0]}***`;
+    }
+    return result;
+  }
+  gtm(args) {
+    let data = {
+      event: this.event,
+      path: this.getPath(),
+      person: this.getPerson(),
+      user_id: this.getPerson(true),
+      globus_id: this.user.globus_id,
+      session: this.user.email !== undefined,
+      ...args
+    };
+    Addon.log(`GTM, ${this.event} event ...`, {
+      color: 'pink',
+      data
+    });
+    dataLayer.push(data);
+  }
+}
+/**
  * This displays our own components when @elastic/react-search-ui spits an error from search
- */class SearchErrorBoundary extends Addon{constructor(a,b){super(a,b),this.prettyError()}getComponent(a){try{const b=JSON.parse(atob(this.el.data("components")));Addon.isLocal()&&console.log("SearchErrorBoundary",b),b[a]&&(this.el.removeClass("sui-search-error alert alert-danger "),this.el.html(b[a]))}catch(a){}}prettyError(){const a=this.el.html().trim().toLowerCase();a.contains("header is either invalid or expired")?this.getComponent("token"):this.getComponent("notFound")}}
-"use strict";/**
+ */
+class SearchErrorBoundary extends Addon {
+  constructor(el, args) {
+    super(el, args);
+    this.prettyError();
+  }
+  getComponent(key) {
+    try {
+      const data = JSON.parse(atob(this.el.data('components')));
+      if (Addon.isLocal()) {
+        console.log('SearchErrorBoundary', data);
+      }
+      if (data[key]) {
+        this.el.removeClass('sui-search-error alert alert-danger ');
+        this.el.html(data[key]);
+      }
+    } catch (e) {}
+  }
+  prettyError() {
+    const error = this.el.html().trim().toLowerCase();
+    if (error.contains("header is either invalid or expired")) {
+      this.getComponent('token');
+    } else {
+      this.getComponent('notFound');
+    }
+  }
+}
+/**
  * Display a tooltip on click of an element.
- */class Tooltip extends Addon{constructor(a,b){super(a,b),this.ops=this.el.data("js-tooltip"),this.timeouts,this.ops?(Addon.log("Tooltip ops...",{data:this.ops}),this.events()):(this.ops={},this.text=b.text,this.e=b.e,this.show())}handleToolTip(){const a=$(this.ops.data).attr("data-tooltiptext");a&&(this.text=a,this.show(),clearTimeout(this.timeouts),this.timeouts=setTimeout(()=>{$(".js-popover").remove()},3e3))}events(){this.el.on("click",this.ops.trigger,(a=>{this.e=a;const b=this;clearTimeout(this.timeouts),this.timeouts=setTimeout(()=>{$(".js-popover").remove(),b.handleToolTip(a)},200)}).bind(this))}getPosition(){const a=this.e.currentTarget.getBoundingClientRect(),b=this.e.clientX-a.left/2,c=this.e.clientY+(this.ops.diffY||0);return{x:b,y:c}}buildHtml(){const a=this.getPosition();return`<div role="tooltip" x-placement="right" class="fade show popover bs-popover-end js-popover ${this.ops.class||""}" id="popover-basic"
+ */
+class Tooltip extends Addon {
+  constructor(el, args) {
+    super(el, args);
+    this.ops = this.el.data('js-tooltip');
+    this.timeouts;
+    if (this.ops) {
+      Addon.log('Tooltip ops...', {
+        data: this.ops
+      });
+      this.events();
+    } else {
+      this.ops = {};
+      this.text = args.text;
+      this.e = args.e;
+      this.show();
+    }
+  }
+  handleToolTip(e) {
+    const text = $(this.ops.data).attr('data-tooltiptext');
+    if (text) {
+      this.text = text;
+      this.show();
+      clearTimeout(this.timeouts);
+      this.timeouts = setTimeout(() => {
+        $('.js-popover').remove();
+      }, 3000);
+    }
+  }
+  events() {
+    this.el.on('click', this.ops.trigger, (e => {
+      this.e = e;
+      const _t = this;
+      clearTimeout(this.timeouts);
+      this.timeouts = setTimeout(() => {
+        $('.js-popover').remove();
+        _t.handleToolTip(e);
+      }, 200);
+    }).bind(this));
+  }
+  getPosition() {
+    const rect = this.e.currentTarget.getBoundingClientRect();
+    const x = this.e.clientX - rect.left / 2;
+    const y = this.e.clientY + (this.ops.diffY || 0);
+    return {
+      x,
+      y
+    };
+  }
+  buildHtml() {
+    const pos = this.getPosition();
+    return `<div role="tooltip" x-placement="right" class="fade show popover bs-popover-end js-popover ${this.ops.class || ''}" id="popover-basic"
              data-popper-reference-hidden="false" data-popper-escaped="false" data-popper-placement="right"
-             style="position: absolute; display: block; inset: 0px auto auto 0px; transform: translate(${a.x}px, ${a.y}px);">
+             style="position: absolute; display: block; inset: 0px auto auto 0px; transform: translate(${pos.x}px, ${pos.y}px);">
             <div class="popover-arrow" style="position: absolute; top: 0px; transform: translate(0px, 47px);"></div>
             <div class="popover-body">${this.text}</div>
-        </div>`}show(){this.el.append(this.buildHtml())}}
+        </div>`;
+  }
+  show() {
+    this.el.append(this.buildHtml());
+  }
+}

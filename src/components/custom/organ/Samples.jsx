@@ -1,10 +1,14 @@
+import dynamic from "next/dynamic";
 import { APP_ROUTES } from '@/config/constants'
 import useLocalSettings from '@/hooks/useLocalSettings'
 import { getSamplesByOrgan } from '@/lib/services'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useEffect, useState, useContext } from 'react'
-import DataTable from 'react-data-table-component'
+
+const DataTable = dynamic(() => import('react-data-table-component'), {
+  ssr: false,
+});
 import ClipboardCopy from '../../ClipboardCopy'
 import { searchUIQueryString } from '../js/functions'
 import SenNetAccordion from '../layout/SenNetAccordion'

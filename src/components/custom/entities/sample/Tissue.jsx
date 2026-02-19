@@ -1,10 +1,14 @@
+import dynamic from "next/dynamic";
 import { APP_ROUTES } from '@/config/constants';
 import { getOrganByCode, organIcons } from "@/config/organs";
 import AppContext from "@/context/AppContext";
 import { Chip, Stack } from "@mui/material";
 import { useContext } from 'react';
 import { Card } from 'react-bootstrap';
-import DataTable from "react-data-table-component";
+
+const DataTable = dynamic(() => import('react-data-table-component'), {
+  ssr: false,
+});
 import {displayBodyHeader, getUBKGFullName} from "@/components/custom/js/functions";
 import SenNetAccordion from "@/components/custom/layout/SenNetAccordion";
 
