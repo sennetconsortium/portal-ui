@@ -29,7 +29,7 @@
     "provenance-ui": "github:sennetconsortium/provenance-ui#v2.6.9-beta2",
     "react": "^18.2.0",
     "react-bootstrap": "^2.10.10",
-    "react-data-table-component": "^7.6.2",
+    "react-data-table-component": "7.6.2",
     "react-datepicker": "^8.2.1",
     "react-dom": "^18.2.0",
     "react-idle-timer": "^5.7.2",
