@@ -2,6 +2,10 @@
   "name": "portal-ui",
   "version": "1.11.5",
   "private": true,
+  "description": "SenNet Data Portal",
+  "repository": {
+    "url": "https://github.com/sennetconsortium/portal-ui"
+  },
   "watch": {
     "plugins": "./components/custom/js/addons/plugins*.js"
   },
@@ -12,7 +16,7 @@
     "start": "next start",
     "sass": "sass --watch sass/main.scss public/css/main.css --style compressed",
     "sass-build": "sass sass/main.scss public/css/main.css --style compressed",
-    "plugins": "./node_modules/.bin/babel components/custom/js/addons/plugins/_Addon.js components/custom/js/addons/plugins/*.js  --out-file public/js/main-plugins.js",
+    "plugins": "node ./node_modules/xac-esbuild/index.js -o=src/public/js/ -s=src/components/custom/js/addons/plugins/ -outfile=src/public/js/main-plugins.js -banner=src/package.json -log=1",
     "watch": "npm-watch"
   },
   "dependencies": {
@@ -48,6 +52,7 @@
     "eslint": "^10.0.2",
     "eslint-config-next": "^16.1.6",
     "npm-run-all": "^4.1.5",
-    "npm-watch": "^0.13.0"
+    "npm-watch": "^0.13.0",
+    "xac-esbuild": "file:../../xac-esbuild"
   }
 }
