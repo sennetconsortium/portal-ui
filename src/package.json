@@ -16,19 +16,18 @@
     "start": "next start",
     "sass": "sass --watch sass/main.scss public/css/main.css --style compressed",
     "sass-build": "sass sass/main.scss public/css/main.css --style compressed",
-    "plugins": "node ./node_modules/xac-esbuild/index.js -o=public/js/ -s=components/custom/js/addons/plugins/ -outfile=public/js/main-plugins.js -banner=package.json -log=1",
+    "plugins": "node ./node_modules/xac-esbuild/index.js -o=public/js/ -s=components/custom/js/addons/plugins/ -outfile=public/js/main-plugins.js -banner=package.json",
     "watch": "npm-watch"
   },
   "dependencies": {
     "@mui/icons-material": "^5.10.9",
     "@mui/material": "^5.14.2",
-    "bootstrap-icons": "^1.13.1",
     "cookies-next": "^4.3.0",
     "driver.js": "^1.4.0",
     "next": "16.1.6",
     "primeicons": "^7.0.0",
     "primereact": "^10.9.7",
-    "provenance-ui": "github:sennetconsortium/provenance-ui#v3.0.0-beta",
+    "provenance-ui": "github:sennetconsortium/provenance-ui#libpitt/esbuild",
     "react": "^18.2.0",
     "react-bootstrap": "^2.10.10",
     "react-data-table-component": "7.6.2",
@@ -47,6 +46,6 @@
     "eslint-config-next": "^16.1.6",
     "npm-run-all": "^4.1.5",
     "npm-watch": "^0.13.0",
-    "xac-esbuild": "file:../../xac-esbuild"
+    "xac-esbuild": "github:x-atlas-consortia/xac-esbuild#1.0.0"
   }
 }
