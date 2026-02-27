@@ -16,7 +16,7 @@
     "start": "next start",
     "sass": "sass --watch sass/main.scss public/css/main.css --style compressed",
     "sass-build": "sass sass/main.scss public/css/main.css --style compressed",
-    "plugins": "node ./node_modules/xac-esbuild/index.js -o=public/js/ -s=components/custom/js/addons/plugins/ -outfile=public/js/main-plugins.js -banner=package.json",
+    "plugins": "node ./node_modules/xac-esbuild/index.js -o=public/js/ -s=components/custom/js/addons/plugins/ -outfile=public/js/main-plugins.js",
     "watch": "npm-watch"
   },
   "dependencies": {
