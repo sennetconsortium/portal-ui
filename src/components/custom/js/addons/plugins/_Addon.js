@@ -1,4 +1,6 @@
-// Base class that should be an entry before the other plugins.
+/**
+ * Base class that should be an entry before the other plugins.
+ */
 class Addon {
     route;
 
@@ -96,4 +98,3 @@ class Addon {
         Addon.log(msg, {fn})
     }
 }
-
