@@ -7,6 +7,7 @@ const ONTOLOGY_CACHE_PATH = path.join(process.cwd(), 'cache')
 
 export default async function handler(req, res) {
     const key = req.query.code
+    const errMsg = `ONTOLOGY API: Misconfiguration detected for UBKG with key ${key}`
     try {
         const filePath = ONTOLOGY_CACHE_PATH + '/.ontology_' + key
         const filePathBackUp = filePath + '_bk'
@@ -55,11 +56,13 @@ export default async function handler(req, res) {
             if (ontologyBackUp && ontologyBackUp.length) {
                 res.status(200).json(ontologyBackUp)
             } else {
-                res.status(404).json({code: key})
+                console.warn(errMsg)
+                res.status(404).json([])
             }
         }
     } catch (error) {
         console.error(`ONTOLOGY API`, error)
     }
-    res.status(404).json({code: key})
+    console.warn(errMsg)
+    res.status(404).json([])
 }
