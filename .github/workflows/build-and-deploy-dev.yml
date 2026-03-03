@@ -56,7 +56,8 @@ jobs:
           envkey_NEXT_PUBLIC_UBKG_API_ENDPOINT : ${{ secrets.NEXT_PUBLIC_UBKG_API_ENDPOINT }}
           envkey_NEXT_PUBLIC_UBKG_VALUESET_PATH : ${{ secrets.NEXT_PUBLIC_UBKG_VALUESET_PATH }}
           envkey_NEXT_PUBLIC_UBKG_CODES : ${{ secrets.NEXT_PUBLIC_UBKG_CODES }}
-          envkey_ NEXT_PUBLIC_UBKG_CODES_PATHS: ${{ secrets.NEXT_PUBLIC_UBKG_CODES_PATHS }}
+          envkey_NEXT_PUBLIC_UBKG_CODES_PATHS: ${{ secrets.NEXT_PUBLIC_UBKG_CODES_PATHS }}
+          envkey_NEXT_PUBLIC_CELL_TYPES_INDEX: ${{ secrets.NEXT_PUBLIC_CELL_TYPES_INDEX }}
           envkey_GLOBUS_TOKEN : ${{ secrets.GLOBUS_TOKEN }}
           envkey_PROTOCOLS_TOKEN : ${{ secrets.PROTOCOLS_TOKEN }}
           envkey_UI_PSWD : ${{ secrets.UI_PSWD }}
