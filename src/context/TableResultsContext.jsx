@@ -1,19 +1,38 @@
 import React, {createContext, useContext, useEffect, useRef, useState} from "react";
 import $ from "jquery";
-import { useRouter } from 'next/router'
+import {useRouter} from 'next/router'
 import AppContext from "./AppContext";
 import {RESULTS_PER_PAGE} from "@/config/config";
-import {createTheme} from "react-data-table-component";
 import {handleTableControls} from "@/components/custom/search/ResultsPerPage";
 import {eq} from "@/components/custom/js/functions";
-import { useSearchUIContext } from "search-ui/components/core/SearchUIContext";
+import {useSearchUIContext} from "search-ui/components/core/SearchUIContext";
 
 const TableResultsContext = createContext({})
 
-export const TableResultsProvider = ({ columnsRef, children, getHotLink, rows, filters, onRowClicked, raw, getId, inModal = false }) => {
+export const TableResultsProvider = ({
+                                         columnsRef,
+                                         children,
+                                         getHotLink,
+                                         rows,
+                                         filters,
+                                         onRowClicked,
+                                         raw,
+                                         getId,
+                                         inModal = false
+                                     }) => {
 
     const {isLoggedIn} = useContext(AppContext)
-    const {isLoading, rawResponse, pageNumber, setPageNumber, pageSize, setPageSize, setSort, addFilter, clearSearchTerm} = useSearchUIContext()
+    const {
+        isLoading,
+        rawResponse,
+        pageNumber,
+        setPageNumber,
+        pageSize,
+        setPageSize,
+        setSort,
+        addFilter,
+        clearSearchTerm
+    } = useSearchUIContext()
     const sortedFields = useRef({})
     const router = useRouter()
 
@@ -40,15 +59,17 @@ export const TableResultsProvider = ({ columnsRef, children, getHotLink, rows, f
                 let values = kv[1].split(',')
                 for (let v of values) {
                     addFilter(kv[0], v)
-                } 
+                }
             }
         }
 
     }, [router.isReady, router.query])
 
     const hasSearch = () => {
-        return filters.length > 0 || $('#search').val()?.length > 0
-    }
+        // Guard against SSR (no DOM on the server)
+        if (typeof window === "undefined") return filters.length > 0;
+        return filters.length > 0 || $("#search").val()?.length > 0;
+    };
 
     const getNoDataMessage = () => {
         if (!hasLoaded.current) return (<></>)
@@ -56,19 +77,37 @@ export const TableResultsProvider = ({ columnsRef, children, getHotLink, rows, f
             <div className={'alert alert-warning text-center'} style={{padding: '24px'}}>
                 {isLoggedIn() && !hasSearch() && <span>No results to show.</span>}
                 {hasSearch() && <span>No results to show. Please check search filters/keywords and try again.</span>}
-                {!isLoggedIn() && !hasSearch() && <span>There are currently no published entities available to view.</span>}
-                {!isLoggedIn() && <span><br /> To view non-published data, please <a href={'/login'}>log in</a>.</span>}
+                {!isLoggedIn() && !hasSearch() &&
+                    <span>There are currently no published entities available to view.</span>}
+                {!isLoggedIn() && <span><br/> To view non-published data, please <a href={'/login'}>log in</a>.</span>}
             </div>
         )
     }
 
     const [noResultsMessage, setNoResultsMessage] = useState(getNoDataMessage())
 
+    useEffect(() => {
+        let cancelled = false;
 
-    createTheme('plain', {
-        background: {
-            default: 'transparent',
-        }})
+        (async () => {
+            try {
+                const {createTheme} = await import("react-data-table-component");
+                if (cancelled) return;
+                createTheme("plain", {
+                    background: {
+                        default: "transparent",
+                    },
+                });
+            } catch (e) {
+                // Swallow errors silently or log if you prefer:
+                // console.warn('Failed to create RDT theme', e);
+            }
+        })();
+
+        return () => {
+            cancelled = true;
+        };
+    }, []);
 
     const handleOnRowClicked = (row, e) => {
         e.stopPropagation()
@@ -180,7 +219,7 @@ export const TableResultsProvider = ({ columnsRef, children, getHotLink, rows, f
         rawResponse,
         updateTablePagination
     }}>
-        { children }
+        {children}
     </TableResultsContext.Provider>
 }
 

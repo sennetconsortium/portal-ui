@@ -16,7 +16,10 @@ import {getEntityEndPoint, getIngestEndPoint, valid_dataset_ancestor_config} fro
 import $ from 'jquery'
 import SenNetPopover, {SenPopoverOptions} from "@/components/SenNetPopover"
 import AttributesUpload, {getResponseList} from "@/components/custom/edit/AttributesUpload";
-import DataTable from "react-data-table-component";
+
+const DataTable = dynamic(() => import('react-data-table-component'), {
+  ssr: false,
+});
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import Tooltip from '@mui/material/Tooltip';
 import Zoom from "@mui/material/Zoom"

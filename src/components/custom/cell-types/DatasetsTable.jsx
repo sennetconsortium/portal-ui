@@ -1,3 +1,4 @@
+import dynamic from "next/dynamic";
 import ClipboardCopy from '@/components/ClipboardCopy'
 import Spinner from '@/components/custom/Spinner'
 import { getCellTypesIndex } from '@/config/config'
@@ -6,7 +7,10 @@ import useSearchUIQuery from '@/hooks/useSearchUIQuery'
 import Image from 'next/image'
 import { useMemo, useState } from 'react'
 import Form from 'react-bootstrap/Form'
-import DataTable from 'react-data-table-component'
+
+const DataTable = dynamic(() => import('react-data-table-component'), {
+  ssr: false,
+});
 
 function DatasetsTable({ clId, cellLabel }) {
     const query = {
