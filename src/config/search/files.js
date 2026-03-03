@@ -183,6 +183,17 @@ export const SEARCH_FILES = {
                 isAggregationActive: true,
                 isFacetVisible: doesAggregationHaveBuckets('data_class')
             },
+            'assay_input_entity': {
+                label: 'Assay Input Entity',
+                type: 'value',
+                field: 'assay_input_entity.keyword',
+                isExpanded: false,
+                filterType: 'any',
+                isFilterable: false,
+                facetType: 'term',
+                isAggregationActive: true,
+                isFacetVisible: doesAggregationHaveBuckets('assay_input_entity')
+            },
             'analyte_class': {
                 label: 'Analyte Class',
                 type: 'value',
