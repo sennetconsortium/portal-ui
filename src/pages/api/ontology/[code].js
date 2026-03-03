@@ -61,4 +61,5 @@ export default async function handler(req, res) {
     } catch (error) {
         console.error(`ONTOLOGY API`, error)
     }
+    res.status(404).json({code: key})
 }
