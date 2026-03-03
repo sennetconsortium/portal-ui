@@ -10,7 +10,7 @@ function useContent() {
     const loadBanners = async () => {
         try {
             let res = await fetch(
-                `${getRootURL()}content/banners/index.json`,
+                `/content/banners/index.json`,
                 getJsonHeader()
             )
             if (res.ok) {

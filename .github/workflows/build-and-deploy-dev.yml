@@ -39,6 +39,7 @@ jobs:
         uses: SpicyPizza/create-envfile@v2.0
         with:
           # Prefix the input names with 'envkey_' to add them to the .env file
+          envkey_NEXT_PUBLIC_CELL_TYPES_INDEX: ${{ secrets.NEXT_PUBLIC_CELL_TYPES_INDEX }}
           envkey_NEXT_PUBLIC_FILES_INDEX: ${{ secrets.NEXT_PUBLIC_FILES_INDEX }}
           envkey_NEXT_PUBLIC_ENTITIES_INDEX: ${{ secrets.NEXT_PUBLIC_ENTITIES_INDEX }}
           envkey_NEXT_PUBLIC_SEARCH_API_ENDPOINT: ${{ secrets.NEXT_PUBLIC_SEARCH_API_ENDPOINT}}
