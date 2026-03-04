@@ -36,7 +36,7 @@ export function getAuthHeader(ops = {}) {
         if (auth)
             headers.append("Authorization", "Bearer " + auth)
     } catch (e) {
-        console.error(e)
+        log.error(e)
     }
     return headers;
 }
@@ -132,7 +132,7 @@ export async function getReadWritePrivileges() {
         let json = response.json()
         return await json
     } catch (e) {
-        console.error(e)
+        log.error(e)
     }
 }
 
@@ -153,7 +153,7 @@ export async function callIngestService(path, base = 'privs/') {
         }
 
     } catch (e) {
-        console.error(e)
+        log.error(e)
     }
 }
 
@@ -367,7 +367,7 @@ export const fetchSearchAPIEntities = async (body, index = 'entities') => {
         }
         return res.json();
     } catch (error) {
-        console.error(error);
+        log.error(error);
         return null;
     }
 }
@@ -809,7 +809,7 @@ export const getDistinctOrgansAndCellTypes = async () => {
                     field: "organs.code.keyword",
                     size: 10000
                 },
-                
+
                 aggs: {
                     group_by_cell_label: {
                         terms: {
@@ -821,7 +821,7 @@ export const getDistinctOrgansAndCellTypes = async () => {
                             total_cell_count: {
                                 sum: {
                                     field: "cell_count"
-                                    
+
                                 }
                             }
                         }
