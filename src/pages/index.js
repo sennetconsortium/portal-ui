@@ -1,6 +1,6 @@
 import dynamic from "next/dynamic";
 import {useRouter} from 'next/router'
-import {useContext, useEffect} from 'react'
+import React, {useContext, useEffect} from 'react'
 import log from 'loglevel'
 import {getCookie} from 'cookies-next'
 import AppContext from '@/context/AppContext'

@@ -22,7 +22,11 @@ import SenNetAlert from "@/components/SenNetAlert";
 import FileTransfersContext from "@/context/FileTransfersContext";
 import OptionsSelect from "../layout/entity/OptionsSelect";
 import SenNetPopover from "@/components/SenNetPopover";
-import DataTable from "react-data-table-component";
+
+const DataTable = dynamic(() => import('react-data-table-component'), {
+  ssr: false,
+});
+
 import LnkIc from "../layout/LnkIc";
 import AncestorsModal, { FilesBodyContent } from "../edit/dataset/AncestorsModal";
 import { SEARCH_FILES } from "@/config/search/files";

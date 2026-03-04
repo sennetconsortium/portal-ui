@@ -1,10 +1,14 @@
+import dynamic from "next/dynamic";
 import React, {useEffect, useState, useRef} from 'react'
 import PropTypes from 'prop-types'
 import {Button} from 'react-bootstrap';
 import {InputGroup} from 'react-bootstrap';
 import {getDocsRootURL, getIngestEndPoint} from "@/config/config";
 import log from 'loglevel'
-import DataTable from 'react-data-table-component';
+
+const DataTable = dynamic(() => import('react-data-table-component'), {
+  ssr: false,
+});
 import $ from 'jquery'
 import { getAuthHeader } from "@/lib/services";
 import SenNetPopover, {SenPopoverOptions} from "../../SenNetPopover";
