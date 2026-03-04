@@ -1,3 +1,4 @@
+import CellTypes from '@/components/custom/organ/CellTypes'
 import HumanReferenceAtlas from '@/components/custom/organ/HumanReferenceAtlas'
 import AppContext from '@/context/AppContext'
 import useOrganDetail from '@/hooks/organ/useOrganDetail'
@@ -95,6 +96,8 @@ const Organ = () => {
 
                         {/* Sample */}
                         <Samples id='Samples' organ={organDetail} />
+
+                        <CellTypes organ={organDetail} />
                     </main>
                 </div>
             </div>
