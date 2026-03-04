@@ -8,6 +8,7 @@ import Form from 'react-bootstrap/Form';
 import {Layout} from '@elastic/react-search-ui-views'
 import '@elastic/react-search-ui-views/lib/styles/styles.css'
 import log from 'loglevel'
+import _ from 'lodash';
 import {getAuthJsonHeaders, getAncestryData, getEntityData, updateCreateDataset} from '@/lib/services'
 import {
     cleanJson,

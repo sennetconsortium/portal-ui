@@ -54,7 +54,7 @@ class RUIIntegration extends Component {
         const ruiRef = this.ruiRef.current;
         const ruiRefObserver = new MutationObserver((_) => {
             // Check if the register button is present, if so then the rui is loaded
-            const element = ruiRef.getElementsByClassName("ccf-review-button");
+            const element = ruiRef.getElementsByClassName("review-button");
             if (element.length) {
                 this.ruiDidLoad();
                 ruiRefObserver.disconnect();
@@ -71,7 +71,7 @@ class RUIIntegration extends Component {
 
     removeRegisterButton() {
         const ruiRef = this.ruiRef.current;
-        const reviewButtons = ruiRef.getElementsByTagName("ccf-review-button");
+        const reviewButtons = ruiRef.getElementsByTagName("review-button");
         if (reviewButtons.length) {
             this.registerButtonRef.current = reviewButtons[0];
             reviewButtons[0].remove();
