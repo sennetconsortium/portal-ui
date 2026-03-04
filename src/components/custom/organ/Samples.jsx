@@ -2,7 +2,6 @@ import { APP_ROUTES } from '@/config/constants'
 import useLocalSettings from '@/hooks/useLocalSettings'
 import { getSamplesByOrgan } from '@/lib/services'
 import Link from 'next/link'
-import { useRouter } from 'next/router'
 import { useEffect, useState, useContext } from 'react'
 import DataTable from 'react-data-table-component'
 import ClipboardCopy from '../../ClipboardCopy'
@@ -19,7 +18,6 @@ import AppContext from '@/context/AppContext'
  * @returns {JSX.Element} The JSX code for the HumanReferenceAtlas component.
  */
 const Samples = ({ id, organ }) => {
-    const router = useRouter()
     const { setLocalSettings } = useLocalSettings()
     const [samples, setSamples] = useState(null)
     const {authorized} = useContext(AppContext)
