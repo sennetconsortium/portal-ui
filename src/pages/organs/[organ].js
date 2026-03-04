@@ -8,6 +8,7 @@ import { useContext } from 'react'
 const AppFooter = dynamic(() => import('@/components/custom/layout/AppFooter'))
 const AppNavbar = dynamic(() => import('@/components/custom/layout/AppNavbar'))
 const DataTypeQuantities = dynamic(() => import('@/components/custom/organ/DataTypeQuantities'))
+const IntegratedMaps = dynamic(() => import('@/components/custom/organ/IntegratedMaps'))
 const NotFound = dynamic(() => import('@/components/custom/NotFound'))
 const OrganViewHeader = dynamic(() => import('@/components/custom/organ/ViewHeader'))
 const Samples = dynamic(() => import('@/components/custom/organ/Samples'))
@@ -69,6 +70,15 @@ const Organ = () => {
                                         Samples
                                     </a>
                                 </li>
+                                <li className='nav-item'>
+                                    <a
+                                        href='#IntegratedMaps'
+                                        className='nav-link'
+                                        data-bs-parent='#sidebar'
+                                    >
+                                        Integrated Maps
+                                    </a>
+                                </li>
                             </ul>
                         </div>
                     </div>
@@ -95,6 +105,9 @@ const Organ = () => {
 
                         {/* Sample */}
                         <Samples id='Samples' organ={organDetail} />
+
+                        {/* Integrated Maps */}
+                        <IntegratedMaps id='IntegratedMaps' title="Integrated Maps" organ={organDetail} />
                     </main>
                 </div>
             </div>

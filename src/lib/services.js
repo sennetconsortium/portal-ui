@@ -5,7 +5,8 @@ import {
     getEntityEndPoint,
     getIngestEndPoint,
     getSearchEndPoint,
-    getUUIDEndpoint
+    getUUIDEndpoint,
+    getIntegratedMappingEndPoint
 } from "@/config/config";
 import {getCookie} from "cookies-next";
 import log from "loglevel";
@@ -935,5 +936,19 @@ export const filterProperties = {
             "lab_dataset_id"
         ],
         is_include: true
+    }
+}
+
+export async function getIntegratedMapsForOrgan(organTerm) {
+    try {
+        const endpoint = getIntegratedMappingEndPoint() + `api/integrated_maps/tissue/${organTerm}`
+        const res = await fetch(endpoint, { method: 'GET' });
+        if (res.status === 404) {
+            return []
+        }
+        return await res.json();
+    } catch (error) {
+        log.error(error);
+        return null;
     }
 }
