@@ -220,21 +220,19 @@ function CellTypes({ organ }) {
     autoBlobDownloader([tableDataTSV], 'text/tab-separated-values', `cell-types-${organ.label}.tsv`)
   }
 
-  if (!tableData.length) return <></>
-
   return (
     <>
-      {tableData.length > 0 && <SenNetAccordion title="Cell Types">
+      <SenNetAccordion id="cell-types" title="Cell Types">
 
-        <div className='d-flex flex-row-reverse'>
+        {tableData.length > 0 && <div className='d-flex flex-row-reverse'>
           <span
             className='btn btn-outline-primary rounded-0'
             role='button'
             onClick={downloadData}
           >
-            Download Table Data
+            Download Table Data <i class="bi bi-download"></i>
           </span>
-        </div>
+        </div>}
 
         <DataTable columns={columns} data={tableData} className='rdt_Results' pagination />
 
@@ -252,7 +250,7 @@ function CellTypes({ organ }) {
           secondaryBtnLabel={
             'Okay'}
         />
-      </SenNetAccordion>}
+      </SenNetAccordion>
     </>
   )
 }

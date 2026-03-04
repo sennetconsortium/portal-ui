@@ -70,6 +70,15 @@ const Organ = () => {
                                         Samples
                                     </a>
                                 </li>
+                                <li className='nav-item'>
+                                    <a
+                                        href='#cell-types'
+                                        className='nav-link'
+                                        data-bs-parent='#sidebar'
+                                    >
+                                        Cell Types
+                                    </a>
+                                </li>
                             </ul>
                         </div>
                     </div>
