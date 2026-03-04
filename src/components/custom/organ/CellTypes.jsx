@@ -7,7 +7,7 @@ import SenNetAccordion from '../layout/SenNetAccordion';
 import { getCellTypesIndex } from '@/config/config';
 import { Chip } from "@mui/material";
 import SenNetPopover from "@/components/SenNetPopover"
-import { percentage } from '../js/functions';
+import { autoBlobDownloader, percentage } from '../js/functions';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import AppModal from '@/components/AppModal';
 import ClipboardCopy from '@/components/ClipboardCopy';
@@ -118,9 +118,9 @@ function CellTypes({ organ }) {
           cell_count: d.total_cell_count.value,
           percentage: percentage(d.total_datasets.value, data.aggregations.total_datasets.value) + '%',
           total_datasets: d.total_datasets.value,
-          matched_datasets: data.aggregations.total_datasets.value,
+          total_indexed_datasets: data.aggregations.total_datasets.value,
         })
-        
+
       }
       totalDatasets.current = data.aggregations.total_datasets.value
       setTableData(_res)
@@ -170,7 +170,7 @@ function CellTypes({ organ }) {
     },
     {
       name: 'Matched Datasets',
-      id: 'matched_datasets',
+      id: 'total_datasets',
       width: '200px',
       selector: row => '',
       sortable: false,
@@ -188,28 +188,71 @@ function CellTypes({ organ }) {
     }
   ]
 
+  const downloadData = () => {
+    let tableDataTSV = ''
+    const _columns = [{
+      name: 'Cell ID',
+      id: 'cl_id'
+    }, ...columns, {
+      name: 'Percentage',
+      id: 'percentage'
+    },
+    {
+      name: 'Total Indexed Datasets',
+      id: 'total_indexed_datasets'
+    }
+    ]
+    for (let col of _columns) {
+      if (col.name.length) {
+        tableDataTSV += `${col.name}\t`
+      }
+    }
+    tableDataTSV += "\n"
+    for (const d of tableData) {
+
+      for (let col of _columns) {
+        if (col.name.length) {
+          tableDataTSV += `${d[col.id]}\t`
+        }
+      }
+      tableDataTSV += "\n"
+    }
+    autoBlobDownloader([tableDataTSV], 'text/tab-separated-values', `cell-types-${organ.label}.tsv`)
+  }
+
   if (!tableData.length) return <></>
 
   return (
     <>
-    {tableData.length > 0 && <SenNetAccordion title="Cell Types">
-      <DataTable columns={columns} data={tableData} className='rdt_Results' pagination />
+      {tableData.length > 0 && <SenNetAccordion title="Cell Types">
 
-      <AppModal
-        className={`modal--searchCellTypes`}
-        modalSize={'xl'}
-        showModal={showModal}
-        modalTitle={modalTitle}
-        modalBody={modalBody}
-        handleSecondaryBtn={
-          () => {
-            setShowModal(false)
-          }}
-        showPrimaryBtn={false}
-        secondaryBtnLabel={
-          'Okay'}
-      />
-    </SenNetAccordion>}
+        <div className='d-flex flex-row-reverse'>
+          <span
+            className='btn btn-outline-primary rounded-0'
+            role='button'
+            onClick={downloadData}
+          >
+            Download Table Data
+          </span>
+        </div>
+
+        <DataTable columns={columns} data={tableData} className='rdt_Results' pagination />
+
+        <AppModal
+          className={`modal--searchCellTypes`}
+          modalSize={'xl'}
+          showModal={showModal}
+          modalTitle={modalTitle}
+          modalBody={modalBody}
+          handleSecondaryBtn={
+            () => {
+              setShowModal(false)
+            }}
+          showPrimaryBtn={false}
+          secondaryBtnLabel={
+            'Okay'}
+        />
+      </SenNetAccordion>}
     </>
   )
 }
