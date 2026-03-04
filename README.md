@@ -56,6 +56,7 @@ There are a few configurable environment variables to keep in mind:
 cd docker
 ./docker-development.sh [check|config|build|start|stop|down]
 ```
+To run the image just built edit `docker-compose.deployment.dev.yml` and set it to the name of the image just built like `sennet/portal-ui:<version_number>`
 
 ### Docker build for deployment on TEST/STAGE/PROD
 
