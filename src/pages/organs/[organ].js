@@ -51,7 +51,16 @@ const Organ = () => {
                                         </a>
                                     </li>
                                 )}
-
+                                <li className='nav-item'>
+                                    <a
+                                        href='#cell-types'
+                                        className='nav-link'
+                                        data-bs-parent='#sidebar'
+                                    >
+                                        Cell Types
+                                    </a>
+                                </li>
+                                
                                 <li className='nav-item'>
                                     <a
                                         href='#DatasetTypes'
@@ -68,15 +77,6 @@ const Organ = () => {
                                         data-bs-parent='#sidebar'
                                     >
                                         Samples
-                                    </a>
-                                </li>
-                                <li className='nav-item'>
-                                    <a
-                                        href='#cell-types'
-                                        className='nav-link'
-                                        data-bs-parent='#sidebar'
-                                    >
-                                        Cell Types
                                     </a>
                                 </li>
                             </ul>
@@ -97,6 +97,8 @@ const Organ = () => {
                             />
                         )}
 
+                        <CellTypes organ={organDetail} />
+
                         {/* Data Types */}
                         <DataTypeQuantities
                             id='DatasetTypes'
@@ -106,7 +108,6 @@ const Organ = () => {
                         {/* Sample */}
                         <Samples id='Samples' organ={organDetail} />
 
-                        <CellTypes organ={organDetail} />
                     </main>
                 </div>
             </div>
