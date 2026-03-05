@@ -1,6 +1,6 @@
 import {formatMessageForCloudwatch} from "./find";
 import {getProtocolId} from "@/components/custom/js/functions";
-import log from "loglevel";
+import {log} from 'xac-loglevel'
 
 export default async function handler(req, res) {
     let baseProtocolUrl = 'https://www.protocols.io/api/v4/protocols/'
