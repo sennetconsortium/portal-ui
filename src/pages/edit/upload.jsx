@@ -6,7 +6,7 @@ import Alert from 'react-bootstrap/Alert';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import {Layout} from "@elastic/react-search-ui-views";
-import log from "loglevel";
+import {log} from 'xac-loglevel'
 import {cleanJson, eq, getStatusColor} from "@/components/custom/js/functions";
 import {getEntityData, updateCreateDataset} from "@/lib/services";
 import AppContext from '@/context/AppContext'
