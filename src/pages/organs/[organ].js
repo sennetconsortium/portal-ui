@@ -1,3 +1,4 @@
+import CellTypes from '@/components/custom/organ/CellTypes'
 import HumanReferenceAtlas from '@/components/custom/organ/HumanReferenceAtlas'
 import AppContext from '@/context/AppContext'
 import useOrganDetail from '@/hooks/organ/useOrganDetail'
@@ -50,7 +51,16 @@ const Organ = () => {
                                         </a>
                                     </li>
                                 )}
-
+                                <li className='nav-item'>
+                                    <a
+                                        href='#cell-types'
+                                        className='nav-link'
+                                        data-bs-parent='#sidebar'
+                                    >
+                                        Cell Types
+                                    </a>
+                                </li>
+                                
                                 <li className='nav-item'>
                                     <a
                                         href='#DatasetTypes'
@@ -87,6 +97,8 @@ const Organ = () => {
                             />
                         )}
 
+                        <CellTypes organ={organDetail} />
+
                         {/* Data Types */}
                         <DataTypeQuantities
                             id='DatasetTypes'
@@ -95,6 +107,7 @@ const Organ = () => {
 
                         {/* Sample */}
                         <Samples id='Samples' organ={organDetail} />
+
                     </main>
                 </div>
             </div>
