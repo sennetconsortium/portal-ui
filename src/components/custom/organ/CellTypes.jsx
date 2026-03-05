@@ -131,7 +131,6 @@ function CellTypes({ organ }) {
     return <Spinner />
   }
 
-
   const handleModal = (row) => {
     setShowModal(true)
     setModalBody(<span>{row.cell_definition}</span>)
@@ -180,7 +179,7 @@ function CellTypes({ organ }) {
     {
       name: '',
       id: 'view_datasets',
-      width: '25%',
+      width: '15%',
       selector: row => '',
       sortable: false,
       reorder: true,
@@ -230,7 +229,7 @@ function CellTypes({ organ }) {
             role='button'
             onClick={downloadData}
           >
-            Download Table Data <i class="bi bi-download"></i>
+            Download Table Data <i className="bi bi-download"></i>
           </span>
         </div>}
 
