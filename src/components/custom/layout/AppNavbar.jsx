@@ -142,6 +142,10 @@ const AppNavbar = ({hidden, signoutHidden, innerRef}) => {
                                               href={APP_ROUTES.organs}>
                                 <span>Organs</span>
                             </NavDropdown.Item>
+                            <NavDropdown.Item key={`dd-integrated-maps`} target='_blank'
+                                              href={'https://sn-integrated-mapping.sennetconsortium.org/integrated_maps/'}>
+                                <span>Integrated Maps <i className='bi bi-box-arrow-up-right'></i></span>
+                            </NavDropdown.Item>
                         </NavDropdown>
 
                         <NavDropdown active={false}
