@@ -1,6 +1,6 @@
 import { getUbkgCodes, getUbkgCodesPath, getUbkgEndPoint, getUbkgValuesetPath } from '@/config/config'
 import { getJsonHeader } from './services'
-import log from 'loglevel'
+import {log} from 'xac-loglevel'
 
 export async function getOnotologyValueset(code) {
     const valuesetPath = getUbkgValuesetPath()

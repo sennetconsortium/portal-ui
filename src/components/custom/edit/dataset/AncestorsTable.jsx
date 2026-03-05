@@ -12,7 +12,7 @@ import ClipboardCopy from '@/components/ClipboardCopy';
 const DataTable = dynamic(() => import('react-data-table-component'), {
   ssr: false,
 });
-import log from 'loglevel'
+import {log} from 'xac-loglevel'
 import useAutoHideColumns from "@/hooks/useAutoHideColumns";
 import {formatOrganRow} from "@/components/custom/TableResultsEntities";
 

@@ -1,6 +1,6 @@
 import path from 'path'
 import {promises as fs} from 'fs'
-import log from 'loglevel'
+import {log} from 'xac-loglevel'
 import {getOnotologyValueset} from '@/lib/ontology'
 
 const ONTOLOGY_CACHE_PATH = path.join(process.cwd(), 'cache')
@@ -52,9 +52,11 @@ export default async function handler(req, res) {
 
         if (ontology && ontology.length) {
             res.status(200).json(ontology)
+            return
         } else {
             if (ontologyBackUp && ontologyBackUp.length) {
                 res.status(200).json(ontologyBackUp)
+                return 
             } else {
                 console.warn(errMsg)
                 res.status(404).json([])
