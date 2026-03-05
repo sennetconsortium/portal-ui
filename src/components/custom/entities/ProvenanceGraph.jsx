@@ -1,5 +1,5 @@
 import React, {useEffect, useRef, useState} from 'react'
-import log from 'loglevel'
+import {log} from 'xac-loglevel'
 import {DataConverterNeo4J, GraphGeneric, ProvenanceUI, Legend} from 'provenance-ui/dist/index'
 import 'provenance-ui/dist/ProvenanceUI.css'
 import Spinner from '../Spinner'

@@ -1,5 +1,5 @@
 import { getOrganByPath } from '@/config/organs'
-import log from 'loglevel'
+import {log} from 'xac-loglevel'
 
 /**
  * Custom hook to fetch and manage the details of a specific organ based on the url path name.
