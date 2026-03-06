@@ -1,13 +1,17 @@
-import ClipboardCopy from '@/components/ClipboardCopy'
-import { searchUIQueryString } from '@/components/custom/js/functions'
-import SenNetAccordion from '@/components/custom/layout/SenNetAccordion'
-import { APP_ROUTES } from '@/config/constants'
-import AppContext from '@/context/AppContext'
-import useLocalSettings from '@/hooks/useLocalSettings'
-import { getSamplesByOrgan } from '@/lib/services'
-import Link from 'next/link'
-import { useContext, useEffect, useState } from 'react'
-import DataTable from 'react-data-table-component'
+import ClipboardCopy from '@/components/ClipboardCopy';
+import { searchUIQueryString } from '@/components/custom/js/functions';
+import SenNetAccordion from '@/components/custom/layout/SenNetAccordion';
+import { APP_ROUTES } from '@/config/constants';
+import AppContext from '@/context/AppContext';
+import useLocalSettings from '@/hooks/useLocalSettings';
+import { getSamplesByOrgan } from '@/lib/services';
+import dynamic from "next/dynamic";
+import Link from 'next/link';
+import { useContext, useEffect, useState } from 'react';
+
+const DataTable = dynamic(() => import('react-data-table-component'), {
+  ssr: false,
+});
 
 /**
  * Displays organ-associated samples in a table.

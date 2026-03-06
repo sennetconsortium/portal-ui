@@ -1,4 +1,4 @@
-import log from "loglevel";
+import {log} from 'xac-loglevel'
 import React from "react";
 
 class ErrorBoundary extends React.Component {

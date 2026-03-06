@@ -1,3 +1,4 @@
+import CellTypes from '@/components/custom/organ/CellTypes'
 import HumanReferenceAtlas from '@/components/custom/organ/HumanReferenceAtlas'
 import AppContext from '@/context/AppContext'
 import useOrganDetail from '@/hooks/organ/useOrganDetail'
@@ -18,7 +19,7 @@ const Organ = () => {
     const { isRegisterHidden } = useContext(AppContext)
 
     const router = useRouter()
-    const { organ } = router.query;
+    const { organ } = router.query
     const { organDetail } = useOrganDetail(organ)
 
     if (!organDetail) {
@@ -36,10 +37,7 @@ const Organ = () => {
                             id='sidebar'
                             className='collapse collapse-horizontal sticky-top custom-sticky'
                         >
-                            <ul
-                                id='sidebar-nav'
-                                className='nav list-group rounded-1 text-sm-start'
-                            >
+                            <ul id='sidebar-nav' className='nav list-group rounded-1 text-sm-start'>
                                 {organDetail.hraSupported && (
                                     <li className='nav-item'>
                                         <a
@@ -51,7 +49,15 @@ const Organ = () => {
                                         </a>
                                     </li>
                                 )}
-
+                                <li className='nav-item'>
+                                    <a
+                                        href='#cell-types'
+                                        className='nav-link'
+                                        data-bs-parent='#sidebar'
+                                    >
+                                        Cell Types
+                                    </a>
+                                </li>
                                 <li className='nav-item'>
                                     <a
                                         href='#DatasetTypes'
@@ -91,23 +97,23 @@ const Organ = () => {
 
                         {/* Human Reference Atlas */}
                         {organDetail.hraSupported && (
-                            <HumanReferenceAtlas
-                                id='HumanReferenceAtlas'
-                                organ={organDetail}
-                            />
+                            <HumanReferenceAtlas id='HumanReferenceAtlas' organ={organDetail} />
                         )}
 
+                        <CellTypes organ={organDetail} />
+
                         {/* Data Types */}
-                        <DataTypeQuantities
-                            id='DatasetTypes'
-                            organ={organDetail}
-                        />
+                        <DataTypeQuantities id='DatasetTypes' organ={organDetail} />
 
                         {/* Sample */}
                         <Samples id='Samples' organ={organDetail} />
 
                         {/* Integrated Maps */}
-                        <IntegratedMaps id='IntegratedMaps' title="Integrated Maps" organ={organDetail} />
+                        <IntegratedMaps
+                            id='IntegratedMaps'
+                            title='Integrated Maps'
+                            organ={organDetail}
+                        />
                     </main>
                 </div>
             </div>

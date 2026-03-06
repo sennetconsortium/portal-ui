@@ -1,9 +1,14 @@
+import dynamic from "next/dynamic";
 import React, {createContext, useContext, useEffect, useRef, useState} from 'react'
 import {getAuthHeader, getJsonHeader} from "@/lib/services";
 import {getEntityEndPoint} from "@/config/config";
 import {createDownloadUrl, eq} from "@/components/custom/js/functions";
 import AppContext from "./AppContext";
-import DataTable from "react-data-table-component";
+
+const DataTable = dynamic(() => import('react-data-table-component'), {
+  ssr: false,
+});
+
 import {Row, Stack} from "react-bootstrap";
 
 const JobQueueContext = createContext()

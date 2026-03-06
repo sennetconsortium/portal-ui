@@ -1,7 +1,7 @@
 import dynamic from "next/dynamic";
 import React, {useContext, useEffect, useState} from "react";
 import {useRouter} from 'next/router';
-import log from "loglevel";
+import {log} from 'xac-loglevel'
 import {eq, extractSourceMappedMetadataInfo} from "@/components/custom/js/functions";
 import {getWritePrivilegeForGroupUuid, getAncestryData, getEntityData} from "@/lib/services";
 import AppContext from "@/context/AppContext";

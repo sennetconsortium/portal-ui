@@ -7,7 +7,8 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import {Layout} from '@elastic/react-search-ui-views'
 import '@elastic/react-search-ui-views/lib/styles/styles.css'
-import log from 'loglevel'
+import {log} from 'xac-loglevel'
+import _ from 'lodash';
 import {getAuthJsonHeaders, getAncestryData, getEntityData, updateCreateDataset} from '@/lib/services'
 import {
     cleanJson,
@@ -23,7 +24,11 @@ import EntityContext, {EntityProvider} from '@/context/EntityContext'
 import {getIngestEndPoint, valid_dataset_ancestor_config} from "@/config/config";
 import $ from 'jquery'
 import DatasetRevertButton, {statusRevertTooltip} from "@/components/custom/edit/dataset/DatasetRevertButton";
-import DataTable from "react-data-table-component";
+
+const DataTable = dynamic(() => import('react-data-table-component'), {
+  ssr: false,
+});
+
 import AttributesUpload, {getResponseList} from "@/components/custom/edit/AttributesUpload";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 

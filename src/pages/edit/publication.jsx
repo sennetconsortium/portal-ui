@@ -7,7 +7,7 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import {Layout} from '@elastic/react-search-ui-views'
 import '@elastic/react-search-ui-views/lib/styles/styles.css'
-import log from 'loglevel'
+import {log} from 'xac-loglevel'
 import {getAncestryData, getEntityData, updateCreateDataset, getAuthJsonHeaders} from '@/lib/services'
 import {cleanJson, eq, fetchEntity, getStatusColor,} from '@/components/custom/js/functions'
 import AppContext from '@/context/AppContext'

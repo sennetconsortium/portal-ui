@@ -1,12 +1,16 @@
-import { searchUIQueryString } from '@/components/custom/js/functions'
-import SenNetAccordion from '@/components/custom/layout/SenNetAccordion'
-import { RESULTS_PER_PAGE } from '@/config/config'
-import { APP_ROUTES } from '@/config/constants'
-import useLocalSettings from '@/hooks/useLocalSettings'
-import { getOrganDataTypeQuantities } from '@/lib/services'
-import Link from 'next/link'
-import { useEffect, useState } from 'react'
-import DataTable from 'react-data-table-component'
+import { searchUIQueryString } from '@/components/custom/js/functions';
+import SenNetAccordion from '@/components/custom/layout/SenNetAccordion';
+import { RESULTS_PER_PAGE } from "@/config/config";
+import { APP_ROUTES } from '@/config/constants';
+import useLocalSettings from '@/hooks/useLocalSettings';
+import { getOrganDataTypeQuantities } from '@/lib/services';
+import dynamic from "next/dynamic";
+import Link from 'next/link';
+import { useEffect, useState } from 'react';
+
+const DataTable = dynamic(() => import('react-data-table-component'), {
+  ssr: false,
+});
 
 /**
  * Displays dataset type counts for an organ in a table.

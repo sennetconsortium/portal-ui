@@ -48,7 +48,8 @@ export const organIcons = {
     'UBERON:0000948': `${BASE_ICON_URL}/organs/organ-icon-heart.svg`,
     'FMA:54974': `${BASE_ICON_URL}/organs/organ-icon-palatine-tonsil.svg`,
     'FMA:54973': `${BASE_ICON_URL}/organs/organ-icon-palatine-tonsil.svg`,
-    'UBERON:0010000': "https://cdn.jsdelivr.net/gh/cns-iu/md-icons@main/other-icons/organs/ico-organs-united.svg",
+    'UBERON:0001066': `${BASE_ICON_URL}/organs/organ-icon-spinal-cord.svg`,
+    'UBERON:0010000': 'https://cdn.jsdelivr.net/gh/cns-iu/md-icons@main/other-icons/organs/ico-organs-united.svg',
 }
 
 /**
@@ -123,6 +124,15 @@ export const organs = [
         path: 'heart',
         subLabel: 'UBERON:0000948',
         url: 'http://purl.obolibrary.org/obo/UBERON_0000948'
+    },
+    {
+        codes: ['UBERON:0001066'],
+        hraSupported: true,
+        icon: organIcons['UBERON:0001066'],
+        label: 'Intervertebral Disc',
+        path: 'intervertebral-disc',
+        subLabel: 'UBERON:0001066',
+        url: 'http://purl.obolibrary.org/obo/UBERON_0001066'
     },
     {
         codes: ['UBERON:0004538', 'UBERON:0004539'],

@@ -1,7 +1,12 @@
+import dynamic from "next/dynamic";
 import React, {useContext, useEffect, useState} from 'react'
 import PropTypes from 'prop-types'
 import {opsDict, ResultsPerPage} from "./ResultsPerPage";
-import DataTable from "react-data-table-component";
+
+const DataTable = dynamic(() => import('react-data-table-component'), {
+  ssr: false,
+});
+
 import TableResultsContext from "@/context/TableResultsContext";
 import ColumnsDropdown from "./ColumnsDropdown";
 import {eq} from '../js/functions'

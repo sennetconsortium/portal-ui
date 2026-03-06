@@ -1,6 +1,6 @@
 {
   "name": "portal-ui",
-  "version": "1.11.6",
+  "version": "1.11.7",
   "private": true,
   "description": "SenNet Data Portal",
   "repository": {
@@ -24,6 +24,7 @@
     "@mui/material": "^5.14.2",
     "cookies-next": "^4.3.0",
     "driver.js": "^1.4.0",
+    "lodash": "^4.17.23",
     "next": "16.1.6",
     "primeicons": "^7.0.0",
     "primereact": "^10.9.7",
@@ -39,6 +40,7 @@
     "sass": "^1.97.3",
     "search-ui": "file:search-ui",
     "vitessce": "^3.9.5",
+    "xac-loglevel": "github:x-atlas-consortia/xac-loglevel#1.0.0",
     "xac-sankey": "github:x-atlas-consortia/data-sankey#1.0.18"
   },
   "devDependencies": {

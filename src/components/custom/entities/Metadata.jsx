@@ -11,7 +11,7 @@ import PropTypes from "prop-types";
 import * as d3 from "d3";
 import $ from 'jquery'
 import {ViewHeaderBadges} from "../layout/entity/ViewHeaderBadges";
-import log from 'loglevel';
+import {log} from 'xac-loglevel';
 import { getProvenanceMetadata } from "@/lib/services";
 import {datasetIs, objIsNotEmpty} from "@/components/custom/js/functions";
 

@@ -1,9 +1,9 @@
 import dynamic from "next/dynamic";
 import React, {useContext, useEffect, useRef, useState} from 'react'
 import PropTypes from 'prop-types'
-import AppContext from "../../context/AppContext";
+import AppContext from "@/context/AppContext";
 import LinearProgress from '@mui/material/LinearProgress';
-import log from 'loglevel'
+import {log} from 'xac-loglevel'
 import {
     eq,
     getHeaders,
@@ -12,7 +12,11 @@ import {
     getStatusColor,
     THEME
 } from "@/components/custom/js/functions";
-import DataTable from "react-data-table-component";
+
+const DataTable = dynamic(() => import('react-data-table-component'), {
+  ssr: false,
+});
+
 import Alert from "react-bootstrap/Alert"
 import Button from "react-bootstrap/Button"
 import Container from "react-bootstrap/Container"

@@ -23,7 +23,7 @@ import AppContext from "@/context/AppContext";
 import {getAuthJsonHeaders, getAuthHeader} from "@/lib/services";
 import JobQueueContext from "@/context/JobQueueContext";
 import OptionsSelect from "../layout/entity/OptionsSelect";
-import log from 'loglevel'
+import {log} from 'xac-loglevel'
 
 export default function BulkCreate({
                                        userWriteGroups,
