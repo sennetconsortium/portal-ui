@@ -1,3 +1,4 @@
+import SenNetAccordion from '@/components/custom/layout/SenNetAccordion'
 import { APP_ROUTES } from '@/config/constants'
 import { getOrganTypes } from '@/lib/ontology'
 import { getIntegratedMapsForOrgan, getPrimaryDatasets } from '@/lib/services'
@@ -6,8 +7,16 @@ import { useEffect, useState } from 'react'
 import { Card } from 'react-bootstrap'
 import DataTable from 'react-data-table-component'
 import { searchUIQueryString } from '../js/functions'
-import SenNetAccordion from '../layout/SenNetAccordion'
 
+/**
+ * Displays the latest integrated maps in a table.
+ *
+ * @param {Object} props Component props.
+ * @param {string} props.id Accordion element id.
+ * @param {string} props.title Accordion title.
+ * @param {import('@/config/organs').Organ} props.organ Organ metadata used to resolve map records.
+ * @returns {JSX.Element}
+ */
 function IntegratedMaps({ id, title, organ }) {
     const [data, setData] = useState(null)
     const [error, setError] = useState(null)
@@ -73,42 +82,53 @@ function IntegratedMaps({ id, title, organ }) {
         },
         {
             name: 'Raw Download',
+            id: 'raw_download',
+            sortable: true,
+            reorder: true,
             selector: (row) => {
-                const url = row.download_raw
-                const filename = url.split('/').pop().split('?')[0]
+                const url = row.download_raw.split('/').pop().split('?')[0]
                 return (
-                    <a target='_blank' rel='noopener noreferrer' href={url} className='icon-inline'>
-                        <span className='me-1'>{filename}</span> <i className='bi bi-download'></i>
-                    </a>
+                    <span data-field='raw_download' className='has-supIcon'>
+                        <a target='_blank' rel='noopener noreferrer' href={row.download_raw}>
+                            {url}
+                        </a>{' '}
+                        <i className='bi bi-download'></i>
+                    </span>
                 )
-            },
-            sortable: true
+            }
         },
         {
             name: 'Processed Download',
+            id: 'processed_download',
+            sortable: true,
+            reorder: true,
             selector: (row) => {
-                const url = row.download
-                const filename = url.split('/').pop().split('?')[0]
+                const url = row.download.split('/').pop().split('?')[0]
                 return (
-                    <a target='_blank' rel='noopener noreferrer' href={url} className='icon-inline'>
-                        <span className='me-1'>{filename}</span> <i className='bi bi-download'></i>
-                    </a>
+                    <span data-field='processed_download' className='has-supIcon'>
+                        <a target='_blank' rel='noopener noreferrer' href={row.download}>
+                            {url}
+                        </a>{' '}
+                        <i className='bi bi-download'></i>
+                    </span>
                 )
-            },
-            sortable: true
+            }
         },
         {
             name: 'Shiny App',
+            id: 'shiny_app',
+            sortable: true,
+            reorder: true,
             selector: (row) => {
-                const url = row.shiny_app
                 return (
-                    <a target='_blank' rel='noopener noreferrer' href={url} className='icon-inline'>
-                        <span className='me-1'>View</span>{' '}
+                    <span data-field='shiny_app' className='has-supIcon'>
+                        <a target='_blank' rel='noopener noreferrer' href={row.shiny_app}>
+                            View
+                        </a>{' '}
                         <i className='bi bi-box-arrow-up-right'></i>
-                    </a>
+                    </span>
                 )
-            },
-            sortable: true
+            }
         },
         {
             name: 'Creation Date',
@@ -186,7 +206,14 @@ function IntegratedMaps({ id, title, organ }) {
                         <div className='mx-auto text-center'>Unable to load integrated maps</div>
                     )}
 
-                    {data != null && <DataTable columns={columns} data={data} fixedHeader={true} />}
+                    {data != null && (
+                        <DataTable
+                            className='rdt_Results'
+                            columns={columns}
+                            data={data}
+                            fixedHeader={true}
+                        />
+                    )}
                 </Card.Body>
             </Card>
         </SenNetAccordion>

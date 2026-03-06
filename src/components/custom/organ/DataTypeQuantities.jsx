@@ -1,21 +1,20 @@
+import { searchUIQueryString } from '@/components/custom/js/functions'
+import SenNetAccordion from '@/components/custom/layout/SenNetAccordion'
+import { RESULTS_PER_PAGE } from '@/config/config'
 import { APP_ROUTES } from '@/config/constants'
 import useLocalSettings from '@/hooks/useLocalSettings'
 import { getOrganDataTypeQuantities } from '@/lib/services'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import DataTable from 'react-data-table-component'
-import { searchUIQueryString } from '../js/functions'
-import SenNetAccordion from '../layout/SenNetAccordion'
-import {RESULTS_PER_PAGE} from "@/config/config";
 
 /**
- * DataTypeQuantities component displays the quantities for a given organ in a SenNetAccordion.
+ * Displays dataset type counts for an organ in a table.
  *
- * @param {Object} props - The properties object.
- * @param {string} props.id - The id of the SenNetAccordion.
- * @param {import('@/config/organs').Organ} props.organ - The organ to display in the component.
- *
- * @returns {JSX.Element} The JSX code for the HumanReferenceAtlas component.
+ * @param {Object} props Component props.
+ * @param {string} props.id Accordion element id.
+ * @param {import('@/config/organs').Organ} props.organ Organ metadata used to filter dataset quantities.
+ * @returns {JSX.Element}
  */
 const DataTypeQuantities = ({ id, organ }) => {
     const { setLocalSettings } = useLocalSettings()
@@ -35,17 +34,28 @@ const DataTypeQuantities = ({ id, organ }) => {
         getQuantities()
     }, [organ])
 
-    const searchUrl = `${APP_ROUTES.search}?` + searchUIQueryString([
-        { field: 'entity_type', values: ['Dataset'], type: 'any' },
-        { field: 'origin_samples.organ', values: organ.codes, type: 'any' }
-    ], 20)
+    const searchUrl =
+        `${APP_ROUTES.search}?` +
+        searchUIQueryString(
+            [
+                { field: 'entity_type', values: ['Dataset'], type: 'any' },
+                { field: 'origin_samples.organ', values: organ.codes, type: 'any' }
+            ],
+            20
+        )
 
     const searchUrlForDatasetType = (types) => {
-        return `${APP_ROUTES.search}?` + searchUIQueryString([
-            { field: 'entity_type', values: ['Dataset'], type: 'any' },
-            { field: 'origin_samples.organ', values: organ.codes, type: 'any' },
-            { field: 'dataset_type', values: types, type: 'any' }
-        ], 20)
+        return (
+            `${APP_ROUTES.search}?` +
+            searchUIQueryString(
+                [
+                    { field: 'entity_type', values: ['Dataset'], type: 'any' },
+                    { field: 'origin_samples.organ', values: organ.codes, type: 'any' },
+                    { field: 'dataset_type', values: types, type: 'any' }
+                ],
+                20
+            )
+        )
     }
 
     const handleSearchPageClick = (e) => {
@@ -104,6 +114,7 @@ const DataTypeQuantities = ({ id, organ }) => {
             </div>
             {datasetTypeHierarchy && (
                 <DataTable
+                    className='rdt_Results'
                     columns={columns}
                     data={datasetTypeHierarchy}
                     fixedHeader={true}
