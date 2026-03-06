@@ -1,32 +1,30 @@
+import ClipboardCopy from '@/components/ClipboardCopy';
+import { searchUIQueryString } from '@/components/custom/js/functions';
+import SenNetAccordion from '@/components/custom/layout/SenNetAccordion';
+import { APP_ROUTES } from '@/config/constants';
+import AppContext from '@/context/AppContext';
+import useLocalSettings from '@/hooks/useLocalSettings';
+import { getSamplesByOrgan } from '@/lib/services';
 import dynamic from "next/dynamic";
-import { APP_ROUTES } from '@/config/constants'
-import useLocalSettings from '@/hooks/useLocalSettings'
-import { getSamplesByOrgan } from '@/lib/services'
-import Link from 'next/link'
-import { useRouter } from 'next/router'
-import { useEffect, useState, useContext } from 'react'
+import Link from 'next/link';
+import { useContext, useEffect, useState } from 'react';
 
 const DataTable = dynamic(() => import('react-data-table-component'), {
   ssr: false,
 });
-import ClipboardCopy from '../../ClipboardCopy'
-import { searchUIQueryString } from '../js/functions'
-import SenNetAccordion from '../layout/SenNetAccordion'
-import AppContext from '@/context/AppContext'
 
 /**
- * Samples component displays the samples for a given organ in a SenNetAccordion.
+ * Displays organ-associated samples in a table.
  *
- * @param {Object} props - The properties object.
- * @param {import('@/config/organs').Organ} props.organ - The organ.
- *
- * @returns {JSX.Element} The JSX code for the HumanReferenceAtlas component.
+ * @param {Object} props Component props.
+ * @param {string} props.id Accordion element id.
+ * @param {import('@/config/organs').Organ} props.organ Organ metadata used to fetch and filter samples.
+ * @returns {JSX.Element}
  */
 const Samples = ({ id, organ }) => {
-    const router = useRouter()
     const { setLocalSettings } = useLocalSettings()
     const [samples, setSamples] = useState(null)
-    const {authorized} = useContext(AppContext)
+    const { authorized } = useContext(AppContext)
 
     useEffect(() => {
         const getSamples = async () => {
@@ -56,7 +54,7 @@ const Samples = ({ id, organ }) => {
                 )
             }
         },
-         {
+        {
             name: 'Source Type',
             selector: (row) => row.sourceType,
             sortable: true
@@ -107,6 +105,7 @@ const Samples = ({ id, organ }) => {
             </div>
             {samples != null && (
                 <DataTable
+                    className='rdt_Results'
                     columns={columns}
                     data={samples}
                     fixedHeader={true}

@@ -9,6 +9,7 @@ import { useContext } from 'react'
 const AppFooter = dynamic(() => import('@/components/custom/layout/AppFooter'))
 const AppNavbar = dynamic(() => import('@/components/custom/layout/AppNavbar'))
 const DataTypeQuantities = dynamic(() => import('@/components/custom/organ/DataTypeQuantities'))
+const IntegratedMaps = dynamic(() => import('@/components/custom/organ/IntegratedMaps'))
 const NotFound = dynamic(() => import('@/components/custom/NotFound'))
 const OrganViewHeader = dynamic(() => import('@/components/custom/organ/ViewHeader'))
 const Samples = dynamic(() => import('@/components/custom/organ/Samples'))
@@ -18,7 +19,7 @@ const Organ = () => {
     const { isRegisterHidden } = useContext(AppContext)
 
     const router = useRouter()
-    const { organ } = router.query;
+    const { organ } = router.query
     const { organDetail } = useOrganDetail(organ)
 
     if (!organDetail) {
@@ -36,10 +37,7 @@ const Organ = () => {
                             id='sidebar'
                             className='collapse collapse-horizontal sticky-top custom-sticky'
                         >
-                            <ul
-                                id='sidebar-nav'
-                                className='nav list-group rounded-1 text-sm-start'
-                            >
+                            <ul id='sidebar-nav' className='nav list-group rounded-1 text-sm-start'>
                                 {organDetail.hraSupported && (
                                     <li className='nav-item'>
                                         <a
@@ -60,7 +58,6 @@ const Organ = () => {
                                         Cell Types
                                     </a>
                                 </li>
-                                
                                 <li className='nav-item'>
                                     <a
                                         href='#DatasetTypes'
@@ -79,6 +76,15 @@ const Organ = () => {
                                         Samples
                                     </a>
                                 </li>
+                                <li className='nav-item'>
+                                    <a
+                                        href='#IntegratedMaps'
+                                        className='nav-link'
+                                        data-bs-parent='#sidebar'
+                                    >
+                                        Integrated Maps
+                                    </a>
+                                </li>
                             </ul>
                         </div>
                     </div>
@@ -91,23 +97,24 @@ const Organ = () => {
 
                         {/* Human Reference Atlas */}
                         {organDetail.hraSupported && (
-                            <HumanReferenceAtlas
-                                id='HumanReferenceAtlas'
-                                organ={organDetail}
-                            />
+                            <HumanReferenceAtlas id='HumanReferenceAtlas' organ={organDetail} />
                         )}
 
+                        {/* Cell Types */}
                         <CellTypes organ={organDetail} />
 
-                        {/* Data Types */}
-                        <DataTypeQuantities
-                            id='DatasetTypes'
+                        {/* Integrated Maps */}
+                        <IntegratedMaps
+                            id='IntegratedMaps'
+                            title='Integrated Maps'
                             organ={organDetail}
                         />
 
+                        {/* Data Types */}
+                        <DataTypeQuantities id='DatasetTypes' organ={organDetail} />
+
                         {/* Sample */}
                         <Samples id='Samples' organ={organDetail} />
-
                     </main>
                 </div>
             </div>

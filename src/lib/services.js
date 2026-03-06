@@ -5,7 +5,8 @@ import {
     getEntityEndPoint,
     getIngestEndPoint,
     getSearchEndPoint,
-    getUUIDEndpoint
+    getUUIDEndpoint,
+    getIntegratedMappingEndPoint
 } from "@/config/config";
 import {getCookie} from "cookies-next";
 import {log} from 'xac-loglevel'
@@ -36,7 +37,7 @@ export function getAuthHeader(ops = {}) {
         if (auth)
             headers.append("Authorization", "Bearer " + auth)
     } catch (e) {
-        console.error(e)
+        log.error(e)
     }
     return headers;
 }
@@ -132,7 +133,7 @@ export async function getReadWritePrivileges() {
         let json = response.json()
         return await json
     } catch (e) {
-        console.error(e)
+        log.error(e)
     }
 }
 
@@ -153,7 +154,7 @@ export async function callIngestService(path, base = 'privs/') {
         }
 
     } catch (e) {
-        console.error(e)
+        log.error(e)
     }
 }
 
@@ -367,7 +368,7 @@ export const fetchSearchAPIEntities = async (body, index = 'entities') => {
         }
         return res.json();
     } catch (error) {
-        console.error(error);
+        log.error(error);
         return null;
     }
 }
@@ -809,7 +810,7 @@ export const getDistinctOrgansAndCellTypes = async () => {
                     field: "organs.code.keyword",
                     size: 10000
                 },
-                
+
                 aggs: {
                     group_by_cell_label: {
                         terms: {
@@ -821,7 +822,7 @@ export const getDistinctOrgansAndCellTypes = async () => {
                             total_cell_count: {
                                 sum: {
                                     field: "cell_count"
-                                    
+
                                 }
                             }
                         }
@@ -865,8 +866,30 @@ export const getDistinctDatasetsUnderCellTypes = async () => {
     return content.aggregations.unique_datasets.value
 }
 
-
-
+export const getPrimaryDatasets = async (uuids) => {
+    const body = {
+        "size": 10000,
+        "_source": [
+            "uuid",
+            "immediate_ancestors.sennet_id"
+        ],
+        "query": {
+            "terms": {
+            "uuid.keyword": uuids
+            }
+        }
+    }
+    const content = await fetchSearchAPIEntities(body, 'entities');
+    if (!content) {
+        return null;
+    }
+    return content.hits.hits.map((hit) => {
+        return {
+            uuid: hit._source.uuid,
+            primary_datasets: hit._source.immediate_ancestors.map((ancestor) => ({ sennetId: ancestor.sennet_id }))
+        }
+    });
+}
 
 export const filterProperties = {
     ancestors: {
@@ -935,5 +958,19 @@ export const filterProperties = {
             "lab_dataset_id"
         ],
         is_include: true
+    }
+}
+
+export async function getIntegratedMapsForOrgan(organTerm) {
+    try {
+        const endpoint = getIntegratedMappingEndPoint() + `api/integrated_maps/tissue/${organTerm}`
+        const res = await fetch(endpoint, { method: 'GET' });
+        if (res.status === 404) {
+            return []
+        }
+        return await res.json();
+    } catch (error) {
+        log.error(error);
+        return null;
     }
 }
