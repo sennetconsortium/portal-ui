@@ -1,32 +1,28 @@
-import useSearchUIQuery from '@/hooks/useSearchUIQuery'
-import { getCellTypesByIds, parseJson } from "@/lib/services";
-import { useEffect, useRef, useState } from 'react';
-import dynamic from "next/dynamic";
-import Spinner from '@/components/custom/Spinner'
-import SenNetAccordion from '../layout/SenNetAccordion';
-import { getCellTypesIndex } from '@/config/config';
-import { Chip } from "@mui/material";
-import SenNetPopover from "@/components/SenNetPopover"
-import { autoBlobDownloader, percentage } from '../js/functions';
-import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import AppModal from '@/components/AppModal';
 import ClipboardCopy from '@/components/ClipboardCopy';
+import SenNetPopover from "@/components/SenNetPopover";
+import Spinner from '@/components/custom/Spinner';
+import { autoBlobDownloader, percentage } from '@/components/custom/js/functions';
+import SenNetAccordion from '@/components/custom/layout/SenNetAccordion';
+import { getCellTypesIndex } from '@/config/config';
 import { APP_ROUTES } from '@/config/constants';
+import useSearchUIQuery from '@/hooks/useSearchUIQuery';
+import { getCellTypesByIds } from "@/lib/services";
+import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
+import { Chip } from "@mui/material";
+import dynamic from "next/dynamic";
+import { useEffect, useRef, useState } from 'react';
 
 const DataTable = dynamic(() => import('react-data-table-component'), {
   ssr: false,
 });
 
-
-
 function CellTypes({ organ }) {
-
   const isSearching = useRef(false)
   const [tableData, setTableData] = useState([])
   const [showModal, setShowModal] = useState(false)
   const [modalTitle, setModalTitle] = useState(null)
   const [modalBody, setModalBody] = useState(null)
-
 
   const query = {
     size: 0,
