@@ -1,6 +1,6 @@
 import { APP_ROUTES } from '@/config/constants'
 import { getOrganTypes } from '@/lib/ontology'
-import { getIntegratedMapsForOrgan } from '@/lib/services'
+import { getIntegratedMapsForOrgan, getPrimaryDatasets } from '@/lib/services'
 import log from 'loglevel'
 import { useEffect, useState } from 'react'
 import { Card } from 'react-bootstrap'
@@ -9,6 +9,57 @@ import { searchUIQueryString } from '../js/functions'
 import SenNetAccordion from '../layout/SenNetAccordion'
 
 function IntegratedMaps({ id, title, organ }) {
+    const [data, setData] = useState(null)
+    const [error, setError] = useState(null)
+    const [primaryDatasets, setPrimaryDatasets] = useState(null)
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const organTypes = await getOrganTypes()
+            const organTerms = organ.codes.map((code) => organTypes[code])
+
+            const integratedMaps = await Promise.all(
+                organTerms.map((term) => getIntegratedMapsForOrgan(term))
+            )
+            if (integratedMaps.some((map) => map === null)) {
+                log.error(`Error fetching integrated maps for organ ${organ.name}`)
+                setError('Unable to load integrated maps')
+                return
+            }
+
+            // integratedMap is an array of arrays. for each top level array find the newest item based on creation_time
+            const latestMaps = integratedMaps
+                .map((maps) => {
+                    if (maps.length === 0) return null
+                    return maps.reduce((latest, map) => {
+                        return new Date(map.creation_time) > new Date(latest.creation_time)
+                            ? map
+                            : latest
+                    })
+                })
+                .filter((map) => map !== null)
+                .sort((a, b) => a.tissue.tissuetype.localeCompare(b.tissue.tissuetype))
+
+            setData(latestMaps)
+
+            if (latestMaps.length === 0) {
+                log.warn(`No integrated maps found for organ ${organ.name}`)
+                return
+            }
+
+            const uuids = [...new Set(latestMaps.flatMap((map) => map.dataSets.map((d) => d.uuid)))]
+            const primaryDatasets = await getPrimaryDatasets(uuids)
+
+            const primaryDatasetsMap = {}
+            for (const dataset of primaryDatasets) {
+                primaryDatasetsMap[dataset.uuid] = dataset.primary_datasets
+            }
+            setPrimaryDatasets(primaryDatasetsMap)
+        }
+
+        fetchData()
+    }, [organ])
+
     const columns = [
         {
             name: 'Organ',
@@ -70,8 +121,26 @@ function IntegratedMaps({ id, title, organ }) {
         {
             name: '',
             selector: (row) => {
+                // integrated maps contain derived datasets. we need the primary datasets to link to the search page.
+                if (primaryDatasets == null) {
+                    return (
+                        <button className='btn btn-outline-primary' disabled>
+                            Loading datasets...
+                        </button>
+                    )
+                }
+
+                const url = buildUrl(row.dataSets)
+                if (url == null) {
+                    return (
+                        <button className='btn btn-outline-primary' disabled>
+                            No datasets to view
+                        </button>
+                    )
+                }
+
                 return (
-                    <a className='btn btn-outline-primary rounded-0' href={buildUrl(row)}>
+                    <a className='btn btn-outline-primary' href={url}>
                         View datasets
                     </a>
                 )
@@ -80,49 +149,34 @@ function IntegratedMaps({ id, title, organ }) {
         }
     ]
 
-    function buildUrl(row) {
-        const datasets = row.dataSets.map((d) => d.sennet_id)
-        return (
-            `${APP_ROUTES.search}?` +
-            searchUIQueryString([{ field: 'sennet_id', values: datasets, type: 'any' }], 20)
-        )
-    }
+    function buildUrl(datasets) {
+        const derivedUUIDs = datasets.map((d) => d.uuid)
 
-    const [data, setData] = useState(null)
-    const [error, setError] = useState(null)
-
-    useEffect(() => {
-        const fetchData = async () => {
-            const organTypes = await getOrganTypes()
-            const organTerms = organ.codes.map((code) => organTypes[code])
-
-            const integratedMaps = await Promise.all(
-                organTerms.map((term) => getIntegratedMapsForOrgan(term))
-            )
-            if (integratedMaps.some((map) => map === null)) {
-                log.error(`Error fetching integrated maps for organ ${organ.name}`)
-                setError('Unable to load integrated maps')
-                return
+        // find all the primary datasets for the given uuids and extract their sennetIds.
+        const primarySennetIds = []
+        for (const uuid of derivedUUIDs) {
+            const dataset = primaryDatasets[uuid]
+            if (dataset) {
+                primarySennetIds.push(...dataset.map((d) => d.sennetId))
             }
-
-            // integratedMap is an array of arrays. for each top level array find the newest item based on creation_time
-            const latestMaps = integratedMaps
-                .map((maps) => {
-                    if (maps.length === 0) return null
-                    return maps.reduce((latest, map) => {
-                        return new Date(map.creation_time) > new Date(latest.creation_time)
-                            ? map
-                            : latest
-                    })
-                })
-                .filter((map) => map !== null)
-                .sort((a, b) => a.tissue.tissuetype.localeCompare(b.tissue.tissuetype))
-
-            setData(latestMaps)
         }
 
-        fetchData()
-    }, [organ])
+        if (primarySennetIds.length === 0) {
+            return null
+        }
+
+        // build a search url for the entity search page
+        return (
+            `${APP_ROUTES.search}?` +
+            searchUIQueryString(
+                [
+                    { field: 'sennet_id', values: primarySennetIds, type: 'any' },
+                    { field: 'entity_type', values: ['Dataset'], type: 'any' }
+                ],
+                20
+            )
+        )
+    }
 
     return (
         <SenNetAccordion id={id} title={title}>

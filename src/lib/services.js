@@ -866,8 +866,30 @@ export const getDistinctDatasetsUnderCellTypes = async () => {
     return content.aggregations.unique_datasets.value
 }
 
-
-
+export const getPrimaryDatasets = async (uuids) => {
+    const body = {
+        "size": 10000,
+        "_source": [
+            "uuid",
+            "immediate_ancestors.sennet_id"
+        ],
+        "query": {
+            "terms": {
+            "uuid.keyword": uuids
+            }
+        }
+    }
+    const content = await fetchSearchAPIEntities(body, 'entities');
+    if (!content) {
+        return null;
+    }
+    return content.hits.hits.map((hit) => {
+        return {
+            uuid: hit._source.uuid,
+            primary_datasets: hit._source.immediate_ancestors.map((ancestor) => ({ sennetId: ancestor.sennet_id }))
+        }
+    });
+}
 
 export const filterProperties = {
     ancestors: {
