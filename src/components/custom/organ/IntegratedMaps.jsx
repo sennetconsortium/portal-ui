@@ -144,7 +144,7 @@ function IntegratedMaps({ id, title, organ }) {
                 // integrated maps contain derived datasets. we need the primary datasets to link to the search page.
                 if (primaryDatasets == null) {
                     return (
-                        <button className='btn btn-outline-primary' disabled>
+                        <button className='btn btn-outline-primary my-1' disabled>
                             Loading datasets...
                         </button>
                     )
@@ -153,14 +153,14 @@ function IntegratedMaps({ id, title, organ }) {
                 const url = buildUrl(row.dataSets)
                 if (url == null) {
                     return (
-                        <button className='btn btn-outline-primary' disabled>
+                        <button className='btn btn-outline-primary my-1' disabled>
                             No datasets to view
                         </button>
                     )
                 }
 
                 return (
-                    <a className='btn btn-outline-primary' href={url}>
+                    <a className='btn btn-outline-primary my-1' href={url}>
                         View datasets
                     </a>
                 )

@@ -100,13 +100,8 @@ const Organ = () => {
                             <HumanReferenceAtlas id='HumanReferenceAtlas' organ={organDetail} />
                         )}
 
+                        {/* Cell Types */}
                         <CellTypes organ={organDetail} />
-
-                        {/* Data Types */}
-                        <DataTypeQuantities id='DatasetTypes' organ={organDetail} />
-
-                        {/* Sample */}
-                        <Samples id='Samples' organ={organDetail} />
 
                         {/* Integrated Maps */}
                         <IntegratedMaps
@@ -114,6 +109,12 @@ const Organ = () => {
                             title='Integrated Maps'
                             organ={organDetail}
                         />
+
+                        {/* Data Types */}
+                        <DataTypeQuantities id='DatasetTypes' organ={organDetail} />
+
+                        {/* Sample */}
+                        <Samples id='Samples' organ={organDetail} />
                     </main>
                 </div>
             </div>
