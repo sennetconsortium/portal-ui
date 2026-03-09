@@ -6,7 +6,7 @@ import {
     getReadWritePrivileges,
     getUserWriteGroups,
 } from '@/lib/services'
-import {log} from 'xac-loglevel'
+import log from 'xac-loglevel'
 import {APP_ROUTES} from '@/config/constants'
 import AppModal from '@/components/AppModal'
 import AppContext from './AppContext'

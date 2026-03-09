@@ -1,6 +1,6 @@
 import path from 'path'
 import {promises as fs} from 'fs'
-import {log} from 'xac-loglevel'
+import log from 'xac-loglevel'
 import {getIngestEndPoint, getUbkgCodes} from '@/config/config'
 import {getAuthHeader, getHeadersFromRequest, getJsonHeader} from "@/lib/services";
 

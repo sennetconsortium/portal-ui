@@ -1,5 +1,5 @@
 import {getCookie} from 'cookies-next'
-import {log} from 'xac-loglevel'
+import log from 'xac-loglevel'
 import Script from "next/script";
 import React from "react";
 

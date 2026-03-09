@@ -1,6 +1,6 @@
 import {useEffect, useState} from 'react'
 import { compressToEncodedURIComponent, decompressFromEncodedURIComponent } from 'lz-string';
-import {log} from 'xac-loglevel'
+import log from 'xac-loglevel'
 
 function useVitessceEncoder() {
 

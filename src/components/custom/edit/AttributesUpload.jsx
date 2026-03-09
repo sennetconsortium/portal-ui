@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import {Button} from 'react-bootstrap';
 import {InputGroup} from 'react-bootstrap';
 import {getDocsRootURL, getIngestEndPoint} from "@/config/config";
-import {log} from 'xac-loglevel'
+import log from 'xac-loglevel'
 
 const DataTable = dynamic(() => import('react-data-table-component'), {
   ssr: false,

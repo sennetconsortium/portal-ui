@@ -1,6 +1,6 @@
 import { getAuth, getRootURL } from "@/config/config";
 import { APP_ROUTES } from "@/config/constants";
-import {log} from 'xac-loglevel'
+import log from 'xac-loglevel'
 import React from "react";
 import {getOrganByCode, organIcons} from "@/config/organs";
 
