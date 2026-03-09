@@ -13,10 +13,11 @@ function Collections({ entityType, data }) {
     const getCollectionsView = () => {
         return data?.map((collection) =>
             <span key={collection.uuid}>
+                <a href={getEntityViewUrl('Collection', collection.uuid, {}, {})} title={collection.title}>{collection.sennet_id}</a><ClipboardCopy text={collection.sennet_id}/>
                 <SenNetPopover text={collection.title}>
-                    <a href={getEntityViewUrl('Collection', collection.uuid, {}, {})} title={collection.title}>{collection.sennet_id}</a><ClipboardCopy text={collection.sennet_id}/>
+                    <sup><i className="bi bi-info-circle"></i></sup>
                 </SenNetPopover>
-                &nbsp;
+                &nbsp;&nbsp;
             </span>
         );
     }
