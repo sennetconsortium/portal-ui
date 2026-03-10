@@ -21,7 +21,6 @@
   },
   "dependencies": {
     "@mui/icons-material": "^5.10.9",
-    "@mui/material": "^5.14.2",
     "cookies-next": "^4.3.0",
     "driver.js": "^1.4.0",
     "lodash": "^4.17.23",
