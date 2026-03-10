@@ -1,6 +1,6 @@
 import dynamic from "next/dynamic";
 import React, {useContext, useEffect, useState} from "react";
-import {log} from 'xac-loglevel'
+import log from 'xac-loglevel'
 import {fetchDataCite} from "@/components/custom/js/functions";
 import Header from "@/components/custom/layout/Header";
 import AppContext from "@/context/AppContext";

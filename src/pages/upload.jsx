@@ -1,7 +1,7 @@
 import dynamic from "next/dynamic";
 import React, {useContext, useEffect, useState} from "react";
 import {useRouter} from 'next/router';
-import {log} from 'xac-loglevel'
+import log from 'xac-loglevel'
 import {
     callService,
     filterProperties,

@@ -1,6 +1,6 @@
 import {simple_query_builder} from "search-ui/lib/search-tools";
 import {getEntitiesIndex, getSearchEndPoint} from "@/config/config";
-import {log} from 'xac-loglevel'
+import log from 'xac-loglevel'
 
 // a mock service to return some data
 export default async function handler(req, res) {

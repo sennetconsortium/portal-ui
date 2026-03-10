@@ -2,6 +2,8 @@ import SenNetAccordion from "@/components/custom/layout/SenNetAccordion";
 import Card from 'react-bootstrap/Card';
 import ClipboardCopy from "@/components/ClipboardCopy";
 import {getEntityViewUrl} from "@/components/custom/js/functions";
+import SenNetPopover from "@/components/SenNetPopover";
+
 
 function Collections({ entityType, data }) {
     const getTitleType = () => {
@@ -11,8 +13,11 @@ function Collections({ entityType, data }) {
     const getCollectionsView = () => {
         return data?.map((collection) =>
             <span key={collection.uuid}>
-                <a href={getEntityViewUrl('Collection', collection.uuid, {}, {})}>{collection.sennet_id}</a><ClipboardCopy text={collection.sennet_id}/>
-                &nbsp;
+                <a href={getEntityViewUrl('Collection', collection.uuid, {}, {})} title={collection.title}>{collection.sennet_id}</a><ClipboardCopy text={collection.sennet_id}/>
+                <SenNetPopover text={collection.title}>
+                    <sup><i className="bi bi-info-circle"></i></sup>
+                </SenNetPopover>
+                &nbsp;&nbsp;
             </span>
         );
     }

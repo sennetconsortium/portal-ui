@@ -1,6 +1,6 @@
 import dynamic from "next/dynamic";
 import React, {useContext, useEffect, useState} from "react";
-import {log} from 'xac-loglevel'
+import log from 'xac-loglevel'
 import {eq, fetchDataCite, getDatasetTypeDisplay} from "@/components/custom/js/functions";
 import {getAncestryData, getEntityData, getWritePrivilegeForGroupUuid} from "@/lib/services";
 import AppContext from "@/context/AppContext";

@@ -7,7 +7,7 @@ import {
     getStatusColor, getStatusDefinition, matchArrayOrder, getOrganMeta
 } from './js/functions'
 import AppContext from "@/context/AppContext"
-import {log} from 'xac-loglevel'
+import log from 'xac-loglevel'
 import ClipboardCopy from "../ClipboardCopy";
 import {getOptions} from "./search/ResultsPerPage";
 import ResultsBlock from "./search/ResultsBlock";

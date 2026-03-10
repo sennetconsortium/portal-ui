@@ -9,7 +9,7 @@ import {
     getIntegratedMappingEndPoint
 } from "@/config/config";
 import {getCookie} from "cookies-next";
-import {log} from 'xac-loglevel'
+import log from 'xac-loglevel'
 import {SEARCH_ENTITIES} from "@/config/search/entities";
 
 //////////////////////

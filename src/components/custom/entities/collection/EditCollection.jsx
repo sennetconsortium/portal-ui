@@ -7,7 +7,7 @@ import Form from 'react-bootstrap/Form';
 import Alert from 'react-bootstrap/Alert';
 import {Layout} from '@elastic/react-search-ui-views'
 import '@elastic/react-search-ui-views/lib/styles/styles.css'
-import {log} from 'xac-loglevel'
+import log from 'xac-loglevel'
 import _ from 'lodash';
 import {callService, filterProperties, getEntityData, update_create_entity} from '@/lib/services'
 import {cleanJson, eq, fetchEntity, getIdRegEx} from '@/components/custom/js/functions'

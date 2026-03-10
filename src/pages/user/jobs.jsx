@@ -3,7 +3,7 @@ import React, {useContext, useEffect, useRef, useState} from 'react'
 import PropTypes from 'prop-types'
 import AppContext from "@/context/AppContext";
 import LinearProgress from '@mui/material/LinearProgress';
-import {log} from 'xac-loglevel'
+import log from 'xac-loglevel'
 import {
     eq,
     getHeaders,
