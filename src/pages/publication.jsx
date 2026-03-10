@@ -2,7 +2,7 @@ import dynamic from "next/dynamic";
 import React, {useContext, useEffect, useState} from "react";
 import {log} from 'xac-loglevel'
 import {eq, fetchDataCite, getDatasetTypeDisplay} from "@/components/custom/js/functions";
-import {getWritePrivilegeForGroupUuid, getAncestryData, getEntityData} from "@/lib/services";
+import {getAncestryData, getEntityData, getWritePrivilegeForGroupUuid} from "@/lib/services";
 import AppContext from "@/context/AppContext";
 import Alert from 'react-bootstrap/Alert';
 import {EntityViewHeader} from "@/components/custom/layout/entity/ViewHeader";
@@ -20,7 +20,7 @@ const ContributorsContacts = dynamic(() => import("@/components/custom/entities/
 const FileTreeView = dynamic(() => import("@/components/custom/entities/dataset/FileTreeView"))
 const Header = dynamic(() => import("@/components/custom/layout/Header"))
 const Provenance = dynamic(() => import("@/components/custom/entities/Provenance"), {
-    loading: () => <LoadingAccordion id="Provenance" title="Provenance" style={{ height:'490px' }} />
+    loading: () => <LoadingAccordion id="Provenance" title="Provenance" style={{height: '490px'}}/>
 })
 const SidebarBtn = dynamic(() => import("@/components/SidebarBtn"))
 
@@ -52,7 +52,10 @@ function ViewPublication() {
             setData(_data)
 
             // fetch ancestry data
-            getAncestryData(_data.uuid,  {endpoints: ['ancestors', 'descendants'], otherEndpoints: []},'Publication').then(ancestry => {
+            getAncestryData(_data.uuid, {
+                endpoints: ['ancestors', 'descendants'],
+                otherEndpoints: []
+            }, 'Publication').then(ancestry => {
                 Object.assign(_data, ancestry)
                 setData(_data)
                 setHasAncestry(true)
@@ -71,25 +74,33 @@ function ViewPublication() {
                 }
 
                 setAncillaryPublicationData(ancillaryPublication || {})
-            }).catch(log.error)
+            }).catch(error => {
+                log.error(error)
+            })
 
             // fetch citation data
             if (_data.publication_url) {
                 fetchDataCite(_data.publication_url).then(citation => {
                     setCitationData(citation)
-                }).catch(log.error)
+                }).catch(error => {
+                    log.error(error)
+                })
             }
 
             // fetch write privilege
             getWritePrivilegeForGroupUuid(_data.group_uuid).then(response => {
                 setHasWritePrivilege(response.has_write_privs)
-            }).catch(log.error)
+            }).catch(error => {
+                log.error(error)
+            })
         }
 
         if (router.query.hasOwnProperty("uuid")) {
             // fetch publication data
             fetchData(router.query.uuid)
-                .catch(log.error);
+                .catch(error => {
+                    log.error(error)
+                })
         } else {
             setData(null);
         }
@@ -97,7 +108,7 @@ function ViewPublication() {
 
     const getTimestamp = () => {
         const dates = data?.publication_date.split('-')
-        return new Date( dates[0], dates[1] - 1, dates[2])
+        return new Date(dates[0], dates[1] - 1, dates[2])
     }
 
     const getDatasetTypeFromAncestors = () => {
@@ -110,7 +121,7 @@ function ViewPublication() {
         return Array.from(res).join(', ')
     }
 
-    if (isPreview(data, error))  {
+    if (isPreview(data, error)) {
         return getPreviewView(data)
     } else {
         return (
@@ -137,11 +148,12 @@ function ViewPublication() {
                                                    data-bs-parent="#sidebar">Summary</a>
                                             </li>
 
-                                            {data.associated_collection && Object.values(data.associated_collection).length > 0 && <li className="nav-item">
-                                                <a href="#AssociatedEntity--Collection"
-                                                   className="nav-link"
-                                                   data-bs-parent="#sidebar">Associated Collection</a>
-                                            </li>}
+                                            {data.associated_collection && Object.values(data.associated_collection).length > 0 &&
+                                                <li className="nav-item">
+                                                    <a href="#AssociatedEntity--Collection"
+                                                       className="nav-link"
+                                                       data-bs-parent="#sidebar">Associated Collection</a>
+                                                </li>}
 
                                             <li className="nav-item">
                                                 <a href="#Visualizations"
@@ -201,22 +213,24 @@ function ViewPublication() {
                                                          showOrgans={true}
                                             />
 
-                                            {data.associated_collection && Object.values(data.associated_collection).length > 0 && <AssociatedEntity currentEntity={'Publication'} data={data.associated_collection} />}
+                                            {data.associated_collection && Object.values(data.associated_collection).length > 0 &&
+                                                <AssociatedEntity currentEntity={'Publication'}
+                                                                  data={data.associated_collection}/>}
 
                                             {/* Visualizations */}
-                                            {data.ancestors &&
-                                            <VignetteList 
-                                                publication={{uuid: data.uuid}}
-                                                ancillaryPublication={ancillaryPublicationData}/>
+                                            {ancillaryPublicationData &&
+                                                <VignetteList
+                                                    publication={{uuid: data.uuid}}
+                                                    ancillaryPublication={ancillaryPublicationData}/>
                                             }
 
                                             {/*Provenance*/}
                                             <Provenance data={data} hasAncestry={hasAncestry}/>
 
                                             {/*Bulk Data Transfer*/}
-                                            <BulkDataTransfer data={data} entityType={data.entity_type} />
+                                            <BulkDataTransfer data={data} entityType={data.entity_type}/>
 
-                                             {!!(data.contacts && Object.keys(data.contacts).length) &&
+                                            {!!(data.contacts && Object.keys(data.contacts).length) &&
                                                 <ContributorsContacts title={'Authors'} data={data.contributors}/>
                                             }
 

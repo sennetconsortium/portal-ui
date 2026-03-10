@@ -60,6 +60,15 @@ const Organ = () => {
                                 </li>
                                 <li className='nav-item'>
                                     <a
+                                        href='#IntegratedMaps'
+                                        className='nav-link'
+                                        data-bs-parent='#sidebar'
+                                    >
+                                        Integrated Maps
+                                    </a>
+                                </li>
+                                <li className='nav-item'>
+                                    <a
                                         href='#DatasetTypes'
                                         className='nav-link'
                                         data-bs-parent='#sidebar'
@@ -74,15 +83,6 @@ const Organ = () => {
                                         data-bs-parent='#sidebar'
                                     >
                                         Samples
-                                    </a>
-                                </li>
-                                <li className='nav-item'>
-                                    <a
-                                        href='#IntegratedMaps'
-                                        className='nav-link'
-                                        data-bs-parent='#sidebar'
-                                    >
-                                        Integrated Maps
                                     </a>
                                 </li>
                             </ul>
