@@ -21,7 +21,6 @@
   },
   "dependencies": {
     "@mui/icons-material": "^5.10.9",
-    "@mui/material": "^5.14.2",
     "cookies-next": "^4.3.0",
     "driver.js": "^1.4.0",
     "lodash": "^4.17.23",
@@ -40,7 +39,7 @@
     "sass": "^1.97.3",
     "search-ui": "file:search-ui",
     "vitessce": "^3.9.5",
-    "xac-loglevel": "github:x-atlas-consortia/xac-loglevel#1.0.0",
+    "xac-loglevel": "github:x-atlas-consortia/xac-loglevel#1.0.1",
     "xac-sankey": "github:x-atlas-consortia/data-sankey#1.0.18"
   },
   "devDependencies": {

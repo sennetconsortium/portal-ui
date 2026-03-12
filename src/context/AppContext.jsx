@@ -2,7 +2,7 @@ import React, { createContext, useEffect, useState} from 'react'
 import { useRouter } from 'next/router'
 import {eq} from '@/components/custom/js/functions'
 import {deleteCookie, getCookie, setCookie} from 'cookies-next'
-import {log} from 'xac-loglevel'
+import log from 'xac-loglevel'
 import {
     checkValidToken,
     getReadWritePrivileges,
