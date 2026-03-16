@@ -268,6 +268,13 @@ function ViewDataset() {
                                                    data-bs-parent="#sidebar">Associated Collections</a>
                                             </li>
                                         )}
+                                        {data.publications && data.publications.length > 0 && (
+                                            <li className="nav-item">
+                                                <a href="#Publications"
+                                                   className="nav-link"
+                                                   data-bs-parent="#sidebar">Associated Publications</a>
+                                            </li>
+                                        )}
                                         {hasViz &&
                                             <li className="nav-item">
                                                 <a href="#Vitessce"
