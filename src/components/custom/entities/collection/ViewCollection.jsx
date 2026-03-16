@@ -153,7 +153,7 @@ function ViewCollection({collectionType='Collection', entitiesLabel='Entities'})
                                                 secondaryDate={data.last_modified_timestamp}
                                             />
 
-                                            {data.associated_publication && Object.values(data.associated_publication).length > 0 && <AssociatedEntity currentEntity={data.entity_type} data={data.associated_publication} grammar={'contains'} />}
+                                            {data.associated_publication && Object.values(data.associated_publication).length > 0 && <AssociatedEntity currentEntity={data.entity_type} data={data.associated_publication} grammar={'contains the'} />}
 
                                             {/*Entities*/}
                                             {isEntitiesLoading ? (

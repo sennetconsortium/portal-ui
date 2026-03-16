@@ -19,7 +19,6 @@ import WarningIcon from '@mui/icons-material/Warning'
 import LoadingAccordion from "@/components/custom/layout/LoadingAccordion";
 import AppNavbar from "@/components/custom/layout/AppNavbar"
 import Description from "@/components/custom/entities/sample/Description";
-import Upload from "@/components/custom/entities/dataset/Upload";
 import Collections from "@/components/custom/entities/Collections";
 import FilesDataProducts from "@/components/custom/entities/dataset/FilesDataProducts";
 import BulkDataTransfer from "@/components/custom/entities/dataset/BulkDataTransfer";
@@ -27,6 +26,7 @@ import {toast} from "react-toastify";
 import SenNetSuspense from "@/components/SenNetSuspense";
 import {ShimmerText, ShimmerThumbnail} from "react-shimmer-effects";
 import ProtocolsWorkflow from "@/components/custom/entities/dataset/ProtocolsWorkflow";
+import AssociatedEntity from "@/components/custom/entities/AssociatedEntity";
 
 
 const AppFooter = dynamic(() => import("@/components/custom/layout/AppFooter"))
@@ -347,7 +347,7 @@ function ViewDataset() {
                                         }
 
                                         {/*Upload*/}
-                                        {isLoggedIn() && data.upload && <Upload data={data.upload}/>}
+                                        {isLoggedIn() && data.upload && <AssociatedEntity data={data.upload} currentEntity={data.entity_type} grammar="is contained in the data" />}
 
                                         {/*Collections*/}
                                         {data.collections && data.collections.length > 0 && (
