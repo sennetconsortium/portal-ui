@@ -1,12 +1,12 @@
 import SenNetAccordion from '@/components/custom/layout/SenNetAccordion'
-import { APP_ROUTES } from '@/config/constants'
-import { getOrganTypes } from '@/lib/ontology'
-import { getIntegratedMapsForOrgan, getPrimaryDatasets } from '@/lib/services'
+import {APP_ROUTES} from '@/config/constants'
+import {getOrganTypes} from '@/lib/ontology'
+import {getIntegratedMapsForOrgan, getPrimaryDatasets} from '@/lib/services'
 import log from 'loglevel'
-import { useEffect, useState } from 'react'
-import { Card } from 'react-bootstrap'
+import {useEffect, useState} from 'react'
+import {Card} from 'react-bootstrap'
 import DataTable from 'react-data-table-component'
-import { searchUIQueryString } from '../js/functions'
+import {searchUIQueryString} from '../js/functions'
 
 /**
  * Displays the latest integrated maps in a table.
@@ -17,7 +17,7 @@ import { searchUIQueryString } from '../js/functions'
  * @param {import('@/config/organs').Organ} props.organ Organ metadata used to resolve map records.
  * @returns {JSX.Element}
  */
-function IntegratedMaps({ id, title, organ }) {
+function IntegratedMaps({id, title, organ}) {
     const [data, setData] = useState(null)
     const [error, setError] = useState(null)
     const [primaryDatasets, setPrimaryDatasets] = useState(null)
@@ -40,12 +40,21 @@ function IntegratedMaps({ id, title, organ }) {
             const latestMaps = integratedMaps
                 .map((maps) => {
                     if (maps.length === 0) return null
-                    return maps.reduce((latest, map) => {
-                        return new Date(map.creation_time) > new Date(latest.creation_time)
-                            ? map
-                            : latest
+
+                    const uniqueAssayNames = [
+                        ...new Set(maps.map(item => item.assay.assayName))
+                    ];
+
+                    let uniqueAssayLatestMaps = []
+                    uniqueAssayNames.forEach((assayName) => {
+                        uniqueAssayLatestMaps.push(maps.filter(item => item.assay.assayName === assayName).reduce((latest, map) => {
+                            return new Date(map.creation_time) > new Date(latest.creation_time)
+                                ? map
+                                : latest
+                        }))
                     })
-                })
+                    return uniqueAssayLatestMaps
+                }).flat() // Since the above returns an array we want to flatten this so we don't have nested arrays
                 .filter((map) => map !== null)
                 .sort((a, b) => a.tissue.tissuetype.localeCompare(b.tissue.tissuetype))
 
@@ -86,15 +95,17 @@ function IntegratedMaps({ id, title, organ }) {
             sortable: true,
             reorder: true,
             selector: (row) => {
-                const url = row.download_raw.split('/').pop().split('?')[0]
-                return (
-                    <span data-field='raw_download' className='has-supIcon'>
+                if (row.download_raw !== null) {
+                    const url = row.download_raw.split('/').pop().split('?')[0]
+                    return (
+                        <span data-field='raw_download' className='has-supIcon'>
                         <a target='_blank' rel='noopener noreferrer' href={row.download_raw}>
                             {url}
                         </a>{' '}
-                        <i className='bi bi-download'></i>
+                            <i className='bi bi-download'></i>
                     </span>
-                )
+                    )
+                }
             }
         },
         {
@@ -103,15 +114,17 @@ function IntegratedMaps({ id, title, organ }) {
             sortable: true,
             reorder: true,
             selector: (row) => {
-                const url = row.download.split('/').pop().split('?')[0]
-                return (
-                    <span data-field='processed_download' className='has-supIcon'>
+                if (row.download !== null) {
+                    const url = row.download.split('/').pop().split('?')[0]
+                    return (
+                        <span data-field='processed_download' className='has-supIcon'>
                         <a target='_blank' rel='noopener noreferrer' href={row.download}>
                             {url}
                         </a>{' '}
-                        <i className='bi bi-download'></i>
+                            <i className='bi bi-download'></i>
                     </span>
-                )
+                    )
+                }
             }
         },
         {
@@ -120,14 +133,16 @@ function IntegratedMaps({ id, title, organ }) {
             sortable: true,
             reorder: true,
             selector: (row) => {
-                return (
-                    <span data-field='shiny_app' className='has-supIcon'>
+                if (row.shiny_app !== null) {
+                    return (
+                        <span data-field='shiny_app' className='has-supIcon'>
                         <a target='_blank' rel='noopener noreferrer' href={row.shiny_app}>
                             View
                         </a>{' '}
-                        <i className='bi bi-box-arrow-up-right'></i>
+                            <i className='bi bi-box-arrow-up-right'></i>
                     </span>
-                )
+                    )
+                }
             }
         },
         {
@@ -190,8 +205,8 @@ function IntegratedMaps({ id, title, organ }) {
             `${APP_ROUTES.search}?` +
             searchUIQueryString(
                 [
-                    { field: 'sennet_id', values: primarySennetIds, type: 'any' },
-                    { field: 'entity_type', values: ['Dataset'], type: 'any' }
+                    {field: 'sennet_id', values: primarySennetIds, type: 'any'},
+                    {field: 'entity_type', values: ['Dataset'], type: 'any'}
                 ],
                 20
             )
