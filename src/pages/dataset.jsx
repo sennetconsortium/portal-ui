@@ -27,6 +27,7 @@ import SenNetSuspense from "@/components/SenNetSuspense";
 import {ShimmerText, ShimmerThumbnail} from "react-shimmer-effects";
 import ProtocolsWorkflow from "@/components/custom/entities/dataset/ProtocolsWorkflow";
 import AssociatedEntity from "@/components/custom/entities/AssociatedEntity";
+import AssociatedEntityTable from "@/components/custom/entities/AssociatedEntityTable";
 
 
 const AppFooter = dynamic(() => import("@/components/custom/layout/AppFooter"))
@@ -351,7 +352,14 @@ function ViewDataset() {
 
                                         {/*Collections*/}
                                         {data.collections && data.collections.length > 0 && (
-                                            <Collections entityType='Dataset' data={data.collections}/>
+                                            <AssociatedEntityTable id="Collections" propertyName={'collections'} data={data} />
+                                           
+                                        )}
+
+                                        {/*Publications*/}
+                                        {data.publications && data.publications.length > 0 && (
+                                            <AssociatedEntityTable id="Publications" propertyName={'publications'} data={data} />
+                                           
                                         )}
 
                                         {/* Vitessce */}
