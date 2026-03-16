@@ -20,7 +20,7 @@ import AppNavbar from "@/components/custom/layout/AppNavbar"
 import Description from "@/components/custom/entities/sample/Description";
 import Datasets from "@/components/custom/entities/collection/Datasets"
 import ContributorsContacts from "@/components/custom/entities/ContributorsContacts"
-import AssociatedEntity from "@/components/custom/entities/AssociatedEntity";
+import AssociatedEntityTable from "../AssociatedEntityTable";
 
 const AppFooter = dynamic(() => import("@/components/custom/layout/AppFooter"))
 const Attribution = dynamic(() => import("@/components/custom/entities/sample/Attribution"))
@@ -153,7 +153,7 @@ function ViewCollection({collectionType='Collection', entitiesLabel='Entities'})
                                                 secondaryDate={data.last_modified_timestamp}
                                             />
 
-                                            {data.associated_publication && Object.values(data.associated_publication).length > 0 && <AssociatedEntity currentEntity={data.entity_type} data={data.associated_publication} grammar={'contains the'} />}
+                                            {data.associated_publication && Object.values(data.associated_publication).length > 0 && <AssociatedEntityTable id='AssociatedEntity--Publication'  data={{...data, publications: [data.associated_publication]}} propertyName={'publications'} />}
 
                                             {/*Entities*/}
                                             {isEntitiesLoading ? (

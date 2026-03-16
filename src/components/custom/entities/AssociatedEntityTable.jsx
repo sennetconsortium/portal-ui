@@ -40,7 +40,7 @@ function AssociatedEntityTable({ id, propertyName, data }) {
         selector: row => row.sennet_id,
         sortable: true,
         reorder: true,
-        format: column => <span data-field='sennet_id' className='has-supIcon'><a href={getHotLink(column)}>{column.sennet_id}</a> <ClipboardCopy text={column.sennet_id} title={'Copy SenNet ID {text} to clipboard'} /></span>,
+        format: column => <span data-field='sennet_id' className='has-supIcon'><a href={getHotLink(column)}>{column.sennet_id}</a><ClipboardCopy text={column.sennet_id} title={'Copy SenNet ID {text} to clipboard'} /></span>,
     },
     {
         name: '',
