@@ -12,7 +12,7 @@ import AppNavbar from "@/components/custom/layout/AppNavbar"
 import Description from "@/components/custom/entities/sample/Description";
 import VignetteList from "@/components/custom/vitessce/VignetteList";
 import BulkDataTransfer from "@/components/custom/entities/dataset/BulkDataTransfer";
-import AssociatedEntity from "@/components/custom/entities/AssociatedEntity";
+import AssociatedEntityTable from "@/components/custom/entities/AssociatedEntityTable";
 
 const AppFooter = dynamic(() => import("@/components/custom/layout/AppFooter"))
 const Attribution = dynamic(() => import("@/components/custom/entities/sample/Attribution"))
@@ -214,8 +214,8 @@ function ViewPublication() {
                                             />
 
                                             {data.associated_collection && Object.values(data.associated_collection).length > 0 &&
-                                                <AssociatedEntity currentEntity={'Publication'}
-                                                                  data={data.associated_collection}/>}
+                                                <AssociatedEntityTable id='AssociatedEntity--Collection' propertyName={'collections'}
+                                                                  data={{...data, collections: [data.associated_collection]}}/>}
 
                                             {/* Visualizations */}
                                             {ancillaryPublicationData &&
