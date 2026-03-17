@@ -267,7 +267,7 @@ export const SEARCH_ENTITIES = {
                 isFacetVisible: doesTermFilterContainValues('entity_type', ['Upload']),
                 facets: {
                     intended_source_type: {
-                        label: 'Source',
+                        label: 'Source Type',
                         type: 'value',
                         field: 'intended_source_type.keyword',
                         isExpanded: false,
