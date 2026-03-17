@@ -258,6 +258,49 @@ export const SEARCH_ENTITIES = {
                 isAggregationActive: doesTermFilterContainValues('entity_type', ['Sample']),
                 isFacetVisible: doesAggregationHaveBuckets('rui_location_anatomical_locations.label')
             },
+            // Intended
+            intended_group: {
+                label: 'Intended',
+                facetType: 'group',
+                isExpanded: false,
+                tooltipText: 'Types that the data contained in the filtered Uploads are registered/associated with.',
+                isFacetVisible: doesTermFilterContainValues('entity_type', ['Upload']),
+                facets: {
+                    intended_source_type: {
+                        label: 'Source',
+                        type: 'value',
+                        field: 'intended_source_type.keyword',
+                        isExpanded: false,
+                        filterType: 'any',
+                        isFilterable: false,
+                        facetType: 'term',
+                        isAggregationActive: true,
+                        isFacetVisible: doesAggregationHaveBuckets('intended_source_type')
+                    },
+                    intended_organ: {
+                        label: 'Organ',
+                        type: 'value',
+                        field: 'intended_organ.keyword',
+                        isExpanded: false,
+                        filterType: 'any',
+                        isFilterable: false,
+                        facetType: 'term',
+                        isAggregationActive: true,
+                        isFacetVisible: doesAggregationHaveBuckets('intended_organ')
+                    },
+                    intended_dataset_type: {
+                        label: 'Dataset Type',
+                        type: 'value',
+                        field: 'intended_dataset_type.keyword',
+                        isExpanded: false,
+                        filterType: 'any',
+                        isFilterable: false,
+                        facetType: 'term',
+                        isAggregationActive: true,
+                        isFacetVisible: doesAggregationHaveBuckets('intended_dataset_type')
+                    }
+                },
+            },
 
             // Data processing group
             data_processing_group: {
