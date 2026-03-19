@@ -11,7 +11,7 @@ import {getEntityData, update_create_entity} from "@/lib/services";
 import AppContext from '@/context/AppContext'
 import EntityContext, {EntityProvider} from '@/context/EntityContext'
 import {SenPopoverOptions} from "@/components/SenNetPopover";
-import $ from "jquery";
+import $ from 'jquery';
 
 const AppFooter = dynamic(() => import("@/components/custom/layout/AppFooter"))
 const AppNavbar = dynamic(() => import("@/components/custom/layout/AppNavbar"))

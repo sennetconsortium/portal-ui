@@ -5,7 +5,7 @@ import 'provenance-ui/dist/ProvenanceUI.css'
 import Spinner from '../Spinner'
 import {getAuth, getEntityEndPoint} from "@/config/config";
 import AppModal from "../../AppModal";
-import $ from 'jquery'
+import $ from 'jquery';
 import {
     datasetIs,
     eq,

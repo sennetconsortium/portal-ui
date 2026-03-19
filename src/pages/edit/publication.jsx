@@ -1,18 +1,16 @@
 import dynamic from "next/dynamic";
 import React, {useContext, useEffect, useState} from 'react'
 import {useRouter} from 'next/router'
-import 'bootstrap/dist/css/bootstrap.css'
 import Alert from 'react-bootstrap/Alert';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import {Layout} from '@elastic/react-search-ui-views'
-import '@elastic/react-search-ui-views/lib/styles/styles.css'
 import log from 'xac-loglevel'
 import {getAncestryData, getEntityData, updateCreateDataset, getAuthJsonHeaders} from '@/lib/services'
 import {cleanJson, eq, fetchEntity, getStatusColor,} from '@/components/custom/js/functions'
 import AppContext from '@/context/AppContext'
 import EntityContext, {EntityProvider} from '@/context/EntityContext'
-import $ from 'jquery'
+import $ from 'jquery';
 import GroupSelect from "@/components/custom/edit/GroupSelect";
 import {valid_dataset_ancestor_config, getIngestEndPoint} from "@/config/config";
 import DatasetSubmissionButton from "@/components/custom/edit/dataset/DatasetSubmissionButton";

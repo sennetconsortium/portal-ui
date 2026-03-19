@@ -36,8 +36,8 @@ To start the application run the following commands inside `/src`:\
  **_Note:_** This application requires Node.js 18 or later
 
 ```
-$ npm install
-$ npm run run
+$ pnpm install
+$ pnpm run run
 ```
 
 ## Docker deployment
@@ -170,5 +170,5 @@ Configure the json object with the following properties:
 
 ## Custom Plugins
 There are some custom JS plugins located in `src/components/custom/js/addons` which adds additional functionality to the UI on HTML elements with classes or properties like `js-{app}--{component}` or `data-js-{app}` respectively.
-The ES6 classes have been excluded from docker build time and are automatically rebuilt to `main-plugins.js` when developing under `npm run run` or `npm run plugins-watch`. 
-Use `npm run plugins` to manually rebuild. 
+The ES6 classes have been excluded from docker build time and are automatically rebuilt to `main-plugins.js` when developing under `pnpm run run` or `pnpm run plugins-watch`. 
+Use `pnpm run plugins` to manually rebuild. 

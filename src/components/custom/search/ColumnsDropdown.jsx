@@ -1,7 +1,7 @@
 import {useRef, useEffect} from 'react'
 import PropTypes from 'prop-types'
 import Select from 'react-select'
-import $ from 'jquery'
+import $ from 'jquery';
 import {parseJson} from "@/lib/services";
 import {COLS_ORDER_KEY} from "@/config/config";
 import {deleteFromLocalStorageWithSuffix} from "../js/functions";

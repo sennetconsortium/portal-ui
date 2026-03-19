@@ -19,8 +19,8 @@ docker/portal-ui/src
 src/node_modules
 src/portalt-ui/.pnp
 src/portal-ui/.pnp.js
-src/package-lock.json
-package-lock.json
+src/pnpm-lock.yaml
+pnpm-lock.yaml
 
 # testing
 src/react-app/coverage
