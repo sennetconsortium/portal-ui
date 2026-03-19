@@ -1,6 +1,6 @@
 import VignetteItem from '@/components/custom/vitessce/VignetteItem'
 import { getJSONFromAssetsEndpoint } from '@/lib/services'
-import $ from 'jquery'
+import $ from 'jquery';
 import log from 'xac-loglevel'
 import { useEffect, useState } from 'react'
 import Spinner from '../Spinner'

@@ -1,5 +1,5 @@
 import {createContext, useCallback, useContext, useRef, useState} from "react";
-import $ from "jquery";
+import $ from 'jquery';
 import log from 'xac-loglevel'
 import {datasetIs, fetchEntity, getDatasetTypeDisplay} from "@/components/custom/js/functions";
 import {fetchVitessceConfiguration, getEntityData, getProvInfo} from "@/lib/services";

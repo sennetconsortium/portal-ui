@@ -4,7 +4,7 @@ import InputGroup from 'react-bootstrap/InputGroup';
 import Button from 'react-bootstrap/Button';
 
 import AncestorsTable from './AncestorsTable';
-import $ from 'jquery'
+import $ from 'jquery';
 import SenNetPopover from '@/components/SenNetPopover';
 import AppContext from '@/context/AppContext';
 

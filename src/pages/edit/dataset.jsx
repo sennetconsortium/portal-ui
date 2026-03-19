@@ -1,12 +1,10 @@
 import dynamic from "next/dynamic";
 import React, {useContext, useEffect, useRef, useState} from 'react'
 import {useRouter} from 'next/router'
-import 'bootstrap/dist/css/bootstrap.css'
 import Alert from 'react-bootstrap/Alert';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import {Layout} from '@elastic/react-search-ui-views'
-import '@elastic/react-search-ui-views/lib/styles/styles.css'
 import log from 'xac-loglevel'
 import _ from 'lodash';
 import {getAuthJsonHeaders, getAncestryData, getEntityData, updateCreateDataset} from '@/lib/services'
@@ -22,7 +20,7 @@ import {
 import AppContext from '@/context/AppContext'
 import EntityContext, {EntityProvider} from '@/context/EntityContext'
 import {getIngestEndPoint, valid_dataset_ancestor_config} from "@/config/config";
-import $ from 'jquery'
+import $ from 'jquery';
 import DatasetRevertButton, {statusRevertTooltip} from "@/components/custom/edit/dataset/DatasetRevertButton";
 
 const DataTable = dynamic(() => import('react-data-table-component'), {

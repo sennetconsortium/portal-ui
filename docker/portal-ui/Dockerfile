@@ -5,34 +5,39 @@ LABEL description="SenNet Portal UI"
 ARG HOST_GID
 ARG HOST_UID
 
-# Change to directory that contains the Dockerfile
+# Set working directory
 WORKDIR /usr/src/app
 
-# Update the package list and install git
+# System dependencies
 RUN apt-get update -y && \
     apt-get dist-upgrade -y && \
-    apt-get install git -y && \
-    apt-get install curl -y
+    apt-get install -y git curl && \
+    rm -rf /var/lib/apt/lists/*
 
-# Create the non-root codcc user
+# Create non-root user
 RUN groupadd -g $HOST_GID codcc && \
     useradd -m -u $HOST_UID -g codcc -s /bin/bash codcc
 
-# Copy package.json and update npm
+# Enable corepack and activate pnpm
+RUN corepack enable && \
+    corepack prepare pnpm@latest --activate
+
+# Copy source
 COPY --chown=codcc:codcc ./src .
 COPY --chmod=755 ./entrypoint.sh /usr/local/bin/entrypoint.sh
 
-# Update npm, install dependencies, and build the project
+# Production environment
 ENV NODE_ENV=production
-RUN npm install -g npm@latest && \
-    npm install --omit=dev --no-audit --no-fund && \
-    npm run sass-build && \
-    npm run build && \
-    npm prune --production
 
-# Clean up
+# Install deps and build using pnpm
+RUN pnpm install --prod --frozen-lockfile && \
+    pnpm run sass-build && \
+    pnpm run build
+
+# Remove git after build
 RUN apt-get purge -y git && \
-    apt-get auto-remove -y
+    apt-get autoremove -y && \
+    rm -rf /var/lib/apt/lists/*
 
 USER codcc
 
