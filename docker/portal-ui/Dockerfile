@@ -30,7 +30,7 @@ COPY --chmod=755 ./entrypoint.sh /usr/local/bin/entrypoint.sh
 ENV NODE_ENV=production
 
 # Install deps and build using pnpm
-RUN pnpm install --prod --frozen-lockfile && \
+RUN pnpm install --prod && \
     pnpm run sass-build && \
     pnpm run build
 
