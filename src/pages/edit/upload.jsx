@@ -11,7 +11,7 @@ import {cleanJson, eq, getStatusColor} from "@/components/custom/js/functions";
 import {getEntityData, updateCreateDataset} from "@/lib/services";
 import AppContext from '@/context/AppContext'
 import EntityContext, {EntityProvider} from '@/context/EntityContext'
-import $ from "jquery";
+import $ from 'jquery';
 import DatasetRevertButton, {statusRevertTooltip} from "@/components/custom/edit/dataset/DatasetRevertButton";
 import DatePicker from "react-datepicker";
 

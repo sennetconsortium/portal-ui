@@ -1,12 +1,10 @@
 import dynamic from "next/dynamic";
 import React, {useContext, useEffect, useRef, useState} from 'react'
 import {useRouter} from 'next/router'
-import 'bootstrap/dist/css/bootstrap.css'
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Alert from 'react-bootstrap/Alert';
 import {Layout} from '@elastic/react-search-ui-views'
-import '@elastic/react-search-ui-views/lib/styles/styles.css'
 import log from 'xac-loglevel'
 import _ from 'lodash';
 import {callService, filterProperties, getEntityData, update_create_entity} from '@/lib/services'
@@ -14,7 +12,7 @@ import {cleanJson, eq, fetchEntity, getIdRegEx} from '@/components/custom/js/fun
 import AppContext from '@/context/AppContext'
 import EntityContext, {EntityProvider} from "@/context/EntityContext";
 import {getEntityEndPoint, getIngestEndPoint, valid_dataset_ancestor_config} from "@/config/config";
-import $ from 'jquery'
+import $ from 'jquery';
 import SenNetPopover, {SenPopoverOptions} from "@/components/SenNetPopover"
 import AttributesUpload, {getResponseList} from "@/components/custom/edit/AttributesUpload";
 

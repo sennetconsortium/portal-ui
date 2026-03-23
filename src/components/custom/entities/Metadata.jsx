@@ -9,7 +9,7 @@ import AppContext from "@/context/AppContext";
 import MetadataTable from "./MetadataTable";
 import PropTypes from "prop-types";
 import * as d3 from "d3";
-import $ from 'jquery'
+import $ from 'jquery';
 import {ViewHeaderBadges} from "../layout/entity/ViewHeaderBadges";
 import log from 'xac-loglevel';
 import { getProvenanceMetadata } from "@/lib/services";

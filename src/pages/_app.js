@@ -1,6 +1,6 @@
-import "@elastic/react-search-ui-views/lib/styles/styles.css";
-import 'bootstrap/dist/css/bootstrap.css';
-import '@/public/css/main.css'
+import 'bootstrap/dist/css/bootstrap.css'
+import '@elastic/react-search-ui-views/lib/styles/styles.css'
+import '../public/css/main.css'
 import log from 'xac-loglevel'
 import ErrorBoundary from '@/components/custom/error/ErrorBoundary'
 import React, {useEffect, useState} from 'react'

@@ -1,5 +1,5 @@
 import React, {createContext, useContext, useEffect, useRef, useState} from "react";
-import $ from "jquery";
+import $ from 'jquery';
 import {useRouter} from 'next/router'
 import AppContext from "./AppContext";
 import {RESULTS_PER_PAGE} from "@/config/config";

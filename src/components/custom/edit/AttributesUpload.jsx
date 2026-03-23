@@ -9,7 +9,7 @@ import log from 'xac-loglevel'
 const DataTable = dynamic(() => import('react-data-table-component'), {
   ssr: false,
 });
-import $ from 'jquery'
+import $ from 'jquery';
 import { getAuthHeader } from "@/lib/services";
 import SenNetPopover, {SenPopoverOptions} from "../../SenNetPopover";
 import {eq, urlify} from "../js/functions";
