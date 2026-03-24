@@ -50,6 +50,7 @@
     "react-toastify": "^11.0.5",
     "sass": "^1.97.3",
     "search-ui": "workspace:*",
+    "shimmer-from-structure": "^2.4.2",
     "sweetalert2": "^11.26.23",
     "vitessce": "^3.9.5",
     "xac-loglevel": "github:x-atlas-consortia/xac-loglevel#1.0.2",
