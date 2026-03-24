@@ -477,6 +477,7 @@ export default function EditCollection({ collectionType = 'Collection', entities
                                                 </span>
                                             </SenNetPopover>}
                                         </>}
+                                        isEditMode={isEditMode}
                                         formLabel={entitiesButtonLabel} formLabelPlural={entitiesTableLabel} values={values}
                                         ancestors={ancestors} onChange={onChange}
                                         onShowModal={clearBulkPopover}

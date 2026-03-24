@@ -6,11 +6,11 @@ import Button from 'react-bootstrap/Button';
 import AncestorsTable from './AncestorsTable';
 import $ from 'jquery';
 import SenNetPopover from '@/components/SenNetPopover';
-import AppContext from '@/context/AppContext';
 
 import AncestorsModal from "@/components/custom/edit/dataset/AncestorsModal";
+import { ShimmerThumbnail } from 'react-shimmer-effects';
 
-export default function AncestorIds({values, onChange, fetchAncestors, deleteAncestor, ancestors, otherWithAdd, onShowModal, formLabelPlural,
+export default function AncestorIds({values, onChange, fetchAncestors, deleteAncestor, ancestors, otherWithAdd, onShowModal, formLabelPlural, isEditMode,
                                         formLabel = 'ancestor', controlId = 'direct_ancestor_uuids',  disableDelete, addButtonDisabled, data}) {
     const [showHideModal, setShowHideModal] = useState(false)
 
@@ -73,6 +73,8 @@ export default function AncestorIds({values, onChange, fetchAncestors, deleteAnc
                 <AncestorsTable controlId={controlId} formLabel='SenNet' values={values} onChange={onChange}
                                 ancestors={ancestors} deleteAncestor={deleteAncestor} disableDelete={disableDelete}/>
             }
+
+            {!ancestors && isEditMode() && <ShimmerThumbnail height={100} className={'mt-5'} rounded />}
 
             {/*Disable the button if the dataset is not 'primary'*/}
             <InputGroup className="mb-5 ancestor-ctas" id="direct_ancestor_uuid_button">
