@@ -38,7 +38,7 @@
     "primeicons": "^7.0.0",
     "primereact": "^10.9.7",
     "prop-types": "^15.8.1",
-    "provenance-ui": "github:sennetconsortium/provenance-ui#v3.0.0-beta",
+    "provenance-ui": "github:sennetconsortium/provenance-ui#v3.0.1-beta",
     "react": "^18.2.0",
     "react-bootstrap": "^2.10.10",
     "react-data-table-component": "7.6.2",
