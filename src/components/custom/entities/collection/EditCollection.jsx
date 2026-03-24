@@ -459,8 +459,8 @@ export default function EditCollection({ collectionType = 'Collection', entities
                                                 text={<span>Click here to cancel/close this field.</span>}
                                             >
                                                 <span role={'button'} aria-label={'Cancel/close this field'}
-                                                    className={`btn-close ${bulkAddField ? 'is-visible' : ''}`}
-                                                    onClick={hideBulkAdd}></span>
+                                                    className={`rounded-0 btn btn-outline-secondary btn-cancel ${bulkAddField ? 'is-visible' : ''}`}
+                                                    onClick={hideBulkAdd}>Cancel</span>
                                             </SenNetPopover>
 
                                             {bulkAddField && bulkAddTextareaVal && <SenNetPopover
@@ -471,8 +471,8 @@ export default function EditCollection({ collectionType = 'Collection', entities
                                             >
                                                 <span role='button' aria-label={'Bulk add Entities to the Collection'}
                                                     onClick={bulkAddSpinnerVisible ? undefined : handleBulkAdd}
-                                                    className={`btn-add ${bulkAddField && bulkAddTextareaVal ? 'is-visible' : ''}`}> {!bulkAddSpinnerVisible &&
-                                                        <CheckIcon />}
+                                                    className={`rounded-0 btn btn-success btn-add ${bulkAddField && bulkAddTextareaVal ? 'is-visible' : ''}`}> {!bulkAddSpinnerVisible &&
+                                                        <span> Save Entities</span>}
                                                     {bulkAddSpinnerVisible && <SpinnerEl />}
                                                 </span>
                                             </SenNetPopover>}
