@@ -4,7 +4,7 @@
 .ancestor-ctas {
   display: flex;
   .btn {
-    max-height: 40px;
+    height: 40px;
   }
 
   .MuiTooltip-tooltip {
@@ -32,36 +32,25 @@
     }
   }
 
-  .btn-close, .btn-add {
-    margin-left: 10px;
+  .btn-cancel, .btn-add {
+    margin-right: 10px;
+    align-content: center;
     transition-property: opacity;
     opacity: 0;
-    transition:  1s ease;
+    padding: 0 10px;
+    margin-top: 5px;
+    display: inline-block;
+    transition:  1s ease opacity;
     &.is-visible {
       opacity: 1;
       cursor: pointer;
     }
   }
 
-  .btn-add {
-    margin-left: 6px;
-    svg {
-      width: 0.8em;
-      margin-left: -15px;
-      position: absolute;
-      top: 30px;
-      @include mixins.md-mx {
-        top: 70px;
-      }
-      path {
-        fill: green;
-      }
-    }
-  }
-
   textarea {
     transition:  1s ease-in-out;
     margin-left: 10px !important;
+    margin-right: 10px;
     margin-top: 5px;
     border: solid 1px #999;
     transition-property: opacity, width;
