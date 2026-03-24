@@ -1,8 +1,8 @@
 import {useEffect, useRef, useState} from 'react'
 import { useRouter } from 'next/router'
 import {getCookie} from "cookies-next";
-import { ShimmerThumbnail } from "react-shimmer-effects";
 import SenNetAlert from "@/components/SenNetAlert";
+import { Skeleton } from '@mui/material';
 
 /**
  *
@@ -115,7 +115,7 @@ function Sankey({maxHeight, showExpandButton = false}) {
                 } }))
             } /> }
 
-            {loading && <ShimmerThumbnail className={'mt-5'} rounded />}
+            {loading && <Skeleton variant="rounded" className={'mt-5'} height={250} />}
             {loadingMsg && <SenNetAlert variant={'warning'} text={loadingMsg}></SenNetAlert>}
         </div>
     )

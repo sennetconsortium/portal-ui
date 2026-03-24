@@ -8,12 +8,12 @@ import {eq, getDatasetTypeDisplay} from "@/components/custom/js/functions";
 const DataTable = dynamic(() => import('react-data-table-component'), {
   ssr: false,
 });
-import {ShimmerTable, ShimmerText} from "react-shimmer-effects";
 import LnkIc from "@/components/custom/layout/LnkIc";
 import useAutoHideColumns from "@/hooks/useAutoHideColumns";
 import ClipboardCopy from "@/components/ClipboardCopy";
 import DerivedContext from "@/context/DerivedContext";
 import Link from "next/link";
+import { Skeleton } from "@mui/material";
 
 function ProtocolsWorkflow({data}) {
     const [rawTableData, setRawTableData] = useState([])
@@ -160,8 +160,9 @@ function ProtocolsWorkflow({data}) {
                         id="Protocols-Workflow-Details" title="Protocols & Workflow Details"
                         style={{height: '600px'}}
                         suspenseElements={<>
-                            <ShimmerText line={4} gap={10}/>
-                            <ShimmerTable row={5} col={5} height={700} className={'mt-2'} rounded/>
+                            <Skeleton />
+                            <Skeleton />
+                            <Skeleton variant="rounded" className={'mt-2'} height={700} />
                         </>}
         >
             {}
