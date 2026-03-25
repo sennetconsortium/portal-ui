@@ -123,7 +123,7 @@ export default function EditCollection({ collectionType = 'Collection', entities
                 if (entities) {
                     const uuids = entities.map((entity) => entity.uuid)
                     setValues(prevValue => ({ ...prevValue, entity_uuids: uuids }))
-                    fetchLinkedEntities(uuids).catch(log.error)
+                    setAncestors(entities)
                 }
             }).catch(log.error)
 
