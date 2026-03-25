@@ -957,7 +957,8 @@ export const filterProperties = {
             "lab_source_id",
             "lab_tissue_sample_id",
             "lab_dataset_id",
-            "creation_action"
+            "creation_action",
+            "origin_samples",
         ],
         is_include: true
     }
