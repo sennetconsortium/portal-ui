@@ -20,8 +20,8 @@ import {COLS_ORDER_KEY, FILE_KEY_SEPARATOR} from "@/config/config";
 import {fetchGlobusFilepath, parseJson} from "@/lib/services";
 import {useSearchUIContext} from "@/search-ui/components/core/SearchUIContext";
 import DataUsageModal from "@/components/custom/entities/dataset/DataUsageModal";
-import {ShimmerText} from "react-shimmer-effects";
 import {Button} from 'react-bootstrap'
+import { Skeleton } from '@mui/material';
 
 function TableResultsFiles({children, onRowClicked, filters, forData = false, rowFn, inModal = false, rawResponse}) {
     const fileTypeField = 'file_extension'
@@ -41,7 +41,10 @@ function TableResultsFiles({children, onRowClicked, filters, forData = false, ro
     const [searchResponse, setSearchResponse] = useState({})
     const {pageSize} = useSearchUIContext()
     const globusLinks = useRef({})
-    const loadingComponent = <ShimmerText line={2} gap={10} />
+    const loadingComponent = <>
+    <Skeleton />
+    <Skeleton />
+    </>
     const [globusText, setGlobusText] = useState(loadingComponent)
     const deselectMainTableRow = useRef(null)
 

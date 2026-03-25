@@ -8,7 +8,7 @@ import $ from 'jquery';
 import SenNetPopover from '@/components/SenNetPopover';
 
 import AncestorsModal from "@/components/custom/edit/dataset/AncestorsModal";
-import { ShimmerThumbnail } from 'react-shimmer-effects';
+import { Skeleton } from '@mui/material';
 
 export default function AncestorIds({values, onChange, fetchAncestors, deleteAncestor, ancestors, otherWithAdd, onShowModal, formLabelPlural, isEditMode,
                                         formLabel = 'ancestor', controlId = 'direct_ancestor_uuids',  disableDelete, addButtonDisabled, data}) {
@@ -74,7 +74,7 @@ export default function AncestorIds({values, onChange, fetchAncestors, deleteAnc
                                 ancestors={ancestors} deleteAncestor={deleteAncestor} disableDelete={disableDelete}/>
             }
 
-            {!ancestors && isEditMode() && <ShimmerThumbnail height={100} className={'mt-5'} rounded />}
+            {!ancestors && isEditMode() && <Skeleton variant="rounded" className={'mt-2 mb-2'} height={100} />}
 
             {/*Disable the button if the dataset is not 'primary'*/}
             <InputGroup className="mb-5 ancestor-ctas" id="direct_ancestor_uuid_button">

@@ -16,7 +16,6 @@ import AppModal from "../AppModal";
 import { COLS_ORDER_KEY } from "@/config/config";
 import { getCellTypesByIds, parseJson } from "@/lib/services";
 import { useSearchUIContext } from "@/search-ui/components/core/SearchUIContext";
-import { ShimmerText } from "react-shimmer-effects";
 import { APP_ROUTES } from '@/config/constants';
 
 function TableResultsCellTypes({ children, onRowClicked, filters, forData = false, rowFn, inModal = false, rawResponse }) {
@@ -36,8 +35,6 @@ function TableResultsCellTypes({ children, onRowClicked, filters, forData = fals
   const [searchResponse, setSearchResponse] = useState({})
   const {pageSize} = useSearchUIContext()
   const isSearching = useRef(false)
-
-  const loadingComponent = <ShimmerText line={2} gap={10} />
 
   function updatePagingInfo(resultsCount) {
         $('.sui-paging-info strong').eq(1).text(resultsCount)
