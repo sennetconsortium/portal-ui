@@ -1,7 +1,7 @@
 import {useEffect} from 'react'
 import PropTypes from 'prop-types'
-import {ShimmerThumbnail} from "react-shimmer-effects";
 import LoadingAccordion from "@/components/custom/layout/LoadingAccordion";
+import { Skeleton } from '@mui/material';
 
 function SenNetSuspense({children, showChildren,  suspenseElements, id, title, style}) {
     useEffect(() => {
@@ -13,7 +13,7 @@ function SenNetSuspense({children, showChildren,  suspenseElements, id, title, s
 
     return (
         <LoadingAccordion id={id} title={title} style={style}>
-            {!suspenseElements && <ShimmerThumbnail className={'mt-5'} rounded />}
+            {!suspenseElements &&  <Skeleton variant="rounded" className={'mt-5'} height={250} />}
             {suspenseElements}
         </LoadingAccordion>
     )

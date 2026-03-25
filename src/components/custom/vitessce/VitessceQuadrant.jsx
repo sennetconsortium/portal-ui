@@ -1,11 +1,11 @@
 import React, {useContext, useEffect, useState} from 'react'
 import DerivedContext from "@/context/DerivedContext";
 import SenNetSuspense from "@/components/SenNetSuspense";
-import {ShimmerText, ShimmerThumbnail} from "react-shimmer-effects";
 import dynamic from "next/dynamic";
 import AncestorsModal from "@/components/custom/edit/dataset/AncestorsModal";
 import {DescendantInfo} from "@/components/custom/vitessce/SenNetVitessce";
 import ClipboardCopy from "@/components/ClipboardCopy";
+import { Skeleton } from '@mui/material';
 
 const SenNetVitessce = dynamic(() => import("@/components/custom/vitessce/SenNetVitessce"))
 
@@ -40,8 +40,9 @@ function VitessceQuadrant({data, setQ, fetchData, resultsFilterCallback}) {
             {/* Vitessce */}
             <SenNetSuspense showChildren={showVitessce}
                                                suspenseElements={<>
-                                                   <ShimmerText line={3} gap={10} />
-                                                   <ShimmerThumbnail height={700} className={'mt-2'} rounded />
+                                                   <Skeleton width={'20%'} />
+                                                   <Skeleton width={'60%'} />
+                                                   <Skeleton variant="rounded" className={'mt-2 mb-2'} height={700} />
                                                </>}
                                                id={'viz-'+ data.uuid} title={data.sennet_id}
                                                style={{ height:'800px' }}>

@@ -19,15 +19,14 @@ import WarningIcon from '@mui/icons-material/Warning'
 import LoadingAccordion from "@/components/custom/layout/LoadingAccordion";
 import AppNavbar from "@/components/custom/layout/AppNavbar"
 import Description from "@/components/custom/entities/sample/Description";
-import Collections from "@/components/custom/entities/Collections";
 import FilesDataProducts from "@/components/custom/entities/dataset/FilesDataProducts";
 import BulkDataTransfer from "@/components/custom/entities/dataset/BulkDataTransfer";
 import {toast} from "react-toastify";
 import SenNetSuspense from "@/components/SenNetSuspense";
-import {ShimmerText, ShimmerThumbnail} from "react-shimmer-effects";
 import ProtocolsWorkflow from "@/components/custom/entities/dataset/ProtocolsWorkflow";
 import AssociatedEntity from "@/components/custom/entities/AssociatedEntity";
 import AssociatedEntityTable from "@/components/custom/entities/AssociatedEntityTable";
+import { Skeleton } from "@mui/material";
 
 
 const AppFooter = dynamic(() => import("@/components/custom/layout/AppFooter"))
@@ -372,10 +371,11 @@ function ViewDataset() {
                                         {/* Vitessce */}
                                         {data && hasViz && <SenNetSuspense showChildren={showVitessce}
                                                                            suspenseElements={<>
-                                                                               <ShimmerText line={3} gap={10}/>
-                                                                               <ShimmerThumbnail height={700}
-                                                                                                 className={'mt-2'}
-                                                                                                 rounded/>
+
+                                                                               <Skeleton width={'20%'} />
+                                                                               <Skeleton width={'60%'} />
+                                                                               <Skeleton variant="rounded" className={'mt-2 mb-2'} height={700} />
+
                                                                            </>}
                                                                            id="Vitessce" title="Visualization"
                                                                            style={{height: '800px'}}>
