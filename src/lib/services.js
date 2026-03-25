@@ -946,7 +946,8 @@ export const filterProperties = {
     uploadsDatasets: {
         filter_properties: [
             "status",
-            "lab_dataset_id"
+            "lab_dataset_id",
+            "creation_action"
         ],
         is_include: true
     },
@@ -955,7 +956,8 @@ export const filterProperties = {
             "status",
             "lab_source_id",
             "lab_tissue_sample_id",
-            "lab_dataset_id"
+            "lab_dataset_id",
+            "creation_action"
         ],
         is_include: true
     }
