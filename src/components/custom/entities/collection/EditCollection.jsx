@@ -1,29 +1,30 @@
 import dynamic from "next/dynamic";
-import React, {useContext, useEffect, useRef, useState} from 'react'
-import {useRouter} from 'next/router'
+import React, { useContext, useEffect, useRef, useState } from 'react'
+import { useRouter } from 'next/router'
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Alert from 'react-bootstrap/Alert';
-import {Layout} from '@elastic/react-search-ui-views'
+import { Layout } from '@elastic/react-search-ui-views'
 import log from 'xac-loglevel'
 import _ from 'lodash';
-import {callService, filterProperties, getEntityData, update_create_entity} from '@/lib/services'
-import {cleanJson, eq, fetchEntity, getIdRegEx} from '@/components/custom/js/functions'
+import { callService, filterProperties, getEntityData, update_create_entity } from '@/lib/services'
+import { cleanJson, eq, fetchEntity, getIdRegEx } from '@/components/custom/js/functions'
 import AppContext from '@/context/AppContext'
-import EntityContext, {EntityProvider} from "@/context/EntityContext";
-import {getEntityEndPoint, getIngestEndPoint, valid_dataset_ancestor_config} from "@/config/config";
+import EntityContext, { EntityProvider } from "@/context/EntityContext";
+import { getEntityEndPoint, getIngestEndPoint, valid_dataset_ancestor_config } from "@/config/config";
 import $ from 'jquery';
-import SenNetPopover, {SenPopoverOptions} from "@/components/SenNetPopover"
-import AttributesUpload, {getResponseList} from "@/components/custom/edit/AttributesUpload";
+import SenNetPopover, { SenPopoverOptions } from "@/components/SenNetPopover"
+import AttributesUpload, { getResponseList } from "@/components/custom/edit/AttributesUpload";
+import InputGroup from 'react-bootstrap/InputGroup';
 
 const DataTable = dynamic(() => import('react-data-table-component'), {
-  ssr: false,
+    ssr: false,
 });
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import Tooltip from '@mui/material/Tooltip';
 import Zoom from "@mui/material/Zoom"
-import {CheckIcon} from "primereact/icons/check";
-import {SpinnerEl} from "@/components/custom/Spinner";
+import { CheckIcon } from "primereact/icons/check";
+import { SpinnerEl } from "@/components/custom/Spinner";
 
 const AncestorIds = dynamic(() => import('@/components/custom/edit/dataset/AncestorIds'))
 const AppFooter = dynamic(() => import("@/components/custom/layout/AppFooter"))
@@ -33,7 +34,7 @@ const EntityFormGroup = dynamic(() => import('@/components/custom/layout/entity/
 const GroupSelect = dynamic(() => import("@/components/custom/edit/GroupSelect"))
 const Header = dynamic(() => import("@/components/custom/layout/Header"))
 
-export default function EditCollection({collectionType='Collection', entitiesTableLabel='Entities', entitiesButtonLabel='entity'}) {
+export default function EditCollection({ collectionType = 'Collection', entitiesTableLabel = 'Entities', entitiesButtonLabel = 'entity' }) {
     const {
         isPreview, getModal, setModalDetails,
         data, setData,
@@ -49,7 +50,7 @@ export default function EditCollection({collectionType='Collection', entitiesTab
         getCancelBtn,
         contactsTSV, contacts, setContacts, contributors, setContactsAttributes, setContactsAttributesOnFail
     } = useContext(EntityContext)
-    const {_t, cache, adminGroup, getBusyOverlay, toggleBusyOverlay, getPreviewView} = useContext(AppContext)
+    const { _t, cache, adminGroup, getBusyOverlay, toggleBusyOverlay, getPreviewView } = useContext(AppContext)
     const router = useRouter()
     const [ancestors, setAncestors] = useState(null)
     const [bulkAddField, setBulkAddField] = useState(false)
@@ -62,7 +63,7 @@ export default function EditCollection({collectionType='Collection', entitiesTab
     const supportedEntities = [cache.entities.dataset, cache.entities.sample, cache.entities.source]
     const [bulkAddSpinnerVisible, setBulkAddSpinnerVisible] = useState(false)
 
-     useEffect(() => {
+    useEffect(() => {
         async function fetchAncestorConstraints() {
             const fullBody = [
                 {
@@ -72,7 +73,7 @@ export default function EditCollection({collectionType='Collection', entitiesTab
                 }
             ]
 
-            const response = await getEntityConstraints(fullBody, {order: 'descendants', filter: 'search'})
+            const response = await getEntityConstraints(fullBody, { order: 'descendants', filter: 'search' })
             if (response.ok) {
                 const body = await response.json()
                 const searchQuery = body.description[0].description
@@ -116,18 +117,18 @@ export default function EditCollection({collectionType='Collection', entitiesTab
             setData(_data)
 
             callService(filterProperties.collectionEntities, `${getEntityEndPoint()}collections/${_data.uuid}/entities`, 'POST').then(entities => {
-                Object.assign(_data, {entities})
+                Object.assign(_data, { entities })
                 setData(_data)
 
                 if (entities) {
                     const uuids = entities.map((entity) => entity.uuid)
-                    setValues(prevValue => ({...prevValue, entity_uuids: uuids}))
-                    fetchLinkedEntities(uuids).catch(log.error)
+                    setValues(prevValue => ({ ...prevValue, entity_uuids: uuids }))
+                    setAncestors(entities)
                 }
             }).catch(log.error)
 
             if (_data.contacts) {
-                setContacts({description: {records: _data.contacts, headers: contactsTSV.headers}})
+                setContacts({ description: { records: _data.contacts, headers: contactsTSV.headers } })
             }
 
             // Set state with default values that will be PUT to Entity API to update
@@ -170,7 +171,7 @@ export default function EditCollection({collectionType='Collection', entitiesTab
             if (entity.hasOwnProperty("error")) {
                 if (isBulkHandling.current) {
                     setBulkPopover(true)
-                    errMsgs = <>{errMsgs} <br/>{entity["error"]}</>
+                    errMsgs = <>{errMsgs} <br />{entity["error"]}</>
                 } else {
                     setError(true)
                     setErrorMessage(entity["error"])
@@ -196,7 +197,7 @@ export default function EditCollection({collectionType='Collection', entitiesTab
         }
         if (notSupported.length) {
             setBulkPopover(true)
-            setBulkErrorMessage(<>{errMsgs}{errMsgs && <br/>}<span>Entity with <code>{notSupported.join(',')}</code>
+            setBulkErrorMessage(<>{errMsgs}{errMsgs && <br />}<span>Entity with <code>{notSupported.join(',')}</code>
                 {notSupported.length > 1 ? ' are' : ' is'} not{notSupported.length > 1 ? '' : ' a'} dataset{notSupported.length > 1 ? 's' : ''}.</span></>)
         }
         isBulkHandling.current = false
@@ -388,7 +389,7 @@ export default function EditCollection({collectionType='Collection', entitiesTab
                     <Header title={`${editMode} ${collectionType} | SenNet`}></Header>
                 }
 
-                <AppNavbar/>
+                <AppNavbar />
 
                 {error &&
                     <div><Alert variant='warning'>{_t(errorMessage)}</Alert></div>
@@ -398,7 +399,7 @@ export default function EditCollection({collectionType='Collection', entitiesTab
                         <Layout
                             bodyHeader={
                                 <EntityHeader entity={collectionType} isEditMode={isEditMode()} data={data}
-                                              values={values} adminGroup={adminGroup}/>
+                                    values={values} adminGroup={adminGroup} />
                             }
                             bodyContent={
                                 <Form noValidate validated={validated} id="collection-form" ref={entityForm}>
@@ -409,112 +410,113 @@ export default function EditCollection({collectionType='Collection', entitiesTab
                                             data={data}
                                             groups={userWriteGroups}
                                             onGroupSelectChange={onChange}
-                                            entity_type={'dataset'}/>
+                                            entity_type={'dataset'} />
                                     }
 
                                     {/*Linked Datasets*/}
                                     <AncestorIds controlId={'entity_uuids'}
-                                                 otherWithAdd={<>&nbsp; &nbsp;
-                                                     <SenNetPopover
-                                                         placement={SenPopoverOptions.placement.top}
-                                                         className={`c-metadataUpload__popover--entity_uuids`}
-                                                         text={bulkAddBtnTooltip}
-                                                     ><Button variant="outline-secondary rounded-0 mt-1"
-                                                              onClick={!bulkAddField ? showBulkAdd : handleBulkAdd}
-                                                              aria-controls='js-modal'>
-                                                         Bulk add {entitiesTableLabel.toLowerCase()} <i className="bi bi-plus-lg"></i>
-                                                     </Button></SenNetPopover>
+                                        otherWithAdd={<>&nbsp; &nbsp;
+                                            <SenNetPopover
+                                                placement={SenPopoverOptions.placement.top}
+                                                className={`c-metadataUpload__popover--entity_uuids`}
+                                                text={bulkAddBtnTooltip}
+                                            ><Button variant="outline-secondary rounded-0 mt-1"
+                                                onClick={!bulkAddField ? showBulkAdd : handleBulkAdd}
+                                                aria-controls='js-modal'>
+                                                    Bulk add {entitiesTableLabel.toLowerCase()} <i className="bi bi-plus-lg"></i>
+                                                </Button></SenNetPopover>
 
-                                                     <Tooltip
-                                                         PopperProps={{
-                                                             disablePortal: true,
-                                                         }}
-                                                         onClose={() => {
-                                                             setBulkPopover(false)
-                                                         }}
-                                                         open={bulkPopover}
-                                                         TransitionComponent={Zoom}
-                                                         disableFocusListener
-                                                         disableHoverListener
-                                                         disableTouchListener
-                                                         title={<><span role='button'
-                                                                        aria-label='Close bulk add entity tooltip'
-                                                                        className='tooltip-close'
-                                                                        onClick={() => {
-                                                                            setBulkPopover(false)
-                                                                        }}><i className="bi bi-x"></i>
-                                                    </span>
-                                                             <div
-                                                                 className={'tooltip-content tooltip-bulk-add-id'}>{bulkErrorMessage}</div>
-                                                         </>}
-                                                     ><span>&nbsp;</span>
-                                                     </Tooltip>
-                                                     <textarea id='ancestor_ids' name='ancestor_ids'
-                                                               className={bulkAddField ? 'is-visible' : ''}
-                                                               onChange={handleBulkAddTextChange}/>
-                                                     <SenNetPopover
-                                                         placement={SenPopoverOptions.placement.top}
-                                                         className={`c-metadataUpload__popover--btnClose`}
-                                                         text={<span>Click here to cancel/close this field.</span>}
-                                                     >
-                                                         <span role={'button'} aria-label={'Cancel/close this field'}
-                                                               className={`btn-close ${bulkAddField ? 'is-visible' : ''}`}
-                                                               onClick={hideBulkAdd}></span>
-                                                     </SenNetPopover>
+                                            <Tooltip
+                                                PopperProps={{
+                                                    disablePortal: true,
+                                                }}
+                                                onClose={() => {
+                                                    setBulkPopover(false)
+                                                }}
+                                                open={bulkPopover}
+                                                TransitionComponent={Zoom}
+                                                disableFocusListener
+                                                disableHoverListener
+                                                disableTouchListener
+                                                title={<><span role='button'
+                                                    aria-label='Close bulk add entity tooltip'
+                                                    className='tooltip-close'
+                                                    onClick={() => {
+                                                        setBulkPopover(false)
+                                                    }}><i className="bi bi-x"></i>
+                                                </span>
+                                                    <div
+                                                        className={'tooltip-content tooltip-bulk-add-id'}>{bulkErrorMessage}</div>
+                                                </>}
+                                            ><span>&nbsp;</span>
+                                            </Tooltip>
+                                            <textarea id='ancestor_ids' name='ancestor_ids'
+                                                className={bulkAddField ? 'is-visible' : ''}
+                                                onChange={handleBulkAddTextChange} />
+                                            <SenNetPopover
+                                                placement={SenPopoverOptions.placement.top}
+                                                className={`c-metadataUpload__popover--btnClose`}
+                                                text={<span>Click here to cancel/close this field.</span>}
+                                            >
+                                                <span role={'button'} aria-label={'Cancel/close this field'}
+                                                    className={`rounded-0 btn btn-outline-secondary btn-cancel ${bulkAddField ? 'is-visible' : ''}`}
+                                                    onClick={hideBulkAdd}>Cancel</span>
+                                            </SenNetPopover>
 
-                                                     {bulkAddField && bulkAddTextareaVal && <SenNetPopover
-                                                         placement={SenPopoverOptions.placement.bottom}
-                                                         className={`c-metadataUpload__popover--btnAdd`}
-                                                         text={
-                                                             <span>Click here to bulk add <code>Entities</code> to the <code>Collection</code></span>}
-                                                     >
-                                                 <span role='button' aria-label={'Bulk add Entities to the Collection'}
-                                                       onClick={bulkAddSpinnerVisible ? undefined : handleBulkAdd}
-                                                       className={`btn-add ${bulkAddField && bulkAddTextareaVal ? 'is-visible' : ''}`}> {!bulkAddSpinnerVisible &&
-                                                     <CheckIcon/>}
-                                                     {bulkAddSpinnerVisible && <SpinnerEl/>}
-                                                 </span>
-                                                     </SenNetPopover>}
-                                                 </>}
-                                                 formLabel={entitiesButtonLabel} formLabelPlural={entitiesTableLabel} values={values}
-                                                 ancestors={ancestors} onChange={onChange}
-                                                 onShowModal={clearBulkPopover}
-                                                 fetchAncestors={fetchLinkedEntities}
-                                                 deleteAncestor={deleteLinkedEntity}/>
+                                            {bulkAddField && bulkAddTextareaVal && <SenNetPopover
+                                                placement={SenPopoverOptions.placement.bottom}
+                                                className={`c-metadataUpload__popover--btnAdd`}
+                                                text={
+                                                    <span>Click here to bulk add <code>Entities</code> to the <code>Collection</code></span>}
+                                            >
+                                                <span role='button' aria-label={'Bulk add Entities to the Collection'}
+                                                    onClick={bulkAddSpinnerVisible ? undefined : handleBulkAdd}
+                                                    className={`rounded-0 btn btn-success btn-add ${bulkAddField && bulkAddTextareaVal ? 'is-visible' : ''}`}> {!bulkAddSpinnerVisible &&
+                                                        <span> Save Entities</span>}
+                                                    {bulkAddSpinnerVisible && <SpinnerEl />}
+                                                </span>
+                                            </SenNetPopover>}
+                                        </>}
+                                        isEditMode={isEditMode}
+                                        formLabel={entitiesButtonLabel} formLabelPlural={entitiesTableLabel} values={values}
+                                        ancestors={ancestors} onChange={onChange}
+                                        onShowModal={clearBulkPopover}
+                                        fetchAncestors={fetchLinkedEntities}
+                                        deleteAncestor={deleteLinkedEntity} />
 
                                     {/*/!*Lab Name or ID*!/*/}
                                     <EntityFormGroup label='Title' placeholder='The title of the collection'
-                                                     controlId='title' value={data.title}
-                                                     isRequired={true}
-                                                     onChange={onChange}
-                                                     popoverHelpText={<>The title of the <code>Collection</code>.</>}/>
+                                        controlId='title' value={data.title}
+                                        isRequired={true}
+                                        onChange={onChange}
+                                        popoverHelpText={<>The title of the <code>Collection</code>.</>} />
 
                                     {/*/!*Description*!/*/}
                                     <EntityFormGroup label='Description' type='textarea' controlId='description'
-                                                     isRequired={true}
-                                                     value={data.description}
-                                                     onChange={onChange}
-                                                     popoverHelpText={<>An abstract publicly available when
-                                                         the <code>Collection</code> is published.</>}/>
+                                        isRequired={true}
+                                        value={data.description}
+                                        onChange={onChange}
+                                        popoverHelpText={<>An abstract publicly available when
+                                            the <code>Collection</code> is published.</>} />
 
                                     <AttributesUpload ingestEndpoint={contactsTSV.uploadEndpoint} showAllInTable={true}
-                                                      setAttribute={setContactsAttributes}
-                                                      setAttributesOnFail={setContactsAttributesOnFail}
-                                                      entity={collectionType}
-                                                      excludeColumns={contactsTSV.excludeColumns}
-                                                      attribute={'Contributors'} title={<h6>Contributors</h6>}
-                                                      customFileInfo={<span><a
-                                                          className='btn btn-outline-primary rounded-0 fs-8' download
-                                                          href={'https://raw.githubusercontent.com/hubmapconsortium/dataset-metadata-spreadsheet/main/contributors/latest/contributors.tsv'}> <FileDownloadIcon/>EXAMPLE.TSV</a></span>}/>
+                                        setAttribute={setContactsAttributes}
+                                        setAttributesOnFail={setContactsAttributesOnFail}
+                                        entity={collectionType}
+                                        excludeColumns={contactsTSV.excludeColumns}
+                                        attribute={'Contributors'} title={<h6>Contributors</h6>}
+                                        customFileInfo={<span><a
+                                            className='btn btn-outline-primary rounded-0 fs-8' download
+                                            href={'https://raw.githubusercontent.com/hubmapconsortium/dataset-metadata-spreadsheet/main/contributors/latest/contributors.tsv'}> <FileDownloadIcon />EXAMPLE.TSV</a></span>} />
 
                                     {/*This table is just for showing data.contributors list in edit mode. Regular table from AttributesUpload will show if user uploads new file*/}
                                     {isEditMode && !contributors.description && data.contributors &&
                                         <div className='c-metadataUpload__table table-responsive'>
                                             <h6>Contributors</h6>
                                             <DataTable
-                                                columns={getResponseList({headers: contactsTSV.headers}, contactsTSV.excludeColumns).columns}
+                                                columns={getResponseList({ headers: contactsTSV.headers }, contactsTSV.excludeColumns).columns}
                                                 data={data.contributors}
-                                                pagination/>
+                                                pagination />
                                         </div>}
 
 
@@ -524,22 +526,22 @@ export default function EditCollection({collectionType='Collection', entitiesTab
 
                                         {!data.doi_url &&
                                             <SenNetPopover text={<>Save changes to this <code>Collection</code>.</>}
-                                                           className={'save-button'}>
+                                                className={'save-button'}>
                                                 <Button variant="outline-primary rounded-0 js-btn--save"
-                                                        className={'me-2'}
-                                                        onClick={handleSave}
-                                                        disabled={disableSubmit}>
+                                                    className={'me-2'}
+                                                    onClick={handleSave}
+                                                    disabled={disableSubmit}>
                                                     {_t('Save')}
                                                 </Button>
                                             </SenNetPopover>}
 
                                         {isEditMode() && adminGroup && !data.registered_doi &&
                                             <SenNetPopover text={<>Save changes to this <code>Collection</code>.</>}
-                                                           className={'publish-button'}>
+                                                className={'publish-button'}>
                                                 <Button variant="outline-primary rounded-0 js-btn--publish"
-                                                        className={'me-2'}
-                                                        onClick={handlePublish}
-                                                        disabled={disableSubmit}>
+                                                    className={'me-2'}
+                                                    onClick={handlePublish}
+                                                    disabled={disableSubmit}>
                                                     {_t('Publish')}
                                                 </Button>
                                             </SenNetPopover>}
@@ -552,7 +554,7 @@ export default function EditCollection({collectionType='Collection', entitiesTab
                         />
                     </div>
                 }
-                {!showModal && <AppFooter/>}
+                {!showModal && <AppFooter />}
             </>
         )
     }

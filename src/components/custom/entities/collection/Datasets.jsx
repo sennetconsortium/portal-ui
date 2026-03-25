@@ -5,9 +5,9 @@ import PropTypes from 'prop-types'
 const DataTable = dynamic(() => import('react-data-table-component'), {
   ssr: false,
 });
-import {TableResultsEntities} from "../../TableResultsEntities";
-import SenNetAccordion from "../../layout/SenNetAccordion";
-import {eq} from "../../js/functions";
+import {TableResultsEntities} from "@/components/custom/TableResultsEntities";
+import SenNetAccordion from "@/components/custom/layout/SenNetAccordion";
+import {eq, getDatasetTypeDisplay, getSubtypeProvenanceShape} from "@/components/custom/js/functions";
 import {RESULTS_PER_PAGE} from "@/config/config";
 import useAutoHideColumns from "@/hooks/useAutoHideColumns";
 
@@ -26,6 +26,12 @@ function Datasets({ data, label = 'Datasets' }) {
                 c.format = (row) => {
                     updateCount(c.id, row.lab_dataset_id)
                     return format(row)
+                }
+            }
+            if (c.id === 'dataset_type') {
+                c.format = (row) => {
+                    const subType = getDatasetTypeDisplay(row)
+                    return getSubtypeProvenanceShape(subType, row.creation_action)
                 }
             }
         }
