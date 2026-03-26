@@ -243,7 +243,7 @@ export const VisualizationsProvider = ({ children, options = {} }) => {
                         .attr("class", "x label")
                         .attr("text-anchor", "middle")
                         .attr("x", (sizing.width / 2) + sizing.margin.left)
-                        .attr("y", sizing.height + sizing.margin.bottom * .5)
+                        .attr("y", sizing.height + sizing.margin.bottom * .6)
                         .text(xAxis.label)
                 }
             },
