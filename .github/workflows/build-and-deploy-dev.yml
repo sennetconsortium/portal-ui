@@ -7,15 +7,15 @@ on:
 
 jobs:
   build-and-push:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           submodules: 'true'
 
       - name: Login to Docker Hub
-        uses: docker/login-action@v3
+        uses: docker/login-action@v4
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
@@ -35,38 +35,40 @@ jobs:
         run: chmod +x ./docker-development.sh
         working-directory: ./docker
 
-      - name: Create .env file
-        uses: SpicyPizza/create-envfile@v2.0
-        with:
-          # Prefix the input names with 'envkey_' to add them to the .env file
-          envkey_NEXT_PUBLIC_CELL_TYPES_INDEX: ${{ secrets.NEXT_PUBLIC_CELL_TYPES_INDEX }}
-          envkey_NEXT_PUBLIC_FILES_INDEX: ${{ secrets.NEXT_PUBLIC_FILES_INDEX }}
-          envkey_NEXT_PUBLIC_ENTITIES_INDEX: ${{ secrets.NEXT_PUBLIC_ENTITIES_INDEX }}
-          envkey_NEXT_PUBLIC_SEARCH_API_ENDPOINT: ${{ secrets.NEXT_PUBLIC_SEARCH_API_ENDPOINT}}
-          envkey_NEXT_PUBLIC_ENTITY_API_ENDPOINT : ${{ secrets.NEXT_PUBLIC_ENTITY_API_ENDPOINT }}
-          envkey_NEXT_PUBLIC_INGEST_API_ENDPOINT : ${{ secrets.NEXT_PUBLIC_INGEST_API_ENDPOINT }}
-          envkey_NEXT_PUBLIC_UUID_API_ENDPOINT : ${{ secrets.NEXT_PUBLIC_UUID_API_ENDPOINT }}
-          envkey_NEXT_PUBLIC_APP_ROOT_URL : ${{ secrets.NEXT_PUBLIC_APP_ROOT_URL }}
-          envkey_NEXT_PUBLIC_INGEST_LOGIN : ${{ secrets.NEXT_PUBLIC_INGEST_LOGIN }}
-          envkey_NEXT_PUBLIC_ASSETS_ENDPOINT : ${{ secrets.NEXT_PUBLIC_ASSETS_ENDPOINT }}
-          envkey_NEXT_PUBLIC_DATA_INGEST_BOARD_ENDPOINT : ${{ secrets.NEXT_PUBLIC_DATA_INGEST_BOARD_ENDPOINT }}
-          envkey_NEXT_PUBLIC_GOOGLE_TAG_MANAGER : ${{ secrets.NEXT_PUBLIC_GOOGLE_TAG_MANAGER }}
-          envkey_NEXT_PUBLIC_DOCS_ROOT_URL : ${{ secrets.NEXT_PUBLIC_DOCS_ROOT_URL }}
-          envkey_NEXT_PUBLIC_LOG_LEVEL : ${{ secrets.NEXT_PUBLIC_LOG_LEVEL }}
-          envkey_NEXT_PUBLIC_COOKIE_DOMAIN : ${{ secrets.NEXT_PUBLIC_COOKIE_DOMAIN }}
-          envkey_NEXT_PUBLIC_UBKG_API_ENDPOINT : ${{ secrets.NEXT_PUBLIC_UBKG_API_ENDPOINT }}
-          envkey_NEXT_PUBLIC_UBKG_VALUESET_PATH : ${{ secrets.NEXT_PUBLIC_UBKG_VALUESET_PATH }}
-          envkey_NEXT_PUBLIC_UBKG_CODES : ${{ secrets.NEXT_PUBLIC_UBKG_CODES }}
-          envkey_ NEXT_PUBLIC_UBKG_CODES_PATHS: ${{ secrets.NEXT_PUBLIC_UBKG_CODES_PATHS }}
-          envkey_NEXT_PUBLIC_INTEGRATED_MAPPING_API_ENDPOINT: ${{ secrets.NEXT_PUBLIC_INTEGRATED_MAPPING_API_ENDPOINT }}
-
-          envkey_GLOBUS_TOKEN : ${{ secrets.GLOBUS_TOKEN }}
-          envkey_PROTOCOLS_TOKEN : ${{ secrets.PROTOCOLS_TOKEN }}
-          envkey_UI_PSWD : ${{ secrets.UI_PSWD }}
-#          envkey_ : ${{ secrets. }}
-          directory: ./src
-          file_name: .env.local
-
+      - name: Create ./src/.env.local file
+        run: |
+          set -e
+          : > .env.local
+      
+          cat <<'EOF' >> .env.local
+          
+          NEXT_PUBLIC_CELL_TYPES_INDEX=${{ secrets.NEXT_PUBLIC_CELL_TYPES_INDEX }}
+          NEXT_PUBLIC_FILES_INDEX=${{ secrets.NEXT_PUBLIC_FILES_INDEX }}
+          NEXT_PUBLIC_ENTITIES_INDEX=${{ secrets.NEXT_PUBLIC_ENTITIES_INDEX }}
+          NEXT_PUBLIC_SEARCH_API_ENDPOINT=${{ secrets.NEXT_PUBLIC_SEARCH_API_ENDPOINT }}
+          NEXT_PUBLIC_ENTITY_API_ENDPOINT=${{ secrets.NEXT_PUBLIC_ENTITY_API_ENDPOINT }}
+          NEXT_PUBLIC_INGEST_API_ENDPOINT=${{ secrets.NEXT_PUBLIC_INGEST_API_ENDPOINT }}
+          NEXT_PUBLIC_UUID_API_ENDPOINT=${{ secrets.NEXT_PUBLIC_UUID_API_ENDPOINT }}
+          NEXT_PUBLIC_APP_ROOT_URL=${{ secrets.NEXT_PUBLIC_APP_ROOT_URL }}
+          NEXT_PUBLIC_INGEST_LOGIN=${{ secrets.NEXT_PUBLIC_INGEST_LOGIN }}
+          NEXT_PUBLIC_ASSETS_ENDPOINT=${{ secrets.NEXT_PUBLIC_ASSETS_ENDPOINT }}
+          NEXT_PUBLIC_DATA_INGEST_BOARD_ENDPOINT=${{ secrets.NEXT_PUBLIC_DATA_INGEST_BOARD_ENDPOINT }}
+          NEXT_PUBLIC_GOOGLE_TAG_MANAGER=${{ secrets.NEXT_PUBLIC_GOOGLE_TAG_MANAGER }}
+          NEXT_PUBLIC_DOCS_ROOT_URL=${{ secrets.NEXT_PUBLIC_DOCS_ROOT_URL }}
+          NEXT_PUBLIC_LOG_LEVEL=${{ secrets.NEXT_PUBLIC_LOG_LEVEL }}
+          NEXT_PUBLIC_COOKIE_DOMAIN=${{ secrets.NEXT_PUBLIC_COOKIE_DOMAIN }}
+          NEXT_PUBLIC_UBKG_API_ENDPOINT=${{ secrets.NEXT_PUBLIC_UBKG_API_ENDPOINT }}
+          NEXT_PUBLIC_UBKG_VALUESET_PATH=${{ secrets.NEXT_PUBLIC_UBKG_VALUESET_PATH }}
+          NEXT_PUBLIC_UBKG_CODES=${{ secrets.NEXT_PUBLIC_UBKG_CODES }}
+          NEXT_PUBLIC_UBKG_CODES_PATHS=${{ secrets.NEXT_PUBLIC_UBKG_CODES_PATHS }}
+          NEXT_PUBLIC_INTEGRATED_MAPPING_API_ENDPOINT=${{ secrets.NEXT_PUBLIC_INTEGRATED_MAPPING_API_ENDPOINT }}
+      
+          GLOBUS_TOKEN=${{ secrets.GLOBUS_TOKEN }}
+          PROTOCOLS_TOKEN=${{ secrets.PROTOCOLS_TOKEN }}
+          UI_PSWD=${{ secrets.UI_PSWD }}
+          EOF
+        shell: bash
+        working-directory: ./src
 
       - name: Run the Docker build shell script
         run: ./docker-development.sh build
@@ -85,15 +87,30 @@ jobs:
     runs-on: ubuntu-latest
     needs: build-and-push
     steps:
-      - name: Whitelist GitHub Actions IP
-        uses: bbharathkumarreddy/aws-whitelist-ip@v1.0
-        with:
-          security-group-id: sg-0ddfcbe0a83a5266c
-          action: whitelist
-          port: 22
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Get GitHub runner public IP
+        id: runner_ip
+        run: |
+          IP=$(curl -s https://api.ipify.org)
+          echo "Runner IP: $IP"
+          echo "ip=$IP" >> $GITHUB_OUTPUT
+
+      - name: Install dependencies
+        run: npm install @aws-sdk/client-ec2
+
+      - name: Modify security group
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION:  us-east-1
+          SECURITY_GROUP_ID: sg-0ddfcbe0a83a5266c
+          PORT: 22
+          RUNNER_IP: ${{ steps.runner_ip.outputs.ip }}
+          MODE: authorize
+        run: node $GITHUB_WORKSPACE/.github/scripts/update-security-group.mjs
+
       - name: Deploy to Server via SSH
         uses: appleboy/ssh-action@v1
         with:
@@ -104,13 +121,15 @@ jobs:
           script: |
             # Change to codcc user on server
             sudo su - codcc -c "cd /opt/sennet/portal-ui/docker/; git pull; docker pull sennet/portal-ui-dev:latest; ./docker-development.sh down; ./docker-development.sh start;"
-      - name: Remove GitHub Actions IP
-        uses: bbharathkumarreddy/aws-whitelist-ip@v1.0
+
+      - name: Remove runner IP from security group
         if: always()
-        with:
-          security-group-id: sg-0ddfcbe0a83a5266c
-          action: remove
-          port: 22
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION:  us-east-1
+          SECURITY_GROUP_ID: sg-0ddfcbe0a83a5266c
+          PORT: 22
+          RUNNER_IP: ${{ steps.runner_ip.outputs.ip }}
+          MODE: revoke
+        run: node $GITHUB_WORKSPACE/.github/scripts/update-security-group.mjs
