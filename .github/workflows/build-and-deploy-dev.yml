@@ -37,32 +37,32 @@ jobs:
 
       - name: Create ./src/.env.local file
         run: |
-          touch .env.local
-          echo "NEXT_PUBLIC_CELL_TYPES_INDEX=${{ secrets.NEXT_PUBLIC_CELL_TYPES_INDEX }}" >> ./src/.env.local
-          echo "NEXT_PUBLIC_FILES_INDEX=${{ secrets.NEXT_PUBLIC_FILES_INDEX }}" >> ./src/.env.local
-          echo "NEXT_PUBLIC_ENTITIES_INDEX=${{ secrets.NEXT_PUBLIC_ENTITIES_INDEX }}" >> ./src/.env.local
-          echo "NEXT_PUBLIC_SEARCH_API_ENDPOINT=${{ secrets.NEXT_PUBLIC_SEARCH_API_ENDPOINT}}" >> ./src/.env.local
-          echo "NEXT_PUBLIC_ENTITY_API_ENDPOINT=${{ secrets.NEXT_PUBLIC_ENTITY_API_ENDPOINT }}" >> ./src/.env.local
-          echo "NEXT_PUBLIC_INGEST_API_ENDPOINT=${{ secrets.NEXT_PUBLIC_INGEST_API_ENDPOINT }}" >> ./src/.env.local
-          echo "NEXT_PUBLIC_UUID_API_ENDPOINT=${{ secrets.NEXT_PUBLIC_UUID_API_ENDPOINT }}" >> ./src/.env.local
-          echo "NEXT_PUBLIC_APP_ROOT_URL=${{ secrets.NEXT_PUBLIC_APP_ROOT_URL }}" >> ./src/.env.local
-          echo "NEXT_PUBLIC_INGEST_LOGIN=${{ secrets.NEXT_PUBLIC_INGEST_LOGIN }}" >> ./src/.env.local
-          echo "NEXT_PUBLIC_ASSETS_ENDPOINT=${{ secrets.NEXT_PUBLIC_ASSETS_ENDPOINT }}" >> ./src/.env.local
-          echo "NEXT_PUBLIC_DATA_INGEST_BOARD_ENDPOINT=${{ secrets.NEXT_PUBLIC_DATA_INGEST_BOARD_ENDPOINT }}" >> ./src/.env.local
-          echo "NEXT_PUBLIC_GOOGLE_TAG_MANAGER=${{ secrets.NEXT_PUBLIC_GOOGLE_TAG_MANAGER }}" >> ./src/.env.local
-          echo "NEXT_PUBLIC_DOCS_ROOT_URL=${{ secrets.NEXT_PUBLIC_DOCS_ROOT_URL }}" >> ./src/.env.local
-          echo "NEXT_PUBLIC_LOG_LEVEL=${{ secrets.NEXT_PUBLIC_LOG_LEVEL }}" >> ./src/.env.local
-          echo "NEXT_PUBLIC_COOKIE_DOMAIN=${{ secrets.NEXT_PUBLIC_COOKIE_DOMAIN }}" >> ./src/.env.local
-          echo "NEXT_PUBLIC_UBKG_API_ENDPOINT=${{ secrets.NEXT_PUBLIC_UBKG_API_ENDPOINT }}" >> ./src/.env.local
-          echo "NEXT_PUBLIC_UBKG_VALUESET_PATH=${{ secrets.NEXT_PUBLIC_UBKG_VALUESET_PATH }}" >> ./src/.env.local
-          echo "NEXT_PUBLIC_UBKG_CODES=${{ secrets.NEXT_PUBLIC_UBKG_CODES }}" >> ./src/.env.local
-          echo "NEXT_PUBLIC_UBKG_CODES_PATHS=${{ secrets.NEXT_PUBLIC_UBKG_CODES_PATHS }}" >> ./src/.env.local
-          echo "NEXT_PUBLIC_INTEGRATED_MAPPING_API_ENDPOINT=${{ secrets.NEXT_PUBLIC_INTEGRATED_MAPPING_API_ENDPOINT }}" >> ./src/.env.local
+          echo "NEXT_PUBLIC_CELL_TYPES_INDEX=${{ secrets.NEXT_PUBLIC_CELL_TYPES_INDEX }}" >> .env.local
+          echo "NEXT_PUBLIC_FILES_INDEX=${{ secrets.NEXT_PUBLIC_FILES_INDEX }}" >> .env.local
+          echo "NEXT_PUBLIC_ENTITIES_INDEX=${{ secrets.NEXT_PUBLIC_ENTITIES_INDEX }}" >> .env.local
+          echo "NEXT_PUBLIC_SEARCH_API_ENDPOINT=${{ secrets.NEXT_PUBLIC_SEARCH_API_ENDPOINT}}" >> .env.local
+          echo "NEXT_PUBLIC_ENTITY_API_ENDPOINT=${{ secrets.NEXT_PUBLIC_ENTITY_API_ENDPOINT }}" >> .env.local
+          echo "NEXT_PUBLIC_INGEST_API_ENDPOINT=${{ secrets.NEXT_PUBLIC_INGEST_API_ENDPOINT }}" >> .env.local
+          echo "NEXT_PUBLIC_UUID_API_ENDPOINT=${{ secrets.NEXT_PUBLIC_UUID_API_ENDPOINT }}" >> .env.local
+          echo "NEXT_PUBLIC_APP_ROOT_URL=${{ secrets.NEXT_PUBLIC_APP_ROOT_URL }}" >> .env.local
+          echo "NEXT_PUBLIC_INGEST_LOGIN=${{ secrets.NEXT_PUBLIC_INGEST_LOGIN }}" >> .env.local
+          echo "NEXT_PUBLIC_ASSETS_ENDPOINT=${{ secrets.NEXT_PUBLIC_ASSETS_ENDPOINT }}" >> .env.local
+          echo "NEXT_PUBLIC_DATA_INGEST_BOARD_ENDPOINT=${{ secrets.NEXT_PUBLIC_DATA_INGEST_BOARD_ENDPOINT }}" >> .env.local
+          echo "NEXT_PUBLIC_GOOGLE_TAG_MANAGER=${{ secrets.NEXT_PUBLIC_GOOGLE_TAG_MANAGER }}" >> .env.local
+          echo "NEXT_PUBLIC_DOCS_ROOT_URL=${{ secrets.NEXT_PUBLIC_DOCS_ROOT_URL }}" >> .env.local
+          echo "NEXT_PUBLIC_LOG_LEVEL=${{ secrets.NEXT_PUBLIC_LOG_LEVEL }}" >> .env.local
+          echo "NEXT_PUBLIC_COOKIE_DOMAIN=${{ secrets.NEXT_PUBLIC_COOKIE_DOMAIN }}" >> .env.local
+          echo "NEXT_PUBLIC_UBKG_API_ENDPOINT=${{ secrets.NEXT_PUBLIC_UBKG_API_ENDPOINT }}" >> .env.local
+          echo "NEXT_PUBLIC_UBKG_VALUESET_PATH=${{ secrets.NEXT_PUBLIC_UBKG_VALUESET_PATH }}" >> .env.local
+          echo "NEXT_PUBLIC_UBKG_CODES=${{ secrets.NEXT_PUBLIC_UBKG_CODES }}" >> .env.local
+          echo "NEXT_PUBLIC_UBKG_CODES_PATHS=${{ secrets.NEXT_PUBLIC_UBKG_CODES_PATHS }}" >> .env.local
+          echo "NEXT_PUBLIC_INTEGRATED_MAPPING_API_ENDPOINT=${{ secrets.NEXT_PUBLIC_INTEGRATED_MAPPING_API_ENDPOINT }}" >> .env.local
 
-          echo "GLOBUS_TOKEN=${{ secrets.GLOBUS_TOKEN }}" >> ./src/.env.local
-          echo "PROTOCOLS_TOKEN=${{ secrets.PROTOCOLS_TOKEN }}" >> ./src/.env.local
-          echo UI_PSWD=${{ secrets.UI_PSWD }}" >> ./src/.env.local
+          echo "GLOBUS_TOKEN=${{ secrets.GLOBUS_TOKEN }}" >> .env.local
+          echo "PROTOCOLS_TOKEN=${{ secrets.PROTOCOLS_TOKEN }}" >> .env.local
+          echo "UI_PSWD=${{ secrets.UI_PSWD }}" >> .env.local
         shell: bash
+        working-directory: ./src
 
       - name: Run the Docker build shell script
         run: ./docker-development.sh build
