@@ -105,7 +105,8 @@ jobs:
           SECURITY_GROUP_ID: sg-0ddfcbe0a83a5266c
           PORT: 22
           RUNNER_IP: ${{ steps.runner_ip.outputs.ip }}
-        run: node .github/scripts/update-security-group.mjs
+          MODE: authorize
+        run: node $GITHUB_WORKSPACE/.github/scripts/update-security-group.mjs
 
 #      - name: Whitelist GitHub Actions IP
 #        uses: bbharathkumarreddy/aws-whitelist-ip@v1.0
@@ -138,14 +139,14 @@ jobs:
 #          aws-region: us-east-1
 #
 
-#      - name: Remove runner IP from security group
-#        if: always()
-#        env:
-#          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-#          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-#          AWS_REGION:  us-east-1
-#          SECURITY_GROUP_ID: sg-0ddfcbe0a83a5266c
-#          PORT: 22
-#          RUNNER_IP: ${{ steps.runner_ip.outputs.ip }}
-#          MODE: revoke
-#        run: node scripts/update-security-group.mjs
+      - name: Remove runner IP from security group
+        if: always()
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION:  us-east-1
+          SECURITY_GROUP_ID: sg-0ddfcbe0a83a5266c
+          PORT: 22
+          RUNNER_IP: ${{ steps.runner_ip.outputs.ip }}
+          MODE: revoke
+        run: node $GITHUB_WORKSPACE/.github/scripts/update-security-group.mjs
