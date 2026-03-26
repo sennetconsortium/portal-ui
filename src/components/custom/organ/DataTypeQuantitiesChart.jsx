@@ -1,13 +1,17 @@
 import { VisualizationsProvider } from '@/context/VisualizationsContext'
-import React, {useContext, useRef} from 'react'
+import React, { useContext, useRef, useState } from 'react'
 import useSearchUIQuery from '@/hooks/useSearchUIQuery'
 import { getEntitiesIndex } from '@/config/config'
 import { SEARCH_ENTITIES } from '@/config/search/entities'
 import StackedBar from '../visualizations/charts/StackedBar'
 import AppContext from '@/context/AppContext'
 import { Skeleton } from '@mui/material'
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import VizLegend from '../visualizations/VizLegend'
 
 function DataTypeQuantitiesChart({ organ }) {
+  const [legend, setLegend] = useState({})
 
   const mustNot = SEARCH_ENTITIES.searchQuery.excludeFilters.map((filter) => {
     switch (filter.type) {
@@ -54,9 +58,9 @@ function DataTypeQuantitiesChart({ organ }) {
   }
 
   const { data, loading, error } = useSearchUIQuery(getEntitiesIndex(), query)
-  const {cache} = useContext(AppContext)
+  const { cache } = useContext(AppContext)
 
-  const subGroupLabels = useRef({}) 
+  const subGroupLabels = useRef({})
 
   const getBarData = () => {
     const _data = []
@@ -65,12 +69,12 @@ function DataTypeQuantitiesChart({ organ }) {
     for (const d of data.aggregations.by_dataset_type.buckets) {
       organCodes = {}
       count = 0
-      for(const o of d.by_organ_code.buckets) {
+      for (const o of d.by_organ_code.buckets) {
         organCodes[o.key] = o.doc_count
         count += o.doc_count
         subGroupLabels.current[o.key] = cache.organTypes[o.key]
       }
-      _data.push({...organCodes, group: d.key, total: d.doc_count})
+      _data.push({ ...organCodes, group: d.key, total: d.doc_count })
       maxY = Math.max(count, maxY)
     }
     return { data: _data, ticks: Math.min(10, maxY) }
@@ -80,9 +84,18 @@ function DataTypeQuantitiesChart({ organ }) {
     return <Skeleton variant='rounded' />
   }
   return (
-    <div><VisualizationsProvider>
-      <StackedBar data={barData?.data} subGroupLabels={subGroupLabels.current} style={{className: 'mp-3'}} xAxis={{ label: 'Dataset Type'}} yAxis={{ label: 'Count', ticks: barData?.ticks  }} />
-    </VisualizationsProvider></div>
+    <Row>
+      <Col sm={10}>
+        <div>
+          <VisualizationsProvider>
+            <StackedBar data={barData?.data} setLegend={setLegend} subGroupLabels={subGroupLabels.current} style={{ className: 'mp-3' }} xAxis={{ label: 'Dataset Type' }} yAxis={{ label: 'Count', ticks: barData?.ticks }} />
+          </VisualizationsProvider>
+        </div>
+      </Col>
+      <Col>
+      <VizLegend legend={legend} legendToolTip={null} />
+      </Col>
+    </Row>
   )
 }
 
