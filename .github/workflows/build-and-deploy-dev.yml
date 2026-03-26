@@ -37,30 +37,36 @@ jobs:
 
       - name: Create ./src/.env.local file
         run: |
-          echo "NEXT_PUBLIC_CELL_TYPES_INDEX=${{ secrets.NEXT_PUBLIC_CELL_TYPES_INDEX }}" >> .env.local
-          echo "NEXT_PUBLIC_FILES_INDEX=${{ secrets.NEXT_PUBLIC_FILES_INDEX }}" >> .env.local
-          echo "NEXT_PUBLIC_ENTITIES_INDEX=${{ secrets.NEXT_PUBLIC_ENTITIES_INDEX }}" >> .env.local
-          echo "NEXT_PUBLIC_SEARCH_API_ENDPOINT=${{ secrets.NEXT_PUBLIC_SEARCH_API_ENDPOINT}}" >> .env.local
-          echo "NEXT_PUBLIC_ENTITY_API_ENDPOINT=${{ secrets.NEXT_PUBLIC_ENTITY_API_ENDPOINT }}" >> .env.local
-          echo "NEXT_PUBLIC_INGEST_API_ENDPOINT=${{ secrets.NEXT_PUBLIC_INGEST_API_ENDPOINT }}" >> .env.local
-          echo "NEXT_PUBLIC_UUID_API_ENDPOINT=${{ secrets.NEXT_PUBLIC_UUID_API_ENDPOINT }}" >> .env.local
-          echo "NEXT_PUBLIC_APP_ROOT_URL=${{ secrets.NEXT_PUBLIC_APP_ROOT_URL }}" >> .env.local
-          echo "NEXT_PUBLIC_INGEST_LOGIN=${{ secrets.NEXT_PUBLIC_INGEST_LOGIN }}" >> .env.local
-          echo "NEXT_PUBLIC_ASSETS_ENDPOINT=${{ secrets.NEXT_PUBLIC_ASSETS_ENDPOINT }}" >> .env.local
-          echo "NEXT_PUBLIC_DATA_INGEST_BOARD_ENDPOINT=${{ secrets.NEXT_PUBLIC_DATA_INGEST_BOARD_ENDPOINT }}" >> .env.local
-          echo "NEXT_PUBLIC_GOOGLE_TAG_MANAGER=${{ secrets.NEXT_PUBLIC_GOOGLE_TAG_MANAGER }}" >> .env.local
-          echo "NEXT_PUBLIC_DOCS_ROOT_URL=${{ secrets.NEXT_PUBLIC_DOCS_ROOT_URL }}" >> .env.local
-          echo "NEXT_PUBLIC_LOG_LEVEL=${{ secrets.NEXT_PUBLIC_LOG_LEVEL }}" >> .env.local
-          echo "NEXT_PUBLIC_COOKIE_DOMAIN=${{ secrets.NEXT_PUBLIC_COOKIE_DOMAIN }}" >> .env.local
-          echo "NEXT_PUBLIC_UBKG_API_ENDPOINT=${{ secrets.NEXT_PUBLIC_UBKG_API_ENDPOINT }}" >> .env.local
-          echo "NEXT_PUBLIC_UBKG_VALUESET_PATH=${{ secrets.NEXT_PUBLIC_UBKG_VALUESET_PATH }}" >> .env.local
-          echo "NEXT_PUBLIC_UBKG_CODES=${{ secrets.NEXT_PUBLIC_UBKG_CODES }}" >> .env.local
-          echo "NEXT_PUBLIC_UBKG_CODES_PATHS=${{ secrets.NEXT_PUBLIC_UBKG_CODES_PATHS }}" >> .env.local
-          echo "NEXT_PUBLIC_INTEGRATED_MAPPING_API_ENDPOINT=${{ secrets.NEXT_PUBLIC_INTEGRATED_MAPPING_API_ENDPOINT }}" >> .env.local
-
-          echo "GLOBUS_TOKEN=${{ secrets.GLOBUS_TOKEN }}" >> .env.local
-          echo "PROTOCOLS_TOKEN=${{ secrets.PROTOCOLS_TOKEN }}" >> .env.local
-          echo "UI_PSWD=${{ secrets.UI_PSWD }}" >> .env.local
+          set -e
+          : > .env.local
+      
+          cat <<'EOF' >> .env.local
+          
+          NEXT_PUBLIC_CELL_TYPES_INDEX=${{ secrets.NEXT_PUBLIC_CELL_TYPES_INDEX }}
+          NEXT_PUBLIC_FILES_INDEX=${{ secrets.NEXT_PUBLIC_FILES_INDEX }}
+          NEXT_PUBLIC_ENTITIES_INDEX=${{ secrets.NEXT_PUBLIC_ENTITIES_INDEX }}
+          NEXT_PUBLIC_SEARCH_API_ENDPOINT=${{ secrets.NEXT_PUBLIC_SEARCH_API_ENDPOINT }}
+          NEXT_PUBLIC_ENTITY_API_ENDPOINT=${{ secrets.NEXT_PUBLIC_ENTITY_API_ENDPOINT }}
+          NEXT_PUBLIC_INGEST_API_ENDPOINT=${{ secrets.NEXT_PUBLIC_INGEST_API_ENDPOINT }}
+          NEXT_PUBLIC_UUID_API_ENDPOINT=${{ secrets.NEXT_PUBLIC_UUID_API_ENDPOINT }}
+          NEXT_PUBLIC_APP_ROOT_URL=${{ secrets.NEXT_PUBLIC_APP_ROOT_URL }}
+          NEXT_PUBLIC_INGEST_LOGIN=${{ secrets.NEXT_PUBLIC_INGEST_LOGIN }}
+          NEXT_PUBLIC_ASSETS_ENDPOINT=${{ secrets.NEXT_PUBLIC_ASSETS_ENDPOINT }}
+          NEXT_PUBLIC_DATA_INGEST_BOARD_ENDPOINT=${{ secrets.NEXT_PUBLIC_DATA_INGEST_BOARD_ENDPOINT }}
+          NEXT_PUBLIC_GOOGLE_TAG_MANAGER=${{ secrets.NEXT_PUBLIC_GOOGLE_TAG_MANAGER }}
+          NEXT_PUBLIC_DOCS_ROOT_URL=${{ secrets.NEXT_PUBLIC_DOCS_ROOT_URL }}
+          NEXT_PUBLIC_LOG_LEVEL=${{ secrets.NEXT_PUBLIC_LOG_LEVEL }}
+          NEXT_PUBLIC_COOKIE_DOMAIN=${{ secrets.NEXT_PUBLIC_COOKIE_DOMAIN }}
+          NEXT_PUBLIC_UBKG_API_ENDPOINT=${{ secrets.NEXT_PUBLIC_UBKG_API_ENDPOINT }}
+          NEXT_PUBLIC_UBKG_VALUESET_PATH=${{ secrets.NEXT_PUBLIC_UBKG_VALUESET_PATH }}
+          NEXT_PUBLIC_UBKG_CODES=${{ secrets.NEXT_PUBLIC_UBKG_CODES }}
+          NEXT_PUBLIC_UBKG_CODES_PATHS=${{ secrets.NEXT_PUBLIC_UBKG_CODES_PATHS }}
+          NEXT_PUBLIC_INTEGRATED_MAPPING_API_ENDPOINT=${{ secrets.NEXT_PUBLIC_INTEGRATED_MAPPING_API_ENDPOINT }}
+      
+          GLOBUS_TOKEN=${{ secrets.GLOBUS_TOKEN }}
+          PROTOCOLS_TOKEN=${{ secrets.PROTOCOLS_TOKEN }}
+          UI_PSWD=${{ secrets.UI_PSWD }}
+          EOF
         shell: bash
         working-directory: ./src
 
