@@ -12,6 +12,7 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import { Chip } from "@mui/material";
 import dynamic from "next/dynamic";
 import { useEffect, useRef, useState } from 'react';
+import CellTypeDistributionAcrossOrgansTab from '../cell-types/CellTypeDistributionAcrossOrgansTab';
 
 const DataTable = dynamic(() => import('react-data-table-component'), {
   ssr: false,
@@ -23,6 +24,9 @@ function CellTypes({ organ }) {
   const [showModal, setShowModal] = useState(false)
   const [modalTitle, setModalTitle] = useState(null)
   const [modalBody, setModalBody] = useState(null)
+  const [chartData, setChartData] = useState(null)
+  const cellIds = useRef({})
+  const organId = organ.label.toCamelCase()
 
   const query = {
     size: 0,
@@ -105,6 +109,7 @@ function CellTypes({ organ }) {
 
   useEffect(() => {
     let _res = []
+    let _chartData = {}
     if (data) {
       for (const d of data.aggregations.by_cell_label.buckets) {
         _res.push({
@@ -116,10 +121,25 @@ function CellTypes({ organ }) {
           total_datasets: d.total_datasets.value,
           total_indexed_datasets: data.aggregations.total_datasets.value,
         })
-
       }
       totalDatasets.current = data.aggregations.total_datasets.value
       setTableData(_res)
+
+      // Build chart data
+      let totalCells = 0
+      for (const d of _res) {
+        cellIds.current[d.cell_label] = d.cl_id
+        _chartData[d.cell_label] = d.cell_count
+        totalCells += d.cell_count
+      }
+      const allChartData = {
+        [organId]: {
+          data: [{ group: organ.label, ..._chartData }],
+          types: _res.length,
+          cells: totalCells
+        }
+      }
+      setChartData(allChartData)
     }
   }, [data, loading])
 
@@ -230,6 +250,7 @@ function CellTypes({ organ }) {
         </div>}
 
         <DataTable columns={columns} data={tableData} className='rdt_Results' pagination />
+        {chartData && <div className='position-relative'><CellTypeDistributionAcrossOrgansTab organ={{...organ, _id: organId}} tabData={chartData} cell={{cellIds: cellIds.current}} /></div>}
 
         <AppModal
           className={`modal--searchCellTypes`}
