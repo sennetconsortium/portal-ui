@@ -89,16 +89,16 @@ function DataTypeQuantitiesChart({ organ }) {
   }
   return (
     <Row>
-      <Col sm={10}>
+      <Col sm={organ.codes.length === 1 ? 12 : 10}>
         <div>
           <VisualizationsProvider>
             <StackedBar data={barData?.data} setLegend={setLegend} subGroupLabels={subGroupLabels.current} style={{ className: 'mp-3' }} xAxis={{ label: 'Dataset Type' }} yAxis={{ label: 'Count', ticks: barData?.ticks }} />
           </VisualizationsProvider>
         </div>
       </Col>
-      <Col sm={2}>
+      {organ.codes.length > 1 && <Col sm={2}>
         <VizLegend legend={legend} legendToolTip={null} />
-      </Col>
+      </Col>}
     </Row>
   )
 }
