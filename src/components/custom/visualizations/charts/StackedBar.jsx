@@ -41,7 +41,12 @@ function StackedBar({
 
     const buildChart = () => {
 
+        const groups = data.map(d => (d?.group))
+   
         const sizing = handleSvgSizing(style, chartId, chartType)
+        const rotateLabels = xAxis.rotateLabels || sizing.isMobile
+
+        svgAppend({xAxis}).adjustMargin({groups, sizing, rotateLabels})
 
         // append the svg object to the body of the page
         const svg = d3.create("svg")
@@ -55,7 +60,7 @@ function StackedBar({
 
         const subgroups = Object.keys(subGroupLabels)
 
-        const groups = data.map(d => (d?.group))
+        
 
         const _minY = yAxis.minY || (yAxis.scaleLog ? 1 : 0)
 
