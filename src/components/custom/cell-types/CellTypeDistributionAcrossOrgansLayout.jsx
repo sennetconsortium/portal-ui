@@ -39,20 +39,21 @@ const CellTypeDistributionAcrossOrgansLayout = memo(({ children, organ, tabData,
     return <><code>{formatNum(_cell.value)}</code> cells, <code>{percentage(_cell.value, tabData[organ._id].cells)}</code>% of total </>
   }
 
+  const legendTitle = tabData[organ._id].currentCel ? 'Other Cell Types' : 'Cell Types'
   return (
     <div>
       {children}
       <p>Indexed <code className='fs-6'>{organ.label}</code> datasets contain <strong>{formatNum(tabData[organ._id].cells)}</strong> cells in <strong>{formatNum(tabData[organ._id].types)}</strong> cell types.</p>
       <Row>
-        <Col>
+        {tabData[organ._id].currentCell && <Col>
           <h3 className='fs-6'>Targeted Cell Type</h3>
           <p><span className='badge badge-info fs-6'>{cell.label}</span> &nbsp;
           <code>{formatNum(tabData[organ._id].currentCell)}</code> cells,&nbsp;
           <code> {percentage(tabData[organ._id].currentCell, tabData[organ._id].cells)}%</code> of total</p>
-        </Col>
+        </Col>}
         <Col>
 
-          <VizLegend title={<h3 className='fs-6'>Other Cell Types</h3>} legendToolTip={'Clicking on a legend item redirects to the specific cell type page.'} isFilterable={true} onItemHover={onLegendItemHover} labelValueFormatter={handleLabelValueFormatter} excludedValues={[cell.label]} legendId={organ._id} legend={legend} onItemClick={onLegendItemClick} />
+          <VizLegend title={<h3 className='fs-6'>{legendTitle}</h3>} legendToolTip={'Clicking on a legend item redirects to the specific cell type page.'} isFilterable={true} onItemHover={onLegendItemHover} labelValueFormatter={handleLabelValueFormatter} excludedValues={[cell.label]} legendId={organ._id} legend={legend} onItemClick={onLegendItemClick} />
         </Col>
       </Row>
     </div>

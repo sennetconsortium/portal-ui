@@ -92,6 +92,10 @@ const Lineage = ({lineage}) => {
         name: 'Type',
         id: 'source_type',
         selector: row => row.source_type,
+        format: row => {
+            const source_type = row.source_type
+            return getSubtypeProvenanceShape(source_type)
+        },
         sortable: true
     }
     reusableColumns['LabDatasetID'] = {

@@ -129,7 +129,7 @@ const CellTypeDistributionAcrossOrgans = memo(({ cell }) => {
     const otherCellTypes = useSearchUIQuery(getCellTypesIndex(), query2)
 
     useEffect(() => {
-        if (!data || selectedTab) {
+        if (!data || selectedTab || !otherCellTypes?.data) {
             return
         }
         const organs = getOrganData(data) || []
@@ -142,7 +142,7 @@ const CellTypeDistributionAcrossOrgans = memo(({ cell }) => {
             Addon.log('CellTypeDistributionAcrossOrgans', { data: _tabData, color: '#ff0000' })
             setTabData(_tabData)
         }
-    }, [otherCellTypes?.data])
+    }, [data, otherCellTypes?.data])
 
     if (loading || !tabData) {
         return <Spinner />

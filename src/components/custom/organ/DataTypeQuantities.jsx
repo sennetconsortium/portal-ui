@@ -7,6 +7,7 @@ import { getOrganDataTypeQuantities } from '@/lib/services';
 import dynamic from "next/dynamic";
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import DataTypeQuantitiesChart from './DataTypeQuantitiesChart';
 
 const DataTable = dynamic(() => import('react-data-table-component'), {
   ssr: false,
@@ -126,6 +127,7 @@ const DataTypeQuantities = ({ id, organ }) => {
                     pagination
                 />
             )}
+            <DataTypeQuantitiesChart organ={organ} />
         </SenNetAccordion>
     )
 }

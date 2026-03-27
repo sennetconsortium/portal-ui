@@ -51,10 +51,10 @@ export default function AncestorsTable({formLabel, onChange, deleteAncestor, val
                 name: 'Subtype',
                 id: 'sub_type',
                 omit: columnVisibility.sub_type,
-                selector: row => row.sample_category || row.dataset_type,
+                selector: row => row.sample_category || row.dataset_type || row.source_type,
                 sortable: true,
                 format: row => {
-                    const subType = row.sample_category || row.dataset_type
+                    const subType = row.sample_category || row.dataset_type || row.source_type
                     updateCount('sub_type', subType)
                     return getSubtypeProvenanceShape(subType)
                 }

@@ -277,6 +277,7 @@ export const getOrganMeta = (code) => {
 }
 
 export const getSubtypeProvenanceShape = (t, cat, sz='sm') => {
+    if (!t) return <></>
     let s = 'circle'
     let c = 'pink'
     let title = t

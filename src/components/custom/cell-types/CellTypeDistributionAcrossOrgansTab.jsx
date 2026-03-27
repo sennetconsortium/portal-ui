@@ -111,7 +111,7 @@ const CellTypeDistributionAcrossOrgansTab = memo(({organ, tabData, cell}) => {
           xAxis={getAxis()} yAxis={getAxis()}
           style={{
             className: 'c-visualizations--noAxis c-visualizations--posInherit c-visualizations--boxShadow c-visualizations--tooltipHasArrow',
-            hideViewbox: true, highlight: cell.label,
+            hideViewbox: true, highlight: cell?.label,
             transform: 'translate(0, 30)',
             margin: {bottom: 5},
             key: organ._id,
