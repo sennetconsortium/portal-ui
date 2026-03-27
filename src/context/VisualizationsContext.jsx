@@ -237,7 +237,7 @@ export const VisualizationsProvider = ({ children, options = {} }) => {
                 }
 
                 if (xAxis.label && showXLabels()) {
-                    const mod = (xAxis.rotateLabels || sizing.isMobile) ? 2 : 1.5
+                    const mod = (xAxis.rotateLabels || sizing.isMobile) ? 2.5 : 1.5
                     svg.append("g")
                         .append("text")
                         .style("font-size", sizing.font.title)
