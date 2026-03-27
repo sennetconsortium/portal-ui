@@ -92,7 +92,7 @@ function DataTypeQuantitiesChart({ organ }) {
           </VisualizationsProvider>
         </div>
       </Col>
-      <Col>
+      <Col sm={2}>
       <VizLegend legend={legend} legendToolTip={null} />
       </Col>
     </Row>
