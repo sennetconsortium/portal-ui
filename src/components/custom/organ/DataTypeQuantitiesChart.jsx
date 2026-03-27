@@ -26,16 +26,18 @@ function DataTypeQuantitiesChart({ organ }) {
     size: 0,
     query: {
       bool: {
-        filter: {
-          terms: {
-            'origin_samples.organ.keyword': organ.codes,
+        must: [
+          {
+            terms: {
+              'origin_samples.organ.keyword': organ.codes,
+            }
+          },
+          {
+            term: {
+              "entity_type.keyword": "Dataset"
+            }
           }
-        },
-        must: {
-          term: {
-            "entity_type.keyword": "Dataset"
-          }
-        },
+        ],
         must_not: mustNot
       }
     },
@@ -70,9 +72,11 @@ function DataTypeQuantitiesChart({ organ }) {
       organCodes = {}
       count = 0
       for (const o of d.by_organ_code.buckets) {
-        organCodes[o.key] = o.doc_count
-        count += o.doc_count
-        subGroupLabels.current[o.key] = cache.organTypes[o.key]
+        if (organ.codes.indexOf(o.key) !== -1) {
+          organCodes[o.key] = o.doc_count
+          count += o.doc_count
+          subGroupLabels.current[o.key] = cache.organTypes[o.key]
+        }
       }
       _data.push({ ...organCodes, group: d.key, total: d.doc_count })
       maxY = Math.max(count, maxY)
@@ -93,7 +97,7 @@ function DataTypeQuantitiesChart({ organ }) {
         </div>
       </Col>
       <Col sm={2}>
-      <VizLegend legend={legend} legendToolTip={null} />
+        <VizLegend legend={legend} legendToolTip={null} />
       </Col>
     </Row>
   )
