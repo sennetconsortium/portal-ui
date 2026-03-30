@@ -230,20 +230,21 @@ export const VisualizationsProvider = ({ children, options = {} }) => {
                         .attr("class", "y label")
                         .attr("text-anchor", "start")
                         .attr("y", yAxis.labelPadding || 40)
-                        .attr("x", ((sizing.height + sizing.margin.bottom) / 2) * -1)
+                        .attr("x", (sizing.height / 2) * -1)
                         .attr("dy", ".74em")
                         .attr("transform", "rotate(-90)")
                         .text(yAxis.label || "Frequency")
                 }
 
                 if (xAxis.label && showXLabels()) {
+                    const mod = (xAxis.rotateLabels || sizing.isMobile) ? 2.5 : 1.5
                     svg.append("g")
                         .append("text")
                         .style("font-size", sizing.font.title)
                         .attr("class", "x label")
                         .attr("text-anchor", "middle")
-                        .attr("x", (sizing.width / 2) + sizing.margin.left)
-                        .attr("y", sizing.height + sizing.margin.bottom * .5)
+                        .attr("x", (sizing.width / 2) + (sizing.margin.X/2))
+                        .attr("y", sizing.height + (sizing.margin.bottom / mod))
                         .text(xAxis.label)
                 }
             },
