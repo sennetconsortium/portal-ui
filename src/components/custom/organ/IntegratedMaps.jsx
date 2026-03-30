@@ -1,12 +1,12 @@
 import SenNetAccordion from '@/components/custom/layout/SenNetAccordion'
 import {APP_ROUTES} from '@/config/constants'
 import {getOrganTypes} from '@/lib/ontology'
-import {getIntegratedMapsForOrgan, getPrimaryDatasets} from '@/lib/services'
+import {getIntegratedMaps, getIntegratedMapsForOrgan, getPrimaryDatasets} from '@/lib/services'
 import log from 'xac-loglevel'
 import {useEffect, useState} from 'react'
 import {Card} from 'react-bootstrap'
 import DataTable from 'react-data-table-component'
-import {searchUIQueryString} from '../js/functions'
+import {getOrganMeta, searchUIQueryString} from '../js/functions'
 
 /**
  * Displays the latest integrated maps in a table.
@@ -14,29 +14,17 @@ import {searchUIQueryString} from '../js/functions'
  * @param {Object} props Component props.
  * @param {string} props.id Accordion element id.
  * @param {string} props.title Accordion title.
+ * @param {boolean} props.showOnlyLatest
  * @param {import('@/config/organs').Organ} props.organ Organ metadata used to resolve map records.
  * @returns {JSX.Element}
  */
-function IntegratedMaps({id, title, organ}) {
+function IntegratedMaps({id, title, organ, showOnlyLatest = true}) {
     const [data, setData] = useState(null)
     const [error, setError] = useState(null)
     const [primaryDatasets, setPrimaryDatasets] = useState(null)
 
-    useEffect(() => {
-        const fetchData = async () => {
-            const organTypes = await getOrganTypes()
-            const organTerms = organ.codes.map((code) => organTypes[code])
-
-            const integratedMaps = await Promise.all(
-                organTerms.map((term) => getIntegratedMapsForOrgan(term))
-            )
-            if (integratedMaps.some((map) => map === null)) {
-                log.error(`Error fetching integrated maps for organ ${organ.name}`)
-                setError('Unable to load integrated maps')
-                return
-            }
-
-            // integratedMap is an array of arrays. for each top level array find the newest item based on creation_time
+    const setLatestMaps = (integratedMaps) => {
+        // integratedMap is an array of arrays. for each top level array find the newest item based on creation_time
             const latestMaps = integratedMaps
                 .map((maps) => {
                     if (maps.length === 0) return null
@@ -58,8 +46,35 @@ function IntegratedMaps({id, title, organ}) {
                 .filter((map) => map !== null)
                 .sort((a, b) => a.tissue.tissuetype.localeCompare(b.tissue.tissuetype))
 
-            setData(latestMaps)
+        return latestMaps
+    }
 
+    useEffect(() => {
+        const fetchData = async () => {
+            let integratedMaps
+            if (!organ) {
+                integratedMaps = await getIntegratedMaps()
+            } else {
+                const organTypes = await getOrganTypes()
+                const organTerms = organ.codes.map((code) => organTypes[code])
+
+                integratedMaps = await Promise.all(
+                    organTerms.map((term) => getIntegratedMapsForOrgan(term))
+                )
+            }
+            
+            if (integratedMaps.some((map) => map === null)) {
+                log.error(`Error fetching integrated maps for organ ${organ.name}`)
+                setError('Unable to load integrated maps')
+                return
+            }
+
+            let latestMaps = integratedMaps
+            if (showOnlyLatest) {
+                latestMaps = setLatestMaps(integratedMaps)
+            } 
+            setData(latestMaps)
+            
             if (latestMaps.length === 0) {
                 log.warn(`No integrated maps found for organ ${organ.name}`)
                 return
@@ -82,7 +97,12 @@ function IntegratedMaps({id, title, organ}) {
         {
             name: 'Organ',
             selector: (row) => row.tissue.tissuetype,
-            sortable: true
+            sortable: true,
+            format: (row) => {
+                return <>{row.tissue.tissuetype} &nbsp;<img alt={''}
+                    src={getOrganMeta(row.tissue.uberoncode).icon}
+                    width={'16px'} /></>
+            }
         },
         {
             name: 'Assay Type',
@@ -94,7 +114,8 @@ function IntegratedMaps({id, title, organ}) {
             id: 'raw_download',
             sortable: true,
             reorder: true,
-            selector: (row) => {
+            selector: (row) => row.download_raw,
+            format: (row) => {
                 if (row.download_raw !== null) {
                     const url = row.download_raw.split('/').pop().split('?')[0]
                     return (
@@ -113,7 +134,8 @@ function IntegratedMaps({id, title, organ}) {
             id: 'processed_download',
             sortable: true,
             reorder: true,
-            selector: (row) => {
+            selector: (row) => row.download,
+            format: (row) => {
                 if (row.download !== null) {
                     const url = row.download.split('/').pop().split('?')[0]
                     return (
@@ -176,7 +198,7 @@ function IntegratedMaps({id, title, organ}) {
 
                 return (
                     <a className='btn btn-outline-primary my-1' href={url}>
-                        View datasets
+                        View {row.dataSets.length} datasets
                     </a>
                 )
             },
@@ -213,22 +235,30 @@ function IntegratedMaps({id, title, organ}) {
         )
     }
 
+    const content = <>
+        {error != null && (
+            <div className='mx-auto text-center'>Unable to load integrated maps</div>
+        )}
+
+        {data != null && (
+            <DataTable
+                className='rdt_Results'
+                columns={columns}
+                data={data}
+                fixedHeader={true}
+            />
+        )}
+    </>
+
+    if (!id) {
+        return content
+    }
+
     return (
         <SenNetAccordion id={id} title={title}>
             <Card border='0'>
                 <Card.Body className='mx-auto w-100 mb-4'>
-                    {error != null && (
-                        <div className='mx-auto text-center'>Unable to load integrated maps</div>
-                    )}
-
-                    {data != null && (
-                        <DataTable
-                            className='rdt_Results'
-                            columns={columns}
-                            data={data}
-                            fixedHeader={true}
-                        />
-                    )}
+                    {content}
                 </Card.Body>
             </Card>
         </SenNetAccordion>
