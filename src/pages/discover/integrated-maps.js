@@ -29,7 +29,7 @@ function IntegratedMapsView() {
           SenNet-wide integrated maps contain consolidated data for all datasets of a particular assay type and tissue, across all datasets, assay variants, and data providers. RNA-seq integrated maps are added as both raw and processed versions: 'raw'
           features gene expression count matrices from the SenNet RNA-seq pipeline, and 'processed' versions are the results of secondary analysis (normalization, filtering, dimensionality reduction, clustering) applied to the raw matrix.
         </p>
-        <IntegratedMaps showOnlyLatest={false} />
+        <IntegratedMaps />
       </div>
     </>
 

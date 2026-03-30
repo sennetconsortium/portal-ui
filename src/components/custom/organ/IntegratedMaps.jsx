@@ -6,7 +6,7 @@ import log from 'xac-loglevel'
 import {useEffect, useState} from 'react'
 import {Card} from 'react-bootstrap'
 import DataTable from 'react-data-table-component'
-import {getOrganMeta, searchUIQueryString} from '../js/functions'
+import {getOrganHierarchy, getOrganMeta, searchUIQueryString} from '../js/functions'
 import { Skeleton } from '@mui/material'
 
 /**
@@ -15,11 +15,10 @@ import { Skeleton } from '@mui/material'
  * @param {Object} props Component props.
  * @param {string} props.id Accordion element id.
  * @param {string} props.title Accordion title.
- * @param {boolean} props.showOnlyLatest
  * @param {import('@/config/organs').Organ} props.organ Organ metadata used to resolve map records.
  * @returns {JSX.Element}
  */
-function IntegratedMaps({id, title, organ, showOnlyLatest = true}) {
+function IntegratedMaps({id, title, organ}) {
     const [data, setData] = useState(null)
     const [error, setError] = useState(null)
     const [primaryDatasets, setPrimaryDatasets] = useState(null)
@@ -54,7 +53,7 @@ function IntegratedMaps({id, title, organ, showOnlyLatest = true}) {
         const fetchData = async () => {
             let integratedMaps
             if (!organ) {
-                integratedMaps = await getIntegratedMaps()
+                integratedMaps = [await getIntegratedMaps()]
             } else {
                 const organTypes = await getOrganTypes()
                 const organTerms = organ.codes.map((code) => organTypes[code])
@@ -70,10 +69,7 @@ function IntegratedMaps({id, title, organ, showOnlyLatest = true}) {
                 return
             }
 
-            let latestMaps = integratedMaps
-            if (showOnlyLatest) {
-                latestMaps = setLatestMaps(integratedMaps)
-            } 
+            const latestMaps = setLatestMaps(integratedMaps)
             setData(latestMaps)
             
             if (latestMaps.length === 0) {
@@ -100,7 +96,9 @@ function IntegratedMaps({id, title, organ, showOnlyLatest = true}) {
             selector: (row) => row.tissue.tissuetype,
             sortable: true,
             format: (row) => {
-                return <>{row.tissue.tissuetype} &nbsp;<img alt={''}
+               
+                const tag = organ ? row.tissue.tissuetype : <a href={`${APP_ROUTES.organs}/${getOrganHierarchy(row.tissue.uberoncode).toLowerCase()}`}>{row.tissue.tissuetype}</a>
+                return <>{tag} &nbsp;<img alt={''}
                     src={getOrganMeta(row.tissue.uberoncode).icon}
                     width={'16px'} /></>
             }
