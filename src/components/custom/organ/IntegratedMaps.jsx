@@ -7,6 +7,7 @@ import {useEffect, useState} from 'react'
 import {Card} from 'react-bootstrap'
 import DataTable from 'react-data-table-component'
 import {getOrganMeta, searchUIQueryString} from '../js/functions'
+import { Skeleton } from '@mui/material'
 
 /**
  * Displays the latest integrated maps in a table.
@@ -249,6 +250,10 @@ function IntegratedMaps({id, title, organ, showOnlyLatest = true}) {
             />
         )}
     </>
+
+    if (!data) {
+        return <Skeleton variant='roubded' height={250} />
+    }
 
     if (!id) {
         return content
