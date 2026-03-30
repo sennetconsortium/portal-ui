@@ -500,7 +500,7 @@ export default function BulkTransfer({
                             </Form>
                         </Grid>
                     }
-                    <Grid container spacing={3} className={'text-center mt-3'}>
+                    <Grid container spacing={3} className={'text-center justify-content-center mt-3'}>
                         <Grid item xs>
                             <Button
                                 variant={'outline-dark rounded-0'}
