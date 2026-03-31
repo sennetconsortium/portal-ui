@@ -25,7 +25,7 @@ function IntegratedMaps({id, title, organ}) {
     const {cache} = useContext(AppContext)
 
     const setLatestMaps = (integratedMaps) => {
-        // integratedMap is an array of arrays. for each top level array find the newest item based on creation_time
+        // integratedMaps is an array of arrays. for each top level array find the newest item based on creation_time
         const latestMaps = integratedMaps
             .map((maps) => {
                 if (maps.length === 0) return null
