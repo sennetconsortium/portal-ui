@@ -1,12 +1,13 @@
 import SenNetAccordion from '@/components/custom/layout/SenNetAccordion'
 import {APP_ROUTES} from '@/config/constants'
-import {getOrganTypes} from '@/lib/ontology'
-import {getIntegratedMapsForOrgan, getPrimaryDatasets} from '@/lib/services'
+import {getIntegratedMaps, getIntegratedMapsForOrgan, getPrimaryDatasets} from '@/lib/services'
 import log from 'xac-loglevel'
-import {useEffect, useState} from 'react'
+import {useEffect, useState, useContext} from 'react'
 import {Card} from 'react-bootstrap'
 import DataTable from 'react-data-table-component'
-import {searchUIQueryString} from '../js/functions'
+import {formatByteSize, getOrganHierarchy, getOrganMeta, searchUIQueryString} from '../js/functions'
+import { Skeleton } from '@mui/material'
+import AppContext from '@/context/AppContext'
 
 /**
  * Displays the latest integrated maps in a table.
@@ -21,45 +22,68 @@ function IntegratedMaps({id, title, organ}) {
     const [data, setData] = useState(null)
     const [error, setError] = useState(null)
     const [primaryDatasets, setPrimaryDatasets] = useState(null)
+    const {cache} = useContext(AppContext)
+
+    const setLatestMaps = (integratedMaps) => {
+        // integratedMaps is an array of arrays. for each top level array find the newest item based on creation_time
+        const latestMaps = integratedMaps
+            .map((maps) => {
+                if (maps.length === 0) return null
+
+                const uniqueAssayNames = [
+                    ...new Set(maps.map(item => item.assay.assayName))
+                ];
+
+                let uniqueAssayLatestMaps = []
+                uniqueAssayNames.forEach((assayName) => {
+                    uniqueAssayLatestMaps.push(maps.filter(item => item.assay.assayName === assayName).reduce((latest, map) => {
+                        return new Date(map.creation_time) > new Date(latest.creation_time)
+                            ? map
+                            : latest
+                    }))
+                })
+                return uniqueAssayLatestMaps
+            }).flat() // Since the above returns an array we want to flatten this so we don't have nested arrays
+            .filter((map) => map !== null)
+            .sort((a, b) => a.tissue.tissuetype.localeCompare(b.tissue.tissuetype))
+
+        return latestMaps
+    }
 
     useEffect(() => {
         const fetchData = async () => {
-            const organTypes = await getOrganTypes()
-            const organTerms = organ.codes.map((code) => organTypes[code])
-
-            const integratedMaps = await Promise.all(
-                organTerms.map((term) => getIntegratedMapsForOrgan(term))
-            )
+            let integratedMaps
+            let organTerms
+            const dict = {}
+            const organTypes = cache.organTypes
+            if (!organ) {
+                organTerms = Object.keys(organTypes)
+                // get results for all organs
+                const allResults = await getIntegratedMaps()
+                // group by uberoncode
+                for (const r of allResults) {
+                    dict[r.tissue.uberoncode] = dict[r.tissue.uberoncode] || []
+                    dict[r.tissue.uberoncode].push(r)
+                }
+                // an array of arrays
+                integratedMaps = Object.values(dict)
+            } else {
+                organTerms = organ.codes.map((code) => organTypes[code])
+                // the promise returns an array of arrays
+                integratedMaps = await Promise.all(
+                    organTerms.map((term) => getIntegratedMapsForOrgan(term))
+                )
+            }
+            
             if (integratedMaps.some((map) => map === null)) {
                 log.error(`Error fetching integrated maps for organ ${organ.name}`)
                 setError('Unable to load integrated maps')
                 return
             }
 
-            // integratedMap is an array of arrays. for each top level array find the newest item based on creation_time
-            const latestMaps = integratedMaps
-                .map((maps) => {
-                    if (maps.length === 0) return null
-
-                    const uniqueAssayNames = [
-                        ...new Set(maps.map(item => item.assay.assayName))
-                    ];
-
-                    let uniqueAssayLatestMaps = []
-                    uniqueAssayNames.forEach((assayName) => {
-                        uniqueAssayLatestMaps.push(maps.filter(item => item.assay.assayName === assayName).reduce((latest, map) => {
-                            return new Date(map.creation_time) > new Date(latest.creation_time)
-                                ? map
-                                : latest
-                        }))
-                    })
-                    return uniqueAssayLatestMaps
-                }).flat() // Since the above returns an array we want to flatten this so we don't have nested arrays
-                .filter((map) => map !== null)
-                .sort((a, b) => a.tissue.tissuetype.localeCompare(b.tissue.tissuetype))
-
+            const latestMaps = setLatestMaps(integratedMaps)
             setData(latestMaps)
-
+            
             if (latestMaps.length === 0) {
                 log.warn(`No integrated maps found for organ ${organ.name}`)
                 return
@@ -82,7 +106,14 @@ function IntegratedMaps({id, title, organ}) {
         {
             name: 'Organ',
             selector: (row) => row.tissue.tissuetype,
-            sortable: true
+            sortable: true,
+            format: (row) => {
+               
+                const tag = organ ? row.tissue.tissuetype : <a href={`${APP_ROUTES.organs}/${getOrganHierarchy(row.tissue.uberoncode).toLowerCase()}`}>{row.tissue.tissuetype}</a>
+                return <>{tag} &nbsp;<img alt={''}
+                    src={getOrganMeta(row.tissue.uberoncode).icon}
+                    width={'16px'} /></>
+            }
         },
         {
             name: 'Assay Type',
@@ -94,16 +125,20 @@ function IntegratedMaps({id, title, organ}) {
             id: 'raw_download',
             sortable: true,
             reorder: true,
-            selector: (row) => {
+            selector: (row) => row.download_raw,
+            format: (row) => {
                 if (row.download_raw !== null) {
                     const url = row.download_raw.split('/').pop().split('?')[0]
                     return (
-                        <span data-field='raw_download' className='has-supIcon'>
-                        <a target='_blank' rel='noopener noreferrer' href={row.download_raw}>
-                            {url}
-                        </a>{' '}
+                        <div data-field='raw_download'>
+                            <div>
+                                <a target='_blank' rel='noopener noreferrer' href={row.download_raw}>
+                                {url}
+                            </a>{' '}
                             <i className='bi bi-download'></i>
-                    </span>
+                            </div>
+                            <small  className='text-muted'>{formatByteSize(row.raw_file_size_bytes)}</small>
+                        </div>
                     )
                 }
             }
@@ -113,16 +148,31 @@ function IntegratedMaps({id, title, organ}) {
             id: 'processed_download',
             sortable: true,
             reorder: true,
-            selector: (row) => {
+            selector: (row) => row.download,
+            format: (row) => {
                 if (row.download !== null) {
                     const url = row.download.split('/').pop().split('?')[0]
+                    let cells = 0
+                    if (Object.keys(row.processed_cell_type_counts).length) {
+                        for (const c in row.processed_cell_type_counts) {
+                            cells += row.processed_cell_type_counts[c]
+                        }
+                    }
+                    
                     return (
-                        <span data-field='processed_download' className='has-supIcon'>
-                        <a target='_blank' rel='noopener noreferrer' href={row.download}>
-                            {url}
-                        </a>{' '}
+                        <div data-field='processed_download'>
+                           <div>
+                             <a target='_blank' rel='noopener noreferrer' href={row.download}>
+                                {url}
+                            </a>{' '}
                             <i className='bi bi-download'></i>
-                    </span>
+                           </div>
+                            <small className='text-muted'>{formatByteSize(row.processed_file_sizes_bytes)}</small>
+                            {cells > 0 && <span>
+                                <br />
+                                <small className='text-muted'>{(new Intl.NumberFormat()).format(cells)} cells, {Object.keys(row.processed_cell_type_counts).length} cell types</small>
+                            </span>}
+                        </div>
                     )
                 }
             }
@@ -176,7 +226,7 @@ function IntegratedMaps({id, title, organ}) {
 
                 return (
                     <a className='btn btn-outline-primary my-1' href={url}>
-                        View datasets
+                        View {row.dataSets.length} datasets
                     </a>
                 )
             },
@@ -213,22 +263,34 @@ function IntegratedMaps({id, title, organ}) {
         )
     }
 
+    const content = <>
+        {error != null && (
+            <div className='mx-auto text-center'>Unable to load integrated maps</div>
+        )}
+
+        {data != null && (
+            <DataTable
+                className='rdt_Results'
+                columns={columns}
+                data={data}
+                fixedHeader={true}
+            />
+        )}
+    </>
+
+    if (!data) {
+        return <Skeleton variant='roubded' height={250} />
+    }
+
+    if (!id) {
+        return content
+    }
+
     return (
         <SenNetAccordion id={id} title={title}>
             <Card border='0'>
                 <Card.Body className='mx-auto w-100 mb-4'>
-                    {error != null && (
-                        <div className='mx-auto text-center'>Unable to load integrated maps</div>
-                    )}
-
-                    {data != null && (
-                        <DataTable
-                            className='rdt_Results'
-                            columns={columns}
-                            data={data}
-                            fixedHeader={true}
-                        />
-                    )}
+                    {content}
                 </Card.Body>
             </Card>
         </SenNetAccordion>
