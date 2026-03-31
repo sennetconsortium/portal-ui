@@ -1,6 +1,6 @@
 import SenNetAccordion from '@/components/custom/layout/SenNetAccordion'
 import {APP_ROUTES} from '@/config/constants'
-import {getIntegratedMapsForOrgan, getPrimaryDatasets} from '@/lib/services'
+import {getIntegratedMaps, getIntegratedMapsForOrgan, getPrimaryDatasets} from '@/lib/services'
 import log from 'xac-loglevel'
 import {useEffect, useState, useContext} from 'react'
 import {Card} from 'react-bootstrap'
@@ -54,16 +54,26 @@ function IntegratedMaps({id, title, organ}) {
         const fetchData = async () => {
             let integratedMaps
             let organTerms
+            const dict = {}
+            const organTypes = cache.organTypes
             if (!organ) {
-                organTerms = Object.keys(cache.organTypesCodes)
+                organTerms = Object.keys(organTypes)
+                // get results for all organs
+                const allResults = await getIntegratedMaps()
+                // group by uberoncode
+                for (const r of allResults) {
+                    dict[r.tissue.uberoncode] = dict[r.tissue.uberoncode] || []
+                    dict[r.tissue.uberoncode].push(r)
+                }
+                // an array of arrays
+                integratedMaps = Object.values(dict)
             } else {
-                const organTypes = cache.organTypes
                 organTerms = organ.codes.map((code) => organTypes[code])
-            }
-
-            integratedMaps = await Promise.all(
+                // the promise returns an array of arrays
+                integratedMaps = await Promise.all(
                     organTerms.map((term) => getIntegratedMapsForOrgan(term))
                 )
+            }
             
             if (integratedMaps.some((map) => map === null)) {
                 log.error(`Error fetching integrated maps for organ ${organ.name}`)
