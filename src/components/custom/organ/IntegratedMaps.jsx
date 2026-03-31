@@ -170,7 +170,7 @@ function IntegratedMaps({id, title, organ}) {
                             <small className='text-muted'>{formatByteSize(row.processed_file_sizes_bytes)}</small>
                             {cells > 0 && <span>
                                 <br />
-                                <small className='text-muted'>{cells} cells, {Object.keys(row.processed_cell_type_counts).length} cell types</small>
+                                <small className='text-muted'>{(new Intl.NumberFormat()).format(cells)} cells, {Object.keys(row.processed_cell_type_counts).length} cell types</small>
                             </span>}
                         </div>
                     )
