@@ -238,7 +238,7 @@ function IntegratedMaps({id, title, organ}) {
         const derivedUUIDs = datasets.map((d) => d.uuid)
 
         // find all the primary datasets for the given uuids and extract their sennetIds.
-        const primarySennetIds = []
+        let primarySennetIds = []
         for (const uuid of derivedUUIDs) {
             const dataset = primaryDatasets[uuid]
             if (dataset) {
@@ -249,6 +249,8 @@ function IntegratedMaps({id, title, organ}) {
         if (primarySennetIds.length === 0) {
             return {}
         }
+
+        primarySennetIds = Array.from((new Set(primarySennetIds)))
 
         // build a search url for the entity search page
         return (
