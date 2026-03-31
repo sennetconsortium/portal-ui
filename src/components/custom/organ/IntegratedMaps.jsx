@@ -5,7 +5,7 @@ import log from 'xac-loglevel'
 import {useEffect, useState, useContext} from 'react'
 import {Card} from 'react-bootstrap'
 import DataTable from 'react-data-table-component'
-import {getOrganHierarchy, getOrganMeta, searchUIQueryString} from '../js/functions'
+import {formatByteSize, getOrganHierarchy, getOrganMeta, searchUIQueryString} from '../js/functions'
 import { Skeleton } from '@mui/material'
 import AppContext from '@/context/AppContext'
 
@@ -130,12 +130,15 @@ function IntegratedMaps({id, title, organ}) {
                 if (row.download_raw !== null) {
                     const url = row.download_raw.split('/').pop().split('?')[0]
                     return (
-                        <span data-field='raw_download' className='has-supIcon'>
-                        <a target='_blank' rel='noopener noreferrer' href={row.download_raw}>
-                            {url}
-                        </a>{' '}
+                        <div data-field='raw_download'>
+                            <div>
+                                <a target='_blank' rel='noopener noreferrer' href={row.download_raw}>
+                                {url}
+                            </a>{' '}
                             <i className='bi bi-download'></i>
-                    </span>
+                            </div>
+                            <small  className='text-muted'>{formatByteSize(row.raw_file_size_bytes)}</small>
+                        </div>
                     )
                 }
             }
@@ -149,13 +152,27 @@ function IntegratedMaps({id, title, organ}) {
             format: (row) => {
                 if (row.download !== null) {
                     const url = row.download.split('/').pop().split('?')[0]
+                    let cells = 0
+                    if (Object.keys(row.processed_cell_type_counts).length) {
+                        for (const c in row.processed_cell_type_counts) {
+                            cells += row.processed_cell_type_counts[c]
+                        }
+                    }
+                    
                     return (
-                        <span data-field='processed_download' className='has-supIcon'>
-                        <a target='_blank' rel='noopener noreferrer' href={row.download}>
-                            {url}
-                        </a>{' '}
+                        <div data-field='processed_download'>
+                           <div>
+                             <a target='_blank' rel='noopener noreferrer' href={row.download}>
+                                {url}
+                            </a>{' '}
                             <i className='bi bi-download'></i>
-                    </span>
+                           </div>
+                            <small className='text-muted'>{formatByteSize(row.processed_file_sizes_bytes)}</small>
+                            {cells > 0 && <span>
+                                <br />
+                                <small className='text-muted'>{(new Intl.NumberFormat()).format(cells)} cells, {Object.keys(row.processed_cell_type_counts).length} cell types</small>
+                            </span>}
+                        </div>
                     )
                 }
             }
