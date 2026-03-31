@@ -978,17 +978,3 @@ export async function getIntegratedMapsForOrgan(organTerm) {
     }
 }
 
-export async function getIntegratedMaps() {
-    try {
-        const endpoint = getIntegratedMappingEndPoint() + `api/integrated_maps`
-        const res = await fetch(endpoint, { method: 'GET' });
-        if (res.status === 404) {
-            return []
-        }
-        return await res.json();
-    } catch (error) {
-        log.error(error);
-        return null;
-    }
-}
-
