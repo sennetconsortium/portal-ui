@@ -380,7 +380,7 @@ export default function BulkTransfer({
                     <h1 className={'text-center'}>{getTitle()}</h1>
 
 
-                    <Grid container className={'text-center mt-4 mb-2'}>
+                    <Grid container className={'text-center justify-content-center mt-4 mb-2'}>
 
                         <Grid item xs>
                             {activeStep === 0 &&
