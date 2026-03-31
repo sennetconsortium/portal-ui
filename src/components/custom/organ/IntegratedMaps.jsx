@@ -216,7 +216,7 @@ function IntegratedMaps({id, title, organ}) {
                 }
 
                 const url = buildUrl(row.dataSets)
-                if (url == null) {
+                if (url.url == null) {
                     return (
                         <button className='btn btn-outline-primary my-1' disabled>
                             No datasets to view
@@ -226,7 +226,7 @@ function IntegratedMaps({id, title, organ}) {
 
                 return (
                     <a className='btn btn-outline-primary my-1' href={url}>
-                        View {row.dataSets.length} datasets
+                        View {url.primarySennetIds.length} datasets
                     </a>
                 )
             },
@@ -247,12 +247,14 @@ function IntegratedMaps({id, title, organ}) {
         }
 
         if (primarySennetIds.length === 0) {
-            return null
+            return {}
         }
 
         // build a search url for the entity search page
         return (
-            `${APP_ROUTES.search}?` +
+            {
+                primarySennetIds,
+                url: `${APP_ROUTES.search}?` +
             searchUIQueryString(
                 [
                     {field: 'sennet_id', values: primarySennetIds, type: 'any'},
@@ -260,6 +262,7 @@ function IntegratedMaps({id, title, organ}) {
                 ],
                 20
             )
+            }
         )
     }
 
