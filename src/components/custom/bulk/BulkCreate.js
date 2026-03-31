@@ -596,7 +596,7 @@ export default function BulkCreate({
                     }
                     {
                         !isMetadata && activeStep === 1 && userWriteGroups && getUserWriteGroupsLength() > 1 &&
-                        <Grid container className={'text-center mt-5'}>
+                        <Grid container className={'text-center justify-content-center mt-5'}>
                             <Grid item xs></Grid>
                             <Grid item xs>
                                 <GroupSelect
@@ -611,7 +611,7 @@ export default function BulkCreate({
                     }
                     {
                         isMetadata && activeStep === 1 &&
-                        <Grid container className={'text-center mt-5'}>
+                        <Grid container className={'text-center justify-content-center mt-5'}>
                             <Grid item xs></Grid>
                             <Grid item xs>
                                 <OptionsSelect
