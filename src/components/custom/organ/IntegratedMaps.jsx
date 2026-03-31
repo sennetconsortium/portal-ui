@@ -1,13 +1,13 @@
 import SenNetAccordion from '@/components/custom/layout/SenNetAccordion'
 import {APP_ROUTES} from '@/config/constants'
-import {getOrganTypes} from '@/lib/ontology'
-import {getIntegratedMaps, getIntegratedMapsForOrgan, getPrimaryDatasets} from '@/lib/services'
+import {getIntegratedMapsForOrgan, getPrimaryDatasets} from '@/lib/services'
 import log from 'xac-loglevel'
-import {useEffect, useState} from 'react'
+import {useEffect, useState, useContext} from 'react'
 import {Card} from 'react-bootstrap'
 import DataTable from 'react-data-table-component'
 import {getOrganHierarchy, getOrganMeta, searchUIQueryString} from '../js/functions'
 import { Skeleton } from '@mui/material'
+import AppContext from '@/context/AppContext'
 
 /**
  * Displays the latest integrated maps in a table.
@@ -22,29 +22,30 @@ function IntegratedMaps({id, title, organ}) {
     const [data, setData] = useState(null)
     const [error, setError] = useState(null)
     const [primaryDatasets, setPrimaryDatasets] = useState(null)
+    const {cache} = useContext(AppContext)
 
     const setLatestMaps = (integratedMaps) => {
         // integratedMap is an array of arrays. for each top level array find the newest item based on creation_time
-            const latestMaps = integratedMaps
-                .map((maps) => {
-                    if (maps.length === 0) return null
+        const latestMaps = integratedMaps
+            .map((maps) => {
+                if (maps.length === 0) return null
 
-                    const uniqueAssayNames = [
-                        ...new Set(maps.map(item => item.assay.assayName))
-                    ];
+                const uniqueAssayNames = [
+                    ...new Set(maps.map(item => item.assay.assayName))
+                ];
 
-                    let uniqueAssayLatestMaps = []
-                    uniqueAssayNames.forEach((assayName) => {
-                        uniqueAssayLatestMaps.push(maps.filter(item => item.assay.assayName === assayName).reduce((latest, map) => {
-                            return new Date(map.creation_time) > new Date(latest.creation_time)
-                                ? map
-                                : latest
-                        }))
-                    })
-                    return uniqueAssayLatestMaps
-                }).flat() // Since the above returns an array we want to flatten this so we don't have nested arrays
-                .filter((map) => map !== null)
-                .sort((a, b) => a.tissue.tissuetype.localeCompare(b.tissue.tissuetype))
+                let uniqueAssayLatestMaps = []
+                uniqueAssayNames.forEach((assayName) => {
+                    uniqueAssayLatestMaps.push(maps.filter(item => item.assay.assayName === assayName).reduce((latest, map) => {
+                        return new Date(map.creation_time) > new Date(latest.creation_time)
+                            ? map
+                            : latest
+                    }))
+                })
+                return uniqueAssayLatestMaps
+            }).flat() // Since the above returns an array we want to flatten this so we don't have nested arrays
+            .filter((map) => map !== null)
+            .sort((a, b) => a.tissue.tissuetype.localeCompare(b.tissue.tissuetype))
 
         return latestMaps
     }
@@ -52,16 +53,17 @@ function IntegratedMaps({id, title, organ}) {
     useEffect(() => {
         const fetchData = async () => {
             let integratedMaps
+            let organTerms
             if (!organ) {
-                integratedMaps = [await getIntegratedMaps()]
+                organTerms = Object.keys(cache.organTypesCodes)
             } else {
-                const organTypes = await getOrganTypes()
-                const organTerms = organ.codes.map((code) => organTypes[code])
+                const organTypes = cache.organTypes
+                organTerms = organ.codes.map((code) => organTypes[code])
+            }
 
-                integratedMaps = await Promise.all(
+            integratedMaps = await Promise.all(
                     organTerms.map((term) => getIntegratedMapsForOrgan(term))
                 )
-            }
             
             if (integratedMaps.some((map) => map === null)) {
                 log.error(`Error fetching integrated maps for organ ${organ.name}`)
