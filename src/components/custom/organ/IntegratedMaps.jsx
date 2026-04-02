@@ -2,11 +2,11 @@ import SenNetAccordion from '@/components/custom/layout/SenNetAccordion'
 import {APP_ROUTES} from '@/config/constants'
 import {getIntegratedMaps, getIntegratedMapsForOrgan, getPrimaryDatasets} from '@/lib/services'
 import log from 'xac-loglevel'
-import {useEffect, useState, useContext} from 'react'
+import {useContext, useEffect, useState} from 'react'
 import {Card} from 'react-bootstrap'
 import DataTable from 'react-data-table-component'
 import {formatByteSize, getOrganHierarchy, getOrganMeta, searchUIQueryString} from '../js/functions'
-import { Skeleton } from '@mui/material'
+import {Skeleton} from '@mui/material'
 import AppContext from '@/context/AppContext'
 
 /**
@@ -18,7 +18,7 @@ import AppContext from '@/context/AppContext'
  * @param {import('@/config/organs').Organ} props.organ Organ metadata used to resolve map records.
  * @returns {JSX.Element}
  */
-function IntegratedMaps({id, title, organ}) {
+function IntegratedMaps({id, title, organ, setShowIntegratedMapsSide = null}) {
     const [data, setData] = useState(null)
     const [error, setError] = useState(null)
     const [primaryDatasets, setPrimaryDatasets] = useState(null)
@@ -74,7 +74,7 @@ function IntegratedMaps({id, title, organ}) {
                     organTerms.map((term) => getIntegratedMapsForOrgan(term))
                 )
             }
-            
+
             if (integratedMaps.some((map) => map === null)) {
                 log.error(`Error fetching integrated maps for organ ${organ.name}`)
                 setError('Unable to load integrated maps')
@@ -83,7 +83,10 @@ function IntegratedMaps({id, title, organ}) {
 
             const latestMaps = setLatestMaps(integratedMaps)
             setData(latestMaps)
-            
+            if (setShowIntegratedMapsSide && latestMaps.length > 0) {
+                setShowIntegratedMapsSide(true)
+            }
+
             if (latestMaps.length === 0) {
                 log.warn(`No integrated maps found for organ ${organ.name}`)
                 return
@@ -108,11 +111,12 @@ function IntegratedMaps({id, title, organ}) {
             selector: (row) => row.tissue.tissuetype,
             sortable: true,
             format: (row) => {
-               
-                const tag = organ ? row.tissue.tissuetype : <a href={`${APP_ROUTES.organs}/${getOrganHierarchy(row.tissue.uberoncode).toLowerCase()}`}>{row.tissue.tissuetype}</a>
+
+                const tag = organ ? row.tissue.tissuetype :
+                    <a href={`${APP_ROUTES.organs}/${getOrganHierarchy(row.tissue.uberoncode).toLowerCase()}`}>{row.tissue.tissuetype}</a>
                 return <>{tag} &nbsp;<img alt={''}
-                    src={getOrganMeta(row.tissue.uberoncode).icon}
-                    width={'16px'} /></>
+                                          src={getOrganMeta(row.tissue.uberoncode).icon}
+                                          width={'16px'}/></>
             }
         },
         {
@@ -133,11 +137,11 @@ function IntegratedMaps({id, title, organ}) {
                         <div data-field='raw_download'>
                             <div>
                                 <a target='_blank' rel='noopener noreferrer' href={row.download_raw}>
-                                {url}
-                            </a>{' '}
-                            <i className='bi bi-download'></i>
+                                    {url}
+                                </a>{' '}
+                                <i className='bi bi-download'></i>
                             </div>
-                            <small  className='text-muted'>{formatByteSize(row.raw_file_size_bytes)}</small>
+                            <small className='text-muted'>{formatByteSize(row.raw_file_size_bytes)}</small>
                         </div>
                     )
                 }
@@ -158,19 +162,20 @@ function IntegratedMaps({id, title, organ}) {
                             cells += row.processed_cell_type_counts[c]
                         }
                     }
-                    
+
                     return (
                         <div data-field='processed_download'>
-                           <div>
-                             <a target='_blank' rel='noopener noreferrer' href={row.download}>
-                                {url}
-                            </a>{' '}
-                            <i className='bi bi-download'></i>
-                           </div>
+                            <div>
+                                <a target='_blank' rel='noopener noreferrer' href={row.download}>
+                                    {url}
+                                </a>{' '}
+                                <i className='bi bi-download'></i>
+                            </div>
                             <small className='text-muted'>{formatByteSize(row.processed_file_sizes_bytes)}</small>
                             {cells > 0 && <span>
-                                <br />
-                                <small className='text-muted'>{(new Intl.NumberFormat()).format(cells)} cells, {Object.keys(row.processed_cell_type_counts).length} cell types</small>
+                                <br/>
+                                <small
+                                    className='text-muted'>{(new Intl.NumberFormat()).format(cells)} cells, {Object.keys(row.processed_cell_type_counts).length} cell types</small>
                             </span>}
                         </div>
                     )
@@ -257,13 +262,13 @@ function IntegratedMaps({id, title, organ}) {
             {
                 primarySennetIds,
                 url: `${APP_ROUTES.search}?` +
-            searchUIQueryString(
-                [
-                    {field: 'sennet_id', values: primarySennetIds, type: 'any'},
-                    {field: 'entity_type', values: ['Dataset'], type: 'any'}
-                ],
-                20
-            )
+                    searchUIQueryString(
+                        [
+                            {field: 'sennet_id', values: primarySennetIds, type: 'any'},
+                            {field: 'entity_type', values: ['Dataset'], type: 'any'}
+                        ],
+                        20
+                    )
             }
         )
     }
@@ -284,7 +289,7 @@ function IntegratedMaps({id, title, organ}) {
     </>
 
     if (!data) {
-        return <Skeleton variant='roubded' height={250} />
+        return <Skeleton variant='roubded' height={250}/>
     }
 
     if (!id) {
@@ -292,13 +297,17 @@ function IntegratedMaps({id, title, organ}) {
     }
 
     return (
-        <SenNetAccordion id={id} title={title}>
-            <Card border='0'>
-                <Card.Body className='mx-auto w-100 mb-4'>
-                    {content}
-                </Card.Body>
-            </Card>
-        </SenNetAccordion>
+        <>
+            {data.length > 0 &&
+                <SenNetAccordion id={id} title={title}>
+                    <Card border='0'>
+                        <Card.Body className='mx-auto w-100 mb-4'>
+                            {content}
+                        </Card.Body>
+                    </Card>
+                </SenNetAccordion>
+            }
+        </>
     )
 }
 
