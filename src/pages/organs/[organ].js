@@ -3,8 +3,8 @@ import HumanReferenceAtlas from '@/components/custom/organ/HumanReferenceAtlas'
 import AppContext from '@/context/AppContext'
 import useOrganDetail from '@/hooks/organ/useOrganDetail'
 import dynamic from 'next/dynamic'
-import { useRouter } from 'next/router'
-import { useContext } from 'react'
+import {useRouter} from 'next/router'
+import {useContext, useState} from 'react'
 
 const AppFooter = dynamic(() => import('@/components/custom/layout/AppFooter'))
 const AppNavbar = dynamic(() => import('@/components/custom/layout/AppNavbar'))
@@ -16,19 +16,21 @@ const Samples = dynamic(() => import('@/components/custom/organ/Samples'))
 const SidebarBtn = dynamic(() => import('@/components/SidebarBtn'))
 
 const Organ = () => {
-    const { isRegisterHidden } = useContext(AppContext)
+    const {isRegisterHidden} = useContext(AppContext)
 
     const router = useRouter()
-    const { organ } = router.query
-    const { organDetail } = useOrganDetail(organ)
+    const {organ} = router.query
+    const {organDetail} = useOrganDetail(organ)
+    const [showCellTypesSide, setShowCellTypesSide] = useState(false)
+    const [showIntegratedMapsSide, setShowIntegratedMapsSide] = useState(false)
 
     if (!organDetail) {
-        return <NotFound />
+        return <NotFound/>
     }
 
     return (
         <>
-            <AppNavbar hidden={isRegisterHidden} signoutHidden={false} />
+            <AppNavbar hidden={isRegisterHidden} signoutHidden={false}/>
             <div className='container-fluid'>
                 <div className='row flex-nowrap entity-body g-0'>
                     {/* Sidebar */}
@@ -49,24 +51,28 @@ const Organ = () => {
                                         </a>
                                     </li>
                                 )}
-                                <li className='nav-item'>
-                                    <a
-                                        href='#cell-types'
-                                        className='nav-link'
-                                        data-bs-parent='#sidebar'
-                                    >
-                                        Cell Types
-                                    </a>
-                                </li>
-                                <li className='nav-item'>
-                                    <a
-                                        href='#IntegratedMaps'
-                                        className='nav-link'
-                                        data-bs-parent='#sidebar'
-                                    >
-                                        Integrated Maps
-                                    </a>
-                                </li>
+                                {showCellTypesSide &&
+                                    <li className='nav-item'>
+                                        <a
+                                            href='#cell-types'
+                                            className='nav-link'
+                                            data-bs-parent='#sidebar'
+                                        >
+                                            Cell Types
+                                        </a>
+                                    </li>
+                                }
+                                {showIntegratedMapsSide &&
+                                    <li className='nav-item'>
+                                        <a
+                                            href='#IntegratedMaps'
+                                            className='nav-link'
+                                            data-bs-parent='#sidebar'
+                                        >
+                                            Integrated Maps
+                                        </a>
+                                    </li>
+                                }
                                 <li className='nav-item'>
                                     <a
                                         href='#DatasetTypes'
@@ -90,35 +96,37 @@ const Organ = () => {
                     </div>
 
                     <main className='col m-md-3 entity-details'>
-                        <SidebarBtn />
+                        <SidebarBtn/>
 
                         {/* Title and badges */}
-                        <OrganViewHeader organ={organDetail} />
+                        <OrganViewHeader organ={organDetail}/>
 
                         {/* Human Reference Atlas */}
                         {organDetail.hraSupported && (
-                            <HumanReferenceAtlas id='HumanReferenceAtlas' organ={organDetail} />
+                            <HumanReferenceAtlas id='HumanReferenceAtlas' organ={organDetail}/>
                         )}
 
                         {/* Cell Types */}
-                        <CellTypes organ={organDetail} />
+                        <CellTypes organ={organDetail} setShowCellTypesSide={setShowCellTypesSide}/>
+
 
                         {/* Integrated Maps */}
                         <IntegratedMaps
                             id='IntegratedMaps'
                             title='Integrated Maps'
                             organ={organDetail}
+                            setShowIntegratedMapsSide={setShowIntegratedMapsSide}
                         />
 
                         {/* Data Types */}
-                        <DataTypeQuantities id='DatasetTypes' organ={organDetail} />
+                        <DataTypeQuantities id='DatasetTypes' organ={organDetail}/>
 
                         {/* Sample */}
-                        <Samples id='Samples' organ={organDetail} />
+                        <Samples id='Samples' organ={organDetail}/>
                     </main>
                 </div>
             </div>
-            <AppFooter />
+            <AppFooter/>
         </>
     )
 }
