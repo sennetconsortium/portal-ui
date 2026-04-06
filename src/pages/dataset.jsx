@@ -255,7 +255,7 @@ function ViewDataset() {
 
                                         {isLoggedIn() && data.upload &&
                                             <li className="nav-item">
-                                                <a href="#Upload"
+                                                <a href="#AssociatedEntity--Upload"
                                                    className="nav-link"
                                                    data-bs-parent="#sidebar">Associated Upload</a>
                                             </li>

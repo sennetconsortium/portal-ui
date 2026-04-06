@@ -220,8 +220,8 @@ function IntegratedMaps({id, title, organ, setShowIntegratedMapsSide = null}) {
                     )
                 }
 
-                const url = buildUrl(row.dataSets)
-                if (url.url == null) {
+                const {primarySennetIds, url} = buildUrl(row.dataSets)
+                if (url == null) {
                     return (
                         <button className='btn btn-outline-primary my-1' disabled>
                             No datasets to view
@@ -231,7 +231,7 @@ function IntegratedMaps({id, title, organ, setShowIntegratedMapsSide = null}) {
 
                 return (
                     <a className='btn btn-outline-primary my-1' href={url}>
-                        View {url.primarySennetIds.length} datasets
+                        View {primarySennetIds.length} datasets
                     </a>
                 )
             },
