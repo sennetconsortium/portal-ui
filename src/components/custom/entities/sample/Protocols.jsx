@@ -31,7 +31,7 @@ const Protocols = ({protocolUrl}) => {
                 <Card.Body>
                     <Card.Subtitle className={"title"}>DOI</Card.Subtitle>
                     <Card.Text>
-                        <a href={getClickableLink(protocolUrl)}
+                        <a href={protocolData ? getClickableLink(protocolData.url) :  getClickableLink(protocolUrl)}
                            className="icon-inline" target="_blank"><span
                             className="me-1">{protocolUrl}</span> <i className="bi bi-box-arrow-up-right"></i></a>
                     </Card.Text>
