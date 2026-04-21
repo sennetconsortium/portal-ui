@@ -15,6 +15,7 @@ export default async function handler(req, res) {
     })
         .then(response => response.json())
         .then(result => {
+            console.log(result)
             if(result['status_code'] === 0){
                 res.status(200).json(result.payload)
             } else {
