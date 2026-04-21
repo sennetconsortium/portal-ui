@@ -1,6 +1,6 @@
 import SenNetAccordion from '@/components/custom/layout/SenNetAccordion'
 import {APP_ROUTES} from '@/config/constants'
-import {getIntegratedMaps, getIntegratedMapsForOrgan, getPrimaryDatasets} from '@/lib/services'
+import {getIntegratedMapsForOrganism, getPrimaryDatasets} from '@/lib/services'
 import log from 'xac-loglevel'
 import {useContext, useEffect, useState} from 'react'
 import {Card} from 'react-bootstrap'
@@ -54,25 +54,34 @@ function IntegratedMaps({id, title, organ, setShowIntegratedMapsSide = null}) {
         const fetchData = async () => {
             let integratedMaps
             let organTerms
-            const dict = {}
+            const humanDict = {}
+            const mouseDict = {}
             const organTypes = cache.organTypes
+
+            // Get results for all organisms
+            const humanResults = await getIntegratedMapsForOrganism('human')
+            const mouseResults = await getIntegratedMapsForOrganism('mouse')
+
+            // group by uberoncode
+            for (const r of humanResults) {
+                humanDict[r.tissue.uberoncode] = humanDict[r.tissue.uberoncode] || []
+                humanDict[r.tissue.uberoncode].push(r)
+            }
+            for (const r of mouseResults) {
+                mouseDict[r.tissue.uberoncode] = mouseDict[r.tissue.uberoncode] || []
+                mouseDict[r.tissue.uberoncode].push(r)
+            }
+            console.log(mouseDict)
             if (!organ) {
-                organTerms = Object.keys(organTypes)
-                // get results for all organs
-                const allResults = await getIntegratedMaps()
-                // group by uberoncode
-                for (const r of allResults) {
-                    dict[r.tissue.uberoncode] = dict[r.tissue.uberoncode] || []
-                    dict[r.tissue.uberoncode].push(r)
-                }
+                // For the main integrated maps page display information for all organs
                 // an array of arrays
-                integratedMaps = Object.values(dict)
+                integratedMaps = [...Object.values(mouseDict), ...Object.values(humanDict)]
             } else {
-                organTerms = organ.codes.map((code) => organTypes[code])
-                // the promise returns an array of arrays
-                integratedMaps = await Promise.all(
-                    organTerms.map((term) => getIntegratedMapsForOrgan(term))
-                )
+                // For Organ specific page we need to pull out only specific organs
+                const organSpecificHuman = organ.codes.filter(organCode => humanDict.hasOwnProperty(organCode)).map(organCode => humanDict[organCode])
+                const organSpecificMouse = organ.codes.filter(organCode => mouseDict.hasOwnProperty(organCode)).map(organCode => mouseDict[organCode])
+
+                integratedMaps = [...organSpecificHuman, ...organSpecificMouse]
             }
 
             if (integratedMaps.some((map) => map === null)) {
@@ -123,6 +132,20 @@ function IntegratedMaps({id, title, organ, setShowIntegratedMapsSide = null}) {
             name: 'Assay Type',
             selector: (row) => row.assay.assayName,
             sortable: true
+        },
+        {
+            name: 'Source Type',
+            sortable: true,
+            selector: (row) => row.organism.organismName,
+            format: (row) => {
+                if (row.organism.organismName !== null) {
+                    return (
+                        <div style={{textTransform: "capitalize"}}>
+                            {row.organism.organismName}
+                        </div>
+                    )
+                }
+            }
         },
         {
             name: 'Raw Download',
