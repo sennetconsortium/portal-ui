@@ -1,6 +1,6 @@
 {
   "name": "portal-ui",
-  "version": "1.11.10",
+  "version": "1.11.11",
   "private": true,
   "description": "SenNet Data Portal",
   "packageManager": "pnpm@10.32.1",
