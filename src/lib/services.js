@@ -4,9 +4,9 @@ import {
     getAuth,
     getEntityEndPoint,
     getIngestEndPoint,
+    getIntegratedMappingEndPoint,
     getSearchEndPoint,
-    getUUIDEndpoint,
-    getIntegratedMappingEndPoint
+    getUUIDEndpoint
 } from "@/config/config";
 import {getCookie} from "cookies-next";
 import log from 'xac-loglevel'
@@ -770,9 +770,9 @@ export const getCellTypesByIds = async (ids) => {
             bool: {
                 filter: [
                     {
-                    terms: {
-                        "cl_id.keyword": ids
-                    }
+                        terms: {
+                            "cl_id.keyword": ids
+                        }
                     }
                 ]
             }
@@ -852,10 +852,10 @@ export const getDistinctDatasetsUnderCellTypes = async () => {
         },
         aggs: {
             unique_datasets: {
-            cardinality: {
-                field: "dataset.uuid.keyword",
-                precision_threshold: 40000
-            }
+                cardinality: {
+                    field: "dataset.uuid.keyword",
+                    precision_threshold: 40000
+                }
             }
         }
     }
@@ -875,7 +875,7 @@ export const getPrimaryDatasets = async (uuids) => {
         ],
         "query": {
             "terms": {
-            "uuid.keyword": uuids
+                "uuid.keyword": uuids
             }
         }
     }
@@ -886,7 +886,7 @@ export const getPrimaryDatasets = async (uuids) => {
     return content.hits.hits.map((hit) => {
         return {
             uuid: hit._source.uuid,
-            primary_datasets: hit._source.immediate_ancestors.map((ancestor) => ({ sennetId: ancestor.sennet_id }))
+            primary_datasets: hit._source.immediate_ancestors.map((ancestor) => ({sennetId: ancestor.sennet_id}))
         }
     });
 }
@@ -964,10 +964,24 @@ export const filterProperties = {
     }
 }
 
+export async function getIntegratedMapsForOrganism(organism) {
+    try {
+        const endpoint = getIntegratedMappingEndPoint() + `api/integrated_maps/organism/${organism}`
+        const res = await fetch(endpoint, {method: 'GET'});
+        if (res.status === 404) {
+            return []
+        }
+        return await res.json();
+    } catch (error) {
+        log.error(error);
+        return null;
+    }
+}
+
 export async function getIntegratedMapsForOrgan(organTerm) {
     try {
         const endpoint = getIntegratedMappingEndPoint() + `api/integrated_maps/tissue/${organTerm}`
-        const res = await fetch(endpoint, { method: 'GET' });
+        const res = await fetch(endpoint, {method: 'GET'});
         if (res.status === 404) {
             return []
         }
@@ -981,7 +995,7 @@ export async function getIntegratedMapsForOrgan(organTerm) {
 export async function getIntegratedMaps() {
     try {
         const endpoint = getIntegratedMappingEndPoint() + `api/integrated_maps`
-        const res = await fetch(endpoint, { method: 'GET' });
+        const res = await fetch(endpoint, {method: 'GET'});
         if (res.status === 404) {
             return []
         }
