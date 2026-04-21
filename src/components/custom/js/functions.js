@@ -1,5 +1,5 @@
-import { getAuth, getRootURL } from "@/config/config";
-import { APP_ROUTES } from "@/config/constants";
+import {getAuth, getRootURL} from "@/config/config";
+import {APP_ROUTES} from "@/config/constants";
 import log from 'xac-loglevel'
 import React from "react";
 import {getOrganByCode, organIcons} from "@/config/organs";
@@ -45,9 +45,11 @@ export async function fetchEntity(ancestorId, paramKey = 'uuid') {
 }
 
 export function getProtocolId(protocolUrl) {
-    // The ID is everything after "doi.org/"
-    const regex = new RegExp("(?<=doi.org/).*")
-    return regex.exec(protocolUrl)[0]
+    // The ID is everything after "doi.org/" and before a /{version}
+    const regex = /dx\.doi\.org\/([^\/]+\/[^\/]+)/
+    const match = protocolUrl.match(regex);
+
+    return match ? match[1] : null;
 }
 
 export function fetchDataCite(protocolUrl) {
@@ -79,7 +81,6 @@ export async function fetchProtocols(protocolUrl) {
     if (!protocolUrl) return null
 
     const response = await fetch("/api/protocol?uri=" + encodeURIComponent(protocolUrl));
-
     if (!response.ok) {
         return null
     }
@@ -135,13 +136,13 @@ export function getOrganHierarchy(term) {
             }
         }
         return window.UBKG_CACHE.organTypes[term]
-    } 
+    }
     return getNormalizedName(term)
 }
 
 export const percentage = (a, b, fixed = 2) => (a / b * 100).toFixed(fixed)
 
-export const formatNum = (num) => typeof num === 'number' ?  new Intl.NumberFormat().format(num) : 0
+export const formatNum = (num) => typeof num === 'number' ? new Intl.NumberFormat().format(num) : 0
 
 const normalizedNames = {
     true: "True",
@@ -276,7 +277,7 @@ export const getOrganMeta = (code) => {
     return {icon, organ}
 }
 
-export const getSubtypeProvenanceShape = (t, cat, sz='sm') => {
+export const getSubtypeProvenanceShape = (t, cat, sz = 'sm') => {
     if (!t) return <></>
     let s = 'circle'
     let c = 'pink'
@@ -323,7 +324,8 @@ export const getSubtypeProvenanceShape = (t, cat, sz='sm') => {
             }
 
     }
-    return <span className={`shape shape--${sz} ${c} shape--${s}`} title={title}><span className={'shape-name'}>{t}</span></span>
+    return <span className={`shape shape--${sz} ${c} shape--${s}`} title={title}><span
+        className={'shape-name'}>{t}</span></span>
 }
 
 export function getJobTypeColor(type) {
@@ -402,7 +404,7 @@ export function getStatusColor(status) {
 export const datasetIs = {
     processed: (creationAction) => creationAction.includes('Process'),
     component: (creationAction) => creationAction.includes('Multi-Assay Split'),
-    primary: (creationAction) => eq(creationAction,'create dataset activity')
+    primary: (creationAction) => eq(creationAction, 'create dataset activity')
 }
 
 export function getCreationActionRelationName(creationAction) {
@@ -516,10 +518,10 @@ Object.assign(String.prototype, {
         return this.replace(/\s(.)/g, function (a) {
             return a.toUpperCase();
         })
-        .replace(/\s/g, '')
-        .replace(/^(.)/, function (b) {
-            return b.toLowerCase();
-        });
+            .replace(/\s/g, '')
+            .replace(/^(.)/, function (b) {
+                return b.toLowerCase();
+            });
     },
     toDashedCase() {
         return this
@@ -536,32 +538,32 @@ Object.assign(String.prototype, {
         return (eq(typeof this, 'string') && !this.length)
     },
     camelCase(delimiter = '_') {
-        return this.split(delimiter).map((e,i) => i ? e.charAt(0).toUpperCase() + e.slice(1).toLowerCase() : e.toLowerCase()).join('')
+        return this.split(delimiter).map((e, i) => i ? e.charAt(0).toUpperCase() + e.slice(1).toLowerCase() : e.toLowerCase()).join('')
     }
 })
 
 Object.assign(Array.prototype, {
     sortOnProperty(key) {
         return this.sort((a, b) => {
-                let fa = a[key].toLowerCase(),
-                    fb = b[key].toLowerCase()
+            let fa = a[key].toLowerCase(),
+                fb = b[key].toLowerCase()
 
-                if (fa < fb) {
-                    return -1
-                }
-                if (fa > fb) {
-                    return 1
-                }
-                return 0
+            if (fa < fb) {
+                return -1
+            }
+            if (fa > fb) {
+                return 1
+            }
+            return 0
         })
     },
     contains(needle, insensitive = true) {
         return this.some((i) => eq(i, needle, insensitive))
     },
     mapKeys(fn) {
-        const mapped = this.map(([k,v]) => ({ [fn(k)] : v}) )
+        const mapped = this.map(([k, v]) => ({[fn(k)]: v}))
         let result = {}
-        for(let m of mapped) {
+        for (let m of mapped) {
             result = Object.assign(result, m)
         }
         return result
@@ -585,7 +587,7 @@ export const matchArrayOrder = (ordering, data, key1 = 'name', key2 = 'id') => {
     let val
     let result = []
     if (Array.isArray(data)) {
-        for (let i=0; i < data.length; i++) {
+        for (let i = 0; i < data.length; i++) {
             val = eq(typeof data[i][key1], 'string') ? data[i][key1] : data[i][key2]
             map[val] = i
         }
@@ -632,9 +634,9 @@ export const THEME = {
     },
     randomColor: () => {
         let hexTab = "5553336789ABCDE0";
-        let r1 = hexTab[ Math.floor( Math.random() * 16) ];
-        let g1 = hexTab[ Math.floor( Math.random() * 16) ];
-        let b1 = hexTab[ Math.floor( Math.random() * 16) ];
+        let r1 = hexTab[Math.floor(Math.random() * 16)];
+        let g1 = hexTab[Math.floor(Math.random() * 16)];
+        let b1 = hexTab[Math.floor(Math.random() * 16)];
         let color = "#" + r1 + g1 + b1
         const {r, g, b} = THEME.getRGB(color)
         return {color, light: THEME.isLightColor(color), r, g, b};
@@ -686,7 +688,7 @@ export const extractSourceMappedMetadataInfo = (sourceMappedMetadata) => {
  * @param {number} [size] - The number of results to return per page
  * @returns {string} - The url encodes query string
  */
-export const searchUIQueryString = (filters, size=20) => {
+export const searchUIQueryString = (filters, size = 20) => {
     const segments = filters.map((filter, idx) => {
         let segment = encodeURIComponent(`filters[${idx}][field]`) + `=${filter.field}&`
         segment += filter.values
