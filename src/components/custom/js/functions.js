@@ -214,6 +214,10 @@ export function getStatusDefinition(status) {
                 msg =
                     <span>The data has been successfully processed via the ingest pipeline and is awaiting data provider curation.</span>
                 break;
+            case 'APPROVAL':
+                msg =
+                    <span>The data is out for approval at the Data Provider</span>
+                break;
             case 'ERROR':
                 msg = <span>An error occurred during processing via the ingest pipeline.</span>
                 break;
@@ -367,6 +371,7 @@ export function getStatusColor(status) {
                 badge_class = "badge-danger";
                 break;
             case "QA":
+            case "APPROVAL":
             case "REORGANIZED":
             case "SUBMITTED":
                 badge_class = "badge-info";

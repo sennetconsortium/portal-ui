@@ -5,7 +5,7 @@ import {Button, Form} from 'react-bootstrap'
 import {getStatusColor} from "../../js/functions";
 
 export const supportedReverStatuses = () => {
-    const statuses = ['New', 'Valid', 'Invalid', 'QA', 'Submitted', 'Incomplete']
+    const statuses = ['New', 'Valid', 'Invalid', 'QA', 'Approval', 'Submitted', 'Incomplete']
     return {
         Upload: statuses,
         Dataset: statuses
