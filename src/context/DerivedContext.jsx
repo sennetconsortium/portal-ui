@@ -111,7 +111,7 @@ export const DerivedProvider = ({children, showVitessceList, setShowVitessceList
     })
 
     const isDatasetStatusPassed = data => {
-        let allowableStatuses = ['QA', 'Published']
+        let allowableStatuses = ['QA', 'Approval', 'Published']
         if (!isLoggedIn()) {
             allowableStatuses = ['Published']
         }
