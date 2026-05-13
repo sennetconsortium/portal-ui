@@ -28,8 +28,8 @@ jobs:
 
       - name: Set AWS Log Group
         run: |
-          export PORTAL_UI_CLOUDWATCH_LOG_GROUP="/aws/ec2/sennet-dev/portal-ui/next-server"
-          echo "PORTAL_UI_CLOUDWATCH_LOG_GROUP=PORTAL_UI_CLOUDWATCH_LOG_GROUP" >> $GITHUB_ENV
+          export PORTAL_UI_CLOUDWATCH_LOG_GROUP="/aws/ec2/sennet-dev/senotype-library/next-server"
+          echo "PORTAL_UI_CLOUDWATCH_LOG_GROUP=$PORTAL_UI_CLOUDWATCH_LOG_GROUP" >> $GITHUB_ENV
 
       - name: Make build script executable
         run: chmod +x ./docker-development.sh
