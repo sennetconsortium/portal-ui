@@ -63,7 +63,7 @@ function SearchEntities() {
         }
 
         return (
-            <SearchProvider config={SEARCH_ENTITIES}>
+            
             <>
                 <Header title={APP_TITLE}/>
 
@@ -126,7 +126,7 @@ function SearchEntities() {
 
                 <AppFooter/>
             </>
-            </SearchProvider>
+          
         )
     }
 }
