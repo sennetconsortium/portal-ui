@@ -39,7 +39,6 @@ function ResultsBlock({getTableColumns, onCheckboxChange, disableRowClick, table
         inModal,
         rows,
         handleSort,
-        setResultsPerPage,
         currentColumns,
         filters,
         handleRowsPerPageChange,
@@ -52,6 +51,7 @@ function ResultsBlock({getTableColumns, onCheckboxChange, disableRowClick, table
         pageSize,
         pageNumber,
         raw,
+        resultsPerPage
     } = useContext(TableResultsContext)
 
     useEffect(() => {
@@ -81,7 +81,7 @@ function ResultsBlock({getTableColumns, onCheckboxChange, disableRowClick, table
                                         currentColumns={currentColumns.current} />}
                         <ResultsPerPage updateTablePagination={updateTablePagination}
                                         resultsPerPage={pageSize}
-                                        setResultsPerPage={setResultsPerPage}
+                                        setResultsPerPage={handleRowsPerPageChange}
                                         totalRows={paginationTotalRows}  />
                     </div>
                 </div>
@@ -89,6 +89,7 @@ function ResultsBlock({getTableColumns, onCheckboxChange, disableRowClick, table
 
 
             {<DataTable
+                        key={resultsPerPage}
                         onColumnOrderChange={cols => {
                             currentColumns.current.current = cols
                             const headers = cols.map((col) => eq(typeof col.name, 'string') ? col.name : col.id)
@@ -107,7 +108,7 @@ function ResultsBlock({getTableColumns, onCheckboxChange, disableRowClick, table
                         onChangePage={handlePageChange}
                         onChangeRowsPerPage={handleRowsPerPageChange}
                         onRowClicked={!disableRowClick ? handleOnRowClicked : undefined}
-                        paginationPerPage={pageSize}
+                        paginationPerPage={resultsPerPage}
                         paginationRowsPerPageOptions={Object.keys(opsDict)}
                         pagination
                         paginationServer
