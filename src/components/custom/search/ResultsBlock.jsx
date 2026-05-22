@@ -39,7 +39,6 @@ function ResultsBlock({getTableColumns, onCheckboxChange, disableRowClick, table
         inModal,
         rows,
         handleSort,
-        setResultsPerPage,
         currentColumns,
         filters,
         handleRowsPerPageChange,
