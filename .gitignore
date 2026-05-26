@@ -35,6 +35,7 @@ src/out
 
 # misc
 .DS_Store
+notes/
 
 # debug
 npm-debug.log*
