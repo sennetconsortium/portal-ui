@@ -457,3 +457,16 @@
   }
   }
 }
+
+.sui-megaFacet {
+  &--d0 {
+    width: 100%;
+    .sui-multi-checkbox-facet__option-input-wrapper {
+      width: 100%;
+    }
+  }
+
+  &--d1 {
+    width: 94%;
+  }
+}
