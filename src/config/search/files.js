@@ -1,6 +1,6 @@
 import SearchAPIConnector from 'search-ui/packages/search-api-connector';
 import {
-    doesAggregationHaveBuckets, doesTermFilterContainValues,
+    doesAggregationHaveBuckets,
     getAuth,
     getFilesIndex,
     getSearchEndPoint,
@@ -138,12 +138,14 @@ export const SEARCH_FILES = {
             'organs.label': {
                 label: 'Organ',
                 type: 'value',
-                field: 'organs.label.keyword',
                 isExpanded: false,
                 filterType: 'any',
                 isFilterable: false,
-                facetType: 'hierarchy',
-                groupByField: 'organs.hierarchy.keyword',
+                facetType: 'megahierarchy',
+                hierarchyFields: [
+                    'organs.hierarchy.keyword',
+                    'organs.label.keyword',
+                ],
                 isAggregationActive: true,
                 isFacetVisible: doesAggregationHaveBuckets('organs.label')
             },
@@ -161,12 +163,14 @@ export const SEARCH_FILES = {
             dataset_type: {
                 label: 'Dataset Type',
                 type: 'value',
-                field: 'dataset_type_hierarchy.second_level.keyword',
                 isExpanded: false,
                 filterType: 'any',
                 isFilterable: false,
-                facetType: 'hierarchy',
-                groupByField: 'dataset_type_hierarchy.first_level.keyword',
+                facetType: 'megahierarchy',
+                hierarchyFields: [
+                    'dataset_type_hierarchy.first_level.keyword',
+                    'dataset_type_hierarchy.second_level.keyword',
+                ],
                 isAggregationActive: true,
                 isFacetVisible: doesAggregationHaveBuckets('dataset_type')
             },
