@@ -51,7 +51,7 @@
     "search-ui": "workspace:*",
     "sweetalert2": "^11.26.23",
     "vitessce": "^3.9.5",
-    "xac-loglevel": "github:x-atlas-consortia/xac-loglevel#1.0.2",
+    "xac-loglevel": "github:x-atlas-consortia/xac-loglevel#1.0.3",
     "xac-sankey": "github:x-atlas-consortia/data-sankey#1.0.19"
   },
   "devDependencies": {
