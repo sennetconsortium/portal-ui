@@ -177,7 +177,7 @@ function ProtocolsWorkflow({data}) {
                         </span>
                 }
                 {workflow?.workflow_version && <h2 className={'fs-6'}>Workflow {workflow?.workflow_version}</h2>}
-                <p>{workflow?.workflow_description}</p>
+                <p dangerouslySetInnerHTML={{__html: markdown.default(workflow?.workflow_description)}}></p>
                 <DataTable
                     columns={columns()}
                     data={tableData}

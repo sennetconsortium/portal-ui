@@ -23,6 +23,9 @@ export default function Document() {
             <script defer src="/js/jquery-3.7.1.min.js"
 
                     crossOrigin="anonymous"></script>
+            <script defer src="/js/markdown.min.js"
+
+                    crossOrigin="anonymous"></script>
             <script defer src="https://code.jquery.com/ui/1.14.1/jquery-ui.js" crossOrigin="anonymous"></script>
             <script defer src="/js/main-plugins.js"
                     crossOrigin="anonymous"></script>
