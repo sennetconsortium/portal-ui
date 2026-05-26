@@ -126,8 +126,8 @@ export const SEARCH_ENTITIES = {
                 isFilterable: false,
                 facetType: 'megahierarchy',
                 hierarchyFields: [
-                    'new_dataset_type_hierarchy.analyte.keyword',
                     'new_dataset_type_hierarchy.dataset_type.keyword',
+                    'new_dataset_type_hierarchy.analyte.keyword',
                     'new_dataset_type_hierarchy.modality.keyword',
                 ],
                 isAggregationActive: true,
