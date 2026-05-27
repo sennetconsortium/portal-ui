@@ -65,6 +65,7 @@ function Metadata({data, metadata, mappedMetadata, groups}) {
         }
         for (let e of data?.descendants) {
             if (eq(e.entity_type, cache.entities.dataset) && datasetIs.component(e.creation_action || '')) {
+                e['isDescendant'] = true
                 list.push(e)
             }
         }
@@ -110,7 +111,7 @@ function Metadata({data, metadata, mappedMetadata, groups}) {
     const popoverCommon = (index, entity, data) => {
         return (
             <SenNetPopover key={`sennet-popover-${entity}-${index}`} className={`${index}-${entity}-metadata`}
-                           text={<>View the metadata for the ancestor <code>{cache.entities[entity]}</code> of this
+                           text={<>View the metadata for the {data?.isDescendant ? "descendant": "ancestor"} <code>{cache.entities[entity]}</code> of this
                                entity.</>}>
                 <Nav.Item className='p-0'>
                     <Nav.Link
