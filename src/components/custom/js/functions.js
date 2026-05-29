@@ -44,6 +44,7 @@ export async function fetchEntity(ancestorId, paramKey = 'uuid') {
     }
 }
 
+// Used for displaying/redirecting Datasets DOIs we create and Sample/Source protocol DOIs provided to us
 export function getProtocolId(protocolUrl) {
     // The ID is everything after "doi.org/" and before a /{version}
     const regex = /doi\.org\/([^\/]+\/[^\/]+)/
