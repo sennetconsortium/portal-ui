@@ -269,7 +269,7 @@ export default function EditPublication() {
                                     {/*Ancestor IDs*/}
                                     {/*editMode is only set when page is ready to load */}
                                     {editMode &&
-                                        <AncestorIds data={data} values={values} ancestors={ancestors} onChange={onChange}
+                                        <AncestorIds data={data} values={values} ancestors={ancestors} onChange={onChange} isEditMode={isEditMode}
                                                      fetchAncestors={fetchAncestors} deleteAncestor={deleteAncestor}/>
                                     }
 
