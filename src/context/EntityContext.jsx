@@ -43,6 +43,7 @@ export const EntityProvider = ({ children }) => {
 
     const entityForm = useRef(null)
     const [disabled, setDisabled] = useState(true)
+    const [imageDisabled, setImageDisabled] = useState(false)
 
     const [response, setResponse] = useState()
     const [warningClasses, setWarningClasses] = useState({})
@@ -156,13 +157,15 @@ export const EntityProvider = ({ children }) => {
         }
     }
 
+    
     useEffect(() => {
-        if (data !== null && isEditMode()) {
-            setDisabled(isPublic())
-            const el = document.getElementById('__next')
-            log.debug('useEffect observable', el)
-            observePage(el, observeForm)
-        }
+       if (data !== null && isEditMode()) {
+           setDisabled(isPublic())
+           setImageDisabled(isPublic())
+           const el = document.getElementById('__next')
+           log.debug('useEffect observable', el)
+           observePage(el, observeForm)
+       }
     }, [data, editMode])
 
 
@@ -443,7 +446,7 @@ export const EntityProvider = ({ children }) => {
                 getEntityConstraints, getSampleEntityConstraints, buildConstraint,
                 getMetadataNote, successIcon, errIcon, checkProtocolUrl,
                 warningClasses, setWarningClasses, getCancelBtn, setModalProps, handleValidate,
-                isAdminOrHasValue, getAssignedToGroupNames, entityForm, disabled, setDisabled, disableElements,
+                isAdminOrHasValue, getAssignedToGroupNames, entityForm, disabled, setDisabled, disableElements, imageDisabled,
                 contactsTSV, contacts, setContacts, contributors, setContributors, setContactsAttributes, setContactsAttributesOnFail
             }}
         >

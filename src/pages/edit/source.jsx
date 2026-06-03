@@ -36,7 +36,7 @@ function EditSource() {
         showModal,
         selectedUserWriteGroupUuid,
         disableSubmit, setDisableSubmit,
-        entityForm, disabled, disableElements,
+        entityForm, disabled, imageDisabled,
         getMetadataNote, checkProtocolUrl,
         warningClasses, getCancelBtn
     } = useContext(EntityContext)
@@ -285,7 +285,7 @@ function EditSource() {
                                                  text='Upload de-identified images only'/>
 
                                     {/* Images */}
-                                    <ImageSelector isDisabled={disabled} editMode={editMode}
+                                    <ImageSelector isDisabled={imageDisabled} editMode={editMode}
                                                    values={values}
                                                    setValues={setValues}
                                                    imageByteArray={imageByteArray}
