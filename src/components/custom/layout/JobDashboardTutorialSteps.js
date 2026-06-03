@@ -45,7 +45,7 @@ function JobDashboardTutorialSteps({getVariant, data}) {
             disableBeacon: true,
             popover: {
                 title: "Job Actions",
-                description: `<div>Depending on the status of a particular job, different actions can be taken via` +
+                description: `<div>Depending on the status of a particular job, different actions can be taken via ` +
                     `the <em>Action</em> column in the jobs table. These actions include` +
                     `${actionUI('Register')} ${actionUI('Resubmit')} ${actionUI('Cancel')} and ${actionUI('Delete')}.` +
                     `<div class='mt-4 list-group'>` +
