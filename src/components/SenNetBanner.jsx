@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react'
+import React, {useContext, useEffect, useState, useEffectEvent} from 'react'
 import PropTypes from 'prop-types'
 import {STORAGE_KEY} from "@/config/config"
 import {Alert} from 'react-bootstrap'
@@ -20,14 +20,18 @@ function SenNetBanner({name = 'login'}) {
             }
         }
     }
-
-    useEffect(() => {
+    
+    const updateBanners = useEffectEvent(() =>{
         let _banner = banners[name] || banners.default
-        _banner = $.extend((banners.default || {}), _banner)
+        _banner = $.extend(banners.default || {}, _banner)
         setBanner(_banner)
         if (_banner?.keepDismissed && localStorage.getItem(STORE_KEY)) {
             setDismissed(true)
         }
+    })
+
+    useEffect(() => {
+        updateBanners()
     }, [banners])
 
     return (

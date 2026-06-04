@@ -1,4 +1,4 @@
-import React, {createContext, useEffect, useState, useContext, useRef} from 'react'
+import React, {createContext, useEffect, useState, useContext, useRef, useEffectEvent} from 'react'
 import { useRouter } from 'next/router'
 import {
     getAuthJsonHeaders,
@@ -157,15 +157,19 @@ export const EntityProvider = ({ children }) => {
         }
     }
 
+    const updateBaseOnMode = useEffectEvent(() => {
+        if (data !== null && isEditMode()) {
+            setDisabled(isPublic())
+            setImageDisabled(isPublic())
+            const el = document.getElementById('__next')
+            log.debug('useEffect observable', el)
+            observePage(el, observeForm)
+        }
+    })
+
     
     useEffect(() => {
-       if (data !== null && isEditMode()) {
-           setDisabled(isPublic())
-           setImageDisabled(isPublic())
-           const el = document.getElementById('__next')
-           log.debug('useEffect observable', el)
-           observePage(el, observeForm)
-       }
+       updateBaseOnMode()
     }, [data, editMode])
 
 
