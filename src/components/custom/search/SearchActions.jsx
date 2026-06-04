@@ -438,7 +438,7 @@ function SearchActions({
                             
                         <span>Compare Datasets &nbsp;</span>
                             <SenNetPopover
-                            text={<span>Select up to 4 datasets of the same <code>Dataset Type</code> to compare the visualizations. You must have <code>Dataset</code> from the Entity Type facet and <code>True</code> from Has Spatial Information facet selected to enable this option.</span>}>
+                            text={<span>Select up to 4 datasets of the same <code>Dataset Type</code> to compare the visualizations. You must have <code>Dataset</code> from the <i>Entity Type</i> facet and <code>True</code> from <i>Has Visualization</i> facet selected to enable this option.</span>}>
                             <i className="bi bi-question-circle-fill"></i>
                         </SenNetPopover>
                         </ListItemText>
