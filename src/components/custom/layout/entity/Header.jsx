@@ -1,6 +1,7 @@
 import React, {useContext, useEffect, useState} from 'react'
 import {Col, Container, Row} from 'react-bootstrap'
-import AppContext from '../../../../context/AppContext'
+import AppContext from '@/context/AppContext'
+import EntityContext from '@/context/EntityContext'
 import HipaaModal from "../../edit/sample/HipaaModal";
 import {getStatusColor, getStatusDefinition} from "../../js/functions";
 import ClipboardCopy from "../../../ClipboardCopy";
@@ -8,8 +9,9 @@ import SenNetAlert from "../../../SenNetAlert";
 import SenNetPopover from "../../../SenNetPopover";
 import {fetchPipelineMessages} from "@/lib/services";
 
-function EntityHeader({entity, data, isEditMode, values, showGroup = true, adminGroup}) {
-    const {_t, getGroupName} = useContext(AppContext)
+function EntityHeader({entity, data, values, showGroup = true}) {
+    const { _t, getGroupName, adminGroup } = useContext(AppContext)
+    const { isEditMode } = useContext(EntityContext)
     const [pipelineMessage, setPipelineMessage] = useState(null)
 
 
@@ -29,7 +31,7 @@ function EntityHeader({entity, data, isEditMode, values, showGroup = true, admin
     return (
         <Container className="px-0" fluid={true}>
             <Row md={12}>
-                <h4>{isEditMode ? 'Edit' : 'Register'} {entity} {values && values.status &&
+                <h4>{isEditMode() ? 'Edit' : 'Register'} {entity} {values && values.status &&
                     <span className={`${getStatusColor(values.status)} badge`}><SenNetPopover placement={'bottom'}
                                                                                               text={getStatusDefinition(values.status)}
                                                                                               className={'status-info'}>{values.status}</SenNetPopover></span>}</h4>
@@ -41,7 +43,7 @@ function EntityHeader({entity, data, isEditMode, values, showGroup = true, admin
                              icon={<i className="bi bi-exclamation-triangle-fill"></i>}
                 />
             }
-            {isEditMode &&
+            {isEditMode() &&
                 <>
                     <Row>
                         <Col md={6}><h5>{_t('SenNet ID')}: {data.sennet_id}<ClipboardCopy text={data.sennet_id}/></h5>

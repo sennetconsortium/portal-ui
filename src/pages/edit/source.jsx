@@ -222,7 +222,7 @@ function EditSource() {
                     <div className="no_sidebar">
                         <Layout
                             bodyHeader={
-                                <EntityHeader entity={cache.entities.source} isEditMode={isEditMode()} data={data}/>
+                                <EntityHeader entity={cache.entities.source} data={data}/>
                             }
                             bodyContent={
                                 <Form noValidate validated={validated} onSubmit={handleSave} id={"source-form"} ref={entityForm}>

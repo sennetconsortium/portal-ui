@@ -234,10 +234,8 @@ export default function EditCollection({ collectionType = 'Collection', entities
                             bodyHeader={
                                 <EntityHeader
                                     entity={collectionType}
-                                    isEditMode={isEditMode()}
                                     data={data}
                                     values={values}
-                                    adminGroup={adminGroup}
                                 />
                             }
                             bodyContent={

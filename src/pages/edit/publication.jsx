@@ -195,7 +195,7 @@ export default function EditPublication() {
                     values['group_uuid'] = selectedUserWriteGroupUuid || userWriteGroups[0]?.uuid
                 }
 
-                if (isEditMode) {
+                if (isEditMode()) {
                     delete values['dataset_type']
                 }
 
@@ -250,7 +250,6 @@ export default function EditPublication() {
                             bodyHeader={
                                 <EntityHeader
                                     entity={cache.entities.publication}
-                                    isEditMode={isEditMode()}
                                     data={data}
                                     values={values}
                                     showGroup={false}
