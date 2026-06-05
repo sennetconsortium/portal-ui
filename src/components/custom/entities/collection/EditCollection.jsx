@@ -21,7 +21,7 @@ const DataTable = dynamic(() => import('react-data-table-component'), {
 });
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 
-const AncestorsIdBulkButton = dynamic(() => import('@/components/custom/edit/dataset/AncestorsIdBulkButton'))
+const AncestorIdsBulkButton = dynamic(() => import('@/components/custom/edit/dataset/AncestorIdsBulkButton'))
 const AppFooter = dynamic(() => import("@/components/custom/layout/AppFooter"))
 const AppNavbar = dynamic(() => import("@/components/custom/layout/AppNavbar"))
 const EntityHeader = dynamic(() => import('@/components/custom/layout/entity/Header'))
@@ -261,15 +261,13 @@ export default function EditCollection({ collectionType = 'Collection', entities
                                     )}
 
                                     {/*Linked Datasets*/}
-                                    <AncestorsIdBulkButton
+                                    <AncestorIdsBulkButton
                                         setAncestors={setAncestors}
                                         data={data}
                                         values={values}
                                         ancestors={ancestors}
                                         onChange={onChange}
                                     />
-
-                                    
 
                                     {/*/!*Lab Name or ID*!/*/}
                                     <EntityFormGroup

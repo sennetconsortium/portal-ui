@@ -6,7 +6,7 @@ import log from 'xac-loglevel'
 import _ from 'lodash';
 import { fetchEntity, getIdRegEx } from '@/components/custom/js/functions'
 import AppContext from '@/context/AppContext'
-import EntityContext, { EntityProvider } from "@/context/EntityContext";
+import EntityContext from "@/context/EntityContext";
 import $ from 'jquery';
 import SenNetPopover, { SenPopoverOptions } from "@/components/SenNetPopover"
 
@@ -16,7 +16,8 @@ import { SpinnerEl } from "@/components/custom/Spinner";
 
 const AncestorIds = dynamic(() => import('@/components/custom/edit/dataset/AncestorIds'))
 
-export default function AncestorsIdBulkButton({
+export default function AncestorIdsBulkButton({
+    data,
     values,
     setAncestors,
     ancestors,
@@ -27,15 +28,8 @@ export default function AncestorsIdBulkButton({
     entitiesTableLabel = 'Entities',
     entitiesButtonLabel = 'entity'
 }) {
-    const {
-        setError,
-        setErrorMessage,
-        isEditMode
-    } = useContext(EntityContext)
-    const {
-        _t,
-        cache,
-    } = useContext(AppContext)
+    const { setError, setErrorMessage, isEditMode } = useContext(EntityContext)
+    const { _t, cache } = useContext(AppContext)
     const router = useRouter()
     const [bulkAddField, setBulkAddField] = useState(false)
     const isBulkHandling = useRef(false)
@@ -130,8 +124,6 @@ export default function AncestorsIdBulkButton({
         setAncestors(updatedEntities)
         log.debug(updatedEntities)
     }
-
-
 
     const showBulkAdd = () => {
         setBulkAddBtnTooltip(
@@ -260,6 +252,7 @@ export default function AncestorsIdBulkButton({
     return (
         <>
             <AncestorIds
+                data={data}
                 controlId={controlId}
                 otherWithAdd={
                     <>
@@ -372,7 +365,6 @@ export default function AncestorsIdBulkButton({
                         )}
                     </>
                 }
-                isEditMode={isEditMode}
                 formLabel={entitiesButtonLabel}
                 formLabelPlural={entitiesTableLabel}
                 values={values}

@@ -15,7 +15,7 @@ import GroupSelect from "@/components/custom/edit/GroupSelect";
 import {valid_dataset_ancestor_config, getIngestEndPoint} from "@/config/config";
 import DatasetSubmissionButton from "@/components/custom/edit/dataset/DatasetSubmissionButton";
 
-const AncestorsIdBulkButton = dynamic(() => import('@/components/custom/edit/dataset/AncestorsIdBulkButton'))
+const AncestorIdsBulkButton = dynamic(() => import('@/components/custom/edit/dataset/AncestorIdsBulkButton'))
 const AppFooter = dynamic(() => import("@/components/custom/layout/AppFooter"))
 const AppNavbar = dynamic(() => import("@/components/custom/layout/AppNavbar"))
 const EntityHeader = dynamic(() => import('@/components/custom/layout/entity/Header'))
@@ -274,7 +274,7 @@ export default function EditPublication() {
                                     {/*Ancestor IDs*/}
                                     {/*editMode is only set when page is ready to load */}
                                     {editMode && (
-                                        <AncestorsIdBulkButton
+                                        <AncestorIdsBulkButton
                                             bulkSupportedEntities={[
                                                 cache.entities.dataset
                                             ]}

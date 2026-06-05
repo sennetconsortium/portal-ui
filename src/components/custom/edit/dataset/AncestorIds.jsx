@@ -2,7 +2,7 @@ import React, {useContext, useState} from 'react';
 import {Form} from 'react-bootstrap';
 import InputGroup from 'react-bootstrap/InputGroup';
 import Button from 'react-bootstrap/Button';
-
+import EntityContext from '@/context/EntityContext'
 import AncestorsTable from './AncestorsTable';
 import $ from 'jquery';
 import SenNetPopover from '@/components/SenNetPopover';
@@ -10,9 +10,11 @@ import SenNetPopover from '@/components/SenNetPopover';
 import AncestorsModal from "@/components/custom/edit/dataset/AncestorsModal";
 import { Skeleton } from '@mui/material';
 
-export default function AncestorIds({values, onChange, fetchAncestors, deleteAncestor, ancestors, otherWithAdd, onShowModal, formLabelPlural, isEditMode,
+export default function AncestorIds({values, onChange, fetchAncestors, deleteAncestor, ancestors, otherWithAdd, onShowModal, formLabelPlural,
                                         formLabel = 'ancestor', controlId = 'direct_ancestor_uuids',  disableDelete, addButtonDisabled, data}) {
     const [showHideModal, setShowHideModal] = useState(false)
+
+    const { isEditMode } = useContext(EntityContext)
 
 
     const handleSearchFormSubmit = (event, onSubmit) => {
