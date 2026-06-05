@@ -67,7 +67,7 @@ export default function AncestorIdsBulkButton({
                     setBulkPopover(true)
                     errMsgs = (
                         <>
-                            {errMsgs} <br />
+                            {errMsgs} {errMsgs && <br />}
                             {entity['error']}
                         </>
                     )
