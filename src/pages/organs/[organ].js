@@ -41,17 +41,6 @@ const Organ = () => {
                             className='collapse collapse-horizontal sticky-top custom-sticky'
                         >
                             <ul id='sidebar-nav' className='nav list-group rounded-1 text-sm-start'>
-                                {organDetail.hraSupported && (
-                                    <li className='nav-item'>
-                                        <a
-                                            href='#HumanReferenceAtlas'
-                                            className='nav-link'
-                                            data-bs-parent='#sidebar'
-                                        >
-                                            Human Reference Atlas
-                                        </a>
-                                    </li>
-                                )}
                                 {showCellTypesSide &&
                                     <li className='nav-item'>
                                         <a
@@ -92,6 +81,17 @@ const Organ = () => {
                                         Samples
                                     </a>
                                 </li>
+                                {organDetail.hraSupported && (
+                                    <li className='nav-item'>
+                                        <a
+                                            href='#HumanReferenceAtlas'
+                                            className='nav-link'
+                                            data-bs-parent='#sidebar'
+                                        >
+                                            Human Reference Atlas
+                                        </a>
+                                    </li>
+                                )}
                             </ul>
                         </div>
                     </div>
@@ -101,11 +101,6 @@ const Organ = () => {
 
                         {/* Title and badges */}
                         <OrganViewHeader organ={organDetail}/>
-
-                        {/* Human Reference Atlas */}
-                        {organDetail.hraSupported && (
-                            <HumanReferenceAtlas id='HumanReferenceAtlas' organ={organDetail}/>
-                        )}
 
                         {/* Cell Types */}
                         <CellTypes organ={organDetail} setShowCellTypesSide={setShowCellTypesSide}/>
@@ -124,6 +119,11 @@ const Organ = () => {
 
                         {/* Sample */}
                         <Samples id='Samples' organ={organDetail}/>
+
+                        {/* Human Reference Atlas */}
+                        {organDetail.hraSupported && (
+                            <HumanReferenceAtlas id='HumanReferenceAtlas' organ={organDetail}/>
+                        )}
                     </main>
                 </div>
             </div>
