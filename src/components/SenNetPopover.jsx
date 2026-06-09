@@ -79,7 +79,10 @@ SenNetPopover.propTypes = {
     children: PropTypes.node,
     placement: PropTypes.string,
     className: PropTypes.string,
-    trigger: PropTypes.any,
+    text: PropTypes.string,
+    onTooltipToggle: PropTypes.function,
+    show: PropTypes.bool,
+    trigger: PropTypes.any
 }
 
 export default SenNetPopover

@@ -1,3 +1,5 @@
+import React from 'react';
+import PropTypes from 'prop-types';
 import { getCellTypesIndex } from '@/config/config'
 import { getOrganByCode } from '@/config/organs'
 import { VisualizationsProvider } from '@/context/VisualizationsContext'
@@ -100,4 +102,9 @@ export default function CellTypeDistribution({ clId }) {
             
         </VisualizationsProvider>
     )
+}
+
+CellTypeDistribution.propTypes = {
+    children: PropTypes.node,
+    clId: PropTypes.string
 }

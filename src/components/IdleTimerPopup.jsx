@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useIdleTimer } from 'react-idle-timer'
 import AppModal from "./AppModal";
 import WarningAmberIcon from '@mui/icons-material/WarningAmber';

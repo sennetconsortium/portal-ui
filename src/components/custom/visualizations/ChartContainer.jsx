@@ -1,3 +1,4 @@
+import PropTypes from "prop-types"
 import React, { memo } from 'react'
 import Bar from './charts/Bar'
 import OverlapBar from './charts/OverlapBar'
@@ -32,6 +33,13 @@ const ChartContainer = memo(({children, containerClassName, ...otherProps}) => {
       {children}
     </div>
   )
-})
+});
+
+ChartContainer.propTypes = {
+  children: PropTypes.any,
+  containerClassName: PropTypes.string
+}
+
+ChartContainer.displayName = 'ChartContainer';
 
 export default ChartContainer

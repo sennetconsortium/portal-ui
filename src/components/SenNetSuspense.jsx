@@ -1,3 +1,4 @@
+import React from 'react';
 import PropTypes from 'prop-types'
 import LoadingAccordion from "@/components/custom/layout/LoadingAccordion";
 import { Skeleton } from '@mui/material';
@@ -17,7 +18,12 @@ function SenNetSuspense({children, showChildren,  suspenseElements, id, title, s
 }
 
 SenNetSuspense.propTypes = {
-    children: PropTypes.node
+    children: PropTypes.node,
+    showChildren: PropTypes.bool,
+    suspenseElements: PropTypes.node,
+    id: PropTypes.string,
+    title: PropTypes.string,
+    style: PropTypes.object
 }
 
 export default SenNetSuspense

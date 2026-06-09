@@ -1,3 +1,4 @@
+import PropTypes from "prop-types"
 import React, {useContext, useState} from 'react';
 import {Form} from 'react-bootstrap';
 import InputGroup from 'react-bootstrap/InputGroup';
@@ -89,4 +90,24 @@ export default function AncestorIds({values, onChange, fetchAncestors, deleteAnc
             <AncestorsModal data={data} hideModal={hideModal} changeAncestor={changeAncestor} showHideModal={showHideModal} handleSearchFormSubmit={handleSearchFormSubmit} />
         </>
     )
+}
+
+AncestorIds.propTypes = {
+  addButtonDisabled: PropTypes.any,
+  ancestors: PropTypes.shape({
+    length: PropTypes.number
+  }),
+  controlId: PropTypes.string,
+  data: PropTypes.any,
+  deleteAncestor: PropTypes.any,
+  disableDelete: PropTypes.any,
+  fetchAncestors: PropTypes.func,
+  formLabel: PropTypes.string,
+  formLabelPlural: PropTypes.shape({
+    upperCaseFirst: PropTypes.func
+  }),
+  onChange: PropTypes.func,
+  onShowModal: PropTypes.func,
+  otherWithAdd: PropTypes.any,
+  values: PropTypes.any
 }

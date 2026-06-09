@@ -1,7 +1,13 @@
+import React from 'react';
 import PropTypes from 'prop-types'
 
 export function SpinnerEl({className = '', variant = 'ic'}) {
     return (<span className={`spinner spinner-border ${variant} alert alert-info ${className}`}></span>)
+}
+
+SpinnerEl.propTypes = {
+  className: PropTypes.string,
+  variant: PropTypes.string
 }
 
 function Spinner({text = <span>Loading, please wait...</span> }) {

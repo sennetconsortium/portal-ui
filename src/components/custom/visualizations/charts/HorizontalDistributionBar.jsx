@@ -1,3 +1,4 @@
+import PropTypes from "prop-types"
 import React from 'react'
 import * as d3 from 'd3';
 import { useContext, useEffect, useRef } from 'react'
@@ -199,6 +200,18 @@ function HorizontalDistributionBar({
     return (
         <div className={`c-visualizations__chart c-visualizations__horizontalDistributionBar c-bar ${style.className || ''}`} id={`c-visualizations__horizontalDistributionBar--${chartId}`}></div>
     )
+}
+
+HorizontalDistributionBar.propTypes = {
+  chartId: PropTypes.string,
+  data: PropTypes.array,
+  filters: PropTypes.any,
+  reload: PropTypes.bool,
+  setLegend: PropTypes.func,
+  style: PropTypes.object,
+  subGroupLabels: PropTypes.object,
+  xAxis: PropTypes.object,
+  yAxis: PropTypes.object
 }
 
 export default HorizontalDistributionBar

@@ -130,9 +130,9 @@ function TableResultsFiles({children, onRowClicked, filters, forData = false, ro
         const results = {}
 
         // group files by dataset_uuid
-        for (let file of resp?.records?.files) {
+        for (let file of (resp?.records?.files | [])) {
             let uuid = file.fields['dataset_uuid.keyword'][0]
-            if (!results.hasOwnProperty(uuid)) {
+            if (!results?.hasOwnProperty(uuid)) {
                 let list = []
                 let meta = {
                     files: file.inner_hits.files.hits.total.value,
@@ -504,8 +504,17 @@ function TableResultsFiles({children, onRowClicked, filters, forData = false, ro
 }
 
 TableResultsFiles.propTypes = {
-    children: PropTypes.node,
-    onRowClicked: PropTypes.func
+  children: PropTypes.node,
+  filters: PropTypes.shape({
+    map: PropTypes.func
+  }),
+  forData: PropTypes.bool,
+  inModal: PropTypes.bool,
+  onRowClicked: PropTypes.func,
+  rawResponse: PropTypes.shape({
+    record_count: PropTypes.number
+  }),
+  rowFn: PropTypes.any
 }
 
 export {TableResultsFiles}

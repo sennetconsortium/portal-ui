@@ -59,6 +59,14 @@ function BodyContent({ handleChangeAncestor, data, resultsFilterCallback }) {
     )
 }
 
+BodyContent.propTypes = {
+  data: PropTypes.shape({
+    uuid: PropTypes.string
+  }),
+  handleChangeAncestor: PropTypes.function,
+  resultsFilterCallback: PropTypes.func
+}
+
 export function FilesBodyContent({ handleChangeAncestor, data, resultsFilterCallback }) {
     const { wasSearched, filters, addFilter, setStateProps, rawResponse } = useSearchUIContext();
 
@@ -81,6 +89,12 @@ export function FilesBodyContent({ handleChangeAncestor, data, resultsFilterCall
                                      view={TableResultsFiles} />}
         </div>
     )
+}
+
+FilesBodyContent.propTypes = {
+  data: PropTypes.any,
+  handleChangeAncestor: PropTypes.func,
+  resultsFilterCallback: PropTypes.func
 }
 
 function AncestorsModal({data, changeAncestor, hideModal, showHideModal, handleSearchFormSubmit, resultsFilterCallback, searchValue, searchConfig, resultsBodyContent}) {
@@ -173,7 +187,16 @@ function AncestorsModal({data, changeAncestor, hideModal, showHideModal, handleS
 }
 
 AncestorsModal.propTypes = {
-    children: PropTypes.node
+  changeAncestor: PropTypes.any,
+  children: PropTypes.node,
+  data: PropTypes.any,
+  handleSearchFormSubmit: PropTypes.func,
+  hideModal: PropTypes.bool,
+  resultsBodyContent: PropTypes.any,
+  resultsFilterCallback: PropTypes.any,
+  searchConfig: PropTypes.object,
+  searchValue: PropTypes.any,
+  showHideModal: PropTypes.any
 }
 
 export default AncestorsModal

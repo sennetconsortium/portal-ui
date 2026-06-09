@@ -1,4 +1,4 @@
-import {useEffect, useState, useEffectEvent} from 'react'
+import React, {useEffect, useState, useEffectEvent} from 'react'
 import PropTypes from 'prop-types'
 import {Col, Container, Row} from 'react-bootstrap';
 import {eq, getSubtypeProvenanceShape, goIntent} from "@/components/custom/js/functions";

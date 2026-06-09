@@ -1,5 +1,5 @@
 import dynamic from "next/dynamic";
-import {useContext, useEffect} from 'react'
+import React, {useContext, useEffect} from 'react'
 import AppContext from '@/context/AppContext'
 import {getLogoutURL} from '@/config/config'
 import {deleteCookie} from "cookies-next";

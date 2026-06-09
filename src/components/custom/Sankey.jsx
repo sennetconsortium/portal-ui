@@ -1,4 +1,5 @@
-import {useEffect, useRef, useState} from 'react'
+import PropTypes from "prop-types"
+import React, {useEffect, useRef, useState} from 'react'
 import { useRouter } from 'next/router'
 import {getCookie} from "cookies-next";
 import SenNetAlert from "@/components/SenNetAlert";
@@ -119,6 +120,11 @@ function Sankey({maxHeight, showExpandButton = false}) {
             {loadingMsg && <SenNetAlert variant={'warning'} text={loadingMsg}></SenNetAlert>}
         </div>
     )
+}
+
+Sankey.propTypes = {
+  maxHeight: PropTypes.number,
+  showExpandButton: PropTypes.bool
 }
 
 export default Sankey

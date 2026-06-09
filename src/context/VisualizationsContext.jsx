@@ -331,7 +331,6 @@ export const VisualizationsProvider = ({ children, options = {} }) => {
                 addHighlightToolTip,
                 getSubgroupLabels,
                 handleSvgSizing,
-                toolTipHandlers,
                 setToolTipContent,
                 getTotalY,
                 svgAppend,

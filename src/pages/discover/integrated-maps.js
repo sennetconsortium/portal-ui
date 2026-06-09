@@ -1,6 +1,5 @@
 
-import React, { useContext, useEffect, useState, useRef } from 'react'
-import Spinner from '@/components/custom/Spinner'
+import React, { useContext } from 'react'
 import dynamic from "next/dynamic";
 import AppContext from "@/context/AppContext"
 import { APP_TITLE } from "@/config/config"

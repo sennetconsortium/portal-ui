@@ -62,7 +62,7 @@ export default function AncestorIdsBulkButton({
             let paramKey = getIdRegEx().exec(uuid) ? 'sennet_id' : 'uuid'
             let entity = await fetchEntity(uuid, paramKey)
 
-            if (entity.hasOwnProperty('error')) {
+            if (entity?.hasOwnProperty('error')) {
                 if (isBulkHandling.current) {
                     setBulkPopover(true)
                     errMsgs = (

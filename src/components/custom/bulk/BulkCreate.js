@@ -1,4 +1,5 @@
 import React, {useEffect, useRef, useState, useContext} from 'react';
+import PropTypes from 'prop-types';
 import {styled} from '@mui/material/styles';
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
@@ -127,6 +128,12 @@ export default function BulkCreate({
                 {icons[String(props.icon)]}
             </ColorlibStepIconRoot>
         );
+    }
+
+    ColorlibStepIcon.propTypes = {
+        active: PropTypes.bool,
+        completed: PropTypes.bool,
+        className: PropTypes.string
     }
 
     useEffect(() => {
@@ -360,9 +367,7 @@ export default function BulkCreate({
 
     const onMetadataNext = () => {
         setIsNextButtonDisabled(true)
-        if (activeStep === 0) {
-
-        }
+        if (activeStep === 0) { /* empty */ }
         else if (activeStep === 1) {
             metadataValidation()
         }
@@ -469,7 +474,7 @@ export default function BulkCreate({
     const getDocsUrl = () => {
         const url = new URL(getDocsRootURL());
         url.pathname = isMetadata ? 'registration/schemas' : 'registration/bulk-registration'
-        const _subType = isMouse() ? 'murine' : subType
+        //const _subType = isMouse() ? 'murine' : subType
         url.pathname += isMetadata ? `/` : `/${entityType.toLowerCase()}`
         return url.href
     }
@@ -666,4 +671,11 @@ export default function BulkCreate({
             </Container>
         </div>
     );
+}
+BulkCreate.propTypes = {
+    children: PropTypes.node,
+    userWriteGroups: PropTypes.array,
+    handlePrimaryBtn: PropTypes.func,
+    entityDetails: PropTypes.object,
+    isMetadata:PropTypes.object,
 }

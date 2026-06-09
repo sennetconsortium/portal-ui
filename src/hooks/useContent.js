@@ -1,7 +1,6 @@
 import {useEffect, useState} from 'react'
-import {getJsonHeader} from "../lib/services";
-import log from 'xac-loglevel'
-import {getRootURL} from "@/config/config";
+import {getJsonHeader} from "@/lib/services";
+import log from 'xac-loglevel';
 
 function useContent() {
 

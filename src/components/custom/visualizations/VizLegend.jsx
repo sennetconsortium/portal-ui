@@ -120,7 +120,17 @@ function VizLegend({isFilterable, title, legend, onItemClick, onItemHover, label
 }
 
 VizLegend.propTypes = {
-    children: PropTypes.node
+  children: PropTypes.node,
+  excludedValues: PropTypes.array,
+  isFilterable: PropTypes.bool,
+  labelValueFormatter: PropTypes.func,
+  legend: PropTypes.object,
+  legendToolTip: PropTypes.string,
+  onItemClick: PropTypes.func,
+  onItemHover: PropTypes.func,
+  selectedValues: PropTypes.array,
+  sortLegend: PropTypes.bool,
+  title: PropTypes.any
 }
 
 export default VizLegend

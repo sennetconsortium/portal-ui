@@ -1,3 +1,4 @@
+import PropTypes from "prop-types"
 import React, {useState, memo} from 'react'
 import CellTypeDistributionAcrossOrgansLayout from './CellTypeDistributionAcrossOrgansLayout'
 import { VisualizationsProvider } from '@/context/VisualizationsContext'
@@ -127,6 +128,21 @@ const CellTypeDistributionAcrossOrgansTab = memo(({organ, tabData, cell}) => {
       
     </div>
   )
-})
+});
+
+CellTypeDistributionAcrossOrgansTab.propTypes = {
+  cell: PropTypes.shape({
+    cellIds: PropTypes.object,
+    label: PropTypes.string
+  }),
+  organ: PropTypes.shape({
+    _id: PropTypes.any,
+    label: PropTypes.string
+  }),
+  tabData: PropTypes.array
+}
+
+CellTypeDistributionAcrossOrgansTab.displayName =
+    'CellTypeDistributionAcrossOrgansTab';
 
 export default CellTypeDistributionAcrossOrgansTab

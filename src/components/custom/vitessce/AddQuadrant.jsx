@@ -71,7 +71,11 @@ function AddQuadrant({setQ, qId, fetchData, resultsFilterCallback}) {
 }
 
 AddQuadrant.propTypes = {
-    children: PropTypes.node
+  children: PropTypes.node,
+  fetchData: PropTypes.func,
+  qId: PropTypes.number,
+  resultsFilterCallback: PropTypes.func,
+  setQ: PropTypes.func
 }
 
 export default AddQuadrant
