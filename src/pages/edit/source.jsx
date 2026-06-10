@@ -9,8 +9,7 @@ import log from 'xac-loglevel'
 import {cleanJson, eq, getDOIPattern} from "@/components/custom/js/functions";
 import {getEntityData, update_create_entity} from "@/lib/services";
 import AppContext from '@/context/AppContext'
-import EntityContext, {EntityProvider} from '@/context/EntityContext'
-import {SenPopoverOptions} from "@/components/SenNetPopover";
+import EntityContext, {EntityProvider} from '@/context/EntityContext';
 import $ from 'jquery';
 
 const AppFooter = dynamic(() => import("@/components/custom/layout/AppFooter"))
