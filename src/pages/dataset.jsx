@@ -192,7 +192,7 @@ function ViewDataset() {
         }
     }
 
-    if (isPreview(data, error)) {
+    if (isPreview(data, error) || !cache) {
         return getPreviewView(data)
     } else {
         return (
@@ -334,7 +334,7 @@ function ViewDataset() {
 
                                 <EntityViewHeader data={data}
                                                   uniqueHeader={getDatasetTypeDisplay(data)}
-                                                  entity={cache.entities.dataset.toLowerCase()}
+                                                  entity={cache.entities?.dataset?.toLowerCase()}
                                                   hasWritePrivilege={hasWritePrivilege || false}/>
 
                                 <div className="row">
