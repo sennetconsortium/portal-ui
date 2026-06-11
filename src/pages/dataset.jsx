@@ -58,7 +58,8 @@ function ViewDataset() {
         isPreview,
         getPreviewView,
         isLoggedIn,
-        sidebarVisible
+        sidebarVisible,
+        authorized
     } = useContext(AppContext)
     const [primaryDatasetData, setPrimaryDatasetInfo] = useState(null)
     const [showFilesSection, setShowFilesSection] = useState(null)
@@ -103,7 +104,7 @@ function ViewDataset() {
                 fetchEntityForMultiAssayInfo()
             }
         }
-    }, [data?.ancestors])
+    }, [data?.ancestors, authorized])
 
     useEffect(() => {
         if (isDerivedContextInitialized) {
