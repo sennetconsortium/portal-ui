@@ -18,7 +18,7 @@ export const prepareOverlapData = (data, desc = true) => {
     return sorted
 }
 
-function OverlapBar({
+function OverlappedBar({
     setLegend,
     filters,
     data = [],
@@ -184,7 +184,7 @@ function OverlapBar({
     )
 }
 
-OverlapBar.propTypes = {
+OverlappedBar.propTypes = {
   chartId: PropTypes.string,
   data: PropTypes.array,
   filters: PropTypes.any,
@@ -196,4 +196,4 @@ OverlapBar.propTypes = {
   yAxis: PropTypes.object
 }
 
-export default OverlapBar
+export default OverlappedBar

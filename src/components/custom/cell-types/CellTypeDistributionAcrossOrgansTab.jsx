@@ -4,7 +4,7 @@ import CellTypeDistributionAcrossOrgansLayout from './CellTypeDistributionAcross
 import { VisualizationsProvider } from '@/context/VisualizationsContext'
 import ChartContainer from '../visualizations/ChartContainer'
 import { formatNum, percentage } from '../js/functions'
-import { prepareOverlapData } from '../visualizations/charts/OverlapBar'
+import { prepareOverlapData } from '../visualizations/charts/OverlappedBar'
 import * as d3 from 'd3';
 
 /**
