@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import { useIdleTimer } from 'react-idle-timer'
-import AppModal from "./AppModal";
+import AppModal from '@/components/AppModal'
 import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 import {deleteCookies} from "@/lib/auth";
 import {getIngestEndPoint, IDLE_TIMEOUT} from "@/config/config";
 import {useRouter} from "next/router";
 import {getCookie} from "cookies-next";
-import { eq } from './custom/js/functions';
+import { eq } from '@/components/custom/js/functions'
 
 const timeout = IDLE_TIMEOUT
 const promptBeforeIdle = 60000 // 1 minute

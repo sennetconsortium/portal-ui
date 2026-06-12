@@ -5,9 +5,9 @@ import { getOrganByCode } from '@/config/organs'
 import { VisualizationsProvider } from '@/context/VisualizationsContext'
 import useSearchUIQuery from '@/hooks/useSearchUIQuery'
 import { useMemo } from 'react'
-import { formatNum } from '../js/functions'
-import Spinner from '../Spinner'
-import ChartContainer from '../visualizations/ChartContainer'
+import { formatNum } from '@/components/custom/js/functions'
+import Spinner from '@/components/custom/Spinner'
+import ChartContainer from '@/components/custom/visualizations/ChartContainer'
 
 /**
  * @typedef {object} CellTypeDistributionProps

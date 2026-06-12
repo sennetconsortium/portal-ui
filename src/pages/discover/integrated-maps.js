@@ -8,10 +8,6 @@ import IntegratedMaps from '@/components/custom/organ/IntegratedMaps';
 const AppNavbar = dynamic(() => import("@/components/custom/layout/AppNavbar"))
 const Header = dynamic(() => import("@/components/custom/layout/Header"))
 
-const DataTable = dynamic(() => import('react-data-table-component'), {
-  ssr: false,
-});
-
 function IntegratedMapsView() {
 
   const { isRegisterHidden } = useContext(AppContext)

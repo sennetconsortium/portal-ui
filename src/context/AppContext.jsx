@@ -1,3 +1,4 @@
+import PropTypes from "prop-types"
 import React, { createContext, useEffect, useState} from 'react'
 import { useRouter } from 'next/router'
 import {eq} from '@/components/custom/js/functions'
@@ -308,6 +309,20 @@ export const AppProvider = ({ cache, banners, children }) => {
             {children}
         </AppContext.Provider>
     )
+}
+
+AppProvider.propTypes = {
+    banners: PropTypes.object,
+    cache: PropTypes.shape({
+        entities: PropTypes.object,
+        sampleCategories: PropTypes.object,
+        sourceTypes: PropTypes.object,
+        organTypes: PropTypes.object,
+        organTypesCodes: PropTypes.object,
+        datasetTypes: PropTypes.object,
+        organs: PropTypes.array
+    }),
+    children: PropTypes.node
 }
 
 export default AppContext

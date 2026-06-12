@@ -44,7 +44,7 @@ export default async function handler(req, res) {
                 .then(result => {
                     log.debug('SEARCH API RESPONSE BODY', formatMessageForCloudwatch(result))
 
-                    if (result.hasOwnProperty("error")) {
+                    if (Object.hasOwn(result, 'error')) {
                         res.status(401).json(result)
                     } else {
                         var total = result["hits"]["total"]["value"]

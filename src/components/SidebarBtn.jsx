@@ -1,5 +1,5 @@
 import React, {useContext} from 'react'
-import AppContext from "../context/AppContext";
+import AppContext from "@/context/AppContext";
 
 function SidebarBtn() {
     const {sidebarVisible, handleSidebar} = useContext(AppContext)

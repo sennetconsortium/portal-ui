@@ -2,7 +2,7 @@ import React, {useContext, useEffect, useState, useEffectEvent} from 'react'
 import PropTypes from 'prop-types'
 import {STORAGE_KEY} from "@/config/config"
 import {Alert} from 'react-bootstrap'
-import AppContext from "../context/AppContext";
+import AppContext from "@/context/AppContext";
 import $ from 'jquery';
 
 function SenNetBanner({name = 'login'}) {

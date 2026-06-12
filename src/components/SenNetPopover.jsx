@@ -22,7 +22,6 @@ export const SenPopoverOptions = {
 
 }
 
-
 function SenNetPopover({children, text, placement = SenPopoverOptions.placement.top, className = 'sen-popover',
                            trigger = SenPopoverOptions.triggers.hover, show, onTooltipToggle}) {
 
