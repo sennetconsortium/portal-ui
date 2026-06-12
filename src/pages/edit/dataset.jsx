@@ -483,8 +483,8 @@ export default function EditDataset() {
                     <div className="no_sidebar">
                         <Layout
                             bodyHeader={
-                                <EntityHeader entity={cache.entities.dataset} isEditMode={isEditMode()} data={data}
-                                              values={values} adminGroup={adminGroup}/>
+                                <EntityHeader entity={cache.entities.dataset} data={data}
+                                              values={values} />
                             }
                             bodyContent={
                                 <Form noValidate validated={validated} id="dataset-form" ref={entityForm}>
@@ -615,7 +615,7 @@ export default function EditDataset() {
                                                           href={'https://raw.githubusercontent.com/hubmapconsortium/dataset-metadata-spreadsheet/main/contributors/latest/contributors.tsv'}> <FileDownloadIcon/>EXAMPLE.TSV</a></span>}/>}
 
                                     {/*This table is just for showing data.creators list in edit mode. Regular table from AttributesUpload will show if user uploads new file*/}
-                                    {isEditMode && !contributors.description && data.contributors &&
+                                    {isEditMode() && !contributors.description && data.contributors &&
                                         <div className='c-metadataUpload__table table-responsive'>
                                             <h6>Contributors</h6>
                                             <DataTable

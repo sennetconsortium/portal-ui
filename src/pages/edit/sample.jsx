@@ -452,7 +452,7 @@ function EditSample() {
                     <div className="no_sidebar">
                         <Layout
                             bodyHeader={
-                                <EntityHeader entity={cache.entities.sample} isEditMode={isEditMode()} data={data}/>
+                                <EntityHeader entity={cache.entities.sample} data={data}/>
 
                             }
                             bodyContent={
