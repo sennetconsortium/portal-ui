@@ -5,7 +5,7 @@ import { getOrganByCode } from "@/config/organs";
 import AppContext from "@/context/AppContext";
 import Link from "next/link";
 import PropTypes from "prop-types";
-import {Fragment, useContext, useEffect, useState} from "react";
+import React, {Fragment, useContext, useEffect, useState} from "react";
 import {
     getDatasetTypeDisplay,
     displayBodyHeader,

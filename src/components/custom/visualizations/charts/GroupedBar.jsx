@@ -98,7 +98,7 @@ function GroupedBar({
         // Show the bars
         g.append("g")
             .selectAll("g")
-            // Enter in the stack data = loop key per key = group per group
+            // Enter the stack data = loop key per key = group per group
             .data(data)
             .join("g")
                 .attr("transform", (d) => { return "translate(" + x(d.group) + ",0)"; })

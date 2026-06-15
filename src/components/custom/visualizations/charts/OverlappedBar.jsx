@@ -108,7 +108,7 @@ function OverlappedBar({
         // Show the bars
         g.append("g")
             .selectAll("g")
-            // Enter in the stack data = loop key per key = group per group
+            // Enter the stack data = loop key per key = group per group
             .data(stackedSorted)
             .join("g")
             .selectAll("rect")

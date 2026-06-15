@@ -115,7 +115,7 @@ function HorizontalDistributionBar({
         // Show the bars
         g.append("g")
             .selectAll("g")
-            // Enter in the stack data = loop key per key = group per group
+            // Enter the stack data = loop key per key = group per group
             .data(stackedSeries)
             .join("g")
               .attr('class', d => style.highlight === d.key ? 'g--highlight' : '')

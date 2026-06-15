@@ -4,7 +4,7 @@ import AppContext from '@/context/AppContext'
 import useOrganDetail from '@/hooks/organ/useOrganDetail'
 import dynamic from 'next/dynamic'
 import {useRouter} from 'next/router'
-import {useContext, useState} from 'react'
+import React, {useContext, useState} from 'react'
 
 const AppFooter = dynamic(() => import('@/components/custom/layout/AppFooter'))
 const AppNavbar = dynamic(() => import('@/components/custom/layout/AppNavbar'))

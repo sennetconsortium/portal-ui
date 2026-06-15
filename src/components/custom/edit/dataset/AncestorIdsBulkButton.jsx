@@ -1,9 +1,8 @@
 import dynamic from "next/dynamic";
-import React, { useContext, useEffect, useRef, useState } from 'react'
+import React, { useContext, useRef, useState } from 'react'
 import { useRouter } from 'next/router'
 import Button from 'react-bootstrap/Button';
 import log from 'xac-loglevel'
-import _ from 'lodash';
 import { fetchEntity, getIdRegEx } from '@/components/custom/js/functions'
 import AppContext from '@/context/AppContext'
 import EntityContext from "@/context/EntityContext";
