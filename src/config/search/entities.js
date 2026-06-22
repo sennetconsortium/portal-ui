@@ -1,4 +1,4 @@
-import { getCreationActionRelationName, getUBKGFullName } from '@/components/custom/js/functions';
+import { getCreationActionRelationName } from '@/components/custom/js/functions';
 import SearchAPIConnector from 'search-ui/packages/search-api-connector';
 import {
     doesAggregationHaveBuckets,
@@ -7,7 +7,6 @@ import {
     getEntitiesIndex,
     getSearchEndPoint,
     isDateFacetVisible,
-    lateralOrgans
 } from '../config';
 
 const connector = new SearchAPIConnector({
@@ -108,14 +107,31 @@ export const SEARCH_ENTITIES = {
             dataset_type: {
                 label: 'Dataset Type',
                 type: 'value',
-                field: 'dataset_type_hierarchy.second_level.keyword',
                 isExpanded: false,
                 filterType: 'any',
                 isFilterable: false,
-                facetType: 'hierarchy',
-                groupByField: 'dataset_type_hierarchy.first_level.keyword',
+                facetType: 'megahierarchy',
+                hierarchyFields: [
+                    'dataset_type_hierarchy.first_level.keyword',
+                    'dataset_type_hierarchy.second_level.keyword',
+                ],
                 isAggregationActive: true,
                 isFacetVisible: doesAggregationHaveBuckets('dataset_type')
+            },
+            new_dataset_type: {
+                label: 'New Dataset Type',
+                type: 'value',
+                isExpanded: false,
+                filterType: 'any',
+                isFilterable: false,
+                facetType: 'megahierarchy',
+                hierarchyFields: [
+                    'new_dataset_type_hierarchy.dataset_type.keyword',
+                    'new_dataset_type_hierarchy.analyte.keyword',
+                    'new_dataset_type_hierarchy.modality.keyword',
+                ],
+                isAggregationActive: true,
+                isFacetVisible: doesAggregationHaveBuckets('new_dataset_type')
             },
             'metadata.assay_input_entity': {
                 label: 'Assay Input Entity',
@@ -153,15 +169,14 @@ export const SEARCH_ENTITIES = {
             organ: {
                 label: 'Organ',
                 type: 'value',
-                field: 'organ.keyword',
                 isExpanded: false,
                 filterType: 'any',
                 isFilterable: false,
-                facetType: 'hierarchy',
-                groupByField: 'organ_hierarchy.keyword',
-                isHierarchyOption: (option) => {
-                    return lateralOrgans.includes(option)
-                },
+                facetType: 'megahierarchy',
+                hierarchyFields: [
+                    'organ_hierarchy.keyword',
+                    'organ.keyword',
+                ],
                 isAggregationActive: doesTermFilterContainValues('entity_type', ['Sample']),
                 isFacetVisible: doesAggregationHaveBuckets('organ')
             },
@@ -169,21 +184,14 @@ export const SEARCH_ENTITIES = {
             'origin_samples.organ': {
                 label: 'Organ',
                 type: 'value',
-                field: 'origin_samples.organ.keyword',
                 isExpanded: false,
                 filterType: 'any',
                 isFilterable: false,
-                facetType: 'hierarchy',
-                groupByField: 'origin_samples.organ_hierarchy.keyword',
-                isHierarchyOption: (option) => {
-                    return lateralOrgans.includes(option)
-                },
-                filterSubValues: (value, subValues) => {
-                    return subValues.filter((subValue) => {
-                        const ubkgName = getUBKGFullName(subValue.key)
-                        return ubkgName.startsWith(value)
-                    })
-                },
+                facetType: 'megahierarchy',
+                hierarchyFields: [
+                    'origin_samples.organ_hierarchy.keyword',
+                    'origin_samples.organ.keyword',
+                ],
                 isAggregationActive: [
                     doesTermFilterContainValues('entity_type', ['Dataset']),
                     doesTermFilterContainValues('sample_category', ['Block', 'Section', 'Suspension'])

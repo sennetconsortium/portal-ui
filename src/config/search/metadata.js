@@ -1,4 +1,4 @@
-import { getCreationActionRelationName, getUBKGFullName, searchUIQueryString } from '@/components/custom/js/functions';
+import { getCreationActionRelationName, searchUIQueryString } from '@/components/custom/js/functions';
 import SearchAPIConnector from 'search-ui/packages/search-api-connector';
 import {
     doFiltersContainField,
@@ -7,7 +7,6 @@ import {
     getAuth,
     getEntitiesIndex,
     getSearchEndPoint,
-    lateralOrgans,
 } from '../config';
 
 const connector = new SearchAPIConnector({
@@ -77,12 +76,14 @@ export const SEARCH_METADATA = {
             dataset_type: {
                 label: 'Dataset Type',
                 type: 'value',
-                field: 'dataset_type_hierarchy.second_level.keyword',
                 isExpanded: false,
                 filterType: 'any',
                 isFilterable: false,
-                facetType: 'hierarchy',
-                groupByField: 'dataset_type_hierarchy.first_level.keyword',
+                facetType: 'megahierarchy',
+                hierarchyFields: [
+                    'dataset_type_hierarchy.first_level.keyword',
+                    'dataset_type_hierarchy.second_level.keyword',
+                ],
                 isAggregationActive: true,
                 isFacetVisible: doesAggregationHaveBuckets('dataset_type')
             },
@@ -504,21 +505,14 @@ export const SEARCH_METADATA = {
             'origin_samples.organ': {
                 label: 'Organ',
                 type: 'value',
-                field: 'origin_samples.organ.keyword',
                 isExpanded: false,
                 filterType: 'any',
                 isFilterable: false,
-                facetType: 'hierarchy',
-                groupByField: 'origin_samples.organ_hierarchy.keyword',
-                isHierarchyOption: (option) => {
-                    return lateralOrgans.includes(option)
-                },
-                filterSubValues: (value, subValues) => {
-                    return subValues.filter((subValue) => {
-                        const ubkgName = getUBKGFullName(subValue.key)
-                        return ubkgName.startsWith(value)
-                    })
-                },
+                facetType: 'megahierarchy',
+                hierarchyFields: [
+                    'origin_samples.organ_hierarchy.keyword',
+                    'origin_samples.organ.keyword',
+                ],
                 isAggregationActive: [
                     doesTermFilterContainValues('entity_type', ['Dataset']),
                     doesTermFilterContainValues('sample_category', ['Block', 'Section', 'Suspension'])
