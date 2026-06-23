@@ -104,7 +104,7 @@ export const SEARCH_ENTITIES = {
                 isAggregationActive: doesTermFilterContainValues('entity_type', ['Dataset', 'Upload', 'Publication', 'Collection']),
                 isFacetVisible: doesAggregationHaveBuckets('status')
             },
-            dataset_type: {
+             dataset_type_hierarchy: {
                 label: 'Dataset Type',
                 type: 'value',
                 isExpanded: false,
@@ -112,26 +112,12 @@ export const SEARCH_ENTITIES = {
                 isFilterable: false,
                 facetType: 'megahierarchy',
                 hierarchyFields: [
-                    'dataset_type_hierarchy.first_level.keyword',
-                    'dataset_type_hierarchy.second_level.keyword',
+                    'dataset_type_hierarchy.modality.keyword',
+                    'dataset_type_hierarchy.analyte.keyword',
+                    'dataset_type_hierarchy.dataset_type.keyword'
                 ],
                 isAggregationActive: true,
-                isFacetVisible: doesAggregationHaveBuckets('dataset_type')
-            },
-            new_dataset_type: {
-                label: 'New Dataset Type',
-                type: 'value',
-                isExpanded: false,
-                filterType: 'any',
-                isFilterable: false,
-                facetType: 'megahierarchy',
-                hierarchyFields: [
-                    'new_dataset_type_hierarchy.dataset_type.keyword',
-                    'new_dataset_type_hierarchy.analyte.keyword',
-                    'new_dataset_type_hierarchy.modality.keyword',
-                ],
-                isAggregationActive: true,
-                isFacetVisible: doesAggregationHaveBuckets('new_dataset_type')
+                isFacetVisible: doesAggregationHaveBuckets('dataset_type_hierarchy')
             },
             'metadata.assay_input_entity': {
                 label: 'Assay Input Entity',
