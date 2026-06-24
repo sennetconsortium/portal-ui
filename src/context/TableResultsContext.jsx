@@ -1,3 +1,4 @@
+import PropTypes from "prop-types"
 import React, {createContext, useContext, useEffect, useRef, useState} from "react";
 import $ from 'jquery';
 import {useRouter} from 'next/router'
@@ -231,6 +232,22 @@ export const TableResultsProvider = ({
         <SidebarBtn target='.sui-layout-sidebar' initialClass="show" onClick={onClickSidebarToggle} />
         {children}
     </TableResultsContext.Provider>
+}
+
+TableResultsProvider.propTypes = {
+  children: PropTypes.node,
+  columnsRef: PropTypes.useRef,
+  filters: PropTypes.shape({
+    length: PropTypes.number
+  }),
+  getHotLink: PropTypes.func,
+  getId: PropTypes.any,
+  inModal: PropTypes.bool,
+  onRowClicked: PropTypes.func,
+  raw: PropTypes.func,
+  rows: PropTypes.shape({
+    length: PropTypes.any
+  })
 }
 
 export default TableResultsContext

@@ -1,3 +1,5 @@
+import PropTypes from "prop-types"
+import React from 'react';
 import Spinner from '@/components/custom/Spinner'
 import { getCellTypesIndex } from '@/config/config'
 import { VisualizationsProvider } from '@/context/VisualizationsContext'
@@ -296,6 +298,10 @@ function DatasetsOverview({ clId }) {
             )}
         </VisualizationsProvider>
     )
+}
+
+DatasetsOverview.propTypes = {
+  clId: PropTypes.string
 }
 
 export default DatasetsOverview

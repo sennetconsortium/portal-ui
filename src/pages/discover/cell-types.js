@@ -1,3 +1,4 @@
+import PropTypes from "prop-types"
 import dynamic from "next/dynamic";
 import React, {memo, useContext, useEffect, useRef, useState} from "react"
 import {APP_TITLE} from "@/config/config"
@@ -141,6 +142,23 @@ const ChartOverview = memo(({subGroupLabels, data, setVisualizationData}) => {
                                                               xAxis={xAxis} yAxis={yAxis} chartType={'stackedBar'}/>}
     </VisualizationsProvider>)
 })
+
+ChartOverview.propTypes = {
+  data: PropTypes.shape({
+    countData: PropTypes.shape({
+      current: PropTypes.array
+    }),
+    percentageData: PropTypes.shape({
+      current: PropTypes.array
+    }),
+    visualizationData: PropTypes.array
+  }),
+  setVisualizationData: PropTypes.func,
+  subGroupLabels: PropTypes.shape({
+    current: PropTypes.any
+  })
+}
+ChartOverview.displayName = 'ChartOverview'
 
 function CellTypes() {
     const {isRegisterHidden} = useContext(AppContext)

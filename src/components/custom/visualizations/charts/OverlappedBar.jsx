@@ -1,3 +1,4 @@
+import PropTypes from "prop-types"
 import React from 'react'
 import * as d3 from 'd3';
 import { useContext, useEffect, useRef } from 'react'
@@ -17,7 +18,7 @@ export const prepareOverlapData = (data, desc = true) => {
     return sorted
 }
 
-function OverlapBar({
+function OverlappedBar({
     setLegend,
     filters,
     data = [],
@@ -107,7 +108,7 @@ function OverlapBar({
         // Show the bars
         g.append("g")
             .selectAll("g")
-            // Enter in the stack data = loop key per key = group per group
+            // Enter the stack data = loop key per key = group per group
             .data(stackedSorted)
             .join("g")
             .selectAll("rect")
@@ -183,4 +184,16 @@ function OverlapBar({
     )
 }
 
-export default OverlapBar
+OverlappedBar.propTypes = {
+  chartId: PropTypes.string,
+  data: PropTypes.array,
+  filters: PropTypes.any,
+  reload: PropTypes.bool,
+  setLegend: PropTypes.func,
+  style: PropTypes.object,
+  subGroupLabels: PropTypes.object,
+  xAxis: PropTypes.object,
+  yAxis: PropTypes.object
+}
+
+export default OverlappedBar

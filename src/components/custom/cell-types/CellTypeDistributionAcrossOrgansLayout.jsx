@@ -58,6 +58,8 @@ const CellTypeDistributionAcrossOrgansLayout = memo(({ children, organ, tabData,
       </Row>
     </div>
   )
-})
+});
+
+CellTypeDistributionAcrossOrgansLayout.displayName  = 'CellTypeDistributionAcrossOrgansLayout';
 
 export default CellTypeDistributionAcrossOrgansLayout

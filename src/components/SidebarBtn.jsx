@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react'
-import AppContext from "../context/AppContext";
+import AppContext from "@/context/AppContext";
 import Tooltip from '@mui/material/Tooltip';
 import Zoom from '@mui/material/Zoom';
 
@@ -25,7 +25,7 @@ function SidebarBtn({target='#sidebar', onClick, initialClass = ''}) {
 
     return (
         <div className="d-none d-md-block sticky-top" id="sections-button">
-            <Tooltip 
+            <Tooltip
                 title={`${isOpen ? 'Close' : 'Open'} sidebar.`}
                 placement='right'
                 classes={{ popper: 'snPopover' }}

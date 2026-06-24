@@ -30,7 +30,7 @@ const AllOrgans = () => {
     }
 
     if (isUnauthorized() && hasAuthenticationCookie()) {
-        // This is a scenario in which the GLOBUS token is expired but the token still exists in the user"s cookies
+        // This is a scenario in which the GLOBUS token is expired but the token still exists in the user's cookies
         logout()
         window.location.reload()
     }

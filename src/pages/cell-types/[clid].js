@@ -1,3 +1,6 @@
+import dynamic from 'next/dynamic'
+import { useRouter } from 'next/router'
+import React, { useContext } from 'react'
 import CellTypeDistribution from '@/components/custom/cell-types/CellTypeDistribution'
 import CellTypeDistributionAcrossOrgans from '@/components/custom/cell-types/CellTypeDistributionAcrossOrgans'
 import DatasetsOverview from '@/components/custom/cell-types/DatasetsOverview'
@@ -9,9 +12,6 @@ import Spinner from '@/components/custom/Spinner'
 import { getCellTypesIndex } from '@/config/config'
 import AppContext from '@/context/AppContext'
 import useSearchUIQuery from '@/hooks/useSearchUIQuery'
-import dynamic from 'next/dynamic'
-import { useRouter } from 'next/router'
-import { useContext } from 'react'
 import { Card } from 'react-bootstrap'
 
 const AppFooter = dynamic(() => import('@/components/custom/layout/AppFooter'))
@@ -26,7 +26,11 @@ function ViewCellType() {
     const { clid } = router.query
 
     function getUniqueOrgans(data) {
-        return data?.aggregations?.unique_organs?.buckets?.map((bucket) => bucket.key) || []
+        return (
+            data?.aggregations?.unique_organs?.buckets?.map(
+                (bucket) => bucket.key
+            ) || []
+        )
     }
 
     function titalize(str) {
@@ -61,7 +65,10 @@ function ViewCellType() {
           }
         : null
 
-    const { data, loading, error } = useSearchUIQuery(getCellTypesIndex(), query)
+    const { data, loading, error } = useSearchUIQuery(
+        getCellTypesIndex(),
+        query
+    )
 
     if (loading) {
         return <Spinner />
@@ -88,7 +95,10 @@ function ViewCellType() {
                             id='sidebar'
                             className='collapse collapse-horizontal sticky-top custom-sticky'
                         >
-                            <ul id='sidebar-nav' className='nav list-group rounded-0 text-sm-start'>
+                            <ul
+                                id='sidebar-nav'
+                                className='nav list-group rounded-0 text-sm-start'
+                            >
                                 {/* Description */}
                                 <li className='nav-item'>
                                     <a
@@ -151,7 +161,9 @@ function ViewCellType() {
                         <SidebarBtn />
 
                         <ViewHeader
-                            label={titalize(data?.hits?.hits[0]?._source?.cell_label)}
+                            label={titalize(
+                                data?.hits?.hits[0]?._source?.cell_label
+                            )}
                             clId={clid}
                             organs={getUniqueOrgans(data)}
                         />
@@ -161,9 +173,14 @@ function ViewCellType() {
                             <Card border='0'>
                                 <Card.Body className='mb-4'>
                                     <Card.Text>
-                                        {data?.hits?.hits[0]?._source?.cell_definition}
+                                        {
+                                            data?.hits?.hits[0]?._source
+                                                ?.cell_definition
+                                        }
                                     </Card.Text>
-                                    <Card.Subtitle>Known References</Card.Subtitle>
+                                    <Card.Subtitle>
+                                        Known References
+                                    </Card.Subtitle>
                                     <Card.Text>
                                         <a
                                             target='_blank'
@@ -171,7 +188,10 @@ function ViewCellType() {
                                             className='icon-inline'
                                         >
                                             <span className='me-1'>
-                                                {data?.hits?.hits[0]?._source?.cl_id}
+                                                {
+                                                    data?.hits?.hits[0]?._source
+                                                        ?.cl_id
+                                                }
                                             </span>{' '}
                                             <i className='bi bi-box-arrow-up-right'></i>
                                         </a>
@@ -181,7 +201,10 @@ function ViewCellType() {
                         </SenNetAccordion>
 
                         {/* Cell Type Distribution */}
-                        <SenNetAccordion id='CellTypeDistribution' title='Cell Type Distribution'>
+                        <SenNetAccordion
+                            id='CellTypeDistribution'
+                            title='Cell Type Distribution'
+                        >
                             <Card border='0'>
                                 <Card.Body className='mx-auto w-100 mb-4'>
                                     <CellTypeDistribution clId={clid} />
@@ -200,7 +223,8 @@ function ViewCellType() {
                                         clId={clid}
                                         cell={{
                                             id: clid,
-                                            label: data?.hits?.hits[0]?._source?.cell_label
+                                            label: data?.hits?.hits[0]?._source
+                                                ?.cell_label
                                         }}
                                     />
                                 </Card.Body>
@@ -208,7 +232,10 @@ function ViewCellType() {
                         </SenNetAccordion>
 
                         {/* Datasets Overview */}
-                        <SenNetAccordion id='DatasetsOverview' title='Datasets Overview'>
+                        <SenNetAccordion
+                            id='DatasetsOverview'
+                            title='Datasets Overview'
+                        >
                             <Card border='0'>
                                 <Card.Body
                                     className='mx-auto w-100 mb-4'
@@ -225,7 +252,10 @@ function ViewCellType() {
                                 <Card.Body className='mx-auto w-100 mb-4'>
                                     <DatasetsTable
                                         clId={clid}
-                                        cellLabel={data?.hits?.hits[0]?._source?.cell_label}
+                                        cellLabel={
+                                            data?.hits?.hits[0]?._source
+                                                ?.cell_label
+                                        }
                                     />
                                 </Card.Body>
                             </Card>

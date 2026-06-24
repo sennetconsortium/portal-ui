@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react'
+import React, { useState} from 'react'
 import PropTypes from 'prop-types'
 import {Button, Form, InputGroup, Col} from 'react-bootstrap'
 import Stack from "@mui/material/Stack";
@@ -71,7 +71,11 @@ function AddQuadrant({setQ, qId, fetchData, resultsFilterCallback}) {
 }
 
 AddQuadrant.propTypes = {
-    children: PropTypes.node
+  children: PropTypes.node,
+  fetchData: PropTypes.func,
+  qId: PropTypes.number,
+  resultsFilterCallback: PropTypes.func,
+  setQ: PropTypes.func
 }
 
 export default AddQuadrant

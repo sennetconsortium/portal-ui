@@ -1,9 +1,8 @@
 import dynamic from "next/dynamic";
-import React, { useContext, useEffect, useRef, useState } from 'react'
+import React, { useContext, useRef, useState } from 'react'
 import { useRouter } from 'next/router'
 import Button from 'react-bootstrap/Button';
 import log from 'xac-loglevel'
-import _ from 'lodash';
 import { fetchEntity, getIdRegEx } from '@/components/custom/js/functions'
 import AppContext from '@/context/AppContext'
 import EntityContext from "@/context/EntityContext";
@@ -62,7 +61,7 @@ export default function AncestorIdsBulkButton({
             let paramKey = getIdRegEx().exec(uuid) ? 'sennet_id' : 'uuid'
             let entity = await fetchEntity(uuid, paramKey)
 
-            if (entity.hasOwnProperty('error')) {
+            if (entity?.hasOwnProperty('error')) {
                 if (isBulkHandling.current) {
                     setBulkPopover(true)
                     errMsgs = (

@@ -333,7 +333,7 @@
     margin: 0;
     width: 0.5rem;
     height: 100%;
-    padding: 0px;
+    padding: 0;
     cursor: col-resize;
     border: 1px solid transparent;
   }
@@ -365,8 +365,8 @@
   }
   .p-treetable-unfrozen-view {
     position: absolute;
-    top: 0px;
-    left: 0px;
+    top: 0;
+    left: 0;
   }
   /* Reorder */
   .p-treetable-reorder-indicator-up,

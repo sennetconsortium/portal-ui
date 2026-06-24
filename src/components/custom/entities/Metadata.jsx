@@ -53,7 +53,7 @@ function Metadata({data, metadata, mappedMetadata, groups}) {
     const getOrderedTabList = () => {
         let list = []
         let sources = 0
-        for (let e of data?.ancestors) {
+        for (let e of data?.ancestors || []) {
             if (eq(e.entity_type, cache.entities.source)) {
                 list.unshift(e)
                 sources++
@@ -63,7 +63,7 @@ function Metadata({data, metadata, mappedMetadata, groups}) {
                 list.push(e)
             }
         }
-        for (let e of data?.descendants) {
+        for (let e of (data?.descendants || [])) {
             if (eq(e.entity_type, cache.entities.dataset) && datasetIs.component(e.creation_action || '')) {
                 e['isDescendant'] = true
                 list.push(e)

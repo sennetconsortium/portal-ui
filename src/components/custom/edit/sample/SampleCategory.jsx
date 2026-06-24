@@ -1,9 +1,11 @@
+import PropTypes from "prop-types"
 import React, {useContext, useEffect} from 'react';
 import {Col, Form, Row} from 'react-bootstrap';
 import SenNetPopover from "@/components/SenNetPopover";
 import AppContext from "@/context/AppContext";
 import {eq} from "@/components/custom/js/functions";
 import WarningAmberIcon from "@mui/icons-material/WarningAmber";
+
 
 function SampleCategory({
                             organ_group_hide,
@@ -129,6 +131,21 @@ function SampleCategory({
         </>
     )
 
+}
+
+SampleCategory.propTypes = {
+  data: PropTypes.shape({
+    organ: PropTypes.any,
+    sample_category: PropTypes.any
+  }),
+  isDisabled: PropTypes.any,
+  onChange: PropTypes.func,
+  organ_group_hide: PropTypes.any,
+  popoverWarningText: PropTypes.any,
+  sample_categories: PropTypes.any,
+  selectedOtherOrgan: PropTypes.func,
+  set_organ_group_hide: PropTypes.func,
+  source: PropTypes.any
 }
 
 export default SampleCategory

@@ -11,10 +11,10 @@ function Provenance({ data, hasAncestry }) {
     const [descendants, setDescendants] = useState(null)
 
     useEffect(() => {
-        if (data.hasOwnProperty("descendants")) {
+        if (data?.hasOwnProperty("descendants")) {
             setDescendants(data.descendants)
         }
-        if (data.hasOwnProperty("ancestors")) {
+        if (data?.hasOwnProperty("ancestors")) {
             setAncestors(data.ancestors)
         }
     }, [hasAncestry])

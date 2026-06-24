@@ -9,12 +9,12 @@ import {
 import {getOptions} from "./search/ResultsPerPage";
 import ResultsBlock from "./search/ResultsBlock";
 import {TableResultsProvider} from "@/context/TableResultsContext";
-import ClipboardCopy from "../ClipboardCopy";
+import ClipboardCopy from '@/components/ClipboardCopy'
 import 'primeicons/primeicons.css';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import {Chip} from "@mui/material";
-import SenNetPopover from "../SenNetPopover";
-import AppModal from "../AppModal";
+import SenNetPopover from '@/components/SenNetPopover'
+import AppModal from '@/components/AppModal'
 import FileTreeView from "./entities/dataset/FileTreeView";
 import {COLS_ORDER_KEY, FILE_KEY_SEPARATOR} from "@/config/config";
 import {fetchGlobusFilepath, parseJson} from "@/lib/services";
@@ -130,9 +130,9 @@ function TableResultsFiles({children, onRowClicked, filters, forData = false, ro
         const results = {}
 
         // group files by dataset_uuid
-        for (let file of resp?.records?.files) {
+        for (let file of (resp?.records?.files | [])) {
             let uuid = file.fields['dataset_uuid.keyword'][0]
-            if (!results.hasOwnProperty(uuid)) {
+            if (!results?.hasOwnProperty(uuid)) {
                 let list = []
                 let meta = {
                     files: file.inner_hits.files.hits.total.value,
@@ -504,8 +504,17 @@ function TableResultsFiles({children, onRowClicked, filters, forData = false, ro
 }
 
 TableResultsFiles.propTypes = {
-    children: PropTypes.node,
-    onRowClicked: PropTypes.func
+  children: PropTypes.node,
+  filters: PropTypes.shape({
+    map: PropTypes.func
+  }),
+  forData: PropTypes.bool,
+  inModal: PropTypes.bool,
+  onRowClicked: PropTypes.func,
+  rawResponse: PropTypes.shape({
+    record_count: PropTypes.number
+  }),
+  rowFn: PropTypes.any
 }
 
 export {TableResultsFiles}

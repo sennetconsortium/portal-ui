@@ -64,7 +64,7 @@ function ViewCompare() {
                     // Primary gets processed and updated to QA but the derived dataset is still processed.
                     // This could lead to a scenario where the primary has the property has_visualization: false but the processed is true.
                     // So let's check that a descendant has_visualization: true
-                    for (const descendant of ancestry?.descendants) {
+                    for (const descendant of (ancestry?.descendants || [])) {
                         if (eq(descendant.has_visualization, 'true')) {
                             hasViz = true
                             break;

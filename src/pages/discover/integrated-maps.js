@@ -1,6 +1,5 @@
 
-import React, { useContext, useEffect, useState, useRef } from 'react'
-import Spinner from '@/components/custom/Spinner'
+import React, { useContext } from 'react'
 import dynamic from "next/dynamic";
 import AppContext from "@/context/AppContext"
 import { APP_TITLE } from "@/config/config"
@@ -8,10 +7,6 @@ import IntegratedMaps from '@/components/custom/organ/IntegratedMaps';
 
 const AppNavbar = dynamic(() => import("@/components/custom/layout/AppNavbar"))
 const Header = dynamic(() => import("@/components/custom/layout/Header"))
-
-const DataTable = dynamic(() => import('react-data-table-component'), {
-  ssr: false,
-});
 
 function IntegratedMapsView() {
 

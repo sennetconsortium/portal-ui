@@ -138,7 +138,16 @@ function Bar({
 
 
 Bar.propTypes = {
-    children: PropTypes.node
+  chartId: PropTypes.string,
+  children: PropTypes.node,
+  column: PropTypes.string,
+  data: PropTypes.array,
+  filters: PropTypes.any,
+  reload: PropTypes.bool,
+  setLegend: PropTypes.func,
+  style: PropTypes.object,
+  xAxis: PropTypes.object,
+  yAxis: PropTypes.object
 }
 
 export default Bar

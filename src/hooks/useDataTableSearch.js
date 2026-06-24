@@ -1,3 +1,4 @@
+import PropTypes from "prop-types"
 import React, {useEffect, useState, useMemo} from 'react'
 
 import {Button, Form, InputGroup, Col} from 'react-bootstrap'
@@ -13,6 +14,14 @@ const FilterComponent = ({ filterText, onFilter, onClear, className, onKeydown }
         </Form.Group>
     </>
 );
+
+FilterComponent.propTypes = {
+  className: PropTypes.string,
+  filterText: PropTypes.string,
+  onClear: PropTypes.func,
+  onFilter: PropTypes.func,
+  onKeydown: PropTypes.func
+}
 
 function useDataTableSearch({data, onKeydown, fieldsToSearch = [], className = ''}) {
     useEffect(() => {

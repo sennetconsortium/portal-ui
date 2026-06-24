@@ -1,6 +1,6 @@
-import React, {useState} from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
-import SenNetPopover, {SenPopoverOptions} from "./SenNetPopover";
+import SenNetPopover, { SenPopoverOptions } from '@/components/SenNetPopover'
 
 function ClipboardCopy({children, text, title = 'Copy SenNet ID to clipboard', className = '', size= 12}) {
 
@@ -22,7 +22,8 @@ ClipboardCopy.propTypes = {
     children: PropTypes.node,
     text: PropTypes.string.isRequired,
     title: PropTypes.string,
-    className: PropTypes.string
+    className: PropTypes.string,
+    size: PropTypes.number
 }
 
 export default ClipboardCopy

@@ -1,3 +1,4 @@
+import PropTypes from "prop-types"
 import React from 'react'
 import dynamic from "next/dynamic";
 
@@ -24,5 +25,9 @@ function NotFound({ includeHeader = true}) {
             </div>
         </>
     )
+}
+
+NotFound.propTypes = {
+  includeHeader: PropTypes.bool
 }
 export default NotFound

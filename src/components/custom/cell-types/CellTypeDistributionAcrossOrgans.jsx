@@ -1,11 +1,13 @@
+
+import React, { memo, useEffect, useRef, useState } from 'react';
+import PropTypes from 'prop-types'
 import { getCellTypesIndex } from '@/config/config'
 import { getOrganByCode } from '@/config/organs'
 import useSearchUIQuery from '@/hooks/useSearchUIQuery'
 import Image from 'next/image'
-import { memo, useEffect, useRef, useState } from 'react'
 import Nav from 'react-bootstrap/Nav'
 import Tab from 'react-bootstrap/Tab'
-import Spinner from '../Spinner'
+import Spinner from '../Spinner';
 
 import CellTypeDistributionAcrossOrgansTab from './CellTypeDistributionAcrossOrgansTab'
 
@@ -79,7 +81,7 @@ const CellTypeDistributionAcrossOrgans = memo(({ cell }) => {
     function getOrganData(data) {
         let results = []
         let label, code
-        for (let o of data?.aggregations?.by_organ_category?.buckets) {
+        for (let o of (data?.aggregations?.by_organ_category?.buckets || [])) {
             label = o.key
             code = o.details.hits.hits[0]?._source.organs[0].code
             results.push({
@@ -179,6 +181,14 @@ const CellTypeDistributionAcrossOrgans = memo(({ cell }) => {
             </Tab.Content>
         </Tab.Container>
     )
-})
+});
 
+CellTypeDistributionAcrossOrgans.displayName =
+    'CellTypeDistributionAcrossOrgans';
+
+
+CellTypeDistributionAcrossOrgans.propTypes = {
+    children: PropTypes.node,
+    cell: PropTypes.object
+}
 export default CellTypeDistributionAcrossOrgans

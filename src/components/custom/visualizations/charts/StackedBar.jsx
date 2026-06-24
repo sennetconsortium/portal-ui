@@ -1,3 +1,4 @@
+import PropTypes from "prop-types"
 import React from 'react'
 import * as d3 from 'd3';
 import { useContext, useEffect, useRef } from 'react'
@@ -93,7 +94,7 @@ function StackedBar({
         // Show the bars
         g.append("g")
             .selectAll("g")
-            // Enter in the stack data = loop key per key = group per group
+            // Enter the stack data = loop key per key = group per group
             .data(stackedSeries)
             .join("g")
               .attr('class', d => style.highlight === d.key ? 'g--highlight' : '')
@@ -182,6 +183,18 @@ function StackedBar({
     return (
         <div className={`c-visualizations__chart c-visualizations__stackedBar c-bar ${style.className || ''}`} id={`c-visualizations__stackedBar--${chartId}`}></div>
     )
+}
+
+StackedBar.propTypes = {
+  chartId: PropTypes.string,
+  data: PropTypes.array,
+  filters: PropTypes.any,
+  reload: PropTypes.bool,
+  setLegend: PropTypes.func,
+  style: PropTypes.object,
+  subGroupLabels: PropTypes.object,
+  xAxis: PropTypes.object,
+  yAxis: PropTypes.object
 }
 
 export default StackedBar

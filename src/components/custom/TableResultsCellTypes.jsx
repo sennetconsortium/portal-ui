@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react'
+import React, { useRef, useState, useEffect, useEffectEvent } from 'react'
 import PropTypes from 'prop-types'
 import {
   checkFilterType,
@@ -41,8 +41,9 @@ function TableResultsCellTypes({ children, onRowClicked, filters, forData = fals
     }
 
   const formatDataForTable = () => {
+    if (!rawResponse || !rawResponse.aggregations) return
     let _organsDict = {}
-    for (let o of rawResponse.aggregations.group_organs_by_cell_type.buckets) {
+    for (let o of rawResponse?.aggregations?.group_organs_by_cell_type?.buckets) {
       _organsDict[o.key] = o.organs.buckets
     }
     let _results = []
@@ -53,10 +54,14 @@ function TableResultsCellTypes({ children, onRowClicked, filters, forData = fals
     setResults(_results)
     updatePagingInfo(rawResponse.record_count)
   }
+
+  const updateSearchResults = useEffectEvent(() => {
+      formatDataForTable()
+      setIsBusy(false)
+  })
+
   useEffect(() => {
-    // TODO: build results array
-    formatDataForTable()
-    setIsBusy(false)
+    updateSearchResults()
   }, [rawResponse, pageSize, pageSize])
 
   const getHotLink = (row) => {
@@ -227,7 +232,20 @@ function TableResultsCellTypes({ children, onRowClicked, filters, forData = fals
 
 TableResultsCellTypes.propTypes = {
   children: PropTypes.node,
-  onRowClicked: PropTypes.func
+  filters: PropTypes.any,
+  forData: PropTypes.bool,
+  inModal: PropTypes.bool,
+  onRowClicked: PropTypes.func,
+  rawResponse: PropTypes.shape({
+    aggregations: PropTypes.shape({
+      group_organs_by_cell_type: PropTypes.shape({
+        buckets: PropTypes.any
+      })
+    }),
+    record_count: PropTypes.number,
+    records: PropTypes.object
+  }),
+  rowFn: PropTypes.any
 }
 
 export { TableResultsCellTypes }

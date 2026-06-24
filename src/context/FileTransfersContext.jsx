@@ -1,5 +1,5 @@
 import dynamic from "next/dynamic";
-import {createContext, useContext, useEffect, useRef, useState} from "react";
+import React, {createContext, useContext, useEffect, useRef, useState} from "react";
 import {getDatasetsByIds, getTransferAuthJsonHeaders, parseJson} from "@/lib/services";
 import {getIngestEndPoint} from "@/config/config";
 import {APP_ROUTES} from "@/config/constants";
@@ -15,7 +15,7 @@ import AppContext from "@/context/AppContext";
 
 const FileTransfersContext = createContext()
 
-export const FileTransfersProvider = ({children}) => {
+export const FileTransfersProvider = ({ children }) => {
     const {logout, authorized} = useContext(AppContext)
     const [isLoading, setIsLoading] = useState(null)
     const [error, setError] = useState(null)

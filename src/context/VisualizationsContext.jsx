@@ -1,4 +1,5 @@
-import {createContext, useRef} from "react";
+import PropTypes from "prop-types"
+import React, { createContext, useRef } from 'react'
 import * as d3 from "d3";
 import { eq } from "@/components/custom/js/functions";
 
@@ -277,12 +278,11 @@ export const VisualizationsProvider = ({ children, options = {} }) => {
     }
 
     const addHighlightToolTip = (id, highlight, chart = 'bar') => {
-        let rect, xPos
+        let xPos
         let name = 'highlight'
         
         $(`${getChartSelector(id, chart)} .bar--highlighted`).each(function(index, element) {
             appendDiv(id, name, chart, index)
-            rect = element?.getBoundingClientRect()
 
             xPos = Number($(element).attr('x')) - 5
             d3.select(`#${selectors.base}${name}--${id}${index}`)
@@ -331,7 +331,6 @@ export const VisualizationsProvider = ({ children, options = {} }) => {
                 addHighlightToolTip,
                 getSubgroupLabels,
                 handleSvgSizing,
-                toolTipHandlers,
                 setToolTipContent,
                 getTotalY,
                 svgAppend,
@@ -342,6 +341,11 @@ export const VisualizationsProvider = ({ children, options = {} }) => {
         {children}
     </VisualizationsContext.Provider>
     )
+}
+
+VisualizationsProvider.propTypes = {
+  children: PropTypes.any,
+  options: PropTypes.object
 }
 
 export default VisualizationsContext

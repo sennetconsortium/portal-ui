@@ -1,5 +1,5 @@
 import dynamic from "next/dynamic";
-import React, {useContext, useEffect, useRef, useState} from 'react'
+import React, {useContext, useEffect, useEffectEvent, useRef, useState} from 'react'
 import PropTypes from 'prop-types'
 import AppContext from "@/context/AppContext";
 import LinearProgress from '@mui/material/LinearProgress';
@@ -35,7 +35,7 @@ import Stack from '@mui/material/Stack';
 import JobQueueContext, {JobQueueProvider} from "../../context/JobQueueContext";
 import {driver} from "driver.js";
 import "driver.js/dist/driver.css";
-import {SWAL_DEL_CONFIG, TUTORIAL_THEME} from "@/config/constants";
+import {SWAL_DEL_CONFIG } from "@/config/constants";
 import JobDashboardTutorialSteps from "../../components/custom/layout/JobDashboardTutorialSteps";
 import Spinner, {SpinnerEl} from "../../components/custom/Spinner";
 
@@ -630,7 +630,7 @@ function ViewJobs({isAdmin = false}) {
         }, 3000)
     }
 
-    useEffect(() => {
+    const updateSocket = useEffectEvent(() => {
         mimicSocket()
 
         if (!hasLoaded.current) {
@@ -650,24 +650,37 @@ function ViewJobs({isAdmin = false}) {
         if (q) {
             setFilterText(q)
         }
+    })
 
+    useEffect(() => {
+        updateSocket()
     }, [])
 
-    useEffect(() => {
-        setSteps(JobDashboardTutorialSteps({getVariant, data: filteredItems}))
-    }, [data])
+    const updateSteps = useEffectEvent(() => {
+        setSteps(JobDashboardTutorialSteps({ getVariant, data: filteredItems }))
+    })
 
     useEffect(() => {
+        updateSteps()
+    }, [data])
+
+    const updateTutorial = useEffectEvent(() => {
         if (steps.length > 0) {
             console.log('steps', steps)
-            setDriverObj(driver({
-                popoverClass: 'driverjs-theme',
-                animate: false,
-                showProgress: true,
-                showButtons: ['next', 'previous', 'close'],
-                steps: steps
-            }))
+            setDriverObj(
+                driver({
+                    popoverClass: 'driverjs-theme',
+                    animate: false,
+                    showProgress: true,
+                    showButtons: ['next', 'previous', 'close'],
+                    steps: steps
+                })
+            )
         }
+    })
+
+    useEffect(() => {
+        updateTutorial()
     }, [steps])
 
     getOptions(filteredItems.length)
@@ -822,7 +835,8 @@ function ViewJobs({isAdmin = false}) {
 }
 
 ViewJobs.propTypes = {
-    children: PropTypes.node
+  children: PropTypes.node,
+  isAdmin: PropTypes.bool
 }
 
 export default ViewJobs

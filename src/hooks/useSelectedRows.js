@@ -81,7 +81,7 @@ function useSelectedRows({pageNumber, pageSize, filters, onCheckboxChange}) {
         // thus we will only update selected rows when state contains a value
         // and use our own custom listeners to manage deletions in handleCheckboxes
         // At current version, DataTable persistence options also does not provide the check all checkbox in table header, 
-        // so we can't use the persistence options if even if we wanted to
+        // so we can't use the persistence options if even we wanted to
         if (state.selectedCount) {
             let _dict = {}
             for (let e of selectedRows.current) {
