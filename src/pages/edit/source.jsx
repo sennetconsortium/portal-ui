@@ -9,8 +9,7 @@ import log from 'xac-loglevel'
 import {cleanJson, eq, getDOIPattern} from "@/components/custom/js/functions";
 import {getEntityData, update_create_entity} from "@/lib/services";
 import AppContext from '@/context/AppContext'
-import EntityContext, {EntityProvider} from '@/context/EntityContext'
-import {SenPopoverOptions} from "@/components/SenNetPopover";
+import EntityContext, {EntityProvider} from '@/context/EntityContext';
 import $ from 'jquery';
 
 const AppFooter = dynamic(() => import("@/components/custom/layout/AppFooter"))
@@ -36,7 +35,7 @@ function EditSource() {
         showModal,
         selectedUserWriteGroupUuid,
         disableSubmit, setDisableSubmit,
-        entityForm, disabled, disableElements,
+        entityForm, disabled, imageDisabled,
         getMetadataNote, checkProtocolUrl,
         warningClasses, getCancelBtn
     } = useContext(EntityContext)
@@ -222,7 +221,7 @@ function EditSource() {
                     <div className="no_sidebar">
                         <Layout
                             bodyHeader={
-                                <EntityHeader entity={cache.entities.source} isEditMode={isEditMode()} data={data}/>
+                                <EntityHeader entity={cache.entities.source} data={data}/>
                             }
                             bodyContent={
                                 <Form noValidate validated={validated} onSubmit={handleSave} id={"source-form"} ref={entityForm}>
@@ -285,7 +284,7 @@ function EditSource() {
                                                  text='Upload de-identified images only'/>
 
                                     {/* Images */}
-                                    <ImageSelector isDisabled={disabled} editMode={editMode}
+                                    <ImageSelector isDisabled={imageDisabled} editMode={editMode}
                                                    values={values}
                                                    setValues={setValues}
                                                    imageByteArray={imageByteArray}

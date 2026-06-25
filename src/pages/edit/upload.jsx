@@ -219,8 +219,8 @@ function EditUpload() {
                     <div className="no_sidebar">
                         <Layout
                             bodyHeader={
-                                <EntityHeader adminGroup={adminGroup} entity={cache.entities.upload}
-                                              isEditMode={isEditMode()} data={data} values={values}/>
+                                <EntityHeader entity={cache.entities.upload}
+                                              data={data} values={values}/>
                             }
                             bodyContent={
                                 <>

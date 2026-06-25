@@ -42,7 +42,7 @@ function EditSample() {
         showModal, setAllModalDetails, handleClose, setModalProps,
         selectedUserWriteGroupUuid,
         disableSubmit, setDisableSubmit,
-        entityForm, disabled,
+        entityForm, disabled, imageDisabled,
         getSampleEntityConstraints,
         getMetadataNote, checkProtocolUrl,
         warningClasses, getCancelBtn
@@ -452,7 +452,7 @@ function EditSample() {
                     <div className="no_sidebar">
                         <Layout
                             bodyHeader={
-                                <EntityHeader entity={cache.entities.sample} isEditMode={isEditMode()} data={data}/>
+                                <EntityHeader entity={cache.entities.sample} data={data}/>
 
                             }
                             bodyContent={
@@ -550,7 +550,7 @@ function EditSample() {
 
                                     {/* Images */}
                                     <ImageSelector editMode={editMode}
-                                                   isDisabled={disabled}
+                                                   isDisabled={imageDisabled}
                                                    values={values}
                                                    setValues={setValues}
                                                    imageByteArray={imageByteArray}
@@ -558,7 +558,7 @@ function EditSample() {
 
                                     {/* Thumbnail */}
                                     <ThumbnailSelector editMode={editMode}
-                                                       isDisabled={disabled}
+                                                       isDisabled={imageDisabled}
                                                        values={values}
                                                        setValues={setValues}/>
 

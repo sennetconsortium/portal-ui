@@ -15,7 +15,7 @@ import GroupSelect from "@/components/custom/edit/GroupSelect";
 import {valid_dataset_ancestor_config, getIngestEndPoint} from "@/config/config";
 import DatasetSubmissionButton from "@/components/custom/edit/dataset/DatasetSubmissionButton";
 
-const AncestorIds = dynamic(() => import('@/components/custom/edit/dataset/AncestorIds'))
+const AncestorIdsBulkButton = dynamic(() => import('@/components/custom/edit/dataset/AncestorIdsBulkButton'))
 const AppFooter = dynamic(() => import("@/components/custom/layout/AppFooter"))
 const AppNavbar = dynamic(() => import("@/components/custom/layout/AppNavbar"))
 const EntityHeader = dynamic(() => import('@/components/custom/layout/entity/Header'))
@@ -132,13 +132,7 @@ export default function EditPublication() {
         setAncestors(newAncestors)
     }
 
-    const deleteAncestor = (ancestor_uuid) => {
-        const old_ancestors = [...ancestors];
-        log.debug(old_ancestors)
-        let updated_ancestors = old_ancestors.filter(e => e.uuid !== ancestor_uuid);
-        setAncestors(updated_ancestors);
-        log.debug(updated_ancestors);
-    }
+
 
     const modalResponse = (response) => {
         toggleBusyOverlay(false)
@@ -201,7 +195,7 @@ export default function EditPublication() {
                     values['group_uuid'] = selectedUserWriteGroupUuid || userWriteGroups[0]?.uuid
                 }
 
-                if (isEditMode) {
+                if (isEditMode()) {
                     delete values['dataset_type']
                 }
 
@@ -239,193 +233,374 @@ export default function EditPublication() {
 
         return (
             <>
-                {editMode &&
+                {editMode && (
                     <Header title={`${editMode} Publication | SenNet`}></Header>
-                }
+                )}
 
-                <AppNavbar/>
+                <AppNavbar />
 
-                {error &&
-                    <div><Alert variant='warning'>{_t(errorMessage)}</Alert></div>
-                }
-                {data && !error &&
-                    <div className="no_sidebar">
+                {error && (
+                    <div>
+                        <Alert variant='warning'>{_t(errorMessage)}</Alert>
+                    </div>
+                )}
+                {data && !error && (
+                    <div className='no_sidebar'>
                         <Layout
                             bodyHeader={
-                                <EntityHeader entity={cache.entities.publication} isEditMode={isEditMode()} data={data} values={values} showGroup={false}/>
+                                <EntityHeader
+                                    entity={cache.entities.publication}
+                                    data={data}
+                                    values={values}
+                                    showGroup={false}
+                                />
                             }
                             bodyContent={
                                 <Form noValidate validated={validated}>
                                     {/*Group select*/}
-                                    {
-                                        !(userWriteGroups.length === 1 || isEditMode()) &&
+                                    {!(
+                                        userWriteGroups.length === 1 ||
+                                        isEditMode()
+                                    ) && (
                                         <GroupSelect
                                             data={data}
                                             groups={userWriteGroups}
                                             onGroupSelectChange={onChange}
-                                            entity_type={'dataset'}/>
-                                    }
+                                            entity_type={'dataset'}
+                                        />
+                                    )}
 
                                     {/*Ancestor IDs*/}
                                     {/*editMode is only set when page is ready to load */}
-                                    {editMode &&
-                                        <AncestorIds data={data} values={values} ancestors={ancestors} onChange={onChange}
-                                                     fetchAncestors={fetchAncestors} deleteAncestor={deleteAncestor}/>
-                                    }
+                                    {editMode && (
+                                        <AncestorIdsBulkButton
+                                            bulkSupportedEntities={[
+                                                cache.entities.dataset
+                                            ]}
+                                            setAncestors={setAncestors}
+                                            data={data}
+                                            controlId={'direct_ancestor_uuids'}
+                                            entityType={'Publication'}
+                                            entitiesTableLabel={'Datasets'}
+                                            entitiesButtonLabel={'dataset'}
+                                            values={values}
+                                            ancestors={ancestors}
+                                            onChange={onChange}
+                                        />
+                                    )}
 
                                     {/*/!*Title*!/*/}
-                                    <EntityFormGroup label='Title' placeholder='The title of the publication'
-                                                     controlId='title' value={data.title}
-                                                     isRequired={true}
-                                                     onChange={onChange}
-                                                     popoverHelpText={<>The title of the publication.</>}/>
+                                    <EntityFormGroup
+                                        label='Title'
+                                        placeholder='The title of the publication'
+                                        controlId='title'
+                                        value={data.title}
+                                        isRequired={true}
+                                        onChange={onChange}
+                                        popoverHelpText={
+                                            <>The title of the publication.</>
+                                        }
+                                    />
 
                                     {/*/!*Venue*!/*/}
-                                    <EntityFormGroup label='Venue' controlId='publication_venue'
-                                                     value={data.publication_venue}
-                                                     isRequired={true}
-                                                     onChange={onChange}
-                                                     popoverHelpText={<>The venue of the publication, journal, conference, preprint server, etc.</>}/>
+                                    <EntityFormGroup
+                                        label='Venue'
+                                        controlId='publication_venue'
+                                        value={data.publication_venue}
+                                        isRequired={true}
+                                        onChange={onChange}
+                                        popoverHelpText={
+                                            <>
+                                                The venue of the publication,
+                                                journal, conference, preprint
+                                                server, etc.
+                                            </>
+                                        }
+                                    />
 
                                     <div className='row'>
                                         <div className='col-md-3'>
                                             {/*/!*Publication Date*!/*/}
-                                            <EntityFormGroup label='Publication Date' controlId='publication_date'
-                                                             isRequired={true}
-                                                             type={'date'}
-                                                             otherInputProps={{placeholder:'mm/dd/YYYY'}}
-                                                             value={data.publication_date}
-                                                             onChange={onChange}
-                                                             popoverHelpText={<>The date of the publication.</>}/>
+                                            <EntityFormGroup
+                                                label='Publication Date'
+                                                controlId='publication_date'
+                                                isRequired={true}
+                                                type={'date'}
+                                                otherInputProps={{
+                                                    placeholder: 'mm/dd/YYYY'
+                                                }}
+                                                value={data.publication_date}
+                                                onChange={onChange}
+                                                popoverHelpText={
+                                                    <>
+                                                        The date of the
+                                                        publication.
+                                                    </>
+                                                }
+                                            />
                                         </div>
                                     </div>
 
                                     {/*/!*Human Gene Sequences*!/*/}
-                                    {editMode &&
-                                        <Form.Group controlId="publication_status" className="mb-3">
-                                            <Form.Label>{_t('Publication Status')} <span
-                                                className="required">* </span>
-                                                <SenNetPopover className={'publication_status'} text={'Has this Publication been Published?'}>
-                                                    <i className="bi bi-question-circle-fill"></i>
+                                    {editMode && (
+                                        <Form.Group
+                                            controlId='publication_status'
+                                            className='mb-3'
+                                        >
+                                            <Form.Label>
+                                                {_t('Publication Status')}{' '}
+                                                <span className='required'>
+                                                    *{' '}
+                                                </span>
+                                                <SenNetPopover
+                                                    className={
+                                                        'publication_status'
+                                                    }
+                                                    text={
+                                                        'Has this Publication been Published?'
+                                                    }
+                                                >
+                                                    <i className='bi bi-question-circle-fill'></i>
                                                 </SenNetPopover>
-
                                             </Form.Label>
-                                            <div
-                                                className="mb-2 text-muted">{_t('Has this Publication been Published?')}
+                                            <div className='mb-2 text-muted'>
+                                                {_t(
+                                                    'Has this Publication been Published?'
+                                                )}
                                             </div>
                                             <Form.Check
                                                 required
-                                                type="radio"
-                                                label="No"
-                                                name="publication_status"
+                                                type='radio'
+                                                label='No'
+                                                name='publication_status'
                                                 value={false}
-                                                defaultChecked={(data.publication_status === false)}
-                                                onChange={handlePublicationStatusNo}
+                                                defaultChecked={
+                                                    data.publication_status ===
+                                                    false
+                                                }
+                                                onChange={
+                                                    handlePublicationStatusNo
+                                                }
                                             />
                                             <Form.Check
                                                 required
-                                                type="radio"
-                                                label="Yes"
-                                                name="publication_status"
+                                                type='radio'
+                                                label='Yes'
+                                                name='publication_status'
                                                 value={true}
-                                                defaultChecked={data.publication_status}
-                                                onChange={handlePublicationStatusYes}
+                                                defaultChecked={
+                                                    data.publication_status
+                                                }
+                                                onChange={
+                                                    handlePublicationStatusYes
+                                                }
                                             />
                                         </Form.Group>
-                                    }
+                                    )}
 
                                     {/*/!*Publication URL*!/*/}
-                                    <EntityFormGroup label='Publication URL' controlId='publication_url'
-                                                     type='url'
-                                                     value={data.publication_url}
-                                                     isRequired={true}
-                                                     onChange={onChange}
-                                                     popoverHelpText={<>The URL at the publishers server for print/pre-print (http(s)://[alpha-numeric-string].[alpha-numeric-string].[...]</>}/>
+                                    <EntityFormGroup
+                                        label='Publication URL'
+                                        controlId='publication_url'
+                                        type='url'
+                                        value={data.publication_url}
+                                        isRequired={true}
+                                        onChange={onChange}
+                                        popoverHelpText={
+                                            <>
+                                                The URL at the publishers server
+                                                for print/pre-print
+                                                (http(s)://[alpha-numeric-string].[alpha-numeric-string].[...]
+                                            </>
+                                        }
+                                    />
 
                                     {/*/!*Publication DOI*!/*/}
-                                    <EntityFormGroup label='Publication DOI' controlId='publication_doi'
-                                                     value={data.publication_doi}
-                                                     onChange={onChange}
-                                                     popoverHelpText={<>The doi of the publication. (##.####/[alpha-numeric-string])</>}/>
+                                    <EntityFormGroup
+                                        label='Publication DOI'
+                                        controlId='publication_doi'
+                                        value={data.publication_doi}
+                                        onChange={onChange}
+                                        popoverHelpText={
+                                            <>
+                                                The doi of the publication.
+                                                (##.####/[alpha-numeric-string])
+                                            </>
+                                        }
+                                    />
 
                                     {/*/!*OMAP DOI*!/*/}
-                                    <EntityFormGroup label='OMAP DOI' controlId='omap_doi'
-                                                     value={data.omap_doi}
-                                                     onChange={onChange}
-                                                     popoverHelpText={<>A DOI pointing to an Organ Mapping Antibody Panel relevant to this publication</>}/>
-
+                                    <EntityFormGroup
+                                        label='OMAP DOI'
+                                        controlId='omap_doi'
+                                        value={data.omap_doi}
+                                        onChange={onChange}
+                                        popoverHelpText={
+                                            <>
+                                                A DOI pointing to an Organ
+                                                Mapping Antibody Panel relevant
+                                                to this publication
+                                            </>
+                                        }
+                                    />
 
                                     {/*/!*Issue*!/*/}
-                                    <EntityFormGroup label='Issue Number' controlId='issue'
-                                                     type={'number'}
-                                                     value={data.issue}
-                                                     onChange={onChange}
-                                                     popoverHelpText={<>The issue number of the journal that it was published in.</>}/>
+                                    <EntityFormGroup
+                                        label='Issue Number'
+                                        controlId='issue'
+                                        type={'number'}
+                                        value={data.issue}
+                                        onChange={onChange}
+                                        popoverHelpText={
+                                            <>
+                                                The issue number of the journal
+                                                that it was published in.
+                                            </>
+                                        }
+                                    />
 
                                     {/*/!*Volume*!/*/}
-                                    <EntityFormGroup label='Volume Number' controlId='volume'
-                                                     type={'number'}
-                                                     value={data.volume}
-                                                     onChange={onChange}
-                                                     popoverHelpText={<>The volume number of a journal that it was published in.</>}/>
+                                    <EntityFormGroup
+                                        label='Volume Number'
+                                        controlId='volume'
+                                        type={'number'}
+                                        value={data.volume}
+                                        onChange={onChange}
+                                        popoverHelpText={
+                                            <>
+                                                The volume number of a journal
+                                                that it was published in.
+                                            </>
+                                        }
+                                    />
 
                                     {/*/!*Pages or Article Number*!/*/}
-                                    <EntityFormGroup label='Pages or Article Number' controlId='pages_or_article_num'
-                                                     value={data.pages_or_article_num}
-                                                     onChange={onChange}
-                                                     popoverHelpText={<>The pages or the article number in the publication journal e.g., "23", "23-49", "e1003424.</>}/>
-
+                                    <EntityFormGroup
+                                        label='Pages or Article Number'
+                                        controlId='pages_or_article_num'
+                                        value={data.pages_or_article_num}
+                                        onChange={onChange}
+                                        popoverHelpText={
+                                            <>
+                                                The pages or the article number
+                                                in the publication journal e.g.,
+                                                "23", "23-49", "e1003424.
+                                            </>
+                                        }
+                                    />
 
                                     {/*/!*Description*!/*/}
-                                    <EntityFormGroup label='Abstract' type='textarea' controlId='description'
-                                                     value={data.description}
-                                                     onChange={onChange}
-                                                     popoverHelpText={<>An abstract publicly available when the <code>Publication</code> is published.  This will be included with the DOI information of the published <code>Publication</code>.</>}/>
-
-
+                                    <EntityFormGroup
+                                        label='Abstract'
+                                        type='textarea'
+                                        controlId='description'
+                                        value={data.description}
+                                        onChange={onChange}
+                                        popoverHelpText={
+                                            <>
+                                                An abstract publicly available
+                                                when the{' '}
+                                                <code>Publication</code> is
+                                                published. This will be included
+                                                with the DOI information of the
+                                                published{' '}
+                                                <code>Publication</code>.
+                                            </>
+                                        }
+                                    />
 
                                     <div className={'d-flex flex-row-reverse'}>
-
                                         {getCancelBtn('publication')}
 
                                         {/*
                                             If a user is a data admin and the status is either 'New' or 'Submitted' allow this Dataset to be
                                             processed via the pipeline.
                                             */}
-                                        {!['Processing', 'Published'].contains(data['status'])  && adminGroup && isEditMode() &&
-                                            <SenNetPopover
-                                                text={<>Process this <code>Publication</code> via the Ingest Pipeline.</>}
-                                                className={'initiate-dataset-processing'}>
-                                                <DatasetSubmissionButton
-                                                    actionBtnClassName={'js-btn--process'}
-                                                    btnLabel={"Process"}
-                                                    modalBody={<div><p>By clicking "Process"
-                                                        this <code>Publication</code> will
-                                                        be processed via the Ingest Pipeline and its status set
-                                                        to <span className={`${getStatusColor('QA')} badge`}>QA</span>.
-                                                    </p></div>}
-                                                    onClick={handleProcessing} disableSubmit={disableSubmit}/>
-                                            </SenNetPopover>
-                                        }
+                                        {!['Processing', 'Published'].contains(
+                                            data['status']
+                                        ) &&
+                                            adminGroup &&
+                                            isEditMode() && (
+                                                <SenNetPopover
+                                                    text={
+                                                        <>
+                                                            Process this{' '}
+                                                            <code>
+                                                                Publication
+                                                            </code>{' '}
+                                                            via the Ingest
+                                                            Pipeline.
+                                                        </>
+                                                    }
+                                                    className={
+                                                        'initiate-dataset-processing'
+                                                    }
+                                                >
+                                                    <DatasetSubmissionButton
+                                                        actionBtnClassName={
+                                                            'js-btn--process'
+                                                        }
+                                                        btnLabel={'Process'}
+                                                        modalBody={
+                                                            <div>
+                                                                <p>
+                                                                    By clicking
+                                                                    "Process"
+                                                                    this{' '}
+                                                                    <code>
+                                                                        Publication
+                                                                    </code>{' '}
+                                                                    will be
+                                                                    processed
+                                                                    via the
+                                                                    Ingest
+                                                                    Pipeline and
+                                                                    its status
+                                                                    set to{' '}
+                                                                    <span
+                                                                        className={`${getStatusColor('QA')} badge`}
+                                                                    >
+                                                                        QA
+                                                                    </span>
+                                                                    .
+                                                                </p>
+                                                            </div>
+                                                        }
+                                                        onClick={
+                                                            handleProcessing
+                                                        }
+                                                        disableSubmit={
+                                                            disableSubmit
+                                                        }
+                                                    />
+                                                </SenNetPopover>
+                                            )}
 
-                                        { data['status'] !== 'Processing' &&
-                                            <SenNetPopover text={'Save changes to this publication'} className={'save-button'}>
-                                                <Button variant="outline-primary rounded-0 js-btn--save"
-                                                        className={'me-2'}
-                                                        onClick={handleSave}
-                                                        disabled={disableSubmit}>
+                                        {data['status'] !== 'Processing' && (
+                                            <SenNetPopover
+                                                text={
+                                                    'Save changes to this publication'
+                                                }
+                                                className={'save-button'}
+                                            >
+                                                <Button
+                                                    variant='outline-primary rounded-0 js-btn--save'
+                                                    className={'me-2'}
+                                                    onClick={handleSave}
+                                                    disabled={disableSubmit}
+                                                >
                                                     {_t('Save')}
                                                 </Button>
                                             </SenNetPopover>
-                                        }
+                                        )}
                                     </div>
                                     {getModal()}
                                 </Form>
                             }
                         />
                     </div>
-                }
-                {!showModal && <AppFooter/>}
+                )}
+                {!showModal && <AppFooter />}
             </>
         )
     }
