@@ -144,7 +144,9 @@ function TableResultsEntities({children, filters, onRowClicked, currentColumns =
         name: 'Dataset Type',
         id: 'dataset_type',
         selector: row => {
-            let val = raw(row.dataset_type_hierarchy)?.second_level || raw(row.dataset_type)
+            let val =
+                raw(row.dataset_type_hierarchy)?.dataset_type ||
+                raw(row.dataset_type)
             if (val) {
                 return Array.isArray(val) ? getUBKGFullName(val[0]) : val
             } else {
