@@ -23,40 +23,40 @@ function DataTypeQuantitiesChart({ organ }) {
   })
 
   const query = {
-    size: 0,
-    query: {
-      bool: {
-        must: [
-          {
-            terms: {
-              'origin_samples.organ.keyword': organ.codes,
-            }
-          },
-          {
-            term: {
-              "entity_type.keyword": "Dataset"
-            }
+      size: 0,
+      query: {
+          bool: {
+              must: [
+                  {
+                      terms: {
+                          'origin_samples.organ.keyword': organ.codes
+                      }
+                  },
+                  {
+                      term: {
+                          'entity_type.keyword': 'Dataset'
+                      }
+                  }
+              ],
+              must_not: mustNot
           }
-        ],
-        must_not: mustNot
+      },
+      aggs: {
+          by_dataset_type: {
+              terms: {
+                  field: 'dataset_type_hierarchy.modality.keyword',
+                  size: 1000
+              },
+              aggs: {
+                  by_organ_code: {
+                      terms: {
+                          field: 'origin_samples.organ.keyword',
+                          size: 100
+                      }
+                  }
+              }
+          }
       }
-    },
-    aggs: {
-      by_dataset_type: {
-        terms: {
-          field: "dataset_type_hierarchy.first_level.keyword",
-          size: 1000
-        },
-        aggs: {
-          by_organ_code: {
-            "terms": {
-              "field": "origin_samples.organ.keyword",
-              "size": 100
-            },
-          },
-        }
-      }
-    }
   }
 
   const { data, loading, error } = useSearchUIQuery(getEntitiesIndex(), query)

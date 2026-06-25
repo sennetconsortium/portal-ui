@@ -33,10 +33,14 @@ function ViewCompare() {
             typeDisabled = true
         }
         setStateProps({
-            'entity_type.keyword': {'disabled': true},
-            'has_visualization.keyword': {'disabled': true},
-            'dataset_type_hierarchy.first_level.keyword': {'disabled': typeDisabled},
-            'dataset_type_hierarchy.second_level.keyword': {'disabled': typeDisabled},
+            'entity_type.keyword': { disabled: true },
+            'has_visualization.keyword': { disabled: true },
+            'dataset_type_hierarchy.modality.keyword': {
+                disabled: typeDisabled
+            },
+            'dataset_type_hierarchy.dataset_type.keyword': {
+                disabled: typeDisabled
+            }
         })
 
         setTimeout(()=> {

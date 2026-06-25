@@ -159,7 +159,11 @@ const normalizedNames = {
 }
 
 export const getDatasetTypeDisplay = (data) => {
-    return data.dataset_type_hierarchy?.second_level || data.display_subtype || data.dataset_type
+    return (
+        data.dataset_type_hierarchy?.dataset_type ||
+        data.display_subtype ||
+        data.dataset_type
+    )
 }
 
 function getNormalizedName(term) {

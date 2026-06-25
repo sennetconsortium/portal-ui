@@ -168,8 +168,8 @@ export const SEARCH_FILES = {
                 isFilterable: false,
                 facetType: 'megahierarchy',
                 hierarchyFields: [
-                    'dataset_type_hierarchy.first_level.keyword',
-                    'dataset_type_hierarchy.second_level.keyword',
+                    'dataset_type_hierarchy.first_level.keyword', // TODO: update this field to 'dataset_type_hierarchy.modality.keyword' once the backend is updated to support this field
+                    'dataset_type_hierarchy.second_level.keyword', 
                 ],
                 isAggregationActive: true,
                 isFacetVisible: doesAggregationHaveBuckets('dataset_type')
