@@ -15,7 +15,7 @@ import Box from "@mui/material/Box";
 import {Button} from "react-bootstrap";
 import {Alert, Container, Grid} from "@mui/material";
 import {getDocsRootURL, getIngestEndPoint} from "@/config/config";
-import Spinner, { SpinnerEl } from '@/components/Spinner'
+import Spinner, { SpinnerEl } from '@/components/custom/Spinner'
 import GroupsIcon from '@mui/icons-material/Groups';
 import GroupSelect from "../edit/GroupSelect";
 import AppModal from '@/components/AppModal'
