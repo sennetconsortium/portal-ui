@@ -160,7 +160,7 @@ export const SEARCH_FILES = {
                 isAggregationActive: true,
                 isFacetVisible: doesAggregationHaveBuckets('dataset_status')
             },
-            dataset_type: {
+            dataset_type_hierarchy: {
                 label: 'Dataset Type',
                 type: 'value',
                 isExpanded: false,
@@ -173,7 +173,7 @@ export const SEARCH_FILES = {
                     'dataset_type_hierarchy.dataset_type.keyword'
                 ],
                 isAggregationActive: true,
-                isFacetVisible: doesAggregationHaveBuckets('dataset_type')
+                isFacetVisible: doesAggregationHaveBuckets('dataset_type_hierarchy')
             },
             data_class: {
                 label: 'Data Class',
