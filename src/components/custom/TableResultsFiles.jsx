@@ -130,7 +130,7 @@ function TableResultsFiles({children, onRowClicked, filters, forData = false, ro
         const results = {}
 
         // group files by dataset_uuid
-        for (let file of (resp?.records?.files | [])) {
+        for (let file of (resp?.records?.files || [])) {
             let uuid = file.fields['dataset_uuid.keyword'][0]
             if (!results?.hasOwnProperty(uuid)) {
                 let list = []
