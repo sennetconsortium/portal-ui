@@ -3,7 +3,7 @@ import AppContext from "../context/AppContext";
 import Tooltip from '@mui/material/Tooltip';
 import Zoom from '@mui/material/Zoom';
 
-function SidebarBtn({target='#sidebar', onClick, initialClass = ''}) {
+function SidebarBtn({target='#sidebar', onClick, tooltip, className = '', initialClass = ''}) {
     const {sidebarVisible, handleSidebar} = useContext(AppContext)
     const [isVisible, setIsVisible] = useState(initialClass === 'show')
 
@@ -24,9 +24,9 @@ function SidebarBtn({target='#sidebar', onClick, initialClass = ''}) {
     const isOpen = sidebarVisible || isVisible
 
     return (
-        <div className="d-none d-md-block sticky-top" id="sections-button">
+        <div className={`d-none d-md-block sticky-top ${className}`} id="sidebar-toggle">
             <Tooltip 
-                title={`${isOpen ? 'Close' : 'Open'} sidebar.`}
+                title={<span>{`${isOpen ? 'Close' : 'Open'} sidebar.`}{tooltip}</span>}
                 placement='right'
                 classes={{ popper: 'snPopover' }}
                 arrow
