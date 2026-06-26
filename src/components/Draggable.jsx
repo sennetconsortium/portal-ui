@@ -31,15 +31,17 @@ const Draggable = ({ children, wrapperSelector = '.sui-resultsTable' }) => {
                     e.clientY
                 )
 
-                 $target.style.top = e.clientY + 'px'
-                 $target.style.left = e.clientX + 'px'
-                 $target.classList.add('isActive')
+                $target.style.top = e.clientY + 'px'
+                $target.style.left = e.clientX + 'px'
+                $target.classList.add('isActive')
+                document.body.style.cursor = 'move'
             }
         })
 
         window.addEventListener('mouseup', () => {
             isMouseDown = false
             $target.classList.remove('isActive')
+            document.body.style.cursor = null
             if (realDragging) {
                 log.debug('Draggable.User finished dragging.')
             } else {
