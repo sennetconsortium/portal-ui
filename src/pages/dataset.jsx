@@ -27,6 +27,7 @@ import ProtocolsWorkflow from "@/components/custom/entities/dataset/ProtocolsWor
 import AssociatedEntity from "@/components/custom/entities/AssociatedEntity";
 import AssociatedEntityTable from "@/components/custom/entities/AssociatedEntityTable";
 import { Skeleton } from "@mui/material";
+import SegmentationMetadata from "@/components/custom/entities/dataset/SegmentationMetadata";
 
 
 const AppFooter = dynamic(() => import("@/components/custom/layout/AppFooter"))
@@ -382,6 +383,18 @@ function ViewDataset() {
                                                                            style={{height: '800px'}}>
                                             <SenNetVitessce data={data}/>
                                         </SenNetSuspense>}
+
+                                        {data &&
+                                            data.ingest_metadata &&
+                                            data.ingest_metadata
+                                                .segmentation_metadata && (
+                                                <SegmentationMetadata
+                                                    data={
+                                                        data
+                                                    }
+                                                />
+                                                
+                                            )}
 
                                         {showProtocolsWorkflow && <ProtocolsWorkflow data={data}/>}
 
