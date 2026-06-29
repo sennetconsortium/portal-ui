@@ -390,7 +390,8 @@ function ViewDataset() {
                                                 .segmentation_metadata && (
                                                 <SegmentationMetadata
                                                     data={
-                                                        data
+                                                        data.ingest_metadata
+                                                .segmentation_metadata
                                                     }
                                                 />
                                                 
