@@ -78,7 +78,7 @@ function SegmentationMetadata({ data }) {
             <div className='container-fluid m-0 p-0'>
                 {data.map((item, index) => (
                     <Row key={index} className='mb-3'>
-                        <Col>
+                        <Col md={6} className='mb-3 mb-md-0'>
                             <Card>
                                 <Card.Header as="h6">Segmentation Channels</Card.Header>
                                 <Card.Body>
@@ -89,7 +89,7 @@ function SegmentationMetadata({ data }) {
                                 </Card.Body>
                             </Card>
                         </Col>
-                        <Col>
+                        <Col md={6}>
                             <Card>
                                 <Card.Header as="h6">Segmentation Quality</Card.Header>
                                 <Card.Body>

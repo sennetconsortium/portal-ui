@@ -283,6 +283,16 @@ function ViewDataset() {
                                                    data-bs-parent="#sidebar">Visualization</a>
                                             </li>
                                         }
+                                        {data &&
+                                            data.ingest_metadata &&
+                                            data.ingest_metadata
+                                                .segmentation_metadata.length > 0 &&
+                                            <li className="nav-item">
+                                                <a href="#Segmentation-Channels-Quality"
+                                                   className="nav-link"
+                                                   data-bs-parent="#sidebar">Segmentation Channels & Quality</a>
+                                            </li>
+                                        }
                                         {showProtocolsWorkflow && <li className="nav-item">
                                             <a href="#Protocols-Workflow-Details"
                                                className="nav-link"
@@ -387,7 +397,7 @@ function ViewDataset() {
                                         {data &&
                                             data.ingest_metadata &&
                                             data.ingest_metadata
-                                                .segmentation_metadata && (
+                                                .segmentation_metadata.length > 0 && (
                                                 <SegmentationMetadata
                                                     data={
                                                         data.ingest_metadata
