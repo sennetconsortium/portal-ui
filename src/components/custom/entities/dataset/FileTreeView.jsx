@@ -309,8 +309,8 @@ export const FileTreeView = ({
         directories.shift()
 
         //Check if directory has already been added to `data`
-        if (data.length > 0 && data.filter(e => e.label === directory_name).length > 0) {
-            let alter_data = data.filter(e => e.label === directory_name)[0]
+        if (data.length > 0 && data.filter(e => e?.label === directory_name).length > 0) {
+            let alter_data = data.filter(e => e?.label === directory_name)[0]
             if (alter_data.hasOwnProperty("children")) {
                 alter_data.data.size += sub_directory.data.size
                 let new_child = buildSubDirectory(uuid, file, alter_data.children, directories, directories[0], id)
