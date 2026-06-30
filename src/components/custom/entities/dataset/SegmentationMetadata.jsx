@@ -48,13 +48,15 @@ function SegmentationMetadata({ data }) {
                 tooltip: 'Coefficient of variation in foreground pixels outside cells, averaged across all expression image channels.'
             }
         ]
-        let field
+        let field, val
         for(const f of fields) {
             field = f.name
             if(item[field] !== undefined && item[field] !== null) {
+                val = Number(item[field])
+                val = val ? val.toFixed(2) : item[field]
                 list.push(<p key={field}><strong>{f.label}: <SenNetPopover text={f.tooltip} className={`popover-${field}`}>
                                     <i className="bi bi-question-circle-fill"></i>
-                                </SenNetPopover></strong> <br /> {item[field]}</p>)
+                                </SenNetPopover></strong> <br /> {val}</p>)
             }
         }
       
@@ -62,11 +64,8 @@ function SegmentationMetadata({ data }) {
     }
 
     return (
-        <SenNetAccordion
-            title='Segmentation Channels & Quality'
-            id='Segmentation-Channels-Quality'
-            defaultExpanded={false}
-        >
+        <div>
+            <h3>Segmentation Channels & Quality</h3>
             <p>
                 Segmentation Channels & Quality These channels were used for
                 segmentation, which are visible in the visualization.
@@ -103,7 +102,7 @@ function SegmentationMetadata({ data }) {
                     </Row>
                 ))}
             </div>
-        </SenNetAccordion>
+        </div>
     )
 }
 
