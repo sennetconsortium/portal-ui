@@ -53,7 +53,7 @@ function SegmentationMetadata({ data }) {
             field = f.name
             if(item[field] !== undefined && item[field] !== null) {
                 val = Number(item[field])
-                val = val ? val.toFixed(2) : item[field]
+                val = val ? val.toFixed(3) : item[field]
                 list.push(<p key={field}><strong>{f.label}: <SenNetPopover text={f.tooltip} className={`popover-${field}`}>
                                     <i className="bi bi-question-circle-fill"></i>
                                 </SenNetPopover></strong> <br /> {val}</p>)
