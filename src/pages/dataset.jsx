@@ -197,7 +197,7 @@ function ViewDataset() {
         <>
             {data &&
                 data.ingest_metadata &&
-                data.ingest_metadata.segmentation_metadata.length > 0 && (
+                data.ingest_metadata.segmentation_metadata?.length > 0 && (
                     <SegmentationMetadata
                         data={data.ingest_metadata.segmentation_metadata}
                     />
@@ -290,7 +290,7 @@ function ViewDataset() {
                                         )}
                                         {hasViz &&
                                             <li className="nav-item">
-                                                <a href="#Vitessce"
+                                                <a href="#Visualization"
                                                    className="nav-link"
                                                    data-bs-parent="#sidebar">Visualization</a>
                                             </li>
@@ -395,9 +395,9 @@ function ViewDataset() {
                                                                                 {SegmentationMetadataBlock}
                                                                            </>}
                                                                            
-                                                                           id="Vitessce" title="Visualization"
+                                                                           id="Visualization" title="Visualization"
                                                                            style={{minHeight: '800px'}}>
-                                            <SenNetVitessce data={data}/>
+                                            <SenNetVitessce />
                                             {SegmentationMetadataBlock}
                                         </SenNetSuspense>} 
 
