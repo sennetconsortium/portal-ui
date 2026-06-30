@@ -71,8 +71,8 @@ function SegmentationMetadata({ data }) {
                 segmentation, which are visible in the visualization.
                 Segmentation outputs and quality control scores are available
                 for each image, with additional segmentation information
-                described in the workflow description in the Protocols &
-                Workflow Details section.
+                described in the workflow description in the <a className='lnk--ic' href="#Protocols-Workflow-Details">Protocols &
+                Workflow</a> Details section.
             </p>
             <div className='container-fluid m-0 p-0'>
                 {data.map((item, index) => (
