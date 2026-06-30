@@ -97,6 +97,37 @@ export const FileTreeView = ({
         event.node.icon = 'pi pi-fw pi-folder'
     }
 
+
+    const getFilteredData = () => {
+        if (qaChecked) {
+            return treeData.filter(
+                node => node.data?.is_qa_qc === "true"
+            );
+        }
+        if (dataProductChecked) {
+            return treeData.filter(
+                node => node.data?.is_data_product === "true"
+            );
+        }
+        return treeData;
+    };
+
+
+    const handleToggle = (event, options, filterType) => {
+        const checked = event.currentTarget.checked
+        if (checked) {
+            if (filterType === filterByValues.qa) {
+                setQAChecked(true)
+                setDataProductChecked(false)
+            } else {
+                setDataProductChecked(true)
+                setQAChecked(false)
+            }
+        } else {
+            handleSearchResetButtonClick(options)
+        }
+    }
+
     const handleSearchResetButtonClick = (options) => {
         setFilterBy(filterByValues.default)
         setQAChecked(false)
@@ -112,37 +143,6 @@ export const FileTreeView = ({
         options.filter(event)
     }
 
-    const showHideQa = (event, options) => {
-        if (event.currentTarget.checked) {
-            setFilterBy(filterByValues.qa)
-            options.filter(event)
-        } else {
-            handleSearchResetButtonClick(options)
-        }
-        setDataProductChecked(false)
-        formRef.current.reset()
-    }
-
-    const showHideDataProduct = (event, options) => {
-        if (event.currentTarget.checked) {
-            setFilterBy(filterByValues.dataProduct)
-            options.filter(event)
-        } else {
-            handleSearchResetButtonClick(options)
-        }
-        setQAChecked(false)
-        formRef.current.reset()
-    }
-
-    const handleQAToggleButtonClick = (event, options) => {
-        setQAChecked(event.currentTarget.checked)
-        showHideQa(event, options)
-    }
-
-    const handleDataProductToggleButtonClick = (event, options) => {
-        setDataProductChecked(event.currentTarget.checked)
-        showHideDataProduct(event, options)
-    }
 
     const getBadgeViews = (node) => {
         const badges = {
@@ -251,7 +251,8 @@ export const FileTreeView = ({
                             variant="outline-primary"
                             checked={qaChecked}
                             value="true"
-                            onChange={(e) => handleQAToggleButtonClick(e, filterOptions)}
+                            onChange={(e) =>
+                                handleToggle(e, filterOptions, filterByValues.qa)}
                         >
                             Show QA files only
                         </ToggleButton>
@@ -265,7 +266,9 @@ export const FileTreeView = ({
                             variant="outline-primary"
                             checked={dataProductChecked}
                             value="true"
-                            onChange={(e) => handleDataProductToggleButtonClick(e, filterOptions)}
+                            onChange={(e) =>
+                                handleToggle(e, filterOptions, filterByValues.dataProduct)
+                            }
                         >
                             Show Data Product files only
                         </ToggleButton>
@@ -381,10 +384,10 @@ export const FileTreeView = ({
             selectionMode={selectionMode}
             selectionKeys={selection.value}
             onSelectionChange={selection.setValue ? (e) => selection.setValue(e, selection.args) : undefined}
-            value={treeData}
+            value={getFilteredData()}
             nodeTemplate={nodeTemplate}
             filter={true}
-            filterBy={filterBy}
+            filterBy={"label"}
             filterTemplate={filterTemplate}
             onExpand={onExpand}
             onCollapse={onCollapse}
