@@ -64,7 +64,7 @@ function SegmentationMetadata({ data }) {
     }
 
     return (
-        <div>
+        <div className='mt-3'>
             <h3>Segmentation Channels & Quality</h3>
             <p>
                 Segmentation Channels & Quality These channels were used for

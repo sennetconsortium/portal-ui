@@ -193,6 +193,18 @@ function ViewDataset() {
         }
     }
 
+    const SegmentationMetadataBlock = (
+        <>
+            {data &&
+                data.ingest_metadata &&
+                data.ingest_metadata.segmentation_metadata.length > 0 && (
+                    <SegmentationMetadata
+                        data={data.ingest_metadata.segmentation_metadata}
+                    />
+                )}
+        </>
+    )
+
     if (isPreview(data, error) || !cache) {
         return getPreviewView(data)
     } else {
@@ -378,25 +390,16 @@ function ViewDataset() {
                                                                                <Skeleton width={'20%'} />
                                                                                <Skeleton width={'60%'} />
                                                                                <Skeleton variant="rounded" className={'mt-2 mb-2'} height={700} />
-
+                                                                                {/* This is a static block and already read for showing, so show it
+                                                                                while loading vitessce */}
+                                                                                {SegmentationMetadataBlock}
                                                                            </>}
+                                                                           
                                                                            id="Vitessce" title="Visualization"
-                                                                           style={{height: '800px'}}>
+                                                                           style={{minHeight: '800px'}}>
                                             <SenNetVitessce data={data}/>
-                                        </SenNetSuspense>}
-
-                                        {data &&
-                                            data.ingest_metadata &&
-                                            data.ingest_metadata
-                                                .segmentation_metadata.length > 0 && (
-                                                <SegmentationMetadata
-                                                    data={
-                                                        data.ingest_metadata
-                                                .segmentation_metadata
-                                                    }
-                                                />
-                                                
-                                            )}
+                                            {SegmentationMetadataBlock}
+                                        </SenNetSuspense>} 
 
                                         {showProtocolsWorkflow && <ProtocolsWorkflow data={data}/>}
 
