@@ -73,7 +73,7 @@ export const SenNetVitessce = ({
     } = useContext(DerivedContext)
 
     return (
-        <SenNetAccordion title={title || 'Visualization'} id={id || 'Vitessce'} expanded={expanded}
+        <SenNetAccordion title={title || 'Visualization'} id={id || 'Visualization'} expanded={expanded}
                          className={`accordion--vitessce ${className}`} afterButton={afterButton}>
             <div className={'row'}>
                 {showPoweredInfo && <div className={'col m-2'}>
