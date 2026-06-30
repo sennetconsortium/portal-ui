@@ -27,6 +27,7 @@ import ProtocolsWorkflow from "@/components/custom/entities/dataset/ProtocolsWor
 import AssociatedEntity from "@/components/custom/entities/AssociatedEntity";
 import AssociatedEntityTable from "@/components/custom/entities/AssociatedEntityTable";
 import { Skeleton } from "@mui/material";
+import SegmentationMetadata from "@/components/custom/entities/dataset/SegmentationMetadata";
 
 
 const AppFooter = dynamic(() => import("@/components/custom/layout/AppFooter"))
@@ -192,6 +193,18 @@ function ViewDataset() {
         }
     }
 
+    const SegmentationMetadataBlock = (
+        <>
+            {data &&
+                data.ingest_metadata &&
+                data.ingest_metadata.segmentation_metadata.length > 0 && (
+                    <SegmentationMetadata
+                        data={data.ingest_metadata.segmentation_metadata}
+                    />
+                )}
+        </>
+    )
+
     if (isPreview(data, error) || !cache) {
         return getPreviewView(data)
     } else {
@@ -282,6 +295,7 @@ function ViewDataset() {
                                                    data-bs-parent="#sidebar">Visualization</a>
                                             </li>
                                         }
+                                      
                                         {showProtocolsWorkflow && <li className="nav-item">
                                             <a href="#Protocols-Workflow-Details"
                                                className="nav-link"
@@ -376,12 +390,16 @@ function ViewDataset() {
                                                                                <Skeleton width={'20%'} />
                                                                                <Skeleton width={'60%'} />
                                                                                <Skeleton variant="rounded" className={'mt-2 mb-2'} height={700} />
-
+                                                                                {/* This is a static block and already read for showing, so show it
+                                                                                while loading vitessce */}
+                                                                                {SegmentationMetadataBlock}
                                                                            </>}
+                                                                           
                                                                            id="Vitessce" title="Visualization"
-                                                                           style={{height: '800px'}}>
+                                                                           style={{minHeight: '800px'}}>
                                             <SenNetVitessce data={data}/>
-                                        </SenNetSuspense>}
+                                            {SegmentationMetadataBlock}
+                                        </SenNetSuspense>} 
 
                                         {showProtocolsWorkflow && <ProtocolsWorkflow data={data}/>}
 
