@@ -222,7 +222,7 @@ export const FileTreeView = ({
         return <>
             {Object.entries(badges).map(([label, hasBadge]) => {
                 return hasBadge
-                    ? <span className="badge bg-secondary mx-2" key={label}> {label}</span>
+                    ? <span className="badge bg-secondary" key={label}> {label}</span>
                     : null
             })}
         </>
@@ -234,7 +234,7 @@ export const FileTreeView = ({
             <Fragment>
                 {node.icon.includes("file") ? (
                     <Row className={`w-100 ${filesClassName}`}>
-                        <Col md={8} sm={8}>
+                        <Col lg={8}>
                             {Object.values(selection).length <= 0 && <a target="_blank"
                                                                         className={"icon-inline js-file"}
                                                                         href={`${getAssetsURL(node.data.uuid, node.data.rel_path)}`}><span
@@ -251,19 +251,20 @@ export const FileTreeView = ({
                                     role={'presentation'} className="bi bi-info-circle-fill cursor-pointer"></i>
                                 </SenNetPopover>}
                         </Col>
-                        <Col md={2} sm={2} className={"text-end"}>
+                        {includeDescription && node.data.description && <span className={"d-block d-lg-none description"}>{node.data.description}</span>}
+                        <Col lg={2}  className={"text-end"}>
                             {getBadgeViews(node)}
                         </Col>
-                        <Col md={2} sm={2} className={"text-end"}>
+                        <Col lg={2}  className={"text-end"}>
                             {formatByteSize(node.data.size)}
                         </Col>
-                        {includeDescription && node.data.description && <span>{node.data.description}</span>}
+                        {includeDescription && node.data.description && <span className={"d-none d-lg-block description"}>{node.data.description}</span>}
                     </Row>) : (
                     <Row className={`w-100 ${filesClassName}`}>
-                        <Col md={8} sm={8}>
+                        <Col lg={8} sm={6}>
                             {node.label}
                         </Col>
-                        <Col md={2} sm={2} className={"text-end"}>
+                        <Col lg={2} sm={6} className={"text-end total-size"}>
                             {formatByteSize(node.data.size)}
                         </Col>
                     </Row>)
