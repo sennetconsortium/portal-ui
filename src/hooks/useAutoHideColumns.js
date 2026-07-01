@@ -13,6 +13,7 @@ function useAutoHideColumns({data}) {
     const [tableData, setTableData] = useState(data)
     const [tableReady, setTableReady] = useState(false)
     const [triggerUpdate, setTriggerUpdate] = useState(false)
+    let st = null
 
     /**
      * Counts rows under a given id/field with true condition. Used later to check for 0 values which indicates an empty column.
@@ -33,8 +34,13 @@ function useAutoHideColumns({data}) {
         if (data && data.length > 0 && (!tableReady || triggerUpdate)) {
             setTableData(data)
             setTableReady(true)
-            // This will run after the table is initially rendered with data
-            afterTableBuild()
+            clearTimeout(st)
+
+            // TODO: set this to use useEffectEvent when migrate to React 19
+            st = setTimeout(() => {
+                // This will run after the table is initially rendered with data
+                afterTableBuild()
+            }, 1000)
         }
 
         // In the event the table data changed, like for edit pages' AncestorsTable that use the hook
