@@ -158,14 +158,6 @@ export const FileTreeView = ({
         </>
     }
 
-    const onTooltipToggle = (isOpen) => {
-        if (isOpen) {
-            setSelectionMode(null)
-        } else {
-            setSelectionMode(selection.mode)
-        }
-    }
-
     const nodeTemplate = (node, options) => {
         /* This node instance can do many things. See the API reference. */
         return (
@@ -181,8 +173,7 @@ export const FileTreeView = ({
                             {Object.values(selection).length > 0 && <span
                                 className="me-1">{node.label}</span>}
                             {!includeDescription && node.data.description &&
-                                <SenNetPopover onTooltipToggle={onTooltipToggle}
-                                               trigger={SenPopoverOptions.triggers.click}
+                                <SenNetPopover 
                                                className={`file-${self.crypto.randomUUID()}`}
 
                                                text={<div
