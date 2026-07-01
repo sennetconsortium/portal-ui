@@ -16,10 +16,20 @@ import 'primeicons/primeicons.css';
 
 
 export const FileTreeView = ({
-                                 data, selection = {}, keys = {files: 'files', uuid: 'uuid'},
-                                 loadDerived = true, treeViewOnly = false, className = '', filesClassName = '',
-                                 showQAButton = true, showDataProductButton = true, includeDescription = false,
-                                 showDownloadAllButton = false, withoutAccordion = false, onStateUpdateCallback
+                                 data,
+                                 selection = {},
+                                 keys = {files: 'files', uuid: 'uuid'},
+                                 loadDerived = true,
+                                 treeViewOnly = false,
+                                 className = '',
+                                 filesClassName = '',
+                                 showQAButton = true,
+                                 showDataProductButton = true,
+                                 includeDescription = false,
+                                 showDownloadAllButton = false,
+                                 withoutAccordion = false,
+                                 onStateUpdateCallback,
+                                 expandByDefault = false
                              }) => {
     const filterByValues = {
         default: "label",
@@ -33,6 +43,7 @@ export const FileTreeView = ({
     const [hasData, setHasData] = useState(false)
     const [filterBy, setFilterBy] = useState(filterByValues.default)
     const [selectionMode, setSelectionMode] = useState(selection.mode)
+    const [expandedKeys, setExpandedKeys] = useState({});
 
     const formRef = useRef(null)
 
@@ -97,6 +108,96 @@ export const FileTreeView = ({
         event.node.icon = 'pi pi-fw pi-folder'
     }
 
+
+    useEffect(() => {
+        if (!treeData) return;
+        let filteredTree = treeData;
+
+        if (expandByDefault) {
+            setExpandedKeys(getExpandedKeys(filteredTree));
+        }
+
+        if (!qaChecked && !dataProductChecked) return
+
+        if (qaChecked) {
+            filteredTree = filterTree(
+                treeData,
+                node => node?.data?.is_qa_qc === "true"
+            );
+        } else if (dataProductChecked) {
+            filteredTree = filterTree(
+                treeData,
+                node => node?.data?.is_data_product === "true"
+            );
+        }
+
+        setExpandedKeys(getExpandedKeys(filteredTree));
+    }, [treeData, expandByDefault, qaChecked, dataProductChecked]);
+
+    const getExpandedKeys = (nodes) => {
+        return nodes.reduce((keys, node) => {
+            if (node && "key" in node) {
+                keys[node.key] = true;
+
+                if (node.children) {
+                    Object.assign(keys, getExpandedKeys(node.children));
+                }
+                return keys;
+            }
+        }, {});
+    };
+
+    // Filter needs to be applied to the children of the tree nodes as well.
+    // Otherwise, if a root is marked as is_qa_qc or is_data_product it will display all children.
+    const filterTree = (nodes, predicate) => {
+        return nodes.reduce((result, node) => {
+            const filteredChildren = node?.children
+                ? filterTree(node.children, predicate)
+                : [];
+
+            if (predicate(node) || filteredChildren.length > 0) {
+                result.push({
+                    ...node,
+                    children: filteredChildren
+                });
+            }
+
+            return result;
+        }, []);
+    };
+
+    const getFilteredData = () => {
+        if (qaChecked) {
+            return filterTree(
+                treeData,
+                node => node?.data?.is_qa_qc === "true"
+            );
+        }
+
+        if (dataProductChecked) {
+            return filterTree(
+                treeData,
+                node => node?.data?.is_data_product === "true"
+            );
+        }
+        return treeData;
+    };
+
+    const handleToggle = (event, options, filterType) => {
+        const checked = event.currentTarget.checked
+        if (checked) {
+            if (filterType === filterByValues.qa) {
+                setQAChecked(true)
+                setDataProductChecked(false)
+            } else {
+                setDataProductChecked(true)
+                setQAChecked(false)
+            }
+        } else {
+            handleSearchResetButtonClick(options)
+        }
+    }
+
     const handleSearchResetButtonClick = (options) => {
         setFilterBy(filterByValues.default)
         setQAChecked(false)
@@ -112,37 +213,6 @@ export const FileTreeView = ({
         options.filter(event)
     }
 
-    const showHideQa = (event, options) => {
-        if (event.currentTarget.checked) {
-            setFilterBy(filterByValues.qa)
-            options.filter(event)
-        } else {
-            handleSearchResetButtonClick(options)
-        }
-        setDataProductChecked(false)
-        formRef.current.reset()
-    }
-
-    const showHideDataProduct = (event, options) => {
-        if (event.currentTarget.checked) {
-            setFilterBy(filterByValues.dataProduct)
-            options.filter(event)
-        } else {
-            handleSearchResetButtonClick(options)
-        }
-        setQAChecked(false)
-        formRef.current.reset()
-    }
-
-    const handleQAToggleButtonClick = (event, options) => {
-        setQAChecked(event.currentTarget.checked)
-        showHideQa(event, options)
-    }
-
-    const handleDataProductToggleButtonClick = (event, options) => {
-        setDataProductChecked(event.currentTarget.checked)
-        showHideDataProduct(event, options)
-    }
 
     const getBadgeViews = (node) => {
         const badges = {
@@ -242,7 +312,8 @@ export const FileTreeView = ({
                             variant="outline-primary"
                             checked={qaChecked}
                             value="true"
-                            onChange={(e) => handleQAToggleButtonClick(e, filterOptions)}
+                            onChange={(e) =>
+                                handleToggle(e, filterOptions, filterByValues.qa)}
                         >
                             Show QA files only
                         </ToggleButton>
@@ -256,7 +327,9 @@ export const FileTreeView = ({
                             variant="outline-primary"
                             checked={dataProductChecked}
                             value="true"
-                            onChange={(e) => handleDataProductToggleButtonClick(e, filterOptions)}
+                            onChange={(e) =>
+                                handleToggle(e, filterOptions, filterByValues.dataProduct)
+                            }
                         >
                             Show Data Product files only
                         </ToggleButton>
@@ -320,7 +393,10 @@ export const FileTreeView = ({
             }
         }
         if (directories.length > 0) {
-            sub_directory_children.push(buildSubDirectory(uuid, file, data, directories, directories[0], id))
+            const child = buildSubDirectory(uuid, file, data, directories, directories[0], id);
+            if (child) {
+                sub_directory_children.push(child);
+            }
             sub_directory.children = sub_directory_children
         } else {
             sub_directory.icon = 'pi pi-fw pi-file'
@@ -359,7 +435,6 @@ export const FileTreeView = ({
                     }
                 }
             });
-            console.log(data)
             setTreeData(data)
         } catch (e) {
             console.error(e)
@@ -372,13 +447,15 @@ export const FileTreeView = ({
             selectionMode={selectionMode}
             selectionKeys={selection.value}
             onSelectionChange={selection.setValue ? (e) => selection.setValue(e, selection.args) : undefined}
-            value={treeData}
+            value={getFilteredData()}
             nodeTemplate={nodeTemplate}
             filter={true}
-            filterBy={filterBy}
+            filterBy={"label"}
             filterTemplate={filterTemplate}
             onExpand={onExpand}
             onCollapse={onCollapse}
+            expandedKeys={Object.keys(expandedKeys).length > 0 ? expandedKeys : null}
+            onToggle={Object.keys(expandedKeys).length > 0 ? (e) => setExpandedKeys(e.value) : undefined}
         />
     )
 
