@@ -43,7 +43,8 @@ function DataProducts({files, data}) {
                                                           loadDerived={false}
                                                           treeViewOnly={true}
                                                           filesClassName={'js-files'}
-                                                          className={'c-treeView__main--inTable mb-3'}/>}
+                                                          className={'c-treeView__main--inTable mb-3'}
+                                                          expandByDefault={true}/>}
         </>
     )
 }

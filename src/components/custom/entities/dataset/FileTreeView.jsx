@@ -16,10 +16,20 @@ import 'primeicons/primeicons.css';
 
 
 export const FileTreeView = ({
-                                 data, selection = {}, keys = {files: 'files', uuid: 'uuid'},
-                                 loadDerived = true, treeViewOnly = false, className = '', filesClassName = '',
-                                 showQAButton = true, showDataProductButton = true, includeDescription = false,
-                                 showDownloadAllButton = false, withoutAccordion = false, onStateUpdateCallback
+                                 data,
+                                 selection = {},
+                                 keys = {files: 'files', uuid: 'uuid'},
+                                 loadDerived = true,
+                                 treeViewOnly = false,
+                                 className = '',
+                                 filesClassName = '',
+                                 showQAButton = true,
+                                 showDataProductButton = true,
+                                 includeDescription = false,
+                                 showDownloadAllButton = false,
+                                 withoutAccordion = false,
+                                 onStateUpdateCallback,
+                                 expandByDefault = false
                              }) => {
     const filterByValues = {
         default: "label",
@@ -33,6 +43,7 @@ export const FileTreeView = ({
     const [hasData, setHasData] = useState(false)
     const [filterBy, setFilterBy] = useState(filterByValues.default)
     const [selectionMode, setSelectionMode] = useState(selection.mode)
+    const [expandedKeys, setExpandedKeys] = useState({});
 
     const formRef = useRef(null)
 
@@ -98,20 +109,79 @@ export const FileTreeView = ({
     }
 
 
-    const getFilteredData = () => {
+    useEffect(() => {
+        if (!treeData) return;
+        let filteredTree = treeData;
+
+        if (expandByDefault) {
+            setExpandedKeys(getExpandedKeys(filteredTree));
+        }
+
+        if (!qaChecked && !dataProductChecked) return
+
         if (qaChecked) {
-            return treeData.filter(
-                node => node.data?.is_qa_qc === "true"
+            filteredTree = filterTree(
+                treeData,
+                node => node?.data?.is_qa_qc === "true"
+            );
+        } else if (dataProductChecked) {
+            filteredTree = filterTree(
+                treeData,
+                node => node?.data?.is_data_product === "true"
             );
         }
+
+        setExpandedKeys(getExpandedKeys(filteredTree));
+    }, [treeData, expandByDefault, qaChecked, dataProductChecked]);
+
+    const getExpandedKeys = (nodes) => {
+        return nodes.reduce((keys, node) => {
+            if (node && "key" in node) {
+                keys[node.key] = true;
+
+                if (node.children) {
+                    Object.assign(keys, getExpandedKeys(node.children));
+                }
+                return keys;
+            }
+        }, {});
+    };
+
+    // Filter needs to be applied to the children of the tree nodes as well.
+    // Otherwise, if a root is marked as is_qa_qc or is_data_product it will display all children.
+    const filterTree = (nodes, predicate) => {
+        return nodes.reduce((result, node) => {
+            const filteredChildren = node?.children
+                ? filterTree(node.children, predicate)
+                : [];
+
+            if (predicate(node) || filteredChildren.length > 0) {
+                result.push({
+                    ...node,
+                    children: filteredChildren
+                });
+            }
+
+            return result;
+        }, []);
+    };
+
+    const getFilteredData = () => {
+        if (qaChecked) {
+            return filterTree(
+                treeData,
+                node => node?.data?.is_qa_qc === "true"
+            );
+        }
+
         if (dataProductChecked) {
-            return treeData.filter(
-                node => node.data?.is_data_product === "true"
+            return filterTree(
+                treeData,
+                node => node?.data?.is_data_product === "true"
             );
         }
         return treeData;
     };
-
 
     const handleToggle = (event, options, filterType) => {
         const checked = event.currentTarget.checked
@@ -332,7 +402,10 @@ export const FileTreeView = ({
             }
         }
         if (directories.length > 0) {
-            sub_directory_children.push(buildSubDirectory(uuid, file, data, directories, directories[0], id))
+            const child = buildSubDirectory(uuid, file, data, directories, directories[0], id);
+            if (child) {
+                sub_directory_children.push(child);
+            }
             sub_directory.children = sub_directory_children
         } else {
             sub_directory.icon = 'pi pi-fw pi-file'
@@ -371,7 +444,6 @@ export const FileTreeView = ({
                     }
                 }
             });
-            console.log(data)
             setTreeData(data)
         } catch (e) {
             console.error(e)
@@ -391,6 +463,8 @@ export const FileTreeView = ({
             filterTemplate={filterTemplate}
             onExpand={onExpand}
             onCollapse={onCollapse}
+            expandedKeys={Object.keys(expandedKeys).length > 0 ? expandedKeys : null}
+            onToggle={Object.keys(expandedKeys).length > 0 ? (e) => setExpandedKeys(e.value) : undefined}
         />
     )
 
