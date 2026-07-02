@@ -58,7 +58,8 @@ function ViewDataset() {
         isPreview,
         getPreviewView,
         isLoggedIn,
-        sidebarVisible
+        sidebarVisible,
+        authorized
     } = useContext(AppContext)
     const [primaryDatasetData, setPrimaryDatasetInfo] = useState(null)
     const [showFilesSection, setShowFilesSection] = useState(null)
@@ -103,7 +104,7 @@ function ViewDataset() {
                 fetchEntityForMultiAssayInfo()
             }
         }
-    }, [data?.ancestors])
+    }, [data?.ancestors, authorized])
 
     useEffect(() => {
         if (isDerivedContextInitialized) {
@@ -191,7 +192,7 @@ function ViewDataset() {
         }
     }
 
-    if (isPreview(data, error)) {
+    if (isPreview(data, error) || !cache) {
         return getPreviewView(data)
     } else {
         return (
@@ -333,7 +334,7 @@ function ViewDataset() {
 
                                 <EntityViewHeader data={data}
                                                   uniqueHeader={getDatasetTypeDisplay(data)}
-                                                  entity={cache.entities.dataset.toLowerCase()}
+                                                  entity={cache.entities?.dataset?.toLowerCase()}
                                                   hasWritePrivilege={hasWritePrivilege || false}/>
 
                                 <div className="row">

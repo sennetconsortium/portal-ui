@@ -1,3 +1,5 @@
+@use "../general/mixins";
+
 div.c-treeView div {
   // Remove outline created by `mixins.scss` for child of c-treeView
   outline: none !important;
@@ -9,10 +11,34 @@ div.c-treeView div {
 
 .c-treeView {
   &__main {
-    &--inTable {
-      .p-treenode-content {
-        font-size: 13px;
+    .p-treenode-content {
+      font-size: 0.9rem;
+      padding-bottom: 0 !important;
+      padding-top: 0 !important;
+      .badge {
+        margin: 0 .5rem;
       }
+      .total-size {
+        font-weight: 600;
+      }
+      @include mixins.md-mx {
+        align-items: flex-start;
+        .row > * {
+          padding-top: 0 !important;
+          padding-bottom: 0 !important;
+        }
+        .icon-inline {
+          margin-bottom: 0;
+        }
+        .badge {
+          margin:0;
+        }
+        .p-tree-toggler {
+           align-items: flex-start;
+        }
+      }
+    }
+    &--inTable {
       .p-tree-header {
         .col-md-6 {
           width: 70%;

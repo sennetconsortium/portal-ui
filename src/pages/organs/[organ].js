@@ -5,6 +5,7 @@ import useOrganDetail from '@/hooks/organ/useOrganDetail'
 import dynamic from 'next/dynamic'
 import {useRouter} from 'next/router'
 import React, {useContext, useState} from 'react'
+import { APP_TITLE } from '@/config/config'
 
 const AppFooter = dynamic(() => import('@/components/custom/layout/AppFooter'))
 const AppNavbar = dynamic(() => import('@/components/custom/layout/AppNavbar'))
@@ -14,6 +15,7 @@ const NotFound = dynamic(() => import('@/components/custom/NotFound'))
 const OrganViewHeader = dynamic(() => import('@/components/custom/organ/ViewHeader'))
 const Samples = dynamic(() => import('@/components/custom/organ/Samples'))
 const SidebarBtn = dynamic(() => import('@/components/SidebarBtn'))
+const Header = dynamic(() => import("@/components/custom/layout/Header"))
 
 const Organ = () => {
     const {isRegisterHidden} = useContext(AppContext)
@@ -30,6 +32,7 @@ const Organ = () => {
 
     return (
         <>
+            <Header title={`${organDetail.label} | ${APP_TITLE}`} />
             <AppNavbar hidden={isRegisterHidden} signoutHidden={false}/>
             <div className='container-fluid'>
                 <div className='row flex-nowrap entity-body g-0'>
@@ -40,17 +43,6 @@ const Organ = () => {
                             className='collapse collapse-horizontal sticky-top custom-sticky'
                         >
                             <ul id='sidebar-nav' className='nav list-group rounded-1 text-sm-start'>
-                                {organDetail.hraSupported && (
-                                    <li className='nav-item'>
-                                        <a
-                                            href='#HumanReferenceAtlas'
-                                            className='nav-link'
-                                            data-bs-parent='#sidebar'
-                                        >
-                                            Human Reference Atlas
-                                        </a>
-                                    </li>
-                                )}
                                 {showCellTypesSide &&
                                     <li className='nav-item'>
                                         <a
@@ -91,6 +83,17 @@ const Organ = () => {
                                         Samples
                                     </a>
                                 </li>
+                                {organDetail.hraSupported && (
+                                    <li className='nav-item'>
+                                        <a
+                                            href='#HumanReferenceAtlas'
+                                            className='nav-link'
+                                            data-bs-parent='#sidebar'
+                                        >
+                                            Human Reference Atlas
+                                        </a>
+                                    </li>
+                                )}
                             </ul>
                         </div>
                     </div>
@@ -100,11 +103,6 @@ const Organ = () => {
 
                         {/* Title and badges */}
                         <OrganViewHeader organ={organDetail}/>
-
-                        {/* Human Reference Atlas */}
-                        {organDetail.hraSupported && (
-                            <HumanReferenceAtlas id='HumanReferenceAtlas' organ={organDetail}/>
-                        )}
 
                         {/* Cell Types */}
                         <CellTypes organ={organDetail} setShowCellTypesSide={setShowCellTypesSide}/>
@@ -123,6 +121,11 @@ const Organ = () => {
 
                         {/* Sample */}
                         <Samples id='Samples' organ={organDetail}/>
+
+                        {/* Human Reference Atlas */}
+                        {organDetail.hraSupported && (
+                            <HumanReferenceAtlas id='HumanReferenceAtlas' organ={organDetail}/>
+                        )}
                     </main>
                 </div>
             </div>
