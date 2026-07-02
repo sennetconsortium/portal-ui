@@ -6,11 +6,15 @@ function useSelectedRows({pageNumber, pageSize, filters, onCheckboxChange}) {
 
     const selectedRows = useRef([])
     const sel = {
-        selectAllIo: 'select-all-rows',
+        selectAllIo: 'Select all rows', // the name of the select all checkbox input in the table header, 
+        // may need to be updated if the table library changes
         selectedCount: 'sui-selected-count'
     }
 
-    const getUuid = ($el) => $el.attr('name').replace('select-row-', '')
+    // the name of the checkbox input is "Select row <uuid>", 
+    // may need to be updated if the table library changes
+    const getUuid = ($el) => $el.attr('name').replace('Select row ', '') 
+    
 
     const updatedSelected = (uuid) => {
         selectedRows.current = selectedRows.current.filter((e) => e.id !== uuid)

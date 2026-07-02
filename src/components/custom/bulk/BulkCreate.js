@@ -6,7 +6,7 @@ import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
 import VerifiedIcon from '@mui/icons-material/Verified';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
-import DoneOutlineIcon from '@mui/icons-material/DoneOutline';
+import DoneOutlinedIcon from '@mui/icons-material/DoneOutlined';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import DatasetIcon from '@mui/icons-material/Dataset';
 import StepConnector, {stepConnectorClasses} from '@mui/material/StepConnector';
@@ -112,14 +112,14 @@ export default function BulkCreate({
                 1: <AttachFileIcon/>,
                 2: <GroupsIcon/>,
                 3: <VerifiedIcon/>,
-                4: <DoneOutlineIcon/>,
+                4: <DoneOutlinedIcon/>,
             }
         } else {
             icons = {
                 1: <AttachFileIcon/>,
                 2: <DatasetIcon/>,
                 3: <VerifiedIcon/>,
-                4: <DoneOutlineIcon/>,
+                4: <DoneOutlinedIcon/>,
             }
         }
 
@@ -558,7 +558,7 @@ export default function BulkCreate({
                                     labelProps.error = true
                                 }
                                 return (<Step key={label}>
-                                    <StepLabel StepIconComponent={ColorlibStepIcon} {...labelProps}>{label}</StepLabel>
+                                    <StepLabel slots={{ stepIcon: ColorlibStepIcon }} {...labelProps}>{label}</StepLabel>
                                 </Step>)
                             })
                         }

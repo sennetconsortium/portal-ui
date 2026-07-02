@@ -1,4 +1,21 @@
 .rdt {
+  &_row, &_table, &_headRow, &_pagination {
+    background-color: transparent !important;
+  }
+  &_columnCheckbox {
+    position: relative;
+    &.rdt_cellBase {
+      word-break: initial;
+    }
+    
+  }
+  &_Checkbox {
+    width: 14px !important;
+    height: 14px !important;
+    &:before {
+      border-width: 1px !important;
+    }
+  }
   &_Results {
     .is-activeSort {
       span {
