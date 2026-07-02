@@ -6,7 +6,7 @@ import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
 import DescriptionIcon from '@mui/icons-material/Description';
-import DoneOutlineIcon from '@mui/icons-material/DoneOutline';
+import DoneOutlinedIcon from '@mui/icons-material/DoneOutlined';
 import DriveFileMoveIcon from '@mui/icons-material/DriveFileMove';
 import PublicIcon from '@mui/icons-material/Public'
 import LanIcon from '@mui/icons-material/Lan'
@@ -119,7 +119,7 @@ export default function BulkTransfer({
         let icons = {
             1: <DescriptionIcon/>,
             2: <DriveFileMoveIcon/>,
-            3: <DoneOutlineIcon/>,
+            3: <DoneOutlinedIcon/>,
         }
         return (
             <ColorlibStepIconRoot ownerState={{completed, active}} className={className}>
@@ -435,7 +435,7 @@ export default function BulkTransfer({
                                     labelProps.error = true
                                 }
                                 return (<Step key={label}>
-                                    <StepLabel StepIconComponent={ColorlibStepIcon} {...labelProps}>{label}</StepLabel>
+                                    <StepLabel slots={{ stepIcon: ColorlibStepIcon }} {...labelProps}>{label}</StepLabel>
                                 </Step>)
                             })
                         }
