@@ -58,4 +58,20 @@
   .entity-details {
     margin-top: 10px !important;
   }
+
+  .entity-body {
+    &.has-sidebarOpened {
+        flex-direction: column-reverse;
+        .col-auto, .entity-details {
+            max-width: inherit;
+        }
+
+        #sidebar-nav {
+          width: 100%;
+          max-height: 400px;
+          overflow-y: auto;
+          margin-bottom: 20px;
+        }
+    }
+  }
 }
