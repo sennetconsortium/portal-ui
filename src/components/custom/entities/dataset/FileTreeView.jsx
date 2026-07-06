@@ -4,7 +4,7 @@ import SenNetAccordion from "@/components/custom/layout/SenNetAccordion";
 import Link from "next/link";
 import DerivedContext from "@/context/DerivedContext";
 import {FILE_KEY_SEPARATOR, getAssetsEndpoint, getAuth} from "@/config/config";
-import SenNetPopover, {SenPopoverOptions} from "../../../SenNetPopover";
+import SenNetPopover from "../../../SenNetPopover";
 import {formatByteSize, getDatasetTypeDisplay, urlify} from "@/components/custom/js/functions";
 import {Button, Row} from 'react-bootstrap';
 import Col from 'react-bootstrap/Col';
@@ -13,24 +13,25 @@ import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
 import {Tree} from 'primereact/tree';
 import 'primeicons/primeicons.css';
+import PropTypes from "prop-types";
 
 
-export const FileTreeView = ({
-                                 data,
-                                 selection = {},
-                                 keys = {files: 'files', uuid: 'uuid'},
-                                 loadDerived = true,
-                                 treeViewOnly = false,
-                                 className = '',
-                                 filesClassName = '',
-                                 showQAButton = true,
-                                 showDataProductButton = true,
-                                 includeDescription = false,
-                                 showDownloadAllButton = false,
-                                 withoutAccordion = false,
-                                 onStateUpdateCallback,
-                                 expandByDefault = false
-                             }) => {
+function FileTreeView({
+                          data,
+                          selection = {},
+                          keys = {files: 'files', uuid: 'uuid'},
+                          loadDerived = true,
+                          treeViewOnly = false,
+                          className = '',
+                          filesClassName = '',
+                          showQAButton = true,
+                          showDataProductButton = true,
+                          includeDescription = false,
+                          showDownloadAllButton = false,
+                          withoutAccordion = false,
+                          onStateUpdateCallback,
+                          expandByDefault = false
+                      }) {
     const filterByValues = {
         default: "label",
         qa: "data.is_qa_qc",
@@ -243,22 +244,24 @@ export const FileTreeView = ({
                             {Object.values(selection).length > 0 && <span
                                 className="me-1">{node.label}</span>}
                             {!includeDescription && node.data.description &&
-                                <SenNetPopover 
-                                               className={`file-${self.crypto.randomUUID()}`}
+                                <SenNetPopover
+                                    className={`file-${self.crypto.randomUUID()}`}
 
-                                               text={<div
-                                                   dangerouslySetInnerHTML={{__html: urlify(node.data.description)}}></div>}><i
+                                    text={<div
+                                        dangerouslySetInnerHTML={{__html: urlify(node.data.description)}}></div>}><i
                                     role={'presentation'} className="bi bi-info-circle-fill cursor-pointer"></i>
                                 </SenNetPopover>}
                         </Col>
-                        {includeDescription && node.data.description && <span className={"d-block d-lg-none description"}>{node.data.description}</span>}
-                        <Col lg={2}  className={"text-end"}>
+                        {includeDescription && node.data.description &&
+                            <span className={"d-block d-lg-none description"}>{node.data.description}</span>}
+                        <Col lg={2} className={"text-end"}>
                             {getBadgeViews(node)}
                         </Col>
-                        <Col lg={2}  className={"text-end"}>
+                        <Col lg={2} className={"text-end"}>
                             {formatByteSize(node.data.size)}
                         </Col>
-                        {includeDescription && node.data.description && <span className={"d-none d-lg-block description"}>{node.data.description}</span>}
+                        {includeDescription && node.data.description &&
+                            <span className={"d-none d-lg-block description"}>{node.data.description}</span>}
                     </Row>) : (
                     <Row className={`w-100 ${filesClassName}`}>
                         <Col lg={8} sm={6}>
@@ -504,6 +507,23 @@ export const FileTreeView = ({
             {fragment}
         </SenNetAccordion>
     </Fragment>)
+}
+
+FileTreeView.propTypes = {
+    data: PropTypes.node,
+    selection: PropTypes.object,
+    keys: PropTypes.object,
+    loadDerived: PropTypes.bool,
+    treeViewOnly: PropTypes.bool,
+    className: PropTypes.string,
+    filesClassName: PropTypes.string,
+    showQAButton: PropTypes.bool,
+    showDataProductButton: PropTypes.bool,
+    includeDescription: PropTypes.bool,
+    showDownloadAllButton: PropTypes.bool,
+    withoutAccordion: PropTypes.bool,
+    onStateUpdateCallback: PropTypes.func,
+    expandByDefault: PropTypes.bool
 }
 
 export default FileTreeView
