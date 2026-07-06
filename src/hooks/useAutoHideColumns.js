@@ -36,7 +36,6 @@ function useAutoHideColumns({data}) {
             setTableReady(true)
             clearTimeout(st)
 
-            // TODO: set this to use useEffectEvent when migrate to React 19
             st = setTimeout(() => {
                 // This will run after the table is initially rendered with data
                 afterTableBuild()
