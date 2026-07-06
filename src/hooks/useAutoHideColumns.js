@@ -39,7 +39,7 @@ function useAutoHideColumns({data}) {
             st = setTimeout(() => {
                 // This will run after the table is initially rendered with data
                 afterTableBuild()
-            }, 1000)
+            }, 200)
         }
 
         // In the event the table data changed, like for edit pages' AncestorsTable that use the hook
