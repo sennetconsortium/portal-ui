@@ -16,6 +16,7 @@ import 'primeicons/primeicons.css';
 import PropTypes from "prop-types";
 
 
+
 function FileTreeView({
                           data,
                           selection = {},
@@ -360,12 +361,15 @@ function FileTreeView({
 
     function buildSubDirectory(uuid, file, data, directories, directory_name, id) {
         id = formatKeyId(id, directory_name)
+        let file_idx = file.rel_path.indexOf(directory_name);
+        let directory_path = file.rel_path.substring(0, file_idx + directory_name.length)
         let sub_directory = {
             key: id,
             label: directory_name,
             icon: 'pi pi-fw pi-folder',
             data: {
                 uuid: uuid,
+                directory_path: directory_path,
                 rel_path: file.rel_path,
                 description: file.description,
                 is_qa_qc: file?.is_qa_qc?.toString(),
@@ -377,8 +381,8 @@ function FileTreeView({
         directories.shift()
 
         //Check if directory has already been added to `data`
-        if (data.length > 0 && data.filter(e => e?.label === directory_name).length > 0) {
-            let alter_data = data.filter(e => e?.label === directory_name)[0]
+        if (data.length > 0 && data.filter(e => e.data?.directory_path === directory_path).length > 0) {
+            let alter_data = data.filter(e => e.data?.directory_path === directory_path)[0]
             if (alter_data.hasOwnProperty("children")) {
                 alter_data.data.size += sub_directory.data.size
                 let new_child = buildSubDirectory(uuid, file, alter_data.children, directories, directories[0], id)
@@ -439,6 +443,7 @@ function FileTreeView({
                     }
                 }
             });
+            console.log("Tree data: " + JSON.stringify(data))
             setTreeData(data)
         } catch (e) {
             console.error(e)
