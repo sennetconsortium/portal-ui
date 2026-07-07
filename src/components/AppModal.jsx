@@ -1,4 +1,4 @@
-import { useContext, useState} from 'react'
+import React, { useContext, useState} from 'react'
 import {Button, Modal} from 'react-bootstrap'
 import AppContext from '../context/AppContext'
 import PropTypes from "prop-types"
@@ -65,11 +65,24 @@ const AppModal = ({ children, showModal = false, modalTitle, modalBody, modalSiz
 };
 
 AppModal.propTypes = {
-    showModal: PropTypes.bool,
-    showPrimaryBtn: PropTypes.bool,
-    secondaryBtnLabel: PropTypes.string,
-    children: PropTypes.node,
-    className: PropTypes.string
+  children: PropTypes.node,
+  className: PropTypes.string,
+  footer: PropTypes.any,
+  handlePrimaryBtn: PropTypes.any,
+  handleSecondaryBtn: PropTypes.any,
+  id: PropTypes.string,
+  modalBody: PropTypes.any,
+  modalSize: PropTypes.any,
+  modalTitle: PropTypes.any,
+  primaryBtnClassName: PropTypes.string,
+  primaryBtnLabel: PropTypes.string,
+  primaryBtnProps: PropTypes.object,
+  secondaryBtnClassName: PropTypes.string,
+  secondaryBtnLabel: PropTypes.string,
+  secondaryBtnProps: PropTypes.object,
+  showModal: PropTypes.bool,
+  showPrimaryBtn: PropTypes.bool,
+  showSecondaryBtn: PropTypes.bool
 }
 
 export default AppModal;

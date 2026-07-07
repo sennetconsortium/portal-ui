@@ -108,17 +108,16 @@ export const getErrorList = (details) => {
 export const getResponseList = (details, excludeColumns, asSnakeCase = false) => {
     let data = details?.description || details
     let columns = []
-    for (let column of data?.headers) {
+    for (let column of (data?.headers || [])) {
         if (excludeColumns.indexOf(column) === -1) {
-            columns.push(
-                {
-                    name: asSnakeCase ? column : column.replaceAll('_', ' ').titleCase(),
-                    selector: row => row[column],
-                    sortable: true,
-                }
-            )
+            columns.push({
+                name: asSnakeCase
+                    ? column
+                    : column.replaceAll('_', ' ').titleCase(),
+                selector: (row) => row[column],
+                sortable: true
+            })
         }
-
     }
 
     return {data: data?.records, columns}

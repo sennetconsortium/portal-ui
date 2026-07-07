@@ -1,4 +1,4 @@
-import {createContext, useContext, useEffect, useState} from "react";
+import React, { createContext, useContext, useEffect, useState } from 'react'
 import {APP_ROUTES} from "@/config/constants";
 import AppContext from "./AppContext";
 import {getAuthHeader} from "@/lib/services";
@@ -8,7 +8,7 @@ const AdminContext = createContext()
 
 export const AdminProvider = ({ children }) => {
 
-    const { _t, authorized, isUnauthorized, router} = useContext(AppContext)
+    const { authorized, isUnauthorized, router} = useContext(AppContext)
 
     const [uiAdminAuthorized, setUIAdminAuthorized] = useState({
         authorized: false,

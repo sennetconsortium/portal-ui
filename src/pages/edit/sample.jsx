@@ -1,5 +1,5 @@
 import dynamic from "next/dynamic";
-import React, {useContext, useEffect, useRef, useState} from "react";
+import React, {useContext, useEffect, useRef, useState, useEffectEvent} from "react";
 import {useRouter} from 'next/router';
 import Alert from 'react-bootstrap/Alert';
 import Button from 'react-bootstrap/Button';
@@ -176,21 +176,29 @@ function EditSample() {
         }
     }, [router]);
 
-    useEffect(() => {
+    const updateProtocolUrl = useEffectEvent(() => {
         if (data && isEditMode()) {
             document.addEventListener(
-                "checkProtocolUrl",
+                'checkProtocolUrl',
                 (e) => {
                     checkProtocolUrl(data.protocol_url)
                 },
-                false,
+                false
             )
         }
+    })
+
+    useEffect(() => {
+        updateProtocolUrl()
     }, [data]);
+
+    const updateRui = useEffectEvent(() => {
+        checkRui()
+    })
 
     // On changes made to ancestorOrgan run checkRui function
     useEffect(() => {
-        checkRui();
+        updateRui()
     }, [ancestorOrgan, values]);
 
     const selectedOtherOrgan = (val) => ['Other', 'UBERON:0010000', null].contains(val)

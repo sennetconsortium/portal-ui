@@ -62,7 +62,7 @@ To run the image just built edit `docker-compose.deployment.dev.yml` and set it 
 
 ```
 cd docker
-docker pull hubmap/portal-ui:1.0.0 (replace with the actual released version number)
+docker pull sennet/portal-ui:1.0.0 (replace with the actual released version number)
 ./docker-deployment.sh [start|stop|down]
 ```
 Environment vars

@@ -22,7 +22,6 @@ export const SenPopoverOptions = {
 
 }
 
-
 function SenNetPopover({children, text, placement = SenPopoverOptions.placement.top, className = 'sen-popover',
                            trigger = SenPopoverOptions.triggers.hover, show, onTooltipToggle}) {
 
@@ -79,7 +78,10 @@ SenNetPopover.propTypes = {
     children: PropTypes.node,
     placement: PropTypes.string,
     className: PropTypes.string,
-    trigger: PropTypes.any,
+    text: PropTypes.string,
+    onTooltipToggle: PropTypes.function,
+    show: PropTypes.bool,
+    trigger: PropTypes.any
 }
 
 export default SenNetPopover

@@ -20,7 +20,7 @@ export default async function handler(req, res) {
         id = id.replace(/\/$/, "")
         error_messages.push({error: `${key} ${id} not found, please check for the correct id.`})
         if (id) {
-            // need to convert into a ES ready query
+            // need to convert into an ES ready query
             let queryBody = simple_query_builder(key, id, [], excludeProperties)
             console.log('QUERY', formatMessageForCloudwatch(queryBody))
             var myHeaders = new Headers();
@@ -44,7 +44,7 @@ export default async function handler(req, res) {
                 .then(result => {
                     log.debug('SEARCH API RESPONSE BODY', formatMessageForCloudwatch(result))
 
-                    if (result.hasOwnProperty("error")) {
+                    if (Object.hasOwn(result, 'error')) {
                         res.status(401).json(result)
                     } else {
                         var total = result["hits"]["total"]["value"]

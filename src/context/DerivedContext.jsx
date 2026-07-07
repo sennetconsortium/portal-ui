@@ -1,4 +1,5 @@
-import {createContext, useCallback, useContext, useRef, useState} from "react";
+import PropTypes from "prop-types"
+import React, {createContext, useCallback, useContext, useRef, useState} from "react";
 import $ from 'jquery';
 import log from 'xac-loglevel'
 import {datasetIs, fetchEntity, getDatasetTypeDisplay} from "@/components/custom/js/functions";
@@ -265,6 +266,12 @@ export const DerivedProvider = ({children, showVitessceList, setShowVitessceList
     }}>
         {children}
     </DerivedContext.Provider>
+}
+
+DerivedProvider.propTypes = {
+  children: PropTypes.node,
+  setShowVitessceList: PropTypes.func,
+  showVitessceList: PropTypes.number
 }
 
 export default DerivedContext

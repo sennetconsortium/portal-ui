@@ -1,9 +1,10 @@
+import PropTypes from "prop-types"
 import React, {useState, memo} from 'react'
 import CellTypeDistributionAcrossOrgansLayout from './CellTypeDistributionAcrossOrgansLayout'
 import { VisualizationsProvider } from '@/context/VisualizationsContext'
 import ChartContainer from '../visualizations/ChartContainer'
 import { formatNum, percentage } from '../js/functions'
-import { prepareOverlapData } from '../visualizations/charts/OverlapBar'
+import { prepareOverlapData } from '../visualizations/charts/OverlappedBar'
 import * as d3 from 'd3';
 
 /**
@@ -127,6 +128,21 @@ const CellTypeDistributionAcrossOrgansTab = memo(({organ, tabData, cell}) => {
       
     </div>
   )
-})
+});
+
+CellTypeDistributionAcrossOrgansTab.propTypes = {
+  cell: PropTypes.shape({
+    cellIds: PropTypes.object,
+    label: PropTypes.string
+  }),
+  organ: PropTypes.shape({
+    _id: PropTypes.any,
+    label: PropTypes.string
+  }),
+  tabData: PropTypes.array
+}
+
+CellTypeDistributionAcrossOrgansTab.displayName =
+    'CellTypeDistributionAcrossOrgansTab';
 
 export default CellTypeDistributionAcrossOrgansTab

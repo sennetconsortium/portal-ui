@@ -1,11 +1,12 @@
 import dynamic from "next/dynamic";
 import React, {useContext, useEffect, useRef, useState} from 'react';
+import PropTypes from 'prop-types';
 import {styled} from '@mui/material/styles';
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
 import DescriptionIcon from '@mui/icons-material/Description';
-import DoneOutlineIcon from '@mui/icons-material/DoneOutline';
+import DoneOutlinedIcon from '@mui/icons-material/DoneOutlined';
 import DriveFileMoveIcon from '@mui/icons-material/DriveFileMove';
 import PublicIcon from '@mui/icons-material/Public'
 import LanIcon from '@mui/icons-material/Lan'
@@ -38,7 +39,7 @@ const { Option } = components;
 const EntityFormGroup = dynamic(() => import('@/components/custom/layout/entity/FormGroup'))
 
 export default function BulkTransfer({
-                                         userWriteGroups,
+                                         
                                          handlePrimaryBtn,
                                      }) {
     const buttonVariant = "btn btn-outline-primary rounded-0"
@@ -118,13 +119,19 @@ export default function BulkTransfer({
         let icons = {
             1: <DescriptionIcon/>,
             2: <DriveFileMoveIcon/>,
-            3: <DoneOutlineIcon/>,
+            3: <DoneOutlinedIcon/>,
         }
         return (
             <ColorlibStepIconRoot ownerState={{completed, active}} className={className}>
                 {icons[String(props.icon)]}
             </ColorlibStepIconRoot>
         );
+    }
+
+    ColorlibStepIcon.propTypes = {
+        active: PropTypes.bool,
+        completed: PropTypes.bool,
+        className: PropTypes.string
     }
 
     useEffect(() => {
@@ -201,7 +208,7 @@ export default function BulkTransfer({
                     <span>You can monitor the process of the file transfer via the following link(s):</span>
                     <ul>
                         {globusRunURLs.map((url, index) => (
-                            <li key={index}><a href={url} target='_blank'>{url} <i
+                            <li key={index}><a href={url} rel="noreferrer" target='_blank'>{url} <i
                                 className="bi bi-box-arrow-up-right"></i></a></li>
                         ))}
                     </ul>
@@ -285,7 +292,7 @@ export default function BulkTransfer({
                 name: 'Delete',
                 id: 'delete',
                 width: '100px',
-                selector: row => '',
+                selector: () => '',
                 format: row =>  {
                     return (
                         <Button className="pt-0 pb-0 btn-delete-file-transfer-row"
@@ -323,6 +330,10 @@ export default function BulkTransfer({
             <p><small style={{fontSize: '10px'}}>{props.data.description}</small></p>
         </Option>
     );
+
+    IconOption.propTypes = {
+        data: PropTypes.object
+    }
 
     const getDestinationOptions = () => {
         let options = []
@@ -424,7 +435,7 @@ export default function BulkTransfer({
                                     labelProps.error = true
                                 }
                                 return (<Step key={label}>
-                                    <StepLabel StepIconComponent={ColorlibStepIcon} {...labelProps}>{label}</StepLabel>
+                                    <StepLabel slots={{ stepIcon: ColorlibStepIcon }} {...labelProps}>{label}</StepLabel>
                                 </Step>)
                             })
                         }
@@ -525,4 +536,9 @@ export default function BulkTransfer({
             </Container>
         </div>
     );
+}
+
+BulkTransfer.propTypes = {
+    children: PropTypes.node,
+    handlePrimaryBtn: PropTypes.func,
 }

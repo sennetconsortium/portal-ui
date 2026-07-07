@@ -367,8 +367,19 @@ function TableResultsEntities({children, filters, onRowClicked, currentColumns =
 }
 
 TableResultsEntities.propTypes = {
-    children: PropTypes.node,
-    onRowClicked: PropTypes.func
+  children: PropTypes.node,
+  currentColumns: PropTypes.func,
+  filters: PropTypes.shape({
+    length: PropTypes.any,
+    map: PropTypes.func
+  }),
+  forData: PropTypes.bool,
+  inModal: PropTypes.bool,
+  onRowClicked: PropTypes.func,
+  rawResponse: PropTypes.shape({
+    record_count: PropTypes.any
+  }),
+  rowFn: PropTypes.any
 }
 
 const formatOrganRow = (organRow, row, withAvatar = true) => {

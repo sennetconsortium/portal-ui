@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import SenNetPopover from "./SenNetPopover";
-import {displayBodyHeader} from "./custom/js/functions";
+import SenNetPopover from '@/components/SenNetPopover'
+import {displayBodyHeader} from "@/components/custom/js/functions";
 
 function StatusError({text, error = 'An error occurred', title = 'Copy error message to clipboard',}) {
     const copyToClipboard = () => {

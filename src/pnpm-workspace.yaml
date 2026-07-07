@@ -1,3 +1,19 @@
 packages:
   - .
   - search-ui
+
+allowBuilds:
+  '@danmarshall/deckgl-typings': true
+  '@parcel/watcher': true
+  core-js: true
+  core-js-pure: true
+  esbuild: true
+  sharp: true
+  unrs-resolver: true
+
+# Set to allow releases such as Vitessce to be installed without delay upon update
+minimumReleaseAge: 0
+
+# Added to support Vitessce
+overrides:
+  ikonate: 1.1.1

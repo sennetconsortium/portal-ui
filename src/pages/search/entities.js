@@ -1,6 +1,6 @@
 import dynamic from "next/dynamic";
 import React, {useContext} from "react";
-import {ErrorBoundary, SearchBox} from "@elastic/react-search-ui";
+import {ErrorBoundary, SearchBox, SearchProvider} from "@elastic/react-search-ui";
 import {Layout} from "@elastic/react-search-ui-views";
 import {APP_TITLE} from "@/config/config";
 import {SEARCH_ENTITIES} from "@/config/search/entities"
@@ -63,6 +63,7 @@ function SearchEntities() {
         }
 
         return (
+            
             <>
                 <Header title={APP_TITLE}/>
 
@@ -125,6 +126,7 @@ function SearchEntities() {
 
                 <AppFooter/>
             </>
+          
         )
     }
 }

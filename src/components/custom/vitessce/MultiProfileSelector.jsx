@@ -1,3 +1,5 @@
+import PropTypes from "prop-types"
+import React from 'react';
 import Form from 'react-bootstrap/Form';
 
 function MultiProfileSelector({vitessceConfig, profileIndex, setProfileIndex}) {
@@ -20,6 +22,14 @@ function MultiProfileSelector({vitessceConfig, profileIndex, setProfileIndex}) {
 
     )
 
+}
+
+MultiProfileSelector.propTypes = {
+  profileIndex: PropTypes.any,
+  setProfileIndex: PropTypes.func,
+  vitessceConfig: PropTypes.shape({
+    map: PropTypes.func
+  })
 }
 
 export default MultiProfileSelector

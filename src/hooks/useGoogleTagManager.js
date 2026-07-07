@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { getGoogleTagManagerId } from '../config/config'
+import { getGoogleTagManagerId } from '@/config/config'
 
 function useGoogleTagManager() {
     let gtm
