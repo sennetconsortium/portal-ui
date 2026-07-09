@@ -574,7 +574,7 @@ export default function BulkCreate({
 
                     {isValidationStep() && validationSuccess && !hasAlreadyRegistered(jobData) &&
                         <Alert severity="success" sx={{m: 2}}>
-                         <div>Validation successful please continue onto the next step</div>
+                         <div>Validation successful. Please continue to the next step.</div>
                         </Alert>}
 
                     {jobData && hasAlreadyRegistered(jobData) &&
