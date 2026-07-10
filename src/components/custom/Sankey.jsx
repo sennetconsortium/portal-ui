@@ -111,7 +111,7 @@ function Sankey({maxHeight, showExpandButton = false}) {
     return (
         <div className={'c-sankey'}>
             {showExpandButton && <a href={'/sankey'} className={'c-sankey__btn btn btn-outline-primary icon-inline'}><span>Expand</span> <i className="bi bi-arrows-angle-expand"></i></a>}
-            {filters && options && <react-consortia-sankey ref={xacSankey} options={btoa(JSON.stringify({...options, dimensions: {
+            {filters && options && <react-consortia-sankey className={loading ? 'position-absolute' : ''} ref={xacSankey} options={btoa(JSON.stringify({...options, dimensions: {
                     desktopMaxHeight: sankeyHeight
                 } }))
             } /> }
