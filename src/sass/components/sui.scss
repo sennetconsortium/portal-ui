@@ -107,6 +107,10 @@
   }
 }
 
+.sui-layout-main-header {
+  z-index: 2;
+}
+
 .sui-layout-main-header__inner {
   @include mixins.sm-mx {
     display: initial;
@@ -139,6 +143,7 @@
   width: 100%;
   padding: 0 0 32px 32px;
 }
+
 .sui-facet {
   max-height: 500px;
   overflow-y: auto;
@@ -417,7 +422,7 @@
   }
 }
 
-.sui-facets--entities .facetContainer--sennet_id-keyword, .sui-facets--entities .facetContainer--uuid-keyword  {
+.sui-facets--entities .facetContainer--sennet_id-keyword, .sui-facets--entities .facetContainer--uuid-keyword {
   position: absolute;
   opacity: 0;
   left: -1000px;
@@ -444,27 +449,30 @@
   .sui-layout-sidebar {
     transition: none;
   }
-  
+
   &.has-hiddenSidebar {
     .sui-layout-main {
       width: 100%;
     }
+
     .sui-layout-sidebar {
       flex: none;
     }
   }
+
   #sidebar-toggle {
     margin-left: -45px !important;
     height: 0 !important; // Set so that this does not take up space on the page as a sticky
     &:has(.is-open) {
-    margin-left: -385px !important;
-  }
+      margin-left: -385px !important;
+    }
   }
 }
 
 .sui-megaFacet {
   &--d0 {
     width: 100%;
+
     .sui-multi-checkbox-facet__option-input-wrapper {
       width: 100%;
     }

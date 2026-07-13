@@ -24,27 +24,27 @@ import Form from "react-bootstrap/Form"
 import Row from "react-bootstrap/Row"
 import {getIngestEndPoint, RESULTS_PER_PAGE} from "@/config/config";
 import {getOptions, opsDict, ResultsPerPage} from "@/components/custom/search/ResultsPerPage";
-import AppModal from "../../components/AppModal";
+import AppModal from "@/components/AppModal";
 import {tableColumns} from "@/components/custom/edit/AttributesUpload";
 import Swal from 'sweetalert2'
-import useDataTableSearch from "../../hooks/useDataTableSearch";
+import useDataTableSearch from "@/hooks/useDataTableSearch";
 import {getAuthJsonHeaders} from "@/lib/services";
 import TaskAltIcon from "@mui/icons-material/TaskAlt";
 import WarningAmberIcon from "@mui/icons-material/WarningAmber";
 import Stack from '@mui/material/Stack';
-import JobQueueContext, {JobQueueProvider} from "../../context/JobQueueContext";
+import JobQueueContext, {JobQueueProvider} from "@/context/JobQueueContext";
 import {driver} from "driver.js";
 import "driver.js/dist/driver.css";
 import {SWAL_DEL_CONFIG } from "@/config/constants";
-import JobDashboardTutorialSteps from "../../components/custom/layout/JobDashboardTutorialSteps";
-import Spinner, {SpinnerEl} from "../../components/custom/Spinner";
+import JobDashboardTutorialSteps from "@/components/custom/layout/JobDashboardTutorialSteps";
+import Spinner, {SpinnerEl} from "@/components/custom/Spinner";
 
-const AppFooter = dynamic(() => import("../../components/custom/layout/AppFooter"))
-const AppNavbar = dynamic(() => import("../../components/custom/layout/AppNavbar"))
-const ColumnsDropdown = dynamic(() => import("../../components/custom/search/ColumnsDropdown"))
-const Header = dynamic(() => import("../../components/custom/layout/Header"))
-const SenNetPopover = dynamic(() => import("../../components/SenNetPopover"))
-const Unauthorized = dynamic(() => import("../../components/custom/layout/Unauthorized"))
+const AppFooter = dynamic(() => import("@/components/custom/layout/AppFooter"))
+const AppNavbar = dynamic(() => import("@/components/custom/layout/AppNavbar"))
+const ColumnsDropdown = dynamic(() => import("@/components/custom/search/ColumnsDropdown"))
+const Header = dynamic(() => import("@/components/custom/layout/Header"))
+const SenNetPopover = dynamic(() => import("@/components/SenNetPopover"))
+const Unauthorized = dynamic(() => import("@/components/custom/layout/Unauthorized"))
 
 function ViewJobs({isAdmin = false}) {
 
@@ -777,8 +777,7 @@ function ViewJobs({isAdmin = false}) {
                             fixedHeader={true}
                             defaultSortFieldId={'started_timestamp'}
                             defaultSortAsc={false}
-                            subHeader
-                            subHeaderComponent={
+                            subHeader={
                                 <>
                                     {searchBarComponent}
                                     <div className='sui-layout-main-header mt-4 mb-4'>

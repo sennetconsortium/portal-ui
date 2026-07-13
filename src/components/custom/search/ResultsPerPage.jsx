@@ -33,7 +33,9 @@ export function ResultsPerPage({resultsPerPage, setResultsPerPage, totalRows, up
     const handleChange = (e) => {
         setResultsPerPage(e.value)
         setValue(e)
-        updateTablePagination(1, e.value)
+        if (updateTablePagination) {
+            updateTablePagination(1, e.value)
+        }
         $('.rdt_Pagination select').val(e.value.toString())
     }
 
