@@ -777,8 +777,7 @@ function ViewJobs({isAdmin = false}) {
                             fixedHeader={true}
                             defaultSortFieldId={'started_timestamp'}
                             defaultSortAsc={false}
-                            subHeader
-                            subHeaderComponent={
+                            subHeader={
                                 <>
                                     {searchBarComponent}
                                     <div className='sui-layout-main-header mt-4 mb-4'>
