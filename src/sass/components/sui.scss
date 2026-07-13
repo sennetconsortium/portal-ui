@@ -107,6 +107,10 @@
   }
 }
 
+.sui-layout-main-header {
+  z-index: 2;
+}
+
 .sui-layout-main-header__inner {
   @include mixins.sm-mx {
     display: initial;
