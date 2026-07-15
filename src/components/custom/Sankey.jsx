@@ -66,16 +66,21 @@ function Sankey({maxHeight, showExpandButton = false}) {
         setOptions({
             startUpOnOptions: false,
             useShadow: true,
-            styleSheetPath: 'https://rawcdn.githack.com/x-atlas-consortia/data-sankey/1.0.16/src/lib/xac-sankey.css',
+            styleSheetPath: 'https://rawcdn.githack.com/x-atlas-consortia/data-sankey/1.1.0/src/lib/xac-sankey.css',
             api: {
                 token: getCookie('groups_token')
             },
             displayableFilterMap: {
                 status: null
             },
+            propertyPluralizedDisplayNames: {
+                dataset_type_hierarchy: 'modalities',
+                dataset_type_analyte_class: 'analyte classes'
+            },
             validFilterMap: {
                 dataset_type: 'dataset_type_hierarchy',
-                source_type: 'dataset_source_type'
+                source_type: 'dataset_source_type',
+                analyte_class: 'dataset_type_analyte_class'
             }
         })
     }, [router.isReady, router.query])
