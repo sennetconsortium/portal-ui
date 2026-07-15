@@ -1,3 +1,5 @@
+import { getRootURL } from "./config"
+
 /**
  * Retrieves an organ object by its rui code.
  *
@@ -49,6 +51,7 @@ export const organIcons = {
     'FMA:54974': `${BASE_ICON_URL}/organs/organ-icon-palatine-tonsil.svg`,
     'FMA:54973': `${BASE_ICON_URL}/organs/organ-icon-palatine-tonsil.svg`,
     'UBERON:0001066': `${BASE_ICON_URL}/organs/organ-icon-spinal-cord.svg`,
+    'NCI:C172259':  `${getRootURL()}/images/icons/organ-icon-organoid.svg`,
     'UBERON:0010000': 'https://cdn.jsdelivr.net/gh/cns-iu/md-icons@main/other-icons/organs/ico-organs-united.svg',
 }
 
@@ -220,6 +223,15 @@ export const organs = [
         path: 'muscle',
         subLabel: 'UBERON:0005090',
         url: 'http://purl.obolibrary.org/obo/UBERON_0005090'
+    },
+    {
+        codes: ['NCI:C172259'],
+        hraSupported: false,
+        icon: organIcons['NCI:C172259'],
+        label: 'Organoid',
+        path: 'organoid',
+        subLabel: 'NCI:C172259',
+        url: 'https://evsexplore.semantics.cancer.gov/evsexplore/concept/ncit/C172259'
     },
     {
         codes: ['UBERON:0002119', 'UBERON:0002118'],
