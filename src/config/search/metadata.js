@@ -703,22 +703,22 @@ export const SEARCH_METADATA = {
                     'metadata.acquisition_instrument_vendor'
                 )
             },
-            'metadata.analyte_class': {
-                label: 'Analyte Class',
-                type: 'value',
-                field: 'metadata.analyte_class.keyword',
-                isExpanded: false,
-                filterType: 'any',
-                isFilterable: false,
-                facetType: 'term',
-                isAggregationActive: doesTermFilterContainValues(
-                    'entity_type',
-                    ['Dataset']
-                ),
-                isFacetVisible: doesAggregationHaveBuckets(
-                    'metadata.analyte_class'
-                )
-            },
+            // 'metadata.analyte_class': {
+            //     label: 'Analyte Class',
+            //     type: 'value',
+            //     field: 'metadata.analyte_class.keyword',
+            //     isExpanded: false,
+            //     filterType: 'any',
+            //     isFilterable: false,
+            //     facetType: 'term',
+            //     isAggregationActive: doesTermFilterContainValues(
+            //         'entity_type',
+            //         ['Dataset']
+            //     ),
+            //     isFacetVisible: doesAggregationHaveBuckets(
+            //         'metadata.analyte_class'
+            //     )
+            // },
             'metadata.assay_category': {
                 label: 'Assay Category',
                 type: 'value',

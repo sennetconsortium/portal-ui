@@ -199,17 +199,17 @@ export const SEARCH_FILES = {
                 isAggregationActive: true,
                 isFacetVisible: doesAggregationHaveBuckets('assay_input_entity')
             },
-            'analyte_class': {
-                label: 'Analyte Class',
-                type: 'value',
-                field: 'analyte_class.keyword',
-                isExpanded: false,
-                filterType: 'any',
-                isFilterable: false,
-                facetType: 'term',
-                isAggregationActive: true,
-                isFacetVisible: doesAggregationHaveBuckets('analyte_class')
-            },
+            // 'analyte_class': {
+            //     label: 'Analyte Class',
+            //     type: 'value',
+            //     field: 'analyte_class.keyword',
+            //     isExpanded: false,
+            //     filterType: 'any',
+            //     isFilterable: false,
+            //     facetType: 'term',
+            //     isAggregationActive: true,
+            //     isFacetVisible: doesAggregationHaveBuckets('analyte_class')
+            // },
             'is_data_product': {
                 label: 'Is Data Product',
                 type: 'exists',
