@@ -1,4 +1,4 @@
-import { getCreationActionRelationName } from '@/components/custom/js/functions';
+import {getCreationActionRelationName} from '@/components/custom/js/functions';
 import SearchAPIConnector from 'search-ui/packages/search-api-connector';
 import {
     doesAggregationHaveBuckets,
@@ -104,7 +104,7 @@ export const SEARCH_ENTITIES = {
                 isAggregationActive: doesTermFilterContainValues('entity_type', ['Dataset', 'Upload', 'Publication', 'Collection']),
                 isFacetVisible: doesAggregationHaveBuckets('status')
             },
-             dataset_type_hierarchy: {
+            dataset_type_hierarchy: {
                 label: 'Dataset Type',
                 type: 'value',
                 isExpanded: false,
@@ -286,6 +286,7 @@ export const SEARCH_ENTITIES = {
                         label: 'Dataset Type',
                         type: 'value',
                         field: 'intended_dataset_type.keyword',
+                        tooltipText: `Counts represent the total number of datasets of each type and don’t necessarily accurately reflect the number of datasets for multiplex assays or assays which can be run on multiple unique analytes.`,
                         isExpanded: false,
                         filterType: 'any',
                         isFilterable: false,
