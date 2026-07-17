@@ -110,6 +110,7 @@ export const SEARCH_ENTITIES = {
                 isExpanded: false,
                 filterType: 'any',
                 isFilterable: false,
+                tooltipText: `Counts represent the total number of datasets of each type and don’t necessarily accurately reflect the number of datasets for multiplex assays or assays which can be run on multiple unique analytes.`,
                 facetType: 'megahierarchy',
                 hierarchyFields: [
                     'dataset_type_hierarchy.modality.keyword',
@@ -130,17 +131,17 @@ export const SEARCH_ENTITIES = {
                 isAggregationActive: doesTermFilterContainValues('entity_type', ['Dataset']),
                 isFacetVisible: doesAggregationHaveBuckets('metadata.assay_input_entity')
             },
-            'metadata.analyte_class': {
-                label: 'Analyte Class',
-                type: 'value',
-                field: 'metadata.analyte_class.keyword',
-                isExpanded: false,
-                filterType: 'any',
-                isFilterable: false,
-                facetType: 'term',
-                isAggregationActive: doesTermFilterContainValues('entity_type', ['Dataset']),
-                isFacetVisible: doesAggregationHaveBuckets('metadata.analyte_class')
-            },
+            // 'metadata.analyte_class': {
+            //     label: 'Analyte Class',
+            //     type: 'value',
+            //     field: 'metadata.analyte_class.keyword',
+            //     isExpanded: false,
+            //     filterType: 'any',
+            //     isFilterable: false,
+            //     facetType: 'term',
+            //     isAggregationActive: doesTermFilterContainValues('entity_type', ['Dataset']),
+            //     isFacetVisible: doesAggregationHaveBuckets('metadata.analyte_class')
+            // },
             'sources.source_type': {
                 label: 'Source Type',
                 type: 'value',
@@ -286,7 +287,6 @@ export const SEARCH_ENTITIES = {
                         label: 'Dataset Type',
                         type: 'value',
                         field: 'intended_dataset_type.keyword',
-                        tooltipText: `Counts represent the total number of datasets of each type and don’t necessarily accurately reflect the number of datasets for multiplex assays or assays which can be run on multiple unique analytes.`,
                         isExpanded: false,
                         filterType: 'any',
                         isFilterable: false,
