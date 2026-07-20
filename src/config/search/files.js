@@ -1,6 +1,6 @@
 import SearchAPIConnector from 'search-ui/packages/search-api-connector';
 import {
-    doesAggregationHaveBuckets, doesTermFilterContainValues,
+    doesAggregationHaveBuckets,
     getAuth,
     getFilesIndex,
     getSearchEndPoint,
@@ -138,12 +138,14 @@ export const SEARCH_FILES = {
             'organs.label': {
                 label: 'Organ',
                 type: 'value',
-                field: 'organs.label.keyword',
                 isExpanded: false,
                 filterType: 'any',
                 isFilterable: false,
-                facetType: 'hierarchy',
-                groupByField: 'organs.hierarchy.keyword',
+                facetType: 'megahierarchy',
+                hierarchyFields: [
+                    'organs.hierarchy.keyword',
+                    'organs.label.keyword',
+                ],
                 isAggregationActive: true,
                 isFacetVisible: doesAggregationHaveBuckets('organs.label')
             },
@@ -158,17 +160,20 @@ export const SEARCH_FILES = {
                 isAggregationActive: true,
                 isFacetVisible: doesAggregationHaveBuckets('dataset_status')
             },
-            dataset_type: {
+            dataset_type_hierarchy: {
                 label: 'Dataset Type',
                 type: 'value',
-                field: 'dataset_type_hierarchy.second_level.keyword',
                 isExpanded: false,
                 filterType: 'any',
                 isFilterable: false,
-                facetType: 'hierarchy',
-                groupByField: 'dataset_type_hierarchy.first_level.keyword',
+                facetType: 'megahierarchy',
+                hierarchyFields: [
+                    'dataset_type_hierarchy.modality.keyword',
+                    'dataset_type_hierarchy.analyte.keyword',
+                    'dataset_type_hierarchy.dataset_type.keyword'
+                ],
                 isAggregationActive: true,
-                isFacetVisible: doesAggregationHaveBuckets('dataset_type')
+                isFacetVisible: doesAggregationHaveBuckets('dataset_type_hierarchy')
             },
             data_class: {
                 label: 'Data Class',
@@ -194,17 +199,17 @@ export const SEARCH_FILES = {
                 isAggregationActive: true,
                 isFacetVisible: doesAggregationHaveBuckets('assay_input_entity')
             },
-            'analyte_class': {
-                label: 'Analyte Class',
-                type: 'value',
-                field: 'analyte_class.keyword',
-                isExpanded: false,
-                filterType: 'any',
-                isFilterable: false,
-                facetType: 'term',
-                isAggregationActive: true,
-                isFacetVisible: doesAggregationHaveBuckets('analyte_class')
-            },
+            // 'analyte_class': {
+            //     label: 'Analyte Class',
+            //     type: 'value',
+            //     field: 'analyte_class.keyword',
+            //     isExpanded: false,
+            //     filterType: 'any',
+            //     isFilterable: false,
+            //     facetType: 'term',
+            //     isAggregationActive: true,
+            //     isFacetVisible: doesAggregationHaveBuckets('analyte_class')
+            // },
             'is_data_product': {
                 label: 'Is Data Product',
                 type: 'exists',

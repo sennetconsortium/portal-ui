@@ -1,4 +1,4 @@
-import { getCreationActionRelationName, getUBKGFullName } from '@/components/custom/js/functions';
+import {getCreationActionRelationName} from '@/components/custom/js/functions';
 import SearchAPIConnector from 'search-ui/packages/search-api-connector';
 import {
     doesAggregationHaveBuckets,
@@ -7,7 +7,6 @@ import {
     getEntitiesIndex,
     getSearchEndPoint,
     isDateFacetVisible,
-    lateralOrgans
 } from '../config';
 
 const connector = new SearchAPIConnector({
@@ -105,17 +104,21 @@ export const SEARCH_ENTITIES = {
                 isAggregationActive: doesTermFilterContainValues('entity_type', ['Dataset', 'Upload', 'Publication', 'Collection']),
                 isFacetVisible: doesAggregationHaveBuckets('status')
             },
-            dataset_type: {
+            dataset_type_hierarchy: {
                 label: 'Dataset Type',
                 type: 'value',
-                field: 'dataset_type_hierarchy.second_level.keyword',
                 isExpanded: false,
                 filterType: 'any',
                 isFilterable: false,
-                facetType: 'hierarchy',
-                groupByField: 'dataset_type_hierarchy.first_level.keyword',
+                tooltipText: `Counts represent the total number of datasets of each type and don’t necessarily accurately reflect the number of datasets for multiplex assays or assays which can be run on multiple unique analytes.`,
+                facetType: 'megahierarchy',
+                hierarchyFields: [
+                    'dataset_type_hierarchy.modality.keyword',
+                    'dataset_type_hierarchy.analyte.keyword',
+                    'dataset_type_hierarchy.dataset_type.keyword'
+                ],
                 isAggregationActive: true,
-                isFacetVisible: doesAggregationHaveBuckets('dataset_type')
+                isFacetVisible: doesAggregationHaveBuckets('dataset_type_hierarchy')
             },
             'metadata.assay_input_entity': {
                 label: 'Assay Input Entity',
@@ -128,17 +131,17 @@ export const SEARCH_ENTITIES = {
                 isAggregationActive: doesTermFilterContainValues('entity_type', ['Dataset']),
                 isFacetVisible: doesAggregationHaveBuckets('metadata.assay_input_entity')
             },
-            'metadata.analyte_class': {
-                label: 'Analyte Class',
-                type: 'value',
-                field: 'metadata.analyte_class.keyword',
-                isExpanded: false,
-                filterType: 'any',
-                isFilterable: false,
-                facetType: 'term',
-                isAggregationActive: doesTermFilterContainValues('entity_type', ['Dataset']),
-                isFacetVisible: doesAggregationHaveBuckets('metadata.analyte_class')
-            },
+            // 'metadata.analyte_class': {
+            //     label: 'Analyte Class',
+            //     type: 'value',
+            //     field: 'metadata.analyte_class.keyword',
+            //     isExpanded: false,
+            //     filterType: 'any',
+            //     isFilterable: false,
+            //     facetType: 'term',
+            //     isAggregationActive: doesTermFilterContainValues('entity_type', ['Dataset']),
+            //     isFacetVisible: doesAggregationHaveBuckets('metadata.analyte_class')
+            // },
             'sources.source_type': {
                 label: 'Source Type',
                 type: 'value',
@@ -153,15 +156,14 @@ export const SEARCH_ENTITIES = {
             organ: {
                 label: 'Organ',
                 type: 'value',
-                field: 'organ.keyword',
                 isExpanded: false,
                 filterType: 'any',
                 isFilterable: false,
-                facetType: 'hierarchy',
-                groupByField: 'organ_hierarchy.keyword',
-                isHierarchyOption: (option) => {
-                    return lateralOrgans.includes(option)
-                },
+                facetType: 'megahierarchy',
+                hierarchyFields: [
+                    'organ_hierarchy.keyword',
+                    'organ.keyword',
+                ],
                 isAggregationActive: doesTermFilterContainValues('entity_type', ['Sample']),
                 isFacetVisible: doesAggregationHaveBuckets('organ')
             },
@@ -169,21 +171,14 @@ export const SEARCH_ENTITIES = {
             'origin_samples.organ': {
                 label: 'Organ',
                 type: 'value',
-                field: 'origin_samples.organ.keyword',
                 isExpanded: false,
                 filterType: 'any',
                 isFilterable: false,
-                facetType: 'hierarchy',
-                groupByField: 'origin_samples.organ_hierarchy.keyword',
-                isHierarchyOption: (option) => {
-                    return lateralOrgans.includes(option)
-                },
-                filterSubValues: (value, subValues) => {
-                    return subValues.filter((subValue) => {
-                        const ubkgName = getUBKGFullName(subValue.key)
-                        return ubkgName.startsWith(value)
-                    })
-                },
+                facetType: 'megahierarchy',
+                hierarchyFields: [
+                    'origin_samples.organ_hierarchy.keyword',
+                    'origin_samples.organ.keyword',
+                ],
                 isAggregationActive: [
                     doesTermFilterContainValues('entity_type', ['Dataset']),
                     doesTermFilterContainValues('sample_category', ['Block', 'Section', 'Suspension'])

@@ -13,10 +13,16 @@
   color: var(--bs-dark);
 }
 
-#sections-button {
-  margin-left: -50px;
+#sidebar-toggle {
+  margin-left: -48px;
   width: 42px; //This is set otherwise the z-index of this button interferes with other page functionality
-  top: 220px !important;
+  top: 220px;
+}
+
+#sidebar-toggle.draggable.isActive {
+  .btn {
+    cursor: move;
+  }
 }
 
 .sidebar {

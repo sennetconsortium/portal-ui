@@ -454,12 +454,12 @@ export const getOrganDataTypeQuantities = async (organCodes) => {
             bool: {
                 filter: {
                     terms: {
-                        'origin_samples.organ.keyword': organCodes,
+                        'origin_samples.organ.keyword': organCodes
                     }
                 },
                 must: {
                     term: {
-                        "entity_type.keyword": "Dataset"
+                        'entity_type.keyword': 'Dataset'
                     }
                 },
                 must_not: mustNot
@@ -468,7 +468,7 @@ export const getOrganDataTypeQuantities = async (organCodes) => {
         aggs: {
             dataset_type_hierarchy: {
                 terms: {
-                    field: 'dataset_type_hierarchy.first_level.keyword',
+                    field: 'dataset_type_hierarchy.modality.keyword',
                     size: 40
                 }
             },
@@ -477,16 +477,16 @@ export const getOrganDataTypeQuantities = async (organCodes) => {
                     size: 40,
                     sources: [
                         {
-                            'dataset_type_hierarchy.first_level.keyword': {
+                            'dataset_type_hierarchy.modality.keyword': {
                                 terms: {
-                                    field: 'dataset_type_hierarchy.first_level.keyword'
+                                    field: 'dataset_type_hierarchy.modality.keyword'
                                 }
                             }
                         },
                         {
-                            'dataset_type_hierarchy.second_level.keyword': {
+                            'dataset_type_hierarchy.dataset_type.keyword': {
                                 terms: {
-                                    field: 'dataset_type_hierarchy.second_level.keyword'
+                                    field: 'dataset_type_hierarchy.dataset_type.keyword'
                                 }
                             }
                         }
@@ -503,10 +503,10 @@ export const getOrganDataTypeQuantities = async (organCodes) => {
     let response = {}
     response['dataset_types'] = content.aggregations['dataset_types'].buckets.reduce(
         (acc, bucket) => {
-            if (bucket.key['dataset_type_hierarchy.first_level.keyword'] in acc) {
-                acc[bucket.key['dataset_type_hierarchy.first_level.keyword']].push(bucket.key['dataset_type_hierarchy.second_level.keyword'])
+            if (bucket.key['dataset_type_hierarchy.modality.keyword'] in acc) {
+                acc[bucket.key['dataset_type_hierarchy.modality.keyword']].push(bucket.key['dataset_type_hierarchy.dataset_type.keyword'])
             } else {
-                acc[bucket.key['dataset_type_hierarchy.first_level.keyword']] = [bucket.key['dataset_type_hierarchy.second_level.keyword']];
+                acc[bucket.key['dataset_type_hierarchy.modality.keyword']] = [bucket.key['dataset_type_hierarchy.dataset_type.keyword']];
             }
             return acc;
         },

@@ -7,6 +7,8 @@ import {RESULTS_PER_PAGE} from "@/config/config";
 import {handleTableControls} from "@/components/custom/search/ResultsPerPage";
 import {eq} from "@/components/custom/js/functions";
 import {useSearchUIContext} from "search-ui/components/core/SearchUIContext";
+import SidebarBtn from "@/components/SidebarBtn";
+import Draggable from "@/components/Draggable";
 
 const TableResultsContext = createContext({})
 
@@ -113,7 +115,9 @@ export const TableResultsProvider = ({
     const handleOnRowClicked = (row, e) => {
         e.stopPropagation()
         if (onRowClicked === undefined) {
-            window.location = getHotLink(row)
+            if (getHotLink) {
+                window.location = getHotLink(row)
+            }
         } else {
             onRowClicked(e, row.uuid?.raw, row)
         }
@@ -192,6 +196,12 @@ export const TableResultsProvider = ({
         return pageData;
     }
 
+    const onClickSidebarToggle = (e) => {
+        const $sui = $('.sui-layout-body__inner')
+        $sui.toggleClass('has-hiddenSidebar')
+        $sui.find('#sidebar-toggle i').toggleClass('bi-chevron-left bi-chevron-right')
+        $sui.find('.sidebar-drawer-btn').toggleClass('is-open')
+    }
 
     return <TableResultsContext.Provider value={{
         getTableData,
@@ -220,6 +230,14 @@ export const TableResultsProvider = ({
         rawResponse,
         updateTablePagination
     }}>
+        <Draggable>
+            <SidebarBtn 
+            className={'draggable-sidebarBtn'}
+            tooltip={<small className="text-muted"><br/>Click and hold to drag.</small>} 
+            target='.sui-layout-sidebar' 
+            initialClass="show"
+            onClick={onClickSidebarToggle} />
+        </Draggable>
         {children}
     </TableResultsContext.Provider>
 }

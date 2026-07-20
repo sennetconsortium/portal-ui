@@ -126,8 +126,8 @@
 }
 
 .sui-layout-sidebar {
-  -ms-flex: 0 0 300px;
-  flex: 0 0 300px;
+  -ms-flex: 0 0 350px;
+  flex: 0 0 350px;
   padding: 0 32px 0 0;
   @media (max-width: 1350px) {
     flex: inherit;
@@ -143,6 +143,7 @@
   width: 100%;
   padding: 0 0 32px 32px;
 }
+
 .sui-facet {
   max-height: 500px;
   overflow-y: auto;
@@ -379,14 +380,6 @@
   }
 }
 
-//.sui-columns-toggle {
-//  z-index: 900; //must be lower than navbar but above fixed header in DataTable
-//  @include mixins.lg {
-//    position: absolute !important;
-//    right: 120px;
-//  }
-//}
-
 .sui-filterableComponent {
   .form-control {
     border-radius: 0;
@@ -398,13 +391,6 @@
     }
   }
 }
-
-//.sui-stack {
-//  .sui-columns-toggle {
-//    position: relative !important;
-//    right: initial;
-//  }
-//}
 
 .sui-jobs-dashboard header {
   padding-left: 16px;
@@ -436,7 +422,7 @@
   }
 }
 
-.sui-facets--entities .facetContainer--sennet_id-keyword, .sui-facets--entities .facetContainer--uuid-keyword  {
+.sui-facets--entities .facetContainer--sennet_id-keyword, .sui-facets--entities .facetContainer--uuid-keyword {
   position: absolute;
   opacity: 0;
   left: -1000px;
@@ -455,5 +441,44 @@
     text-overflow: ellipsis;
     max-width: 150px;
     display: inline-flex;
+  }
+}
+
+.sui-layout-body__inner {
+
+  .sui-layout-sidebar {
+    transition: none;
+  }
+
+  &.has-hiddenSidebar {
+    .sui-layout-main {
+      width: 100%;
+    }
+
+    .sui-layout-sidebar {
+      flex: none;
+    }
+  }
+
+  #sidebar-toggle {
+    margin-left: -45px !important;
+    height: 0 !important; // Set so that this does not take up space on the page as a sticky
+    &:has(.is-open) {
+      margin-left: -385px !important;
+    }
+  }
+}
+
+.sui-megaFacet {
+  &--d0 {
+    width: 100%;
+
+    .sui-multi-checkbox-facet__option-input-wrapper {
+      width: 100%;
+    }
+  }
+
+  &--d1, &--d2 {
+    width: 93.5%;
   }
 }
