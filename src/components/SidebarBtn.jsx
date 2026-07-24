@@ -3,7 +3,7 @@ import AppContext from "@/context/AppContext";
 import Tooltip from '@mui/material/Tooltip';
 import Zoom from '@mui/material/Zoom';
 
-function SidebarBtn({target='#sidebar', onClick, tooltip, className = '', initialClass = ''}) {
+function SidebarBtn({target = '#sidebar', onClick, tooltip, className = '', initialClass = ''}) {
     const {sidebarVisible, handleSidebar} = useContext(AppContext)
     const [isVisible, setIsVisible] = useState(initialClass === 'show')
 
@@ -27,7 +27,7 @@ function SidebarBtn({target='#sidebar', onClick, tooltip, className = '', initia
     // Fix tooltip placement for MUI v7 when placement reaches the edge of the screen.
     const onOpenTooltip = (e) => {
         e.stopPropagation()
-        
+
         clearTimeout(st)
         st = setTimeout(() => {
             const $target = document.querySelector('.MuiPopper-root')
@@ -51,14 +51,16 @@ function SidebarBtn({target='#sidebar', onClick, tooltip, className = '', initia
             <Tooltip
                 title={<span>{`${isOpen ? 'Close' : 'Open'} sidebar.`}{tooltip}</span>}
                 placement='right'
-                classes={{ popper: 'snPopover' }}
+                classes={{popper: 'snPopover'}}
                 arrow
-                slots={{ transition: Zoom }}
+                slots={{transition: Zoom}}
                 onOpen={onOpenTooltip}
             >
-            <span onClick={(e) => handleOnClick(e)} data-bs-target={target} aria-controls={target.substring(1)} data-bs-toggle="collapse" title={'Toggle menu sidebar'}
-               className={`btn sidebar-drawer-btn ${isOpen ? 'is-open' : ''} icon-inline mb-2`}>
-                {!isOpen && <i className="bi bi-chevron-right"></i>} {isOpen && <i className="bi bi-chevron-left"></i>}</span>
+            <span onClick={(e) => handleOnClick(e)} data-bs-target={target} aria-controls={target.substring(1)}
+                  data-bs-toggle="collapse" title={'Toggle menu sidebar'}
+                  className={`btn sidebar-drawer-btn ${isOpen ? 'is-open' : ''} icon-inline mb-2`}>
+                {!isOpen && <i className="bi bi-chevron-right"></i>} {isOpen &&
+                <i className="bi bi-chevron-left"></i>}</span>
             </Tooltip>
         </div>
     )
