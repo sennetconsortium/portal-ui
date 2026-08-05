@@ -268,8 +268,20 @@ class GoogleTagManager extends Addon {
         }
         return data
     }
+
+    getUser() {
+       const user = this.getCookie('user')
+       if (user) {
+        try {
+            return JSON.parse(decodeURIComponent(user))
+        } catch(e) {
+            Addon.log('Error getting user info', {color: 'red', data: e})
+        }
+       }
+    }
+
     getPerson(bto = false) {
-        const id = this.user.email
+        const id = this.getUser()?.email
         let result
         if (id) {
             result = bto ? btoa(id.replace('@', '*')) : `${id.split('@')[0]}***`
@@ -282,8 +294,8 @@ class GoogleTagManager extends Addon {
             path: this.getPath(),
             person: this.getPerson(),
             user_id: this.getPerson(true),
-            globus_id: this.user.globus_id,
-            session: (this.user.email !== undefined), ...args
+            globus_id: this.getUser()?.globus_id,
+            session: (this.getUser()?.email !== undefined), ...args
         }
         Addon.log(`GTM, ${this.event} event ...`, {color: 'pink', data})
         dataLayer.push(data)
