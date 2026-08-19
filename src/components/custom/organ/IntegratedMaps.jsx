@@ -121,7 +121,7 @@ function IntegratedMaps({id, title, organ, setShowIntegratedMapsSide = null}) {
             sortable: true,
             format: (row) => {
 
-                const tag = organ ? row.tissue.tissuetype :
+                const tag = organ || row.tissue.uberoncode == null ? row.tissue.tissuetype :
                     <a href={`${APP_ROUTES.organs}/${getOrganHierarchy(row.tissue.uberoncode).toLowerCase()}`}>{row.tissue.tissuetype}</a>
                 return <>{tag} &nbsp;<img alt={''}
                                           src={getOrganMeta(row.tissue.uberoncode).icon}
