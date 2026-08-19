@@ -5,13 +5,13 @@ const DEFAULT_CONFIG = {
     consortiumName: 'SenNet'
 }
 
-export function getCanonicalUrl(dataset) {
-    if (!dataset) {
+export function getCanonicalUrl(entity) {
+    if (!entity) {
         return undefined
     }
     const { baseUrl } = DEFAULT_CONFIG
-    if (dataset.uuid) {
-        return `${baseUrl}/dataset?uuid=${dataset.uuid}`
+    if (entity.uuid && entity.entity_type) {
+        return `${baseUrl}/${entity.entity_type.toLowerCase()}?uuid=${entity.uuid}`
     }
     return undefined
 }
