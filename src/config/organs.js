@@ -27,6 +27,8 @@ export const organIcons = {
     'UBERON:0000178': `${BASE_ICON_URL}/organs/organ-icon-blood.svg`,
     'UBERON:0002371': `${BASE_ICON_URL}/organs/organ-icon-bone-marrow.svg`,
     'UBERON:0000955': `${BASE_ICON_URL}/organs/organ-icon-brain.svg`,
+    'UBERON:0002178': `${BASE_ICON_URL}/organs/organ-icon-extrapulmonary-bronchus.svg`,
+    'UBERON:0002177': `${BASE_ICON_URL}/organs/organ-icon-extrapulmonary-bronchus.svg`,
     'UBERON:0004538': `${BASE_ICON_URL}/organs/organ-icon-kidney-left.svg`,
     'UBERON:0004539': `${BASE_ICON_URL}/organs/organ-icon-kidney-right.svg`,
     'UBERON:0000059': `${BASE_ICON_URL}/organs/organ-icon-large-intestine.svg`,
@@ -118,6 +120,23 @@ export const organs = [
         path: 'brain',
         subLabel: 'UBERON:0000955',
         url: 'http://purl.obolibrary.org/obo/UBERON_0000955'
+    },
+    {
+        codes: ['UBERON:0002178', 'UBERON:0002177'],
+        meta: {
+            'UBERON:0002178': {
+                label: 'Left'
+            },
+            'UBERON:0002177': {
+                label: 'Right'
+            }
+        },
+        hraSupported: true,
+        icon: `${BASE_ICON_URL}/organs/organ-icon-extrapulmonary-bronchus.svg`,
+        label: 'Bronchus',
+        path: 'bronchus',
+        subLabel: 'UBERON:0002185',
+        url: 'http://purl.obolibrary.org/obo/0002185'
     },
     {
         codes: ['UBERON:0000948'],
