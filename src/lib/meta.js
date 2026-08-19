@@ -1,5 +1,7 @@
+import { getRootURL } from '@/config/config'
+
 const DEFAULT_CONFIG = {
-    baseUrl: process.env.NEXT_PUBLIC_APP_ROOT_URL.replace(/\/+$/, ''),
+    baseUrl: getRootURL().replace(/\/+$/, ''),
     consortiumName: 'SenNet'
 }
 

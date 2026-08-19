@@ -212,7 +212,7 @@ function ViewDataset() {
                 {data &&
                     <Header
                         title={`${data.sennet_id || ''} | Dataset | SenNet`}
-                        description={data.description}
+                        description={data.description || undefined}
                         jsonLD={citationData && data.status === "Published" ? getJsonLDMetaData(data, citationData) : undefined}
                         canonical={getCanonicalUrl(data)}
                     />
