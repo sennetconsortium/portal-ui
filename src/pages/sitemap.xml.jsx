@@ -15,7 +15,7 @@ export const getServerSideProps = async ({ res }) => {
     `.trim()
 
     res.setHeader('Content-Type', 'text/xml')
-    res.setHeader('Cache-Control', 's-maxage=3600, stale-while-revalidate')
+    res.setHeader('Cache-Control', 's-maxage=3600, stale-while-revalidate=3600')
     res.write(xml)
     res.end()
 

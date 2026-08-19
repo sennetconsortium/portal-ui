@@ -51,7 +51,7 @@ async function fetchAllPublicDatasets() {
             headers: { 'Content-Type': 'application/json' }
         })
         if (!res.ok) {
-            break
+            throw new Error(`Failed to fetch public datasets for sitemap (HTTP ${res.status})`)
         }
 
         const content = await res.json()
