@@ -92,7 +92,7 @@ function ViewSource() {
                 {data &&
                     <Header
                         title={`${data.sennet_id || ''} | Source | SenNet`}
-                        description={data.description || undefined}
+                        description={data.description || `${data.source_type} source ${data.sennet_id || ''}`}
                         canonical={getCanonicalUrl(data)}
                     />
                 }

@@ -23,6 +23,7 @@ import AssociatedEntityTable from "../AssociatedEntityTable";
 import Lineage from "@/components/custom/entities/sample/Lineage";
 import SenNetAccordion from "@/components/custom/layout/SenNetAccordion";
 import SenNetSuspense from "@/components/SenNetSuspense";
+import {getCanonicalUrl} from "@/lib/meta";
 
 const AppFooter = dynamic(() => import("@/components/custom/layout/AppFooter"))
 const Attribution = dynamic(() => import("@/components/custom/entities/sample/Attribution"))
@@ -91,7 +92,13 @@ function ViewCollection({collectionType='Collection', entitiesLabel='Entities'})
     } else {
         return (
             <>
-                {data && <Header title={`${data.sennet_id} | ${collectionType} | SenNet`}></Header>}
+                {data &&
+                    <Header
+                        title={`${data.sennet_id} | ${collectionType} | SenNet`}
+                        description={data.description || data.title}
+                        canonical={getCanonicalUrl(data)}
+                    />
+                }
 
                 <AppNavbar hidden={isRegisterHidden} signoutHidden={false}/>
 
@@ -165,7 +172,7 @@ function ViewCollection({collectionType='Collection', entitiesLabel='Entities'})
 
                                                 {!eq(entitiesLabel, 'entities') && <Datasets data={data.entities} label={entitiesLabel} />}
                                             </SenNetSuspense>
-                                            
+
 
                                             {/*Contributors*/}
                                             <ContributorsContacts title={'Contributors'} data={data.contributors}/>
