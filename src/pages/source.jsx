@@ -11,6 +11,7 @@ import LoadingAccordion from "@/components/custom/layout/LoadingAccordion";
 import AppNavbar from "@/components/custom/layout/AppNavbar"
 import Description from "@/components/custom/entities/sample/Description";
 import Collections from "@/components/custom/entities/Collections";
+import {getCanonicalUrl} from "@/lib/meta";
 
 const AppFooter = dynamic(() => import("@/components/custom/layout/AppFooter"))
 const Attribution = dynamic(() => import("@/components/custom/entities/sample/Attribution"))
@@ -47,7 +48,7 @@ function ViewSource() {
                 setData(false)
                 return
             }
-                
+
             // set state with the result
             if (eq(_data.source_type, cache.sourceTypes.Human) && _data.source_mapped_metadata) {
                 // Humans have their metadata inside "source_mapped_metadata" while mice have theirs inside "metadata"
@@ -88,7 +89,13 @@ function ViewSource() {
     } else {
         return (
             <>
-                {data && <Header title={`${data.sennet_id} | Source | SenNet`}></Header>}
+                {data &&
+                    <Header
+                        title={`${data.sennet_id || ''} | Source | SenNet`}
+                        description={data.description || undefined}
+                        canonical={getCanonicalUrl(data)}
+                    />
+                }
 
                 <AppNavbar hidden={isRegisterHidden} signoutHidden={false}/>
 

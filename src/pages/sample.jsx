@@ -12,6 +12,7 @@ import AppNavbar from "@/components/custom/layout/AppNavbar"
 import Description from "@/components/custom/entities/sample/Description";
 import Tissue from "@/components/custom/entities/sample/Tissue";
 import Collections from "@/components/custom/entities/Collections";
+import {getCanonicalUrl} from "@/lib/meta";
 
 const AppFooter = dynamic(() => import("@/components/custom/layout/AppFooter"))
 const Attribution = dynamic(() => import("@/components/custom/entities/sample/Attribution"))
@@ -85,7 +86,13 @@ function ViewSample() {
     } else {
         return (
             <>
-                {data && <Header title={`${data.sennet_id} | Sample | SenNet`}></Header>}
+                {data &&
+                    <Header
+                        title={`${data.sennet_id || ''} | Sample | SenNet`}
+                        description={data.description || undefined}
+                        canonical={getCanonicalUrl(data)}
+                    />
+                }
 
                 <AppNavbar hidden={isRegisterHidden} signoutHidden={false}/>
 
