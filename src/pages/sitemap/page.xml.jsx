@@ -7,9 +7,12 @@ const staticPages = [
     '/search',
     '/search/metadata',
     '/search/files',
+    '/search/cell-types',
     '/ccf-eui',
     '/organs',
-    '/discover/integrated-maps'
+    '/discover/integrated-maps',
+    '/discover/cell-types',
+    '/discover/metadata'
 ]
 
 function buildStaticSitemap() {
