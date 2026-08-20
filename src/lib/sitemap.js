@@ -4,14 +4,15 @@ import path from 'path'
 import process from 'process'
 
 const CACHE_DIR = path.join(process.cwd(), 'cache')
-const CACHE_FILE = path.join(CACHE_DIR, 'sitemap-dataset.xml')
+const CACHE_FILE_TEMPLATE = path.join(CACHE_DIR, 'sitemap-<entityType>.xml')
 const CACHE_TTL_MS = 6 * 60 * 60 * 1000 // 6 hours
 
-async function readSitemapCache() {
+async function readSitemapCache(entityType) {
     try {
-        const stat = await fs.stat(CACHE_FILE)
+        const cacheFile = CACHE_FILE_TEMPLATE.replace('<entityType>', entityType.toLowerCase())
+        const stat = await fs.stat(cacheFile)
         if (Date.now() - stat.mtimeMs < CACHE_TTL_MS) {
-            return await fs.readFile(CACHE_FILE, 'utf-8')
+            return await fs.readFile(cacheFile, 'utf-8')
         }
         // stale
         return null
@@ -21,22 +22,25 @@ async function readSitemapCache() {
     }
 }
 
-async function writeSitemapCache(xml) {
+async function writeSitemapCache(xml, entityType) {
     await fs.mkdir(CACHE_DIR, { recursive: true })
 
+    const CACHE_FILE = CACHE_FILE_TEMPLATE.replace('<entityType>', entityType.toLowerCase())
     const tmpFile = `${CACHE_FILE}.${process.pid}.tmp`
     await fs.writeFile(tmpFile, xml)
     await fs.rename(tmpFile, CACHE_FILE)
 }
 
-async function fetchAllPublicDatasets() {
+async function fetchAllPublicEntities(entityType) {
     const pageSize = 1000
-    let allDatasets = []
+    let allEntities = []
     let searchAfter = null
+
+    const titleEntityType = entityType[0].toUpperCase() + entityType.slice(1).toLowerCase()
 
     while (true) {
         const body = {
-            query: { term: { 'status.keyword': 'Published' } },
+            query: { term: { 'entity_type.keyword': titleEntityType } },
             size: pageSize,
             sort: [{ 'uuid.keyword': 'asc' }],
             _source: { includes: ['uuid', 'last_modified_timestamp'] }
@@ -45,13 +49,14 @@ async function fetchAllPublicDatasets() {
             body.search_after = searchAfter
         }
 
+        // Do not add Authorization header here, we want the public index
         const res = await fetch(`${getSearchEndPoint()}entities/search`, {
             method: 'POST',
             body: JSON.stringify(body),
             headers: { 'Content-Type': 'application/json' }
         })
         if (!res.ok) {
-            throw new Error(`Failed to fetch public datasets for sitemap (HTTP ${res.status})`)
+            throw new Error(`Failed to fetch public ${entityType} for sitemap (HTTP ${res.status})`)
         }
 
         const content = await res.json()
@@ -60,7 +65,7 @@ async function fetchAllPublicDatasets() {
             break
         }
 
-        allDatasets.push(
+        allEntities.push(
             ...hits.map((hit) => ({
                 uuid: hit._source.uuid,
                 lastModifiedTimestamp: hit._source.last_modified_timestamp
@@ -73,13 +78,13 @@ async function fetchAllPublicDatasets() {
         searchAfter = hits[hits.length - 1].sort
     }
 
-    return allDatasets
+    return allEntities
 }
 
-function buildSitemapXml(datasets, baseUrl) {
+function buildSitemapXml(datasets, baseUrl, entityType) {
     const urls = datasets
         .map(({ uuid, lastModifiedTimestamp }) => {
-            const loc = `${baseUrl}/dataset?uuid=${uuid}`
+            const loc = `${baseUrl}/${entityType.toLowerCase()}?uuid=${uuid}`
             const lastMod = lastModifiedTimestamp
                 ? new Date(lastModifiedTimestamp).toISOString().split('T')[0]
                 : null
@@ -95,17 +100,17 @@ function buildSitemapXml(datasets, baseUrl) {
     `.trim()
 }
 
-export const getPublicDatasetsSitemap = async (baseUrl, forceRefresh = false) => {
+export const getPublicEntitiesSitemap = async (baseUrl, entityType, forceRefresh = false) => {
     if (!forceRefresh) {
-        const cached = await readSitemapCache()
+        const cached = await readSitemapCache(entityType)
         if (cached) {
             return cached
         }
     }
 
-    const datasets = await fetchAllPublicDatasets()
-    const xml = buildSitemapXml(datasets, baseUrl)
+    const datasets = await fetchAllPublicEntities(entityType)
+    const xml = buildSitemapXml(datasets, baseUrl, entityType)
 
-    await writeSitemapCache(xml)
+    await writeSitemapCache(xml, entityType)
     return xml
 }
