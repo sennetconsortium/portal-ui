@@ -6,6 +6,5 @@ Disallow: /admin/
 Disallow: /user/
 Disallow: /edit/
 Disallow: /transfers
-Disallow: /_next/
 
 Sitemap: https://data.sennetconsortium.org/sitemap.xml
