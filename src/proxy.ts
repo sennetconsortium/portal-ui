@@ -22,6 +22,15 @@ async function entityRewrites(request: NextRequest) {
         if (entity_type === "404") {
             return NextResponse.rewrite(new URL('/404', request.url))
         } else if (entity_type != "") {
+            // Get the entity type currently in the URL path
+            const currentEntityType = request.nextUrl.pathname.match(
+                /^\/(source|sample|dataset|upload|collection|epicollection|publication)(\/|$)/
+            )?.[1];
+            // If the URL already matches the resolved entity type continue without redirecting
+            if (currentEntityType === entity_type) {
+                return NextResponse.rewrite(request.url);
+            }
+
             let updated_url = request.url.replace(/(source|sample|dataset|upload|collection|epicollection|publication)/, entity_type)
             if (!updated_url.includes('_next')) {
                 updated_url = decodeURIComponent(updated_url)
@@ -49,7 +58,7 @@ async function afterLoginRewrites(request: NextRequest) {
             groupsToken = userInfo.groups_token
         }
         let url = new URL('/', request.url)
-        if ( page && (!page?.includes('//') && !page?.includes('www.'))) {
+        if (page && (!page?.includes('//') && !page?.includes('www.'))) {
             url = new URL(page, request.url)
         }
         const response = NextResponse.redirect(url)
