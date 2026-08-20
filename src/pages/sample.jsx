@@ -24,6 +24,17 @@ const Provenance = dynamic(() => import("@/components/custom/entities/Provenance
 })
 const SidebarBtn = dynamic(() => import("@/components/SidebarBtn"))
 
+const sampleDescription = (data) => {
+    if (data.description) {
+        return data.description
+    }
+    if (data.sample_category === "Organ") {
+        return `${data.organ_hierarchy || 'Organ'} sample ${data.sennet_id || ''}`
+    } else {
+        return `${data.sample_category} sample ${data.sennet_id || ''}`
+    }
+}
+
 function ViewSample() {
     const router = useRouter()
     const [data, setData] = useState(null)
@@ -89,7 +100,7 @@ function ViewSample() {
                 {data &&
                     <Header
                         title={`${data.sennet_id || ''} | Sample | SenNet`}
-                        description={data.description || undefined}
+                        description={sampleDescription(data)}
                         canonical={getCanonicalUrl(data)}
                     />
                 }

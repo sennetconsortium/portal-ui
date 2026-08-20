@@ -13,11 +13,11 @@ import Description from "@/components/custom/entities/sample/Description";
 import VignetteList from "@/components/custom/vitessce/VignetteList";
 import BulkDataTransfer from "@/components/custom/entities/dataset/BulkDataTransfer";
 import AssociatedEntityTable from "@/components/custom/entities/AssociatedEntityTable";
+import {getCanonicalUrl} from "@/lib/meta";
 
 const AppFooter = dynamic(() => import("@/components/custom/layout/AppFooter"))
 const Attribution = dynamic(() => import("@/components/custom/entities/sample/Attribution"))
 const ContributorsContacts = dynamic(() => import("@/components/custom/entities/ContributorsContacts"))
-const FileTreeView = dynamic(() => import("@/components/custom/entities/dataset/FileTreeView"))
 const Header = dynamic(() => import("@/components/custom/layout/Header"))
 const Provenance = dynamic(() => import("@/components/custom/entities/Provenance"), {
     loading: () => <LoadingAccordion id="Provenance" title="Provenance" style={{height: '490px'}}/>
@@ -126,7 +126,13 @@ function ViewPublication() {
     } else {
         return (
             <>
-                {data && <Header title={`${data.sennet_id} | Publication | SenNet`}></Header>}
+                {data &&
+                    <Header
+                        title={`${data.sennet_id} | Publication | SenNet`}
+                        description={data.description || data.title}
+                        canonical={getCanonicalUrl(data)}
+                    />
+                }
 
                 <AppNavbar hidden={isRegisterHidden} signoutHidden={false}/>
 
