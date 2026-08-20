@@ -133,10 +133,10 @@ export const organs = [
         },
         hraSupported: true,
         icon: `${BASE_ICON_URL}/organs/organ-icon-extrapulmonary-bronchus.svg`,
-        label: 'Bronchus',
-        path: 'bronchus',
-        subLabel: 'UBERON:0002185',
-        url: 'http://purl.obolibrary.org/obo/0002185'
+        label: 'Main Bronchus',
+        path: 'main-bronchus',
+        subLabel: 'UBERON:0002182',
+        url: 'http://purl.obolibrary.org/obo/0002182'
     },
     {
         codes: ['UBERON:0000948'],
