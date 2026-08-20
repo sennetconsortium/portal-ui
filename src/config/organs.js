@@ -1,4 +1,4 @@
-import { getRootURL } from "./config"
+import {getRootURL} from "./config"
 
 /**
  * Retrieves an organ object by its rui code.
@@ -53,7 +53,7 @@ export const organIcons = {
     'FMA:54974': `${BASE_ICON_URL}/organs/organ-icon-palatine-tonsil.svg`,
     'FMA:54973': `${BASE_ICON_URL}/organs/organ-icon-palatine-tonsil.svg`,
     'UBERON:0001066': `${BASE_ICON_URL}/organs/organ-icon-spinal-cord.svg`,
-    'NCI:C172259':  `${getRootURL()}/images/icons/organ-icon-organoid.svg`,
+    'NCI:C172259': `${getRootURL()}/images/icons/organ-icon-organoid.svg`,
     'UBERON:0010000': 'https://cdn.jsdelivr.net/gh/cns-iu/md-icons@main/other-icons/organs/ico-organs-united.svg',
 }
 
@@ -122,23 +122,6 @@ export const organs = [
         url: 'http://purl.obolibrary.org/obo/UBERON_0000955'
     },
     {
-        codes: ['UBERON:0002178', 'UBERON:0002177'],
-        meta: {
-            'UBERON:0002178': {
-                label: 'Left'
-            },
-            'UBERON:0002177': {
-                label: 'Right'
-            }
-        },
-        hraSupported: true,
-        icon: `${BASE_ICON_URL}/organs/organ-icon-extrapulmonary-bronchus.svg`,
-        label: 'Main Bronchus',
-        path: 'main-bronchus',
-        subLabel: 'UBERON:0002182',
-        url: 'http://purl.obolibrary.org/obo/0002182'
-    },
-    {
         codes: ['UBERON:0000948'],
         hraSupported: true,
         icon: organIcons['UBERON:0000948'],
@@ -158,7 +141,7 @@ export const organs = [
     },
     {
         codes: ['UBERON:0004538', 'UBERON:0004539'],
-         meta: {
+        meta: {
             'UBERON:0004538': {
                 label: 'Left'
             },
@@ -216,6 +199,23 @@ export const organs = [
         path: 'lymph-node',
         subLabel: 'UBERON:0000029',
         url: 'http://purl.obolibrary.org/obo/UBERON_0000029'
+    },
+    {
+        codes: ['UBERON:0002178', 'UBERON:0002177'],
+        meta: {
+            'UBERON:0002178': {
+                label: 'Left'
+            },
+            'UBERON:0002177': {
+                label: 'Right'
+            }
+        },
+        hraSupported: true,
+        icon: `${BASE_ICON_URL}/organs/organ-icon-extrapulmonary-bronchus.svg`,
+        label: 'Main Bronchus',
+        path: 'main-bronchus',
+        subLabel: 'UBERON:0002182',
+        url: 'http://purl.obolibrary.org/obo/0002182'
     },
     {
         codes: ['FMA:57991', 'FMA:57987'],
