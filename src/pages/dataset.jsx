@@ -28,7 +28,7 @@ import AssociatedEntity from "@/components/custom/entities/AssociatedEntity";
 import AssociatedEntityTable from "@/components/custom/entities/AssociatedEntityTable";
 import { Skeleton } from "@mui/material";
 import SegmentationMetadata from "@/components/custom/entities/dataset/SegmentationMetadata";
-
+import {getCanonicalUrl, getJsonLDMetaData} from "@/lib/meta";
 
 const AppFooter = dynamic(() => import("@/components/custom/layout/AppFooter"))
 const Attribution = dynamic(() => import("@/components/custom/entities/sample/Attribution"))
@@ -119,7 +119,6 @@ function ViewDataset() {
             // fetch dataset data
             const _data = await getEntityData(uuid, ['ancestors', 'descendants']);
 
-            log.debug('dataset: Got data', _data)
             if (_data.hasOwnProperty("error")) {
                 setError(true)
                 setErrorMessage(_data["error"])
@@ -210,7 +209,14 @@ function ViewDataset() {
     } else {
         return (
             <>
-                <Header title={`${data?.sennet_id || ''} | Dataset | SenNet`}></Header>
+                {data &&
+                    <Header
+                        title={`${data.sennet_id || ''} | Dataset | SenNet`}
+                        description={data.description || undefined}
+                        jsonLD={citationData && data.status === "Published" && datasetIs.primary(data.creation_action) ? getJsonLDMetaData(data, citationData) : undefined}
+                        canonical={getCanonicalUrl(data)}
+                    />
+                }
 
                 <AppNavbar hidden={isRegisterHidden} signoutHidden={false}/>
 
@@ -295,7 +301,7 @@ function ViewDataset() {
                                                    data-bs-parent="#sidebar">Visualization</a>
                                             </li>
                                         }
-                                      
+
                                         {showProtocolsWorkflow && <li className="nav-item">
                                             <a href="#Protocols-Workflow-Details"
                                                className="nav-link"
@@ -374,13 +380,11 @@ function ViewDataset() {
                                         {/*Collections*/}
                                         {data.collections && data.collections.length > 0 && (
                                             <AssociatedEntityTable id="Collections" propertyName={'collections'} data={data} />
-                                           
                                         )}
 
                                         {/*Publications*/}
                                         {data.publications && data.publications.length > 0 && (
                                             <AssociatedEntityTable id="Publications" propertyName={'publications'} data={data} />
-                                           
                                         )}
 
                                         {/* Vitessce */}
@@ -394,12 +398,11 @@ function ViewDataset() {
                                                                                 while loading vitessce */}
                                                                                 {SegmentationMetadataBlock}
                                                                            </>}
-                                                                           
                                                                            id="Visualization" title="Visualization"
                                                                            style={{minHeight: '800px'}}>
                                             <SenNetVitessce />
                                             {SegmentationMetadataBlock}
-                                        </SenNetSuspense>} 
+                                        </SenNetSuspense>}
 
                                         {showProtocolsWorkflow && <ProtocolsWorkflow data={data}/>}
 
