@@ -4,6 +4,7 @@ import {parseJson} from "@/lib/services";
 import Script from "next/script";
 import React, {Component} from "react";
 import {Button, Modal} from "react-bootstrap";
+import log from "xac-loglevel";
 
 class RUIIntegration extends Component {
     constructor(props) {
