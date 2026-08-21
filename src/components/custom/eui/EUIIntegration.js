@@ -1,15 +1,17 @@
 import Script from "next/script";
 import {getCookie} from "cookies-next";
-import {getRootURL} from "@/config/config";
+import {APP_TITLE, getRootURL} from "@/config/config";
+import React from 'react'
 
 const EUIIntegration = () => {
     return (
         <>
-                <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&amp;display=swap"
-                      rel="stylesheet"/>
-                <link href="https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Outlined"
-                      rel="stylesheet"/>
-                <link href="https://cdn.humanatlas.io/ui/ccf-eui/styles.css" rel="stylesheet"/>
+            <title>{`Exploration User Interface | ${APP_TITLE}`}</title>
+            <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&amp;display=swap"
+                  rel="stylesheet"/>
+            <link href="https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Outlined"
+                  rel="stylesheet"/>
+            <link href="https://cdn.humanatlas.io/ui/ccf-eui/styles.css" rel="stylesheet"/>
             <ccf-eui
                 theme="sennet"
                 data-sources={`["https://apps.humanatlas.io/api/ds-graph/sennet?primary=true&token=${getCookie('groups_token') ? getCookie('groups_token') : ''}"]`}

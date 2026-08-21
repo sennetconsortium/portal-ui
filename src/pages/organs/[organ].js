@@ -32,7 +32,7 @@ const Organ = () => {
 
     return (
         <>
-            <Header title={`${organDetail.label} | ${APP_TITLE}`} />
+            <Header title={`${organDetail.label} | Organ | ${APP_TITLE}`} />
             <AppNavbar hidden={isRegisterHidden} signoutHidden={false}/>
             <div className='container-fluid'>
                 <div className='row flex-nowrap entity-body g-0'>
