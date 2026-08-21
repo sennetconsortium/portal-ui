@@ -69,15 +69,15 @@ p {
   }
 }
 
-#__next, #__next > div:not(.sui-layout, .footer-wrapper, .spinner-wrapper) {
+#__next > div:not(.sui-layout, .footer-wrapper, .spinner-wrapper, .MuiBox-root) {
   display:grid;
   grid-template-rows:auto 1fr auto;
   grid-template-columns:100%;
 
   /* fallback height */
-  //min-height: calc(100vh - 277px);
+  min-height: calc(100vh - 277px);
   /* new small viewport height for modern browsers */
-  //min-height: calc(100svh - 277px);
+  min-height: calc(100svh - 277px);
 }
 
 .revisions-select {
