@@ -65,7 +65,7 @@ function SearchFiles() {
 
         return (
             <>
-                <Header title={APP_TITLE}/>
+                <Header title={`Files | ${APP_TITLE}`}/>
 
                 <SearchUIContainer config={SEARCH_FILES} name='files' authState={authState}>
                     <AppNavbar hidden={isRegisterHidden}/>

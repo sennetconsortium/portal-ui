@@ -13,6 +13,7 @@ import Description from "@/components/custom/entities/sample/Description";
 import Tissue from "@/components/custom/entities/sample/Tissue";
 import Collections from "@/components/custom/entities/Collections";
 import {getCanonicalUrl} from "@/lib/meta";
+import {APP_TITLE} from "@/config/config";
 
 const AppFooter = dynamic(() => import("@/components/custom/layout/AppFooter"))
 const Attribution = dynamic(() => import("@/components/custom/entities/sample/Attribution"))
@@ -99,7 +100,7 @@ function ViewSample() {
             <>
                 {data &&
                     <Header
-                        title={`${data.sennet_id || ''} | Sample | SenNet`}
+                        title={`${data.sennet_id || ''} | Sample | ${APP_TITLE}`}
                         description={sampleDescription(data)}
                         canonical={getCanonicalUrl(data)}
                     />

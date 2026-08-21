@@ -65,7 +65,7 @@ function SearchEntities() {
         return (
             
             <>
-                <Header title={APP_TITLE}/>
+                <Header title={`Data | ${APP_TITLE}`}/>
 
                 <SearchUIContainer config={SEARCH_ENTITIES} name='entities' authState={authState}>
                     <AppNavbar hidden={isRegisterHidden}/>

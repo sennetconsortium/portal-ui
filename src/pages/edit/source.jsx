@@ -11,6 +11,7 @@ import {getEntityData, update_create_entity} from "@/lib/services";
 import AppContext from '@/context/AppContext'
 import EntityContext, {EntityProvider} from '@/context/EntityContext';
 import $ from 'jquery';
+import {APP_TITLE} from "@/config/config";
 
 const AppFooter = dynamic(() => import("@/components/custom/layout/AppFooter"))
 const AppNavbar = dynamic(() => import("@/components/custom/layout/AppNavbar"))
@@ -209,7 +210,7 @@ function EditSource() {
         return (
             <>
                 {editMode &&
-                    <Header title={`${editMode} Source | SenNet`}></Header>
+                    <Header title={`${editMode} Source | ${APP_TITLE}`}></Header>
                 }
 
                 <AppNavbar/>

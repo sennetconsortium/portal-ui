@@ -70,7 +70,7 @@ function SearchMetadata() {
 
         return (
             <>
-                <Header title={APP_TITLE}/>
+                <Header title={`Metadata | ${APP_TITLE}`}/>
 
                 <SearchUIContainer config={SEARCH_METADATA} name='metadata' authState={authState}>
                     <AppNavbar hidden={isRegisterHidden}/>

@@ -12,6 +12,7 @@ import AppNavbar from "@/components/custom/layout/AppNavbar"
 import Description from "@/components/custom/entities/sample/Description";
 import Collections from "@/components/custom/entities/Collections";
 import {getCanonicalUrl} from "@/lib/meta";
+import {APP_TITLE} from "@/config/config";
 
 const AppFooter = dynamic(() => import("@/components/custom/layout/AppFooter"))
 const Attribution = dynamic(() => import("@/components/custom/entities/sample/Attribution"))
@@ -91,7 +92,7 @@ function ViewSource() {
             <>
                 {data &&
                     <Header
-                        title={`${data.sennet_id || ''} | Source | SenNet`}
+                        title={`${data.sennet_id || ''} | Source | ${APP_TITLE}`}
                         description={data.description || `${data.source_type} source ${data.sennet_id || ''}`}
                         canonical={getCanonicalUrl(data)}
                     />

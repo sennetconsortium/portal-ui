@@ -19,7 +19,7 @@ import {
 } from '@/components/custom/js/functions'
 import AppContext from '@/context/AppContext'
 import EntityContext, {EntityProvider} from '@/context/EntityContext'
-import {getIngestEndPoint, valid_dataset_ancestor_config} from "@/config/config";
+import {APP_TITLE, getIngestEndPoint, valid_dataset_ancestor_config} from "@/config/config";
 import $ from 'jquery';
 import DatasetRevertButton, {statusRevertTooltip} from "@/components/custom/edit/dataset/DatasetRevertButton";
 
@@ -471,7 +471,7 @@ export default function EditDataset() {
         return (
             <>
                 {editMode &&
-                    <Header title={`${editMode} Dataset | SenNet`}></Header>
+                    <Header title={`${editMode} Dataset | ${APP_TITLE}`}></Header>
                 }
 
                 <AppNavbar/>
