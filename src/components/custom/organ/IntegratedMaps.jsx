@@ -8,6 +8,7 @@ import DataTable from 'react-data-table-component'
 import {formatByteSize, getOrganHierarchy, getOrganMeta, searchUIQueryString} from '../js/functions'
 import {Skeleton} from '@mui/material'
 import AppContext from '@/context/AppContext'
+import {getOrganByCode} from "@/config/organs";
 
 /**
  * Displays the latest integrated maps in a table.
@@ -23,6 +24,12 @@ function IntegratedMaps({id, title, organ, setShowIntegratedMapsSide = null}) {
     const [error, setError] = useState(null)
     const [primaryDatasets, setPrimaryDatasets] = useState(null)
     const {cache} = useContext(AppContext)
+
+    const getOrganRoute = (code) => {
+        const organ = getOrganByCode(code)
+        if (!organ) return
+        return `${APP_ROUTES.organs}/${organ.path}`
+    }
 
     const setLatestMaps = (integratedMaps) => {
         // integratedMaps is an array of arrays. for each top level array find the newest item based on creation_time
@@ -122,7 +129,7 @@ function IntegratedMaps({id, title, organ, setShowIntegratedMapsSide = null}) {
             format: (row) => {
 
                 const tag = organ || row.tissue.uberoncode == null ? row.tissue.tissuetype :
-                    <a href={`${APP_ROUTES.organs}/${getOrganHierarchy(row.tissue.uberoncode).toLowerCase()}`}>{row.tissue.tissuetype}</a>
+                    <a href={getOrganRoute(row.tissue.uberoncode)}>{row.tissue.tissuetype}</a>
                 return <>{tag} &nbsp;<img alt={''}
                                           src={getOrganMeta(row.tissue.uberoncode).icon}
                                           width={'16px'}/></>
