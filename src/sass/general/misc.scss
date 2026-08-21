@@ -12,7 +12,7 @@ a:focus, button:focus, input:focus, select:focus, textarea:focus,
 }
 
 html {
-  scroll-padding-top: 61px;
+  scroll-padding-top: 93px;
 }
 
 .required {
@@ -69,7 +69,7 @@ p {
   }
 }
 
-#__next, #__next > div:not(.sui-layout, .footer-wrapper, .spinner-wrapper) {
+#__next > div:not(.sui-layout, .footer-wrapper, .spinner-wrapper, .MuiBox-root) {
   display:grid;
   grid-template-rows:auto 1fr auto;
   grid-template-columns:100%;
