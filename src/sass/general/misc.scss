@@ -75,9 +75,9 @@ p {
   grid-template-columns:100%;
 
   /* fallback height */
-  min-height: calc(100vh - 277px);
+  //min-height: calc(100vh - 277px);
   /* new small viewport height for modern browsers */
-  min-height: calc(100svh - 277px);
+  //min-height: calc(100svh - 277px);
 }
 
 .revisions-select {
