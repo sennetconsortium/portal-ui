@@ -7,6 +7,8 @@ import {eq} from "../js/functions";
 import {getCookie} from "cookies-next";
 import Swal from 'sweetalert2'
 import SenNetPopover, {SenPopoverOptions} from "@/components/SenNetPopover";
+import {Alert} from "@mui/material";
+import Box from "@mui/material/Box";
 
 const AppNavbar = ({hidden, signoutHidden, innerRef}) => {
     const {
@@ -92,184 +94,200 @@ const AppNavbar = ({hidden, signoutHidden, innerRef}) => {
     }
 
     return (
-        <Navbar
-            id='basic-navbar-nav'
-            ref={innerRef}
-            variant={'dark'}
-            expand="lg"
-            className={`sticky-top bg--navBarGrey`}
+        <Box sx={{
+            position: 'sticky',
+            top: 0,
+            zIndex: 1050,
+        }}
         >
-            <Container fluid={true}>
-                <Navbar.Brand href={APP_ROUTES.home}>
-                    <img
-                        alt={_t("SenNet logo")}
-                        src={'/static/sennet-logo.png'}
-                        width="30"
-                        height="30"
-                        className="d-inline-block align-top"
-                    />{' '}
-                    {NAVBAR_TITLE}
-                </Navbar.Brand>
+            <Alert severity={'info'}
+                   sx={{
+                       borderRadius: 0,
+                       py:0,
+                       display: 'flex',
+                       justifyContent: 'center',
+                   }}>
+                This repository is under review for potential modification in compliance with Administration directives.
+            </Alert>
+            <Navbar
+                id='basic-navbar-nav'
+                ref={innerRef}
+                variant={'dark'}
+                expand="lg"
+                className={`bg--navBarGrey`}
+            >
+                <Container fluid={true}>
+                    <Navbar.Brand href={APP_ROUTES.home}>
+                        <img
+                            alt={_t("SenNet logo")}
+                            src={'/static/sennet-logo.png'}
+                            width="30"
+                            height="30"
+                            className="d-inline-block align-top"
+                        />{' '}
+                        {NAVBAR_TITLE}
+                    </Navbar.Brand>
 
-                <Navbar.Toggle aria-controls="basic-navbar-nav"/>
-                <Navbar.Collapse>
-                    <Nav className={'me-auto'}>
-                        <Nav.Link key={`dd-sennet-home`}
-                                  href='https://sennetconsortium.org'>
-                            <span>{_t('SenNet Home')}</span>
-                        </Nav.Link>
-                        <Nav.Link key={`dd-portal-search`}
-                                  href={APP_ROUTES.search}>
-                            <span>Data</span>
-                        </Nav.Link>
-                        <NavDropdown active={false}
-                                     variant={'primary'}
-                                     align={{lg: 'end'}}
-                                     title={_t('Resources')}
-                                     id="nav-dropdown--atlas">
-                            <NavDropdown.Item key={`dd-ccf-eui`}
-                                              href='/ccf-eui'>
-                                <span>Exploration User Interface (EUI)</span>
-                            </NavDropdown.Item>
-                            {isLoggedIn() &&
-                                <NavDropdown.Item key={`dd-data-board`}
-                                                  href={getDataIngestBoardEndpoint()}
-                                                  target='_blank'>
-                                    <span>Data Ingest Board</span>
+                    <Navbar.Toggle aria-controls="basic-navbar-nav"/>
+                    <Navbar.Collapse>
+                        <Nav className={'me-auto'}>
+                            <Nav.Link key={`dd-sennet-home`}
+                                      href='https://sennetconsortium.org'>
+                                <span>{_t('SenNet Home')}</span>
+                            </Nav.Link>
+                            <Nav.Link key={`dd-portal-search`}
+                                      href={APP_ROUTES.search}>
+                                <span>Data</span>
+                            </Nav.Link>
+                            <NavDropdown active={false}
+                                         variant={'primary'}
+                                         align={{lg: 'end'}}
+                                         title={_t('Resources')}
+                                         id="nav-dropdown--atlas">
+                                <NavDropdown.Item key={`dd-ccf-eui`}
+                                                  href='/ccf-eui'>
+                                    <span>Exploration User Interface (EUI)</span>
                                 </NavDropdown.Item>
-                            }
-                            <NavDropdown.Item key={`dd-organs`}
-                                              href={APP_ROUTES.organs}>
-                                <span>Organs</span>
-                            </NavDropdown.Item>
-                            <NavDropdown.Item key={`dd-integrated-maps`}
-                                              href={'/discover/integrated-maps/'}>
-                                <span>Integrated Maps</span>
-                            </NavDropdown.Item>
-                        </NavDropdown>
-
-                        <NavDropdown active={false}
-                                     variant={'primary'}
-                                     title="Documentation"
-                                     id="nav-dropdown--docs">
-                            <NavDropdown.Item key={`dd-getting-started`}
-                                              href='https://docs.sennetconsortium.org/libraries/ingest-validation-tools/upload-guidelines/getting-started/'>
-                                <span>Getting started</span>
-                            </NavDropdown.Item>
-                            <NavDropdown.Item key={`dd-registration`}
-                                              href='https://docs.sennetconsortium.org/registration/'>
-                                <span>Entity Registration & Metadata Schemas</span>
-                            </NavDropdown.Item>
-                            <NavDropdown.Item key={`dd-prov-ui`}
-                                              href='https://docs.sennetconsortium.org/provenance/'>
-                                <span>Provenance Graph</span>
-                            </NavDropdown.Item>
-                            <NavDropdown.Item key={`dd-apis`} href='https://docs.sennetconsortium.org/apis/'>
-                                <span>APIs</span>
-                            </NavDropdown.Item>
-                        </NavDropdown>
-                    </Nav>
-                    <Nav>
-                        <NavDropdown
-                            active={false}
-                            variant={'primary'}
-                            hidden={hidden || !isLoggedIn()}
-                            title={_t("Register entity")}
-                            id="nav-dropdown"
-                        >
-                            {['Single', 'Bulk'].map((range, key) => (
-                                <div key={`dropdownItem-register-${range}`} id={`dropdownItem-register-${range}`}>
-                                    {key !== 0 && <NavDropdown.Divider/>}
-                                    <NavDropdown.Item className='dropdown-item is-heading'
-                                                      aria-controls={`submenu-md-${range}`}>
-                                        {range}
+                                {isLoggedIn() &&
+                                    <NavDropdown.Item key={`dd-data-board`}
+                                                      href={getDataIngestBoardEndpoint()}
+                                                      target='_blank'>
+                                        <span>Data Ingest Board</span>
                                     </NavDropdown.Item>
+                                }
+                                <NavDropdown.Item key={`dd-organs`}
+                                                  href={APP_ROUTES.organs}>
+                                    <span>Organs</span>
+                                </NavDropdown.Item>
+                                <NavDropdown.Item key={`dd-integrated-maps`}
+                                                  href={'/discover/integrated-maps/'}>
+                                    <span>Integrated Maps</span>
+                                </NavDropdown.Item>
+                            </NavDropdown>
 
-                                    <div className={'submenu'} id={`submenu-md-${range}`}>
-                                        {eq(range, 'single') && supportedSingleRegister().map((entity) => (
-                                            <NavDropdown.Item key={entity} href={formatRegisterUrl(entity, range)}>
-                                                {eq(entity, cache.entities.upload) ? 'Data Upload' : _t(entity)}
-                                            </NavDropdown.Item>
-                                        ))}
+                            <NavDropdown active={false}
+                                         variant={'primary'}
+                                         title="Documentation"
+                                         id="nav-dropdown--docs">
+                                <NavDropdown.Item key={`dd-getting-started`}
+                                                  href='https://docs.sennetconsortium.org/libraries/ingest-validation-tools/upload-guidelines/getting-started/'>
+                                    <span>Getting started</span>
+                                </NavDropdown.Item>
+                                <NavDropdown.Item key={`dd-registration`}
+                                                  href='https://docs.sennetconsortium.org/registration/'>
+                                    <span>Entity Registration & Metadata Schemas</span>
+                                </NavDropdown.Item>
+                                <NavDropdown.Item key={`dd-prov-ui`}
+                                                  href='https://docs.sennetconsortium.org/provenance/'>
+                                    <span>Provenance Graph</span>
+                                </NavDropdown.Item>
+                                <NavDropdown.Item key={`dd-apis`} href='https://docs.sennetconsortium.org/apis/'>
+                                    <span>APIs</span>
+                                </NavDropdown.Item>
+                            </NavDropdown>
+                        </Nav>
+                        <Nav>
+                            <NavDropdown
+                                active={false}
+                                variant={'primary'}
+                                hidden={hidden || !isLoggedIn()}
+                                title={_t("Register entity")}
+                                id="nav-dropdown"
+                            >
+                                {['Single', 'Bulk'].map((range, key) => (
+                                    <div key={`dropdownItem-register-${range}`} id={`dropdownItem-register-${range}`}>
+                                        {key !== 0 && <NavDropdown.Divider/>}
+                                        <NavDropdown.Item className='dropdown-item is-heading'
+                                                          aria-controls={`submenu-md-${range}`}>
+                                            {range}
+                                        </NavDropdown.Item>
 
-                                        {eq(range, 'single') && adminGroup && adminSupportedSingleRegister().map((entity) => (
-                                            <NavDropdown.Item key={entity} href={formatRegisterUrl(entity, range)}>
-                                                {_t(entity)}
-                                            </NavDropdown.Item>
-                                        ))}
+                                        <div className={'submenu'} id={`submenu-md-${range}`}>
+                                            {eq(range, 'single') && supportedSingleRegister().map((entity) => (
+                                                <NavDropdown.Item key={entity} href={formatRegisterUrl(entity, range)}>
+                                                    {eq(entity, cache.entities.upload) ? 'Data Upload' : _t(entity)}
+                                                </NavDropdown.Item>
+                                            ))}
 
-                                        {eq(range, 'bulk') && supportedBulkRegister().map((entity) => (
-                                            <NavDropdown.Item key={entity} href={formatRegisterUrl(entity, range)}>
-                                                {eq(entity, 'upload') ? 'Data (IDs and Data Files)' : eq(entity, 'dataset') ? 'Data (IDs Only)' : `${entity}s`}
-                                            </NavDropdown.Item>
-                                        ))}
+                                            {eq(range, 'single') && adminGroup && adminSupportedSingleRegister().map((entity) => (
+                                                <NavDropdown.Item key={entity} href={formatRegisterUrl(entity, range)}>
+                                                    {_t(entity)}
+                                                </NavDropdown.Item>
+                                            ))}
+
+                                            {eq(range, 'bulk') && supportedBulkRegister().map((entity) => (
+                                                <NavDropdown.Item key={entity} href={formatRegisterUrl(entity, range)}>
+                                                    {eq(entity, 'upload') ? 'Data (IDs and Data Files)' : eq(entity, 'dataset') ? 'Data (IDs Only)' : `${entity}s`}
+                                                </NavDropdown.Item>
+                                            ))}
+                                        </div>
                                     </div>
-                                </div>
-                            ))}
-                        </NavDropdown>
-                        <Nav.Link hidden={hidden || !isLoggedIn()} key={`submenuItem-md-all`}
-                                  href={`/edit/bulk/metadata`}
-                                  id={'nav-dropdown--upload-metadata'}
-                                  className={'is-subItem'}>
-                            <span>Upload metadata</span>
-                        </Nav.Link>
+                                ))}
+                            </NavDropdown>
+                            <Nav.Link hidden={hidden || !isLoggedIn()} key={`submenuItem-md-all`}
+                                      href={`/edit/bulk/metadata`}
+                                      id={'nav-dropdown--upload-metadata'}
+                                      className={'is-subItem'}>
+                                <span>Upload metadata</span>
+                            </Nav.Link>
 
 
-                        {isLoggedIn() ?
-                            (
-                                <NavDropdown active={false}
-                                             variant={'primary'}
-                                             title={userEmail}
-                                             id="nav-dropdown--user">
-                                    {location.pathname.contains('/search') &&
-                                        <NavDropdown.Item id={`dd-user-tutorial`} key={`dd-user-tutorial`}
-                                                          hidden={!getShowTutorialLink()}
+                            {isLoggedIn() ?
+                                (
+                                    <NavDropdown active={false}
+                                                 variant={'primary'}
+                                                 title={userEmail}
+                                                 id="nav-dropdown--user">
+                                        {location.pathname.contains('/search') &&
+                                            <NavDropdown.Item id={`dd-user-tutorial`} key={`dd-user-tutorial`}
+                                                              hidden={!getShowTutorialLink()}
+                                                              href='#'
+                                                              onClick={(e) => deleteTutorialCookies(e)}>
+                                                {_t('Show Tutorial')}
+                                            </NavDropdown.Item>}
+                                        <NavDropdown.Item key={`dd-user-jobs`}
+                                                          hidden={signoutHidden}
+                                                          href='/user/jobs'>
+                                            {_t('Job Dashboard')}
+                                        </NavDropdown.Item>
+                                        <NavDropdown.Item key={`dd-clear-browsing`}
+                                                          hidden={signoutHidden}
                                                           href='#'
-                                                          onClick={(e) => deleteTutorialCookies(e)}>
-                                            {_t('Show Tutorial')}
-                                        </NavDropdown.Item>}
-                                    <NavDropdown.Item key={`dd-user-jobs`}
-                                                      hidden={signoutHidden}
-                                                      href='/user/jobs'>
-                                        {_t('Job Dashboard')}
-                                    </NavDropdown.Item>
-                                    <NavDropdown.Item key={`dd-clear-browsing`}
-                                                      hidden={signoutHidden}
-                                                      href='#'
-                                                      onClick={(e) => clearBrowsing(e)}>
-                                        {_t('Clear Browsing Data')}
-                                    </NavDropdown.Item>
-                                    <SenNetPopover text={'Copied!'} trigger={SenPopoverOptions.triggers.click}
-                                                   hidden={signoutHidden}>
+                                                          onClick={(e) => clearBrowsing(e)}>
+                                            {_t('Clear Browsing Data')}
+                                        </NavDropdown.Item>
+                                        <SenNetPopover text={'Copied!'} trigger={SenPopoverOptions.triggers.click}
+                                                       hidden={signoutHidden}>
                                         <span role={'button'}
                                               key={`dd-copy-token`}
                                               className={'dropdown-item'}
                                               onClick={(e) => copyToken(e)}>
                                             Copy Globus Token
                                         </span>
-                                    </SenNetPopover>
-                                    <NavDropdown.Item key={`dd-user-logout`}
-                                                      hidden={signoutHidden}
-                                                      href='#'
-                                                      onClick={(e) => handleSession(e)}>
-                                        {_t('Log out')}
-                                    </NavDropdown.Item>
-                                </NavDropdown>
+                                        </SenNetPopover>
+                                        <NavDropdown.Item key={`dd-user-logout`}
+                                                          hidden={signoutHidden}
+                                                          href='#'
+                                                          onClick={(e) => handleSession(e)}>
+                                            {_t('Log out')}
+                                        </NavDropdown.Item>
+                                    </NavDropdown>
 
-                            ) : (
-                                <Nav.Link
-                                    className={'justify-content-end'}
-                                    hidden={signoutHidden}
-                                    href='#'
-                                    onClick={(e) => handleSession(e)}
-                                >{_t('Log in')}
-                                </Nav.Link>
-                            )
-                        }
-                    </Nav>
-                </Navbar.Collapse>
-            </Container>
-        </Navbar>
+                                ) : (
+                                    <Nav.Link
+                                        className={'justify-content-end'}
+                                        hidden={signoutHidden}
+                                        href='#'
+                                        onClick={(e) => handleSession(e)}
+                                    >{_t('Log in')}
+                                    </Nav.Link>
+                                )
+                            }
+                        </Nav>
+                    </Navbar.Collapse>
+                </Container>
+            </Navbar>
+        </Box>
     )
 }
 
