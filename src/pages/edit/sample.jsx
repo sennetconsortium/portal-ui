@@ -10,7 +10,7 @@ import {cleanJson, eq, extractSourceSex, fetchEntity, getDOIPattern} from "@/com
 import {getAncestryData, getEntityData, parseJson, update_create_entity} from "@/lib/services";
 import AppContext from '@/context/AppContext'
 import EntityContext, {EntityProvider} from '@/context/EntityContext'
-import {getUserEmail, getUserName, isRuiSupported} from "@/config/config";
+import {APP_TITLE, getUserEmail, getUserName, isRuiSupported} from "@/config/config";
 import {SenPopoverOptions} from "@/components/SenNetPopover";
 import LnkIc from "@/components/custom/layout/LnkIc";
 
@@ -434,7 +434,7 @@ function EditSample() {
         return (
             <>
                 {editMode &&
-                    <Header title={`${editMode} Sample | SenNet`}></Header>
+                    <Header title={`${editMode} Sample | ${APP_TITLE}`}></Header>
                 }
 
                 <AppNavbar/>

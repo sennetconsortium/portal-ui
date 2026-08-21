@@ -22,7 +22,7 @@ import Button from "react-bootstrap/Button"
 import Container from "react-bootstrap/Container"
 import Form from "react-bootstrap/Form"
 import Row from "react-bootstrap/Row"
-import {getIngestEndPoint, RESULTS_PER_PAGE} from "@/config/config";
+import {APP_TITLE, getIngestEndPoint, RESULTS_PER_PAGE} from "@/config/config";
 import {getOptions, opsDict, ResultsPerPage} from "@/components/custom/search/ResultsPerPage";
 import AppModal from "@/components/AppModal";
 import {tableColumns} from "@/components/custom/edit/AttributesUpload";
@@ -731,7 +731,7 @@ function ViewJobs({isAdmin = false}) {
     } else {
         return (
             <>
-                {data && <Header title={`${isAdmin ? 'Admin' : 'User'} | Job Dashboard | SenNet`}></Header>}
+                {data && <Header title={`${isAdmin ? 'Admin' : 'User'} | Job Dashboard | ${APP_TITLE}`}></Header>}
 
                 <AppNavbar hidden={isRegisterHidden} signoutHidden={false}/>
 

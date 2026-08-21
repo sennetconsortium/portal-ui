@@ -12,7 +12,7 @@ import AppContext from '@/context/AppContext'
 import EntityContext, {EntityProvider} from '@/context/EntityContext'
 import $ from 'jquery';
 import GroupSelect from "@/components/custom/edit/GroupSelect";
-import {valid_dataset_ancestor_config, getIngestEndPoint} from "@/config/config";
+import {valid_dataset_ancestor_config, getIngestEndPoint, APP_TITLE} from "@/config/config";
 import DatasetSubmissionButton from "@/components/custom/edit/dataset/DatasetSubmissionButton";
 
 const AncestorIdsBulkButton = dynamic(() => import('@/components/custom/edit/dataset/AncestorIdsBulkButton'))
@@ -234,7 +234,7 @@ export default function EditPublication() {
         return (
             <>
                 {editMode && (
-                    <Header title={`${editMode} Publication | SenNet`}></Header>
+                    <Header title={`${editMode} Publication | ${APP_TITLE}`}></Header>
                 )}
 
                 <AppNavbar />

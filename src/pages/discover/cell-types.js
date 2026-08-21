@@ -258,7 +258,7 @@ function CellTypes() {
 
     return (
         <>
-            <Header title={APP_TITLE + ' Cell Types'}/>
+            <Header title={`Cell Types | ${APP_TITLE}`}/>
             <AppNavbar hidden={isRegisterHidden}/>
             <Container className="mt-2 mb-5 d-block">
                 <Row>

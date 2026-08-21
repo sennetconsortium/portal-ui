@@ -1,12 +1,12 @@
-import { APP_TITLE } from '@/config/config'
-import { APP_ROUTES } from '@/config/constants'
+import {APP_TITLE} from '@/config/config'
+import {APP_ROUTES} from '@/config/constants'
 import AppContext from '@/context/AppContext'
 import useOrganList from '@/hooks/organ/useOrganList'
 import dynamic from 'next/dynamic'
-import { useContext } from 'react'
 import Col from 'react-bootstrap/Col'
 import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
+import React, {useContext} from 'react'
 
 const AppFooter = dynamic(() => import('@/components/custom/layout/AppFooter'))
 const AppNavbar = dynamic(() => import('@/components/custom/layout/AppNavbar'))
@@ -23,10 +23,10 @@ const AllOrgans = () => {
         hasAuthenticationCookie
     } = useContext(AppContext)
 
-    const { organList } = useOrganList()
+    const {organList} = useOrganList()
 
     if (isAuthorizing()) {
-        return <Spinner />
+        return <Spinner/>
     }
 
     if (isUnauthorized() && hasAuthenticationCookie()) {
@@ -37,8 +37,8 @@ const AllOrgans = () => {
 
     return (
         <>
-            <Header title={APP_TITLE} />
-            <AppNavbar hidden={isRegisterHidden} signoutHidden={false} />
+            <Header title={`Organs | ${APP_TITLE}`}/>
+            <AppNavbar hidden={isRegisterHidden} signoutHidden={false}/>
             <Container fluid className='mb-5 d-block'>
                 <Row>
                     <div className='py-4 bd-highlight'>
@@ -53,13 +53,13 @@ const AllOrgans = () => {
                                 className='text-decoration-none'
                                 href={`${APP_ROUTES.organs}/${organ.path}`}
                             >
-                                <OrganCard organ={organ} />
+                                <OrganCard organ={organ}/>
                             </a>
                         </Col>
                     ))}
                 </Row>
             </Container>
-            <AppFooter />
+            <AppFooter/>
         </>
     )
 }

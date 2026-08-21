@@ -14,6 +14,7 @@ import EntityContext, {EntityProvider} from '@/context/EntityContext'
 import $ from 'jquery';
 import DatasetRevertButton, {statusRevertTooltip} from "@/components/custom/edit/dataset/DatasetRevertButton";
 import DatePicker from "react-datepicker";
+import {APP_TITLE} from "@/config/config";
 
 const AppFooter = dynamic(() => import("@/components/custom/layout/AppFooter"))
 const AppNavbar = dynamic(() => import("@/components/custom/layout/AppNavbar"))
@@ -207,7 +208,7 @@ function EditUpload() {
         return (
             <>
                 {editMode &&
-                    <Header title={`${editMode} Upload | SenNet`}></Header>
+                    <Header title={`${editMode} Upload | ${APP_TITLE}`}></Header>
                 }
 
                 <AppNavbar/>

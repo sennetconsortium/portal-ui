@@ -11,6 +11,7 @@ import {goIntent, goToSearch} from "@/components/custom/js/functions";
 import SenNetStats from "@/components/SenNetStats";
 import Sankey from "@/components/custom/Sankey";
 import SenNetBanner from "@/components/SenNetBanner";
+import {APP_TITLE} from "@/config/config";
 
 const Header = dynamic(() => import("@/components/custom/layout/Header"))
 
@@ -40,7 +41,7 @@ function ViewHome({children}) {
 
     return (
         <>
-            <Header title={`Homepage | SenNet`}></Header>
+            <Header title={`Homepage | ${APP_TITLE}`}></Header>
             <AppNavbar hidden={isRegisterHidden} signoutHidden={false}/>
             <div role='main' className='sui-layout snLanding'>
                 <div className='sui-layout-body'>

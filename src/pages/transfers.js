@@ -2,6 +2,7 @@ import dynamic from "next/dynamic";
 import React, { useContext } from 'react';
 import AppContext from "@/context/AppContext";
 import { FileTransfersProvider } from "@/context/FileTransfersContext";
+import {APP_TITLE} from "@/config/config";
 
 const AppFooter = dynamic(() => import("@/components/custom/layout/AppFooter"))
 const AppNavbar = dynamic(() => import("@/components/custom/layout/AppNavbar"))
@@ -24,7 +25,7 @@ export default function EditBulk() {
 
   return (<>
     <Header
-      title={`Transfers | SenNet`}></Header>
+      title={`Transfers | ${APP_TITLE}`}></Header>
 
     <AppNavbar />
     <BulkTransfer

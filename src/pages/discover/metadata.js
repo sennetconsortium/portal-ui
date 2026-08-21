@@ -45,7 +45,7 @@ function Metadata() {
         }
         return (
             <>
-                <Header title={APP_TITLE}/>
+                <Header title={`Metadata | ${APP_TITLE}`}/>
                 <AppNavbar hidden={isRegisterHidden}/>
                 <Container className="mb-5 d-block">
                     <br></br>

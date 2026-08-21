@@ -15,7 +15,7 @@ function IntegratedMapsView() {
 
   return (
     <>
-      <Header title={APP_TITLE + '| Integrated Maps'} />
+      <Header title={`Integrated Maps | ${APP_TITLE}`} />
 
       <AppNavbar hidden={isRegisterHidden} />
       <div className="mt-4 mb-5 d-block container-fluid px-5">

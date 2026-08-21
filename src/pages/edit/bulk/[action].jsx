@@ -5,6 +5,7 @@ import EntityContext, {EntityProvider} from "@/context/EntityContext";
 import AppContext from "@/context/AppContext";
 import {eq} from "@/components/custom/js/functions";
 import {JobQueueProvider} from "@/context/JobQueueContext";
+import {APP_TITLE} from "@/config/config";
 
 const AppFooter = dynamic(() => import("../../../components/custom/layout/AppFooter"))
 const AppNavbar = dynamic(() => import("../../../components/custom/layout/AppNavbar"))
@@ -58,7 +59,7 @@ export default function EditBulk() {
         if (isSupported()) {
             result = <>
                 <Header
-                    title={`Bulk Register ${isMetadata ? `Metadata` : entityType.upperCaseFirst()} | SenNet`}></Header>
+                    title={`Bulk Register ${isMetadata ? `Metadata` : entityType.upperCaseFirst()} | ${APP_TITLE}`}></Header>
 
                 <AppNavbar/>
                 <BulkCreate

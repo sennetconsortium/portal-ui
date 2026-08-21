@@ -1,10 +1,11 @@
 import Header from "@/components/custom/layout/Header";
 import React from "react";
+import {APP_TITLE} from "@/config/config";
 
 export default function Custom500() {
     return (
         <>
-            <Header title="Internal Server Error | SenNet"></Header>
+            <Header title={`Internal Server Error | ${APP_TITLE}`}></Header>
 
             <div className={"container"}>
                 <div className={"row align-items-center error-row"}>

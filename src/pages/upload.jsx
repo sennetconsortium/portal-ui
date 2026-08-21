@@ -11,7 +11,7 @@ import {
 import AppContext from "@/context/AppContext";
 import Alert from 'react-bootstrap/Alert';
 import {EntityViewHeader} from "@/components/custom/layout/entity/ViewHeader";
-import {getEntityEndPoint} from "@/config/config";
+import {APP_TITLE, getEntityEndPoint} from "@/config/config";
 import LoadingAccordion from "@/components/custom/layout/LoadingAccordion";
 import AppNavbar from "@/components/custom/layout/AppNavbar"
 import Description from "@/components/custom/entities/sample/Description";
@@ -87,7 +87,7 @@ function ViewUpload() {
     } else {
         return (
             <>
-                {data && <Header title={`${data.sennet_id} | Upload | SenNet`}></Header>}
+                {data && <Header title={`${data.sennet_id} | Upload | ${APP_TITLE}`}></Header>}
 
                 <AppNavbar hidden={isRegisterHidden} signoutHidden={false}/>
 

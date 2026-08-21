@@ -9,7 +9,7 @@ import ViewHeader from '@/components/custom/cell-types/ViewHeader'
 import AppNavbar from '@/components/custom/layout/AppNavbar'
 import SenNetAccordion from '@/components/custom/layout/SenNetAccordion'
 import Spinner from '@/components/custom/Spinner'
-import { getCellTypesIndex } from '@/config/config'
+import {APP_TITLE, getCellTypesIndex} from '@/config/config'
 import AppContext from '@/context/AppContext'
 import useSearchUIQuery from '@/hooks/useSearchUIQuery'
 import { Card } from 'react-bootstrap'
@@ -83,7 +83,7 @@ function ViewCellType() {
     return (
         <>
             <Header
-                title={`${clid} | ${data?.hits?.hits[0]?._source?.cell_label} | Cell Type | SenNet`}
+                title={`${clid} | ${data?.hits?.hits[0]?._source?.cell_label} | Cell Type | ${APP_TITLE}`}
             ></Header>
 
             <AppNavbar hidden={isRegisterHidden} signoutHidden={false} />
