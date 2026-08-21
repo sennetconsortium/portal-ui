@@ -5,7 +5,7 @@ import useOrganDetail from '@/hooks/organ/useOrganDetail'
 import dynamic from 'next/dynamic'
 import {useRouter} from 'next/router'
 import React, {useContext, useState} from 'react'
-import { APP_TITLE } from '@/config/config'
+import {APP_TITLE} from '@/config/config'
 
 const AppFooter = dynamic(() => import('@/components/custom/layout/AppFooter'))
 const AppNavbar = dynamic(() => import('@/components/custom/layout/AppNavbar'))
@@ -32,7 +32,7 @@ const Organ = () => {
 
     return (
         <>
-            <Header title={`${organDetail.label} | Organ | ${APP_TITLE}`} />
+            <Header title={`${organDetail.label} | Organ | ${APP_TITLE}`}/>
             <AppNavbar hidden={isRegisterHidden} signoutHidden={false}/>
             <div className='container-fluid'>
                 <div className='row flex-nowrap entity-body g-0'>
