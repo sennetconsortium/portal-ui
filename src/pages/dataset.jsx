@@ -29,6 +29,7 @@ import AssociatedEntityTable from "@/components/custom/entities/AssociatedEntity
 import { Skeleton } from "@mui/material";
 import SegmentationMetadata from "@/components/custom/entities/dataset/SegmentationMetadata";
 import {getCanonicalUrl, getJsonLDMetaData} from "@/lib/meta";
+import {APP_TITLE} from "@/config/config";
 
 const AppFooter = dynamic(() => import("@/components/custom/layout/AppFooter"))
 const Attribution = dynamic(() => import("@/components/custom/entities/sample/Attribution"))
@@ -211,7 +212,7 @@ function ViewDataset() {
             <>
                 {data &&
                     <Header
-                        title={`${data.sennet_id || ''} | Dataset | SenNet`}
+                        title={`${data.sennet_id || ''} | Dataset | ${APP_TITLE}`}
                         description={data.description || data.title}
                         jsonLD={citationData && data.status === "Published" && datasetIs.primary(data.creation_action) ? getJsonLDMetaData(data, citationData) : undefined}
                         canonical={getCanonicalUrl(data)}

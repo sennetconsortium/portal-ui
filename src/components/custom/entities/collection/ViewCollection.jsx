@@ -14,7 +14,7 @@ import {
     getWritePrivilegeForGroupUuid,
     getEntityData
 } from "@/lib/services";
-import {getEntityEndPoint} from "@/config/config";
+import {APP_TITLE, getEntityEndPoint} from "@/config/config";
 import AppNavbar from "@/components/custom/layout/AppNavbar"
 import Description from "@/components/custom/entities/sample/Description";
 import Datasets from "@/components/custom/entities/collection/Datasets"
@@ -94,7 +94,7 @@ function ViewCollection({collectionType='Collection', entitiesLabel='Entities'})
             <>
                 {data &&
                     <Header
-                        title={`${data.sennet_id} | ${collectionType} | SenNet`}
+                        title={`${data.sennet_id} | ${collectionType} | ${APP_TITLE}`}
                         description={data.description || data.title}
                         canonical={getCanonicalUrl(data)}
                     />

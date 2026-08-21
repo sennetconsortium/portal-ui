@@ -1,12 +1,13 @@
 import PropTypes from "prop-types"
 import React from 'react'
 import dynamic from "next/dynamic";
+import {APP_TITLE} from "@/config/config";
 
 function NotFound({ includeHeader = true}) {
     const Header = includeHeader ? dynamic(() => import("./layout/Header")) : null
     return (
         <>
-        {includeHeader && <Header title="Page Not Found | SenNet"></Header>}
+        {includeHeader && <Header title={`Page Not Found | ${APP_TITLE}`}></Header>}
 
             <div className={"container"}>
                 <div className={"row align-items-center error-row"}>

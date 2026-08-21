@@ -84,7 +84,7 @@ function SearchCellTypes() {
 
         return (
             <>
-                <Header title={APP_TITLE}/>
+                <Header title={`Cell Types | ${APP_TITLE}`}/>
 
                 <SearchUIContainer config={SEARCH_CELL_TYPES} name='cellTypes' authState={authState}>
                     <AppNavbar hidden={isRegisterHidden}/>

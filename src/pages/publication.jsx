@@ -14,6 +14,7 @@ import VignetteList from "@/components/custom/vitessce/VignetteList";
 import BulkDataTransfer from "@/components/custom/entities/dataset/BulkDataTransfer";
 import AssociatedEntityTable from "@/components/custom/entities/AssociatedEntityTable";
 import {getCanonicalUrl} from "@/lib/meta";
+import {APP_TITLE} from "@/config/config";
 
 const AppFooter = dynamic(() => import("@/components/custom/layout/AppFooter"))
 const Attribution = dynamic(() => import("@/components/custom/entities/sample/Attribution"))
@@ -128,7 +129,7 @@ function ViewPublication() {
             <>
                 {data &&
                     <Header
-                        title={`${data.sennet_id} | Publication | SenNet`}
+                        title={`${data.sennet_id} | Publication | ${APP_TITLE}`}
                         description={data.description || data.title}
                         canonical={getCanonicalUrl(data)}
                     />

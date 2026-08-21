@@ -11,7 +11,7 @@ import { callService, filterProperties, getEntityData, update_create_entity } fr
 import { cleanJson, eq} from '@/components/custom/js/functions'
 import AppContext from '@/context/AppContext'
 import EntityContext, { EntityProvider } from "@/context/EntityContext";
-import { getEntityEndPoint, getIngestEndPoint, valid_dataset_ancestor_config } from "@/config/config";
+import {APP_TITLE, getEntityEndPoint, getIngestEndPoint, valid_dataset_ancestor_config} from "@/config/config";
 import $ from 'jquery';
 import SenNetPopover from "@/components/SenNetPopover"
 import AttributesUpload, { getResponseList } from "@/components/custom/edit/AttributesUpload";
@@ -217,7 +217,7 @@ export default function EditCollection({ collectionType = 'Collection', entities
             <>
                 {editMode && (
                     <Header
-                        title={`${editMode} ${collectionType} | SenNet`}
+                        title={`${editMode} ${collectionType} | ${APP_TITLE}`}
                     ></Header>
                 )}
 
