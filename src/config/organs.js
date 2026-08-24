@@ -215,7 +215,7 @@ export const organs = [
         label: 'Main Bronchus',
         path: 'main-bronchus',
         subLabel: 'UBERON:0002182',
-        url: 'http://purl.obolibrary.org/obo/0002182'
+        url: 'http://purl.obolibrary.org/obo/UBERON_0002182'
     },
     {
         codes: ['FMA:57991', 'FMA:57987'],
