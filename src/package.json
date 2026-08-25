@@ -49,7 +49,7 @@
     "react-toastify": "^11.1.0",
     "sass": "^1.99.0",
     "sweetalert2": "^11.26.23",
-    "vitessce": "4.0.0",
+    "vitessce": "4.0.4",
     "xac-loglevel": "github:x-atlas-consortia/xac-loglevel#1.0.3",
     "xac-sankey": "github:x-atlas-consortia/data-sankey#1.1.2"
   },
