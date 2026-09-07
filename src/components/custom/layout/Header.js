@@ -11,8 +11,8 @@ const Header = ({ title, description, jsonLD, canonical }) => {
                 name='google-site-verification'
                 content='m72fbKEuY_H6kYypUVFuYcUl6fnapQvPVFUIMRw5NhU'
             />
-            {description && <meta name='description' content={description} />}
-            {canonical && <link rel='canonical' href={canonical} />}
+            {description && (<meta name='description' content={description} />)}
+            {canonical && (<link rel='canonical' href={canonical} />)}
             {jsonLD && (
                 <script
                     type='application/ld+json'
