@@ -1,6 +1,6 @@
 {
   "name": "portal-ui",
-  "version": "1.12.2",
+  "version": "1.12.3",
   "private": true,
   "description": "SenNet Data Portal",
   "packageManager": "pnpm@11.10.0",
@@ -49,7 +49,7 @@
     "react-toastify": "^11.1.0",
     "sass": "^1.99.0",
     "sweetalert2": "^11.26.23",
-    "vitessce": "4.0.4",
+    "vitessce": "4.0.6",
     "xac-loglevel": "github:x-atlas-consortia/xac-loglevel#1.0.3",
     "xac-sankey": "github:x-atlas-consortia/data-sankey#1.1.2"
   },
