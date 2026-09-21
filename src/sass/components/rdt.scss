@@ -1,4 +1,7 @@
 .rdt {
+  &_headFixed {
+    background-color: white;
+  }
   &_row, &_table, &_headRow, &_pagination {
     background-color: transparent !important;
   }
