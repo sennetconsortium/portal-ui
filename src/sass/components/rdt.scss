@@ -1,4 +1,10 @@
 .rdt {
+  &_container {
+    .rdt_table {
+      min-width: var(--rdt-min-width, fit-content);
+    }
+  }
+  
   &_headFixed {
     background-color: white;
   }
