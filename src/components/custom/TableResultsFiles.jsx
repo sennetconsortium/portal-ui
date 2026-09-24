@@ -86,7 +86,9 @@ function TableResultsFiles({children, onRowClicked, filters, forData = false, ro
             }
         }
         for (let uuid of fileTreeSelectionsUuids) {
-            $el = $(`[name="select-row-${uuid}"]`)
+            // the name of the checkbox input is "Select row <uuid>", 
+            // may need to be updated if the table library changes
+            $el = $(`[name="Select row ${uuid}"]`)
             
             if (!_dict[uuid] && $el.length) {
                 // If the row is not already selected from the main table, 
