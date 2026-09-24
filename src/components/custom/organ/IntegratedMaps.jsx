@@ -303,20 +303,27 @@ function IntegratedMaps({id, title, organ, setShowIntegratedMapsSide = null}) {
         )
     }
 
-    const content = <>
-        {error != null && (
-            <div className='mx-auto text-center'>Unable to load integrated maps</div>
-        )}
+    const content = (
+        <>
+            {error != null && (
+                <div className='mx-auto text-center'>
+                    Unable to load integrated maps
+                </div>
+            )}
 
-        {data != null && (
-            <DataTable
-                className='rdt_Results'
-                columns={columns}
-                data={data}
-                fixedHeader={true}
-            />
-        )}
-    </>
+            {data != null && (
+                <div className='rdt_container' style={{'--rdt-min-width': '1920px'}}>
+                    <DataTable
+                        className='rdt_Results'
+                        columns={columns}
+                        data={data}
+                        fixedHeader={true}
+                        responsive
+                    />
+                </div>
+            )}
+        </>
+    )
 
     if (!data) {
         return <Skeleton variant='roubded' height={250}/>
