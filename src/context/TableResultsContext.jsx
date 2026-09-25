@@ -197,7 +197,7 @@ export const TableResultsProvider = ({
     }
 
     const onClickSidebarToggle = (e) => {
-        const $sui = $('.sui-layout-body__inner')
+        const $sui = $('.sui-layout-body__inner').eq(0)
         $sui.toggleClass('has-hiddenSidebar')
         $sui.find('#sidebar-toggle i').toggleClass('bi-chevron-left bi-chevron-right')
         $sui.find('.sidebar-drawer-btn').toggleClass('is-open')
