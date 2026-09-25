@@ -135,6 +135,7 @@
 }
 
 .sui-layout-sidebar--toggled {
+  top: 110px !important; // Need to account for banner at top of site
   display: block !important;
   animation: fadein 0.2s ease-out;
 }
