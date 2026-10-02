@@ -1,17 +1,17 @@
-import { searchUIQueryString } from '@/components/custom/js/functions';
-import SenNetAccordion from '@/components/custom/layout/SenNetAccordion';
-import { RESULTS_PER_PAGE } from "@/config/config";
-import { APP_ROUTES } from '@/config/constants';
-import useLocalSettings from '@/hooks/useLocalSettings';
-import { getOrganDataTypeQuantities } from '@/lib/services';
-import dynamic from "next/dynamic";
-import Link from 'next/link';
-import { useEffect, useState } from 'react';
-import DataTypeQuantitiesChart from './DataTypeQuantitiesChart';
+import { searchUIQueryString } from '@/components/custom/js/functions'
+import SenNetAccordion from '@/components/custom/layout/SenNetAccordion'
+import { RESULTS_PER_PAGE } from '@/config/config'
+import { APP_ROUTES } from '@/config/constants'
+import useLocalSettings from '@/hooks/useLocalSettings'
+import { getOrganDataTypeQuantities } from '@/lib/services'
+import dynamic from 'next/dynamic'
+import Link from 'next/link'
+import { useEffect, useState } from 'react'
+import DataTypeQuantitiesChart from './DataTypeQuantitiesChart'
 
 const DataTable = dynamic(() => import('react-data-table-component'), {
-  ssr: false,
-});
+    ssr: false
+})
 
 /**
  * Displays dataset type counts for an organ in a table.
@@ -44,7 +44,7 @@ const DataTypeQuantities = ({ id, organ }) => {
         searchUIQueryString(
             [
                 { field: 'entity_type', values: ['Dataset'], type: 'any' },
-                { field: 'origin_samples.organ', values: organ.codes, type: 'any' }
+                { field: 'origin_samples.organ.keyword', values: organ.codes, type: 'any' }
             ],
             20
         )
@@ -55,8 +55,8 @@ const DataTypeQuantities = ({ id, organ }) => {
             searchUIQueryString(
                 [
                     { field: 'entity_type', values: ['Dataset'], type: 'any' },
-                    { field: 'origin_samples.organ', values: organ.codes, type: 'any' },
-                    { field: 'dataset_type', values: types, type: 'any' }
+                    { field: 'origin_samples.organ.keyword', values: organ.codes, type: 'any' },
+                    { field: 'dataset_type_hierarchy.dataset_type.keyword', values: types, type: 'any' }
                 ],
                 20
             )
