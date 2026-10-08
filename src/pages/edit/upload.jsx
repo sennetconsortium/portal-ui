@@ -233,21 +233,8 @@ function EditUpload() {
                                                          individual datasets with their own SenNet IDs by CODCC
                                                          Curation. Uploads must have directory structures, contributors,
                                                          and metadata files per the <a target="_blank"
-                                                                                       href={"https://docs.google.com/document/d/1jXjUhC9ErfU7CVe5UGA5UEYx1MIXTq7KmDpF0s69ZsY/edit#heading=h.35zdcmzbs5a0"}>Data
-                                                             Submission Guide</a>. A new section
-                                                         on this topic is forthcoming as of 2023-09-29. For now, please
-                                                         schedule a <a target="_blank"
-                                                                       href={"https://calendly.com/bhonick-psc/30min"}>Data
-                                                             Submission Office Hours</a> meeting with the
-                                                         Curation team or email the Help Desk for guidance on
-                                                         constructing an upload.
-                                                         {/*<br></br><br></br>*/}
-                                                         {/*Temporarily removing this line*/}
-                                                         {/*If a data provider would rather have SenNet IDs for their*/}
-                                                         {/*datasets as soon as possible, CODCC Curation recommends bulk*/}
-                                                         {/*dataset registration through <a*/}
-                                                         {/*    href={getRootURL() + 'edit/bulk/dataset?action=register'}>this*/}
-                                                         {/*    page</a>.*/}
+                                                                                       href={"https://docs.sennetconsortium.org/data-submission/"}>Data
+                                                             Submission Guide</a>.
                                                      </>}
                                                      icon={<i className="bi bi-exclamation-triangle-fill"></i>}/>
                                     }
