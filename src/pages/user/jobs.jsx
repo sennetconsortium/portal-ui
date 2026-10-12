@@ -131,7 +131,7 @@ function ViewJobs({isAdmin = false}) {
 
         // For backwards compatibility only, since old jobs prior to feature change may not have a register_job_id attached
         for (let item of data) {
-            if (item.referrer.path.includes(row.job_id) && eq(item.referrer.type, 'register')) {
+            if (item.referrer?.path?.includes(row.job_id) && eq(item.referrer.type, 'register')) {
                 return createColorMap(item)
             }
         }
