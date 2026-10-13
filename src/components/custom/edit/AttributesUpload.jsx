@@ -40,7 +40,7 @@ export const tableColumns = (d = ['`', '"', "'"]) => [
             return row.column ? ` "${row.column}" ` + err : err
         },
         sortable: true,
-        format: (row) => {
+        cell: (row) => {
             const formatError = (val) => {
                 if (!val) return ''
                 let del = d
@@ -54,7 +54,7 @@ export const tableColumns = (d = ['`', '"', "'"]) => [
             }
             let err = handleErrorRow(row)
             err = formatError(err)
-            return <span dangerouslySetInnerHTML={{__html: urlify(err)}} />
+            return <div className="error-details" data-tag="allowRowEvents"><span dangerouslySetInnerHTML={{__html: urlify(err)}} /></div> 
         }
     }
 ]
