@@ -56,8 +56,11 @@ function SidebarBtn({target = '#sidebar', onClick, tooltip, className = '', init
                 slots={{transition: Zoom}}
                 onOpen={onOpenTooltip}
             >
-            <span onClick={(e) => handleOnClick(e)} data-bs-target={target} aria-controls={target.substring(1)}
-                  data-bs-toggle="collapse" title={'Toggle menu sidebar'}
+            <span onClick={(e) => handleOnClick(e)}
+                  aria-controls={target.substring(1)}
+                  aria-label="Toggle menu sidebar"
+                  data-bs-target={target}
+                  data-bs-toggle="collapse"
                   className={`btn sidebar-drawer-btn ${isOpen ? 'is-open' : ''} icon-inline mb-2`}>
                 {!isOpen && <i className="bi bi-chevron-right"></i>} {isOpen &&
                 <i className="bi bi-chevron-left"></i>}</span>
