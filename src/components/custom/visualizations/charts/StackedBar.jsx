@@ -1,6 +1,7 @@
 import PropTypes from "prop-types"
 import React from 'react'
 import * as d3 from 'd3';
+import { transition } from 'd3-transition';
 import { useContext, useEffect, useRef } from 'react'
 import VisualizationsContext from '@/context/VisualizationsContext';
 
