@@ -173,7 +173,7 @@ function ViewHome({children}) {
                     </section>
 
                     <section aria-label='Data Sankey' className='sui-layout-body__inner'>
-                        <Sankey maxHeight={600} showExpandButton={true}/>
+                        <Sankey maxHeight={740} showExpandButton={true}/>
                     </section>
 
                     <SenNetStats/>
