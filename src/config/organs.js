@@ -69,6 +69,7 @@ export const organIcons = {
  * @property {string} path - The url path parameter name for the organ's page.
  * @property {string} subLabel - The sub-label for the organ, uberon/fma code.
  * @property {string} url - The uberon/fma URL used in the HRA.
+ * @property {Object} [meta] - Optional metadata for the organ, keyed by code.
  */
 
 /**
