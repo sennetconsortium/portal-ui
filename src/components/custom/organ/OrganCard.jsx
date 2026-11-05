@@ -25,8 +25,8 @@ const OrganCard = ({ organ }) => {
                             className='badge bg-dataset text-dark'
                             style={{
                                 display: 'flex',
-                                'align-items': 'center',
-                                'justify-content': 'center',
+                                alignItems: 'center',
+                                justifyContent: 'center',
                                 width: '100px',
                                 height: '25px'
                             }}

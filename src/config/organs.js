@@ -23,7 +23,7 @@ export function getOrganByPath(path) {
 const BASE_ICON_URL = 'https://cdn.humanatlas.io/hra-design-system/icons'
 
 export const organIcons = {
-    'UBERON:0001013': `${BASE_ICON_URL}/organs/organ-icon-skin.svg`,
+    'UBERON:0001013': `${getRootURL()}/images/icons/organ-icon-adipose.svg`,
     'UBERON:0000178': `${BASE_ICON_URL}/organs/organ-icon-blood.svg`,
     'UBERON:0002371': `${BASE_ICON_URL}/organs/organ-icon-bone-marrow.svg`,
     'UBERON:0000955': `${BASE_ICON_URL}/organs/organ-icon-brain.svg`,
@@ -38,7 +38,7 @@ export const organIcons = {
     'UBERON:0000029': `${BASE_ICON_URL}/organs/organ-icon-lymph-nodes.svg`,
     'FMA:57991': `${BASE_ICON_URL}/organs/organ-icon-breast.svg`,
     'FMA:57987': `${BASE_ICON_URL}/organs/organ-icon-breast.svg`,
-    'UBERON:0005090': 'https://cdn.jsdelivr.net/gh/cns-iu/md-icons@main/other-icons/organs/ico-organs-united.svg',
+    'UBERON:0005090': `${getRootURL()}/images/icons/organ-icon-muscle.svg`,
     'UBERON:0002119': `${BASE_ICON_URL}/organs/organ-icon-ovary-left.svg`,
     'UBERON:0002118': `${BASE_ICON_URL}/organs/organ-icon-ovary-right.svg`,
     'UBERON:0001264': `${BASE_ICON_URL}/organs/organ-icon-pancreas.svg`,
@@ -50,6 +50,7 @@ export const organIcons = {
     'UBERON:0002370': `${BASE_ICON_URL}/organs/organ-icon-thymus.svg`,
     'UBERON:0003126': `${BASE_ICON_URL}/organs/organ-icon-trachea.svg`,
     'UBERON:0000948': `${BASE_ICON_URL}/organs/organ-icon-heart.svg`,
+    'UBERON:0000473': `${getRootURL()}/images/icons/organ-icon-testis.svg`,
     'FMA:54974': `${BASE_ICON_URL}/organs/organ-icon-palatine-tonsil.svg`,
     'FMA:54973': `${BASE_ICON_URL}/organs/organ-icon-palatine-tonsil.svg`,
     'UBERON:0001066': `${BASE_ICON_URL}/organs/organ-icon-spinal-cord.svg`,
@@ -68,6 +69,7 @@ export const organIcons = {
  * @property {string} path - The url path parameter name for the organ's page.
  * @property {string} subLabel - The sub-label for the organ, uberon/fma code.
  * @property {string} url - The uberon/fma URL used in the HRA.
+ * @property {Object} [meta] - Optional metadata for the organ, keyed by code.
  */
 
 /**
@@ -313,6 +315,15 @@ export const organs = [
         path: 'spleen',
         subLabel: 'UBERON:0002106',
         url: 'http://purl.obolibrary.org/obo/UBERON_0002106'
+    },
+    {
+        codes: ['UBERON:0000473'],
+        hraSupported: false,
+        icon: organIcons['UBERON:0000473'],
+        label: 'Testis',
+        path: 'testis',
+        subLabel: 'UBERON:0000473',
+        url: 'http://purl.obolibrary.org/obo/UBERON_0000473'
     },
     {
         codes: ['UBERON:0002370'],

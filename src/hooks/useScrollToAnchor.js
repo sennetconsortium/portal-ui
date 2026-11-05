@@ -1,3 +1,5 @@
+import log from 'xac-loglevel'
+
 function useScrollToAnchor(maxTries = 4, interval = 700) {
     let attempts = 0;
     if (typeof window !== 'undefined') {
@@ -15,7 +17,7 @@ function useScrollToAnchor(maxTries = 4, interval = 700) {
                 }
 
                 if (attempts >= maxTries) {
-                    console.error(`Element with ID '${currentHash}' not found after ${maxTries} tries.`);
+                    log.error(`Element with ID '${currentHash}' not found after ${maxTries} tries.`);
                     clearInterval(intervalId); // Stop if the max tries are exceeded
                 }
             }
