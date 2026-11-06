@@ -1,5 +1,5 @@
 import dynamic from "next/dynamic";
-import React, {useContext} from 'react';
+import React, {useContext, useState} from 'react';
 import {
     displayBodyHeader,
     getDatasetTypeDisplay,
@@ -8,25 +8,27 @@ import {
     getStatusDefinition,
     getSubtypeProvenanceShape,
     getUBKGFullName
-} from "../../js/functions";
+} from "@/components/custom/js/functions";
 import ClipboardCopy from "@/components/ClipboardCopy";
 import AppContext from "@/context/AppContext";
 import useAutoHideColumns from "@/hooks/useAutoHideColumns";
-
-const DataTable = dynamic(() => import('react-data-table-component'), {
-  ssr: false,
-});
-import Tab from 'react-bootstrap/Tab';
-import Tabs from 'react-bootstrap/Tabs';
+import CLTModal from '@/components/custom/entities/dataset/CLTModal';
+import Tab from "react-bootstrap/Tab";
+import Tabs from "react-bootstrap/Tabs";
 import {RESULTS_PER_PAGE} from "@/config/config";
 import SenNetPopover from "@/components/SenNetPopover";
+import {categorizeByDatasetType} from "@/components/custom/js/functions";
+
+const DataTable = dynamic(() => import("react-data-table-component"), {
+  ssr: false,
+});
 
 const Lineage = ({lineage}) => {
     const {isLoggedIn} = useContext(AppContext)
     const {columnVisibility, tableData, updateCount} = useAutoHideColumns({data: lineage})
     const getId = (column) => column.id || column.uuid
+    const [showCltModal, setShowCltModal] = useState(false)
 
-    console.log(tableData)
     const reusableColumns = {}
     reusableColumns['SenNetID'] = {
         name: 'SenNet ID',
@@ -166,7 +168,6 @@ const Lineage = ({lineage}) => {
     }
     sourceColumns.push(reusableColumns.GroupName)
 
-
     const datasetData = tableData.filter(obj => obj.entity_type === "Dataset")
     const sampleData = tableData.filter(obj => obj.entity_type === "Sample")
     const sourceData = tableData.filter(obj => obj.entity_type === "Source")
@@ -180,7 +181,12 @@ const Lineage = ({lineage}) => {
             >
                 {datasetData && datasetData.length > 0 &&
                     <Tab eventKey="datasets"
-                         title={<span>{getSubtypeProvenanceShape("Dataset", null, 'lg')} ({datasetData.length})</span>}>
+                         title={<span>{getSubtypeProvenanceShape("Dataset", null, "lg")} ({datasetData.length})</span>}>
+                        <div className="d-flex justify-content-end">
+                            <span role="button" className="btn btn-outline-primary mb-4 lnk--ic" onClick={()=> setShowCltModal(true)}>
+                                Download Files with SenNet CLT <i className={"bi bi-download"}></i>
+                            </span>
+                        </div>
                         <DataTable
                             columns={datasetColumns}
                             data={datasetData}
@@ -214,6 +220,8 @@ const Lineage = ({lineage}) => {
                     </Tab>
                 }
             </Tabs>
+            {datasetData && datasetData.length > 0 &&
+                <CLTModal data={categorizeByDatasetType(datasetData)} setShowModal={setShowCltModal} showModal={showCltModal} />}
         </div>
     )
 }
