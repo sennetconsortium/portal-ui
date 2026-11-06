@@ -171,9 +171,10 @@ const Lineage = ({lineage}) => {
     const datasetData = tableData.filter(obj => obj.entity_type === "Dataset")
     const sampleData = tableData.filter(obj => obj.entity_type === "Sample")
     const sourceData = tableData.filter(obj => obj.entity_type === "Source")
+    const noData = datasetData.length === 0 && sampleData.length === 0 && sourceData.length === 0
 
     return (
-        <div className={"p-tree mb-3"}>
+        <div className="mb-3">
             <Tabs
                 defaultActiveKey={datasetData.length > 0 ? "datasets" : sampleData.length > 0 ? "samples" : "sources"}
                 className="c-provenance__lineage__tabs mb-3"
@@ -192,10 +193,9 @@ const Lineage = ({lineage}) => {
                             data={datasetData}
                             fixedHeader={true}
                             paginationRowsPerPageOptions={RESULTS_PER_PAGE}
-                            pagination/>
+                            pagination />
                     </Tab>
                 }
-
 
                 {sampleData && sampleData.length > 0 &&
                     <Tab eventKey="samples"
@@ -205,9 +205,10 @@ const Lineage = ({lineage}) => {
                             data={sampleData}
                             fixedHeader={true}
                             paginationRowsPerPageOptions={RESULTS_PER_PAGE}
-                            pagination/>
+                            pagination />
                     </Tab>
                 }
+
                 {sourceData && sourceData.length > 0 &&
                     <Tab eventKey="sources"
                          title={<span>{getSubtypeProvenanceShape("Source", null, 'lg')} ({sourceData.length})</span>}>
@@ -216,12 +217,22 @@ const Lineage = ({lineage}) => {
                             data={sourceData}
                             fixedHeader={true}
                             paginationRowsPerPageOptions={RESULTS_PER_PAGE}
-                            pagination/>
+                            pagination />
                     </Tab>
                 }
             </Tabs>
+
+            {noData &&
+                <DataTable data={[]} />
+            }
+
             {datasetData && datasetData.length > 0 &&
-                <CLTModal data={categorizeByDatasetType(datasetData)} setShowModal={setShowCltModal} showModal={showCltModal} />}
+                <CLTModal
+                    data={categorizeByDatasetType(datasetData)}
+                    setShowModal={setShowCltModal}
+                    showModal={showCltModal}
+                />
+            }
         </div>
     )
 }
