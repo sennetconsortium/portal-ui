@@ -23,7 +23,7 @@ const DataTable = dynamic(() => import("react-data-table-component"), {
   ssr: false,
 });
 
-const Lineage = ({lineage}) => {
+const Lineage = ({lineage, showManifestDownload = true}) => {
     const {isLoggedIn} = useContext(AppContext)
     const {columnVisibility, tableData, updateCount} = useAutoHideColumns({data: lineage})
     const getId = (column) => column.id || column.uuid
@@ -183,11 +183,13 @@ const Lineage = ({lineage}) => {
                 {datasetData && datasetData.length > 0 &&
                     <Tab eventKey="datasets"
                          title={<span>{getSubtypeProvenanceShape("Dataset", null, "lg")} ({datasetData.length})</span>}>
-                        <div className="d-flex justify-content-end">
-                            <span role="button" className="btn btn-outline-primary mb-4 lnk--ic" onClick={()=> setShowCltModal(true)}>
-                                Download Files with SenNet CLT <i className={"bi bi-download"}></i>
-                            </span>
-                        </div>
+                        {showManifestDownload && (
+                            <div className="d-flex justify-content-end">
+                                <span role="button" className="btn btn-outline-primary mb-4 lnk--ic" onClick={()=> setShowCltModal(true)}>
+                                    Download Files with SenNet CLT <i className={"bi bi-download"}></i>
+                                </span>
+                            </div>
+                        )}
                         <DataTable
                             columns={datasetColumns}
                             data={datasetData}
@@ -226,7 +228,7 @@ const Lineage = ({lineage}) => {
                 <DataTable data={[]} />
             }
 
-            {datasetData && datasetData.length > 0 &&
+            {showManifestDownload && datasetData && datasetData.length > 0 &&
                 <CLTModal
                     data={categorizeByDatasetType(datasetData)}
                     setShowModal={setShowCltModal}

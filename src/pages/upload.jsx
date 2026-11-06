@@ -12,14 +12,13 @@ import AppContext from "@/context/AppContext";
 import Alert from 'react-bootstrap/Alert';
 import {EntityViewHeader} from "@/components/custom/layout/entity/ViewHeader";
 import {APP_TITLE, getEntityEndPoint} from "@/config/config";
-import LoadingAccordion from "@/components/custom/layout/LoadingAccordion";
 import AppNavbar from "@/components/custom/layout/AppNavbar"
 import Description from "@/components/custom/entities/sample/Description";
-import FileTreeView from "@/components/custom/entities/dataset/FileTreeView";
-import Datasets from "@/components/custom/entities/collection/Datasets";
 import Attribution from "@/components/custom/entities/sample/Attribution";
-import FilesDataProducts from "@/components/custom/entities/dataset/FilesDataProducts";
 import BulkDataTransfer from "@/components/custom/entities/dataset/BulkDataTransfer";
+import Lineage from "@/components/custom/entities/sample/Lineage";
+import SenNetAccordion from "@/components/custom/layout/SenNetAccordion";
+import SenNetSuspense from "@/components/SenNetSuspense";
 
 const AppFooter = dynamic(() => import("@/components/custom/layout/AppFooter"))
 const Header = dynamic(() => import("@/components/custom/layout/Header"))
@@ -148,11 +147,11 @@ function ViewUpload() {
                                              <BulkDataTransfer data={data} entityType={data.entity_type} />
 
                                             {/*Datasets*/}
-                                            {isDatasetsLoading ? (
-                                                <LoadingAccordion id='Datasets' title='Datasets' />
-                                            ) : (
-                                                <Datasets data={data.datasets}/>
-                                            )}
+                                            <SenNetSuspense showChildren={!isDatasetsLoading}>
+                                                <SenNetAccordion id="Datasets" title="Datasets">
+                                                    <Lineage lineage={data.datasets} showManifestDownload={false} />
+                                                </SenNetAccordion>
+                                            </SenNetSuspense>
 
                                             {/*Attribution*/}
                                             <Attribution data={data}/>

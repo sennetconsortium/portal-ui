@@ -1,7 +1,7 @@
 import dynamic from "next/dynamic";
 import React, {useContext, useEffect, useState} from "react";
 import log from 'xac-loglevel'
-import {eq, fetchDataCite} from "@/components/custom/js/functions";
+import {fetchDataCite} from "@/components/custom/js/functions";
 import Header from "@/components/custom/layout/Header";
 import AppContext from "@/context/AppContext";
 import Alert from 'react-bootstrap/Alert';
@@ -17,7 +17,6 @@ import {
 import {APP_TITLE, getEntityEndPoint} from "@/config/config";
 import AppNavbar from "@/components/custom/layout/AppNavbar"
 import Description from "@/components/custom/entities/sample/Description";
-import Datasets from "@/components/custom/entities/collection/Datasets"
 import ContributorsContacts from "@/components/custom/entities/ContributorsContacts"
 import AssociatedEntityTable from "../AssociatedEntityTable";
 import Lineage from "@/components/custom/entities/sample/Lineage";
@@ -159,26 +158,28 @@ function ViewCollection({collectionType='Collection', entitiesLabel='Entities'})
                                                 primaryDateTitle="Creation Date"
                                                 primaryDate={data.created_timestamp}
                                                 secondaryDateTitle="Modification Date"
-                                                secondaryDate={data.last_modified_timestamp}
-                                            />
+                                                secondaryDate={data.last_modified_timestamp} />
 
-                                            {data.associated_publication && Object.values(data.associated_publication).length > 0 && <AssociatedEntityTable id='AssociatedEntity--Publication'  data={{...data, publications: [data.associated_publication]}} propertyName={'publications'} />}
+                                            {/*Associated Publications*/}
+                                            {data.associated_publication && Object.values(data.associated_publication).length > 0 &&
+                                                <AssociatedEntityTable
+                                                    id='AssociatedEntity--Publication'
+                                                    data={{...data, publications: [data.associated_publication]}}
+                                                    propertyName={'publications'} />
+                                            }
 
                                             {/*Entities*/}
                                             <SenNetSuspense showChildren={!isEntitiesLoading}>
-                                               {eq(entitiesLabel, 'entities') && <SenNetAccordion title={entitiesLabel}>
+                                                <SenNetAccordion title={entitiesLabel}>
                                                     <Lineage lineage={data.entities} />
-                                                </SenNetAccordion>}
-
-                                                {!eq(entitiesLabel, 'entities') && <Datasets data={data.entities} label={entitiesLabel} />}
+                                                </SenNetAccordion>
                                             </SenNetSuspense>
 
-
                                             {/*Contributors*/}
-                                            <ContributorsContacts title={'Contributors'} data={data.contributors}/>
+                                            <ContributorsContacts title={'Contributors'} data={data.contributors} />
 
                                             {/*Attribution*/}
-                                            <Attribution data={data}/>
+                                            <Attribution data={data} />
                                         </div>
                                     </div>
                                 </main>
