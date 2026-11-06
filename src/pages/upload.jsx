@@ -19,6 +19,8 @@ import BulkDataTransfer from "@/components/custom/entities/dataset/BulkDataTrans
 import Lineage from "@/components/custom/entities/sample/Lineage";
 import SenNetAccordion from "@/components/custom/layout/SenNetAccordion";
 import SenNetSuspense from "@/components/SenNetSuspense";
+import TableSkeleton from "@/components/custom/skeleton/TableSkeleton";
+import TabsSkeleton from "@/components/custom/skeleton/TabsSkeleton";
 
 const AppFooter = dynamic(() => import("@/components/custom/layout/AppFooter"))
 const Header = dynamic(() => import("@/components/custom/layout/Header"))
@@ -79,6 +81,15 @@ function ViewUpload() {
         if (has !== showFilesSection && showFilesSection !== true) {
             setShowFilesSection(has)
         }
+    }
+
+    const datasetSkeletonComponent = () =>  {
+        return (
+            <div role='status' aria-busy='true' aria-label='Loading entities' className='pt-3'>
+                <TabsSkeleton tabCount={1} />
+                <TableSkeleton rows={3} columns={4} />
+            </div>
+        )
     }
 
     if (isPreview(data, error))  {
@@ -147,7 +158,7 @@ function ViewUpload() {
                                              <BulkDataTransfer data={data} entityType={data.entity_type} />
 
                                             {/*Datasets*/}
-                                            <SenNetSuspense showChildren={!isDatasetsLoading}>
+                                            <SenNetSuspense title="Datasets" showChildren={!isDatasetsLoading} style={{ height:'350px' }} suspenseElements={datasetSkeletonComponent()}>
                                                 <SenNetAccordion id="Datasets" title="Datasets">
                                                     <Lineage lineage={data.datasets} showManifestDownload={false} />
                                                 </SenNetAccordion>

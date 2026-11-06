@@ -23,6 +23,9 @@ import Lineage from "@/components/custom/entities/sample/Lineage";
 import SenNetAccordion from "@/components/custom/layout/SenNetAccordion";
 import SenNetSuspense from "@/components/SenNetSuspense";
 import {getCanonicalUrl} from "@/lib/meta";
+import TableSkeleton from "@/components/custom/skeleton/TableSkeleton";
+import TabsSkeleton from "@/components/custom/skeleton/TabsSkeleton";
+import ToolbarSkeleton from "@/components/custom/skeleton/ToolbarSkeleton";
 
 const AppFooter = dynamic(() => import("@/components/custom/layout/AppFooter"))
 const Attribution = dynamic(() => import("@/components/custom/entities/sample/Attribution"))
@@ -85,6 +88,16 @@ function ViewCollection({collectionType='Collection', entitiesLabel='Entities'})
             setData(null);
         }
     }, [router]);
+
+    const entitiesSkeletonComponent = () =>  {
+        return (
+            <div role='status' aria-busy='true' aria-label='Loading entities' className='pt-3'>
+                <TabsSkeleton tabCount={3} />
+                <ToolbarSkeleton />
+                <TableSkeleton rows={3} columns={6} />
+            </div>
+        )
+    }
 
     if (isPreview(data, error))  {
         return getPreviewView(data)
@@ -169,8 +182,8 @@ function ViewCollection({collectionType='Collection', entitiesLabel='Entities'})
                                             }
 
                                             {/*Entities*/}
-                                            <SenNetSuspense showChildren={!isEntitiesLoading}>
-                                                <SenNetAccordion title={entitiesLabel}>
+                                            <SenNetSuspense title="Entities" showChildren={!isEntitiesLoading} style={{ height:'410px' }} suspenseElements={entitiesSkeletonComponent()}>
+                                                <SenNetAccordion id="Entities" title={entitiesLabel}>
                                                     <Lineage lineage={data.entities} />
                                                 </SenNetAccordion>
                                             </SenNetSuspense>
