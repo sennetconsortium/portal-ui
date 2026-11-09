@@ -11,9 +11,6 @@ import { fetchSearchAPIEntities } from '@/lib/services'
  * @returns {{data: any, loading: boolean, error: any}}
  */
 export default function useSearchUIQuery(index, body) {
-    if (!index || !body) {
-        throw new Error('useSearchUIQuery requires both `index` and `body` arguments')
-    }
     const [data, setData] = useState(null)
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState(null)
