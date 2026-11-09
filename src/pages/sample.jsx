@@ -2,7 +2,7 @@ import dynamic from "next/dynamic";
 import React, {useContext, useEffect, useState} from "react";
 import {useRouter} from 'next/router';
 import log from 'xac-loglevel'
-import {getWritePrivilegeForGroupUuid, getAncestryData, getEntityData} from "@/lib/services";
+import {getAncestryData, getEntityData, getServerEntityData, getWritePrivilegeForGroupUuid} from "@/lib/services";
 import AppContext from "@/context/AppContext";
 import Alert from 'react-bootstrap/Alert';
 import {EntityViewHeader} from "@/components/custom/layout/entity/ViewHeader";
@@ -14,6 +14,8 @@ import Tissue from "@/components/custom/entities/sample/Tissue";
 import Collections from "@/components/custom/entities/Collections";
 import {getCanonicalUrl} from "@/lib/meta";
 import {APP_TITLE} from "@/config/config";
+import PropTypes from "prop-types";
+import {getCookie} from "cookies-next";
 
 const AppFooter = dynamic(() => import("@/components/custom/layout/AppFooter"))
 const Attribution = dynamic(() => import("@/components/custom/entities/sample/Attribution"))
@@ -21,7 +23,7 @@ const Header = dynamic(() => import("@/components/custom/layout/Header"))
 const Metadata = dynamic(() => import("@/components/custom/entities/Metadata"))
 const Protocols = dynamic(() => import("@/components/custom/entities/sample/Protocols"))
 const Provenance = dynamic(() => import("@/components/custom/entities/Provenance"), {
-    loading: () => <LoadingAccordion id="Provenance" title="Provenance" style={{ height:'490px' }} />
+    loading: () => <LoadingAccordion id="Provenance" title="Provenance" style={{height: '490px'}}/>
 })
 const SidebarBtn = dynamic(() => import("@/components/SidebarBtn"))
 
@@ -36,64 +38,96 @@ const sampleDescription = (data) => {
     }
 }
 
-function ViewSample() {
+function ViewSample({initialData, initialError}) {
     const router = useRouter()
-    const [data, setData] = useState(null)
+    const [data, setData] = useState(initialData)
     const [hasAncestry, setHasAncestry] = useState(false)
     const [ancestorHasMetadata, setAncestorHasMetadata] = useState(false)
-    const [error, setError] = useState(false)
-    const [errorMessage, setErrorMessage] = useState(null)
+    const [error, setError] = useState(Boolean(initialError))
+    const [errorMessage, setErrorMessage] = useState(initialError)
     const [hasWritePrivilege, setHasWritePrivilege] = useState(false)
 
     const {isRegisterHidden, _t, cache, isPreview, getPreviewView} = useContext(AppContext)
 
+    // Fetch entity if SSR didn't provide it
     useEffect(() => {
         const fetchData = async (uuid) => {
             log.debug('sample: getting data...', uuid)
-            // fetch sample data
-            const _data = await getEntityData(uuid, ['ancestors', 'descendants']);
+
+            const _data = await getEntityData(
+                uuid,
+                ['ancestors', 'descendants']
+            )
 
             log.debug('sample: Got data', _data)
-            if (_data.hasOwnProperty("error")) {
+
+            if (_data?.error) {
                 setError(true)
-                setErrorMessage(_data["error"])
+                setErrorMessage(_data.error)
                 setData(false)
                 return
             }
 
-            // set state with the result
             setData(_data)
+        }
 
-            // fetch ancestry data
-            getAncestryData(_data.uuid).then(ancestry => {
-                Object.assign(_data, ancestry)
-                setData(_data)
+        const uuid = router.query?.uuid
+
+        if (!uuid) {
+            setData(null)
+            return
+        }
+
+        // Skip fetch if SSR already provided data
+        if (data) {
+            return
+        }
+
+        fetchData(uuid)
+            .catch(log.error)
+
+    }, [router.query?.uuid])
+
+    // Fill in remaining fields when data is available
+    useEffect(() => {
+        if (!data || data === false) {
+            return
+        }
+
+        // Fetch ancestry
+        getAncestryData(data.uuid)
+            .then((ancestry) => {
+                setData(prev => ({
+                    ...prev,
+                    ...ancestry
+                }))
+
                 setHasAncestry(true)
 
-                for (const ancestor of ancestry.ancestors) {
-                    if (ancestor.metadata && Object.keys(ancestor.metadata).length) {
+                for (const ancestor of ancestry.ancestors || []) {
+                    if (
+                        ancestor.metadata &&
+                        Object.keys(ancestor.metadata).length
+                    ) {
                         setAncestorHasMetadata(true)
                         break
                     }
                 }
-            }).catch(log.error)
+            })
+            .catch(log.error)
 
-            // fetch write privilege
-            getWritePrivilegeForGroupUuid(_data.group_uuid).then(response => {
-                setHasWritePrivilege(response.has_write_privs)
-            }).catch(log.error)
-        }
+        // Fetch write privileges
+        getWritePrivilegeForGroupUuid(data.group_uuid)
+            .then((response) => {
+                setHasWritePrivilege(
+                    response.has_write_privs
+                )
+            })
+            .catch(log.error)
 
-        if (router.query.hasOwnProperty("uuid")) {
-            // fetch sample data
-            fetchData(router.query.uuid)
-                .catch(log.error);
-        } else {
-            setData(null);
-        }
-    }, [router]);
+    }, [data?.uuid])
 
-    if (isPreview(data, error))  {
+    if (isPreview(data, error)) {
         return getPreviewView(data)
     } else {
         return (
@@ -166,7 +200,7 @@ function ViewSample() {
                                 <main className="col m-md-3 entity-details">
                                     <SidebarBtn/>
 
-                                    <EntityViewHeader data={data} entity={cache.entities.sample.toLowerCase()}
+                                    <EntityViewHeader data={data} entity={cache?.entities?.sample.toLowerCase()}
                                                       hasWritePrivilege={hasWritePrivilege}
                                                       uniqueHeader={data.sample_category}
                                                       uniqueHeaderUrl={data.sample_category == "Organs" ? APP_ROUTES.organs : undefined}
@@ -200,7 +234,7 @@ function ViewSample() {
                                                     data={data}
                                                     metadata={data?.metadata}
                                                     mappedMetadata={data?.cedar_mapped_metadata}
-                                                    />
+                                                />
                                             }
 
                                             {/*Protocols*/}
@@ -223,5 +257,39 @@ function ViewSample() {
     }
 }
 
+export async function getServerSideProps(context) {
+    const {uuid} = context.query
+    const token = getCookie('groups_token', {
+        req: context.req,
+        res: context.res
+    })
+
+    try {
+        const initialData = await getServerEntityData(
+            uuid,
+            token,
+            ['ancestors', 'descendants']
+        )
+
+        return {
+            props: {
+                initialData,
+                initialError: null
+            }
+        }
+    } catch (e) {
+        return {
+            props: {
+                initialData: null,
+                initialError: e.message
+            }
+        }
+    }
+}
+
+ViewSample.propTypes = {
+    initialData: PropTypes.object,
+    initialError: PropTypes.string
+}
 
 export default ViewSample

@@ -45,7 +45,7 @@ export default function Description({data, citationData, labId, primaryDateTitle
         }
         let res = []
         organs.forEach(organ => {
-            const code = cache.organTypesCodes[organ]
+            const code = cache?.organTypesCodes[organ]
             const organCode = getOrganByCode(code)
             const path = `${APP_ROUTES.organs}/${organCode?.path}`
             const icon = organIcons[code] || organIcons.OT
@@ -86,13 +86,13 @@ export default function Description({data, citationData, labId, primaryDateTitle
             {data && data?.description &&
                 <Card border='0' className='pb-3'>
                     <Card.Body>
-                        <Card.Subtitle>{(eq(data.entity_type, cache.entities.upload) || eq(data.entity_type, 'Collection')) ? 'Description' : 'Abstract'}</Card.Subtitle>
+                        <Card.Subtitle>{(eq(data.entity_type, cache?.entities?.upload) || eq(data.entity_type, 'Collection')) ? 'Description' : 'Abstract'}</Card.Subtitle>
                         <Card.Text>{data.description}</Card.Text>
                     </Card.Body>
                 </Card>
             }
 
-            {isLoggedIn() && data && eq(data.entity_type, cache.entities.upload) &&
+            {isLoggedIn() && data && eq(data.entity_type, cache?.entities?.upload) &&
                 <CardGroup>
                     <Card border='0' className='pb-3'>
                         <Card.Body>
@@ -212,7 +212,7 @@ export default function Description({data, citationData, labId, primaryDateTitle
             }
 
             <CardGroup className='mb-3'>
-                {isLoggedIn() && data && labId && !eq(data.entity_type, cache.entities.upload) &&
+                {isLoggedIn() && data && labId && !eq(data.entity_type, cache?.entities?.upload) &&
                     <Card border='0'>
                         <Card.Body>
                             <Card.Subtitle>Lab ID</Card.Subtitle>
@@ -252,7 +252,7 @@ export default function Description({data, citationData, labId, primaryDateTitle
                 }
 
                 {/*An empty card to align things nicely*/}
-                {data && eq(data.entity_type, cache.entities.upload) &&
+                {data && eq(data.entity_type, cache?.entities?.upload) &&
                     <Card border='0'></Card>
                 }
             </CardGroup>

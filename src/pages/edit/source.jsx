@@ -121,9 +121,9 @@ function EditSource() {
             let uuid = data.uuid
 
 
-            await update_create_entity(uuid, json, editMode, cache.entities.source).then((response) => {
+            await update_create_entity(uuid, json, editMode, cache?.entities?.source).then((response) => {
                 setModalDetails({
-                    entity: cache.entities.source,
+                    entity: cache?.entities?.source,
                     type: response.source_type,
                     typeHeader: _t('Source Type'),
                     response
@@ -145,12 +145,11 @@ function EditSource() {
     };
 
     const supportsMetadata = () => {
-        return values.source_type === cache.sourceTypes.Mouse
+        return values.source_type === cache?.sourceTypes?.Mouse
     }
 
     const curatorHandledMetadata = () => {
-        // TODO: check about Human Organoid
-        return eq(values.source_type, cache.sourceTypes.Human)
+        return eq(values.source_type, cache?.sourceTypes?.Human)
     }
 
     const metadataNote = () => {
@@ -165,11 +164,11 @@ function EditSource() {
         alertStyle.current = notEq && values.metadata ? 'warning' : 'info'
 
         if (isEditMode() && values.metadata) {
-            text.push(getMetadataNote(cache.entities.source, 0, 'type'))
-            text.push(getMetadataNote(cache.entities.source, 1, 'type'))
+            text.push(getMetadataNote(cache?.entities?.source, 0, 'type'))
+            text.push(getMetadataNote(cache?.entities?.source, 1, 'type'))
 
             if (notEq) {
-                text.push(getMetadataNote(cache.entities.source, 2, 'type'))
+                text.push(getMetadataNote(cache?.entities?.source, 2, 'type'))
                 if (!curatorHandledMetadata()) {
                     text.push(noSupportMessage)
                 }
@@ -222,7 +221,7 @@ function EditSource() {
                     <div className="no_sidebar">
                         <Layout
                             bodyHeader={
-                                <EntityHeader entity={cache.entities.source} data={data}/>
+                                <EntityHeader entity={cache?.entities?.source} data={data}/>
                             }
                             bodyContent={
                                 <Form noValidate validated={validated} onSubmit={handleSave} id={"source-form"} ref={entityForm}>

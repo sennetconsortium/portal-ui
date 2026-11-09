@@ -1,15 +1,10 @@
 import PropTypes from "prop-types"
-import React, { createContext, useEffect, useState} from 'react'
-import { useRouter } from 'next/router'
+import React, {createContext, useEffect, useState} from 'react'
+import {useRouter} from 'next/router'
 import {eq} from '@/components/custom/js/functions'
 import {deleteCookie, getCookie, setCookie} from 'cookies-next'
 import log from 'xac-loglevel'
-import {
-    checkValidToken,
-    getReadWritePrivileges,
-    getUserWriteGroups,
-    hasDataAdminPrivs
-} from '@/lib/services'
+import {checkValidToken, getReadWritePrivileges, getUserWriteGroups, hasDataAdminPrivs} from '@/lib/services'
 import {deleteCookies} from "@/lib/auth";
 import {APP_ROUTES_NO_REDIRECT, REDIRECT_COOKIE_KEY} from "@/config/constants";
 import AppModal from "../components/AppModal";
@@ -18,10 +13,11 @@ import Unauthorized from "@/components/custom/layout/Unauthorized";
 import ReactDOMServer from "react-dom/server";
 import InvalidToken from "@/components/custom/layout/InvalidToken";
 import NotFound from "@/components/custom/NotFound";
+import {loadUBKGCache} from "@/lib/cache";
 
 const AppContext = createContext()
 
-export const AppProvider = ({ cache, banners, children }) => {
+export const AppProvider = ({banners, children}) => {
     const [isBusy, setIsBusy] = useState(false)
     const [showModal, setShowModal] = useState(false)
     const [modalBody, setModalBody] = useState(null)
@@ -38,6 +34,14 @@ export const AppProvider = ({ cache, banners, children }) => {
     const tutorialCookieKey = 'tutorialCompleted_'
 
     const [tutorialTrigger, setTutorialTrigger] = useState(0)
+
+    const [cache, setCache] = useState(null)
+
+    useEffect(() => {
+        loadUBKGCache()
+            .then(setCache)
+            .catch((e) => log.error(e))
+    }, [])
 
     const setTokenCookies = (auth) => {
         setCookie('groups_token', auth.groups_token, {sameSite: "Lax"})
@@ -70,7 +74,7 @@ export const AppProvider = ({ cache, banners, children }) => {
             setCookie(REDIRECT_COOKIE_KEY, router.asPath)
         }
 
-        if(groupsToken !== "") {
+        if (groupsToken !== "") {
             checkValidToken().then((response) => {
                 if (typeof response == "boolean") {
                     setValidToken(response)
@@ -140,7 +144,7 @@ export const AppProvider = ({ cache, banners, children }) => {
     }
 
     const isAuthorizing = () => {
-        return authorized === null  
+        return authorized === null
     }
 
     const deleteTutorialCookies = () => {
@@ -169,7 +173,7 @@ export const AppProvider = ({ cache, banners, children }) => {
                         setCookie('user', {email, globus_id}, {sameSite: "Lax"})
                     }
                 } else {
-                    router.replace('/', undefined, { shallow: true })
+                    router.replace('/', undefined, {shallow: true})
                     setIsLoginPermitted(false)
                 }
                 setIsBusy(false)
@@ -202,6 +206,9 @@ export const AppProvider = ({ cache, banners, children }) => {
     }
 
     const supportedMetadata = () => {
+        if (!cache) {
+            return {}
+        }
         let supported = {}
         supported[cache.entities.source] = {
             categories: [
@@ -232,7 +239,7 @@ export const AppProvider = ({ cache, banners, children }) => {
         setShowModal(show)
         if (show && action) {
             setModalTitle(<span>One moment ...</span>)
-            setModalBody(<div> <Spinner text={<>Currently handling your request to {action}...</>}  /></div>)
+            setModalBody(<div><Spinner text={<>Currently handling your request to {action}...</>}/></div>)
         }
     }
 
@@ -254,9 +261,21 @@ export const AppProvider = ({ cache, banners, children }) => {
     }
 
     const isPreview = (data, error) => {
-        if (error && hasPublicAccess(data)) return false
-        return ((isUnauthorized(data) || isAuthorizing()) || !data)
+        if (!data) {
+            return true
+        }
+
+        if (hasPublicAccess(data)) {
+            return false
+        }
+
+        if (error) {
+            return false
+        }
+
+        return isUnauthorized(data) || isAuthorizing()
     }
+
 
     const getPreviewView = (data) => {
         return isUnauthorized(data) && data != null ? <Unauthorized/> : <Spinner/>
@@ -264,8 +283,8 @@ export const AppProvider = ({ cache, banners, children }) => {
 
     const getStringifiedComponents = () => {
         return btoa(JSON.stringify({
-            token: ReactDOMServer.renderToStaticMarkup(<InvalidToken />).toString(),
-            notFound: ReactDOMServer.renderToStaticMarkup(<NotFound includeHeader={false} />).toString()
+            token: ReactDOMServer.renderToStaticMarkup(<InvalidToken/>).toString(),
+            notFound: ReactDOMServer.renderToStaticMarkup(<NotFound includeHeader={false}/>).toString()
         }))
     }
 

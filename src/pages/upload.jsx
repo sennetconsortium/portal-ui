@@ -130,7 +130,7 @@ function ViewUpload() {
                                 <main className="col m-md-3 entity-details">
                                     <SidebarBtn/>
 
-                                    <EntityViewHeader data={data} entity={cache.entities.upload.toLowerCase()}
+                                    <EntityViewHeader data={data} entity={cache?.entities?.upload.toLowerCase()}
                                                       hasWritePrivilege={hasWritePrivilege}/>
 
                                     <div className="row">

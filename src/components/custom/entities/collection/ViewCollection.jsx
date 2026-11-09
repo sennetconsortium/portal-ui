@@ -11,8 +11,9 @@ import {useRouter} from "next/router";
 import {
     callService,
     filterProperties,
-    getWritePrivilegeForGroupUuid,
-    getEntityData
+    getEntityData,
+    getServerEntityData,
+    getWritePrivilegeForGroupUuid
 } from "@/lib/services";
 import {APP_TITLE, getEntityEndPoint} from "@/config/config";
 import AppNavbar from "@/components/custom/layout/AppNavbar"
@@ -24,70 +25,107 @@ import Lineage from "@/components/custom/entities/sample/Lineage";
 import SenNetAccordion from "@/components/custom/layout/SenNetAccordion";
 import SenNetSuspense from "@/components/SenNetSuspense";
 import {getCanonicalUrl} from "@/lib/meta";
+import PropTypes from "prop-types";
+import {getCookie} from "cookies-next";
 
 const AppFooter = dynamic(() => import("@/components/custom/layout/AppFooter"))
 const Attribution = dynamic(() => import("@/components/custom/entities/sample/Attribution"))
 const SidebarBtn = dynamic(() => import("@/components/SidebarBtn"))
 
-function ViewCollection({collectionType='Collection', entitiesLabel='Entities'}) {
+function ViewCollection({collectionType = 'Collection', entitiesLabel = 'Entities', initialData, initialError}) {
     const router = useRouter()
-    const [data, setData] = useState(null)
+    const [data, setData] = useState(initialData)
     const [isEntitiesLoading, setIsEntitiesLoading] = useState(true)
     const [citationData, setCitationData] = useState(null)
-    const [error, setError] = useState(false)
-    const [errorMessage, setErrorMessage] = useState(null)
+    const [error, setError] = useState(Boolean(initialError))
+    const [errorMessage, setErrorMessage] = useState(initialError)
     const [hasWritePrivilege, setHasWritePrivilege] = useState(false)
 
     const {isRegisterHidden, _t, isPreview, getPreviewView} = useContext(AppContext)
 
+    // Fetch entity if SSR didn't provide it
     useEffect(() => {
         const fetchData = async (uuid) => {
             log.debug('collection: getting data...', uuid)
-            // fetch collection data
-            const _data = await getEntityData(uuid, ['ancestors', 'descendants']);
+
+            const _data = await getEntityData(
+                uuid,
+                ['ancestors', 'descendants']
+            )
 
             log.debug('collection: Got data', _data)
-            if (_data.hasOwnProperty("error")) {
+
+            if (_data?.error) {
                 setError(true)
-                setErrorMessage(_data["error"])
+                setErrorMessage(_data.error)
                 setData(false)
                 setIsEntitiesLoading(false)
                 return
             }
 
-            // set state with the result
             setData(_data)
+        }
 
-            // fetch entities data
-            callService(filterProperties.collectionEntities, `${getEntityEndPoint()}collections/${_data.uuid}/entities`, 'POST').then(entities => {
-                Object.assign(_data, {entities})
-                setData(_data)
+        const uuid = router.query?.uuid
+
+        if (!uuid) {
+            setData(null)
+            return
+        }
+
+        // Skip fetch when provided by SSR
+        if (data) {
+            return
+        }
+
+        fetchData(uuid)
+            .catch(log.error)
+
+    }, [router.query?.uuid])
+
+    // Fill in remaining fields when data is available
+    useEffect(() => {
+        if (!data || data === false) {
+            return
+        }
+
+        // Fetch collection entities
+        callService(
+            filterProperties.collectionEntities,
+            `${getEntityEndPoint()}collections/${data.uuid}/entities`,
+            'POST'
+        )
+            .then((entities) => {
+                setData(prev => ({
+                    ...prev,
+                    entities
+                }))
+
                 setIsEntitiesLoading(false)
-            }).catch(log.error)
+            })
+            .catch(log.error)
 
-            // fetch citation data
-            if (_data.doi_url) {
-                fetchDataCite(_data.doi_url).then(citation => {
-                    setCitationData(citation)
-                }).catch(log.error)
-            }
-
-            // fetch write privilege
-            getWritePrivilegeForGroupUuid(_data.group_uuid).then(response => {
-                setHasWritePrivilege(response.has_write_privs)
-            }).catch(log.error)
+        // Fetch citation data
+        if (data.doi_url) {
+            fetchDataCite(data.doi_url)
+                .then(setCitationData)
+                .catch(log.error)
         }
 
-        if (router.query.hasOwnProperty("uuid")) {
-            // fetch collection data
-            fetchData(router.query.uuid)
-                .catch(log.error);
-        } else {
-            setData(null);
-        }
-    }, [router]);
+        // Fetch write privilege
+        getWritePrivilegeForGroupUuid(
+            data.group_uuid
+        )
+            .then((response) => {
+                setHasWritePrivilege(
+                    response.has_write_privs
+                )
+            })
+            .catch(log.error)
 
-    if (isPreview(data, error))  {
+    }, [data?.uuid])
+
+    if (isPreview(data, error)) {
         return getPreviewView(data)
     } else {
         return (
@@ -119,11 +157,12 @@ function ViewCollection({collectionType='Collection', entitiesLabel='Entities'})
                                                    className="nav-link "
                                                    data-bs-parent="#sidebar">Summary</a>
                                             </li>
-                                            {data.associated_publication && Object.values(data.associated_publication).length > 0 && <li className="nav-item">
-                                                <a href="#AssociatedEntity--Publication"
-                                                   className="nav-link"
-                                                   data-bs-parent="#sidebar">Associated Publication</a>
-                                            </li>}
+                                            {data.associated_publication && Object.values(data.associated_publication).length > 0 &&
+                                                <li className="nav-item">
+                                                    <a href="#AssociatedEntity--Publication"
+                                                       className="nav-link"
+                                                       data-bs-parent="#sidebar">Associated Publication</a>
+                                                </li>}
                                             <li className="nav-item">
                                                 <a href="#Entities"
                                                    className="nav-link "
@@ -162,15 +201,21 @@ function ViewCollection({collectionType='Collection', entitiesLabel='Entities'})
                                                 secondaryDate={data.last_modified_timestamp}
                                             />
 
-                                            {data.associated_publication && Object.values(data.associated_publication).length > 0 && <AssociatedEntityTable id='AssociatedEntity--Publication'  data={{...data, publications: [data.associated_publication]}} propertyName={'publications'} />}
+                                            {data.associated_publication && Object.values(data.associated_publication).length > 0 &&
+                                                <AssociatedEntityTable id='AssociatedEntity--Publication' data={{
+                                                    ...data,
+                                                    publications: [data.associated_publication]
+                                                }} propertyName={'publications'}/>}
 
                                             {/*Entities*/}
                                             <SenNetSuspense showChildren={!isEntitiesLoading}>
-                                               {eq(entitiesLabel, 'entities') && <SenNetAccordion title={entitiesLabel}>
-                                                    <Lineage lineage={data.entities} />
-                                                </SenNetAccordion>}
+                                                {eq(entitiesLabel, 'entities') &&
+                                                    <SenNetAccordion title={entitiesLabel}>
+                                                        <Lineage lineage={data.entities}/>
+                                                    </SenNetAccordion>}
 
-                                                {!eq(entitiesLabel, 'entities') && <Datasets data={data.entities} label={entitiesLabel} />}
+                                                {!eq(entitiesLabel, 'entities') &&
+                                                    <Datasets data={data.entities} label={entitiesLabel}/>}
                                             </SenNetSuspense>
 
 
@@ -192,8 +237,44 @@ function ViewCollection({collectionType='Collection', entitiesLabel='Entities'})
     }
 }
 
+export async function getServerSideProps(context) {
+    const {uuid} = context.query
+    const token = getCookie('groups_token', {
+        req: context.req,
+        res: context.res
+    })
+
+    try {
+        const initialData = await getServerEntityData(
+            uuid,
+            token,
+            ['ancestors', 'descendants']
+        )
+
+        return {
+            props: {
+                initialData,
+                initialError: null
+            }
+        }
+    } catch (e) {
+        return {
+            props: {
+                initialData: null,
+                initialError: e.message
+            }
+        }
+    }
+}
 ViewCollection.withWrapper = function (page) {
     return <DerivedProvider>{page}</DerivedProvider>
+}
+
+ViewCollection.propTypes = {
+    collectionType: PropTypes.string,
+    entitiesLabel: PropTypes.string,
+    initialData: PropTypes.object,
+    initialError: PropTypes.string
 }
 
 export default ViewCollection

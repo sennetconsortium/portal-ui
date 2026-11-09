@@ -44,9 +44,9 @@ export default function AncestorIdsBulkButton({
     )
     const [bulkAddTextareaVal, setBulkAddTextareaVal] = useState(null)
     const supportedEntities = bulkSupportedEntities || [
-        cache.entities.dataset,
-        cache.entities.sample,
-        cache.entities.source
+        cache?.entities?.dataset,
+        cache?.entities?.sample,
+        cache?.entities?.source
     ]
     const [bulkAddSpinnerVisible, setBulkAddSpinnerVisible] = useState(false)
 

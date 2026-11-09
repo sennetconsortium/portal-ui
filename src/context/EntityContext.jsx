@@ -199,11 +199,11 @@ export const EntityProvider = ({ children }) => {
 
     const buildConstraint = (entity, constraint = [], key = 'ancestors') => {
         const entityType = entity.entity_type.toLowerCase()
-        let body = {entity_type: cache.entities[entityType]}
-        if (eq(entityType, cache.entities.sample)) {
+        let body = {entity_type: cache?.entities[entityType]}
+        if (eq(entityType, cache?.entities?.sample)) {
             const sample_category = entity.sample_category.toLowerCase()
             body['sub_type'] = [sample_category]
-            if (eq(sample_category, cache.sampleCategories.Organ)) {
+            if (eq(sample_category, cache?.sampleCategories?.Organ)) {
                 body['sub_type_val'] = [getUBKGFullName(entity.organ)]
             }
         }

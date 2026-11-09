@@ -63,7 +63,7 @@ function IntegratedMaps({id, title, organ, setShowIntegratedMapsSide = null}) {
             let organTerms
             const humanDict = {}
             const mouseDict = {}
-            const organTypes = cache.organTypes
+            const organTypes = cache?.organTypes
 
             // Get results for all organisms
             const humanResults = await getIntegratedMapsForOrganism('human')
