@@ -26,6 +26,7 @@ export function getJsonLDMetaData(dataset, citation) {
     const meta = {
         '@context': 'https://schema.org/',
         '@type': 'Dataset',
+        '@id': `${baseUrl}/dataset?uuid=${dataset.uuid}`,
         funder: {
             '@type': 'Organization',
             name: 'NIH Common Fund',
