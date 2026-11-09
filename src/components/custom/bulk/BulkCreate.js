@@ -447,7 +447,7 @@ export default function BulkCreate({
         return (activeStep === 2 && getStepsLength() === 3 || activeStep === 3 && getStepsLength() === 4)
     }
 
-    const isMouse = () => eq(subType, cache.sourceTypes.Mouse)
+    const isMouse = () => eq(subType, cache?.sourceTypes?.Mouse)
 
     const getTitle = () => {
         if (!entityType) {
@@ -480,7 +480,7 @@ export default function BulkCreate({
     }
 
     const getDocsText  = () => {
-        const type = isMetadata ? subType : cache.entities[entityType]
+        const type = isMetadata ? subType : cache?.entities[entityType]
         const action = isMetadata ? 'Upload' : 'Registration'
         const docsUrl = getDocsUrl()
 

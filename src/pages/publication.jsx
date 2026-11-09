@@ -2,7 +2,7 @@ import dynamic from "next/dynamic";
 import React, {useContext, useEffect, useState} from "react";
 import log from 'xac-loglevel'
 import {eq, fetchDataCite, getDatasetTypeDisplay} from "@/components/custom/js/functions";
-import {getAncestryData, getEntityData, getWritePrivilegeForGroupUuid} from "@/lib/services";
+import {getAncestryData, getEntityData, getServerEntityData, getWritePrivilegeForGroupUuid} from "@/lib/services";
 import AppContext from "@/context/AppContext";
 import Alert from 'react-bootstrap/Alert';
 import {EntityViewHeader} from "@/components/custom/layout/entity/ViewHeader";
@@ -15,6 +15,8 @@ import BulkDataTransfer from "@/components/custom/entities/dataset/BulkDataTrans
 import AssociatedEntityTable from "@/components/custom/entities/AssociatedEntityTable";
 import {getCanonicalUrl} from "@/lib/meta";
 import {APP_TITLE} from "@/config/config";
+import PropTypes from "prop-types";
+import {getCookie} from "cookies-next";
 
 const AppFooter = dynamic(() => import("@/components/custom/layout/AppFooter"))
 const Attribution = dynamic(() => import("@/components/custom/entities/sample/Attribution"))
@@ -25,87 +27,127 @@ const Provenance = dynamic(() => import("@/components/custom/entities/Provenance
 })
 const SidebarBtn = dynamic(() => import("@/components/SidebarBtn"))
 
-function ViewPublication() {
-    const [data, setData] = useState(null)
+function ViewPublication({initialData, initialError}) {
+    const [data, setData] = useState(initialData)
     const [hasAncestry, setHasAncestry] = useState(false)
     const [citationData, setCitationData] = useState(null)
     const [ancillaryPublicationData, setAncillaryPublicationData] = useState(null)
-    const [error, setError] = useState(false)
-    const [errorMessage, setErrorMessage] = useState(null)
+    const [error, setError] = useState(Boolean(initialError))
+    const [errorMessage, setErrorMessage] = useState(initialError)
     const [hasWritePrivilege, setHasWritePrivilege] = useState(false)
     const {router, isRegisterHidden, _t, cache, isPreview, getPreviewView} = useContext(AppContext)
 
+    // Fetch entity if SSR didn't provide it
     useEffect(() => {
         const fetchData = async (uuid) => {
             log.debug('publication: getting data...', uuid)
-            // fetch publication data
-            const _data = await getEntityData(uuid, ['ancestors', 'descendants']);
+
+            const _data = await getEntityData(
+                uuid,
+                ['ancestors', 'descendants']
+            )
 
             log.debug('publication: Got data', _data)
-            if (_data.hasOwnProperty("error")) {
+
+            if (_data?.error) {
                 setError(true)
-                setErrorMessage(_data["error"])
+                setErrorMessage(_data.error)
                 setData(false)
                 return
             }
 
-            // set state with the result
             setData(_data)
+        }
 
-            // fetch ancestry data
-            getAncestryData(_data.uuid, {
+        const uuid = router.query?.uuid
+
+        if (!uuid) {
+            setData(null)
+            return
+        }
+
+        // Skip fetch when SSR already provided the publication
+        if (data) {
+            return
+        }
+
+        fetchData(uuid)
+            .catch(log.error)
+
+    }, [router.query?.uuid])
+
+    // Fill in remaining fields when data is available
+    useEffect(() => {
+        if (!data || data === false) {
+            return
+        }
+
+        // Fetch ancestry
+        getAncestryData(
+            data.uuid,
+            {
                 endpoints: ['ancestors', 'descendants'],
                 otherEndpoints: []
-            }, 'Publication').then(ancestry => {
-                Object.assign(_data, ancestry)
-                setData(_data)
+            },
+            'Publication'
+        )
+            .then((ancestry) => {
+                setData(prev => ({
+                    ...prev,
+                    ...ancestry
+                }))
+
                 setHasAncestry(true)
 
-                // get ancillary publication
-                // there could potentially be multiple descendants
                 let ancillaryPublication = null
+
                 if (ancestry.descendants.length > 1) {
-                    // get the most recent ancillary publication
-                    ancillaryPublication = ancestry.descendants
-                        .sort((a, b) => new Date(b.last_modified_timestamp) - new Date(a.last_modified_timestamp))
-                        .find(d => d.dataset_type === 'Publication [ancillary]' && d?.files[0]?.rel_path)
+                    ancillaryPublication =
+                        ancestry.descendants
+                            .sort(
+                                (a, b) =>
+                                    new Date(b.last_modified_timestamp) -
+                                    new Date(a.last_modified_timestamp)
+                            )
+                            .find(
+                                d =>
+                                    d.dataset_type === 'Publication [ancillary]' &&
+                                    d?.files?.[0]?.rel_path
+                            )
                 } else {
-                    ancillaryPublication = _data.descendants
-                        .find(d => d.dataset_type === 'Publication [ancillary]' && d?.files[0]?.rel_path)
+                    ancillaryPublication =
+                        ancestry.descendants.find(
+                            d =>
+                                d.dataset_type === 'Publication [ancillary]' &&
+                                d?.files?.[0]?.rel_path
+                        )
                 }
 
-                setAncillaryPublicationData(ancillaryPublication || {})
-            }).catch(error => {
-                log.error(error)
+                setAncillaryPublicationData(
+                    ancillaryPublication || {}
+                )
             })
+            .catch(log.error)
 
-            // fetch citation data
-            if (_data.publication_url) {
-                fetchDataCite(_data.publication_url).then(citation => {
-                    setCitationData(citation)
-                }).catch(error => {
-                    log.error(error)
-                })
-            }
-
-            // fetch write privilege
-            getWritePrivilegeForGroupUuid(_data.group_uuid).then(response => {
-                setHasWritePrivilege(response.has_write_privs)
-            }).catch(error => {
-                log.error(error)
-            })
+        // Fetch citation
+        if (data.publication_url) {
+            fetchDataCite(data.publication_url)
+                .then(setCitationData)
+                .catch(log.error)
         }
 
-        if (router.query.hasOwnProperty("uuid")) {
-            // fetch publication data
-            fetchData(router.query.uuid)
-                .catch(error => {
-                    log.error(error)
-                })
-        } else {
-            setData(null);
-        }
-    }, [router]);
+        // Fetch write privileges
+        getWritePrivilegeForGroupUuid(
+            data.group_uuid
+        )
+            .then(response => {
+                setHasWritePrivilege(
+                    response.has_write_privs
+                )
+            })
+            .catch(log.error)
+
+    }, [data?.uuid])
 
     const getTimestamp = () => {
         const dates = data?.publication_date.split('-')
@@ -115,7 +157,7 @@ function ViewPublication() {
     const getDatasetTypeFromAncestors = () => {
         let res = new Set();
         for (let d of data.ancestors) {
-            if (eq(d.entity_type, cache.entities.dataset)) {
+            if (eq(d.entity_type, cache?.entities?.dataset)) {
                 res.add(getDatasetTypeDisplay(d))
             }
         }
@@ -202,7 +244,7 @@ function ViewPublication() {
 
                                     <EntityViewHeader data={data}
                                                       uniqueHeader={data.ancestors ? getDatasetTypeFromAncestors() : null}
-                                                      entity={cache.entities.publication.toLowerCase()}
+                                                      entity={cache?.entities?.publication.toLowerCase()}
                                                       hasWritePrivilege={hasWritePrivilege}/>
 
                                     <div className="row">
@@ -257,8 +299,43 @@ function ViewPublication() {
     }
 }
 
+export async function getServerSideProps(context) {
+    const {uuid} = context.query
+    const token = getCookie('groups_token', {
+        req: context.req,
+        res: context.res
+    })
+
+    try {
+        const initialData = await getServerEntityData(
+            uuid,
+            token,
+            ['ancestors', 'descendants']
+        )
+
+        return {
+            props: {
+                initialData,
+                initialError: null
+            }
+        }
+    } catch (e) {
+        return {
+            props: {
+                initialData: null,
+                initialError: e.message
+            }
+        }
+    }
+}
+
 ViewPublication.withWrapper = function (page) {
     return <DerivedProvider>{page}</DerivedProvider>
+}
+
+ViewPublication.propTypes = {
+    initialData: PropTypes.object,
+    initialError: PropTypes.string
 }
 
 export default ViewPublication

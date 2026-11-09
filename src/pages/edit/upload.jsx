@@ -100,7 +100,7 @@ function EditUpload() {
     const modalResponse = (response) => {
         setValues({...values, status: response.status})
         setModalDetails({
-            entity: cache.entities.upload,
+            entity: cache?.entities?.upload,
             type: response.status,
             typeHeader: _t('Status'),
             response
@@ -220,7 +220,7 @@ function EditUpload() {
                     <div className="no_sidebar">
                         <Layout
                             bodyHeader={
-                                <EntityHeader entity={cache.entities.upload}
+                                <EntityHeader entity={cache?.entities?.upload}
                                               data={data} values={values}/>
                             }
                             bodyContent={
@@ -292,7 +292,7 @@ function EditUpload() {
 
                                         {/*/!*Intended Dataset Type*!/*/}
                                          <DatasetType
-                                            datasetTypes={Object.values(cache.datasetTypes)}
+                                            datasetTypes={Object.values(cache?.datasetTypes ?? {})}
                                             label={'Intended Dataset Type'}
                                             labelDescription={<>The dataset type of the intended datasets that will be
                                                 uploaded as part of this <code>Upload</code>.</>}
@@ -316,7 +316,7 @@ function EditUpload() {
                                             }}
                                                          defaultValue={data.intended_organ}>
                                                 <option value="">----</option>
-                                                {Object.entries(cache.organTypes).map(op => {
+                                                {Object.entries(cache?.organTypes).map(op => {
                                                     return (
                                                         <option key={op[0]} value={op[0]}>
                                                             {op[1]}
@@ -448,7 +448,7 @@ function EditUpload() {
 
                                             {!['Processing', 'Reorganized'].contains(data['status']) && adminGroup && isEditMode() &&
                                                 <SenNetPopover
-                                                    text={statusRevertTooltip(cache.entities.upload)}
+                                                    text={statusRevertTooltip(cache?.entities?.upload)}
                                                     className={'initiate-upload-status-change'}>
                                                     <DatasetRevertButton data={data} onClick={handleRevert}
                                                                          disableSubmit={disableSubmit}

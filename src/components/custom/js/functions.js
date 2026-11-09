@@ -89,7 +89,13 @@ export async function fetchProtocols(protocolUrl) {
 }
 
 export function createDownloadUrl(fileStr, fileType) {
-    return window.URL.createObjectURL(new Blob([fileStr], {type: fileType}));
+    if (typeof window === 'undefined') {
+        return null
+    }
+
+    return window.URL.createObjectURL(
+        new Blob([fileStr], { type: fileType })
+    )
 }
 
 export function tableDataToTSV(tableData) {
@@ -118,14 +124,22 @@ export function displayBodyHeader(header) {
 
 
 export function getUBKGFullName(term) {
-    if (!window.UBKG_CACHE) return term
-    if (term in window.UBKG_CACHE.organTypes) {
-        return window.UBKG_CACHE.organTypes[term]
-    } else if (term in window.UBKG_CACHE.datasetTypes) {
-        return window.UBKG_CACHE.datasetTypes[term]
-    } else {
+    if (
+        typeof window === 'undefined' ||
+        !window.UBKG_CACHE
+    ) {
         return getNormalizedName(term)
     }
+
+    if (term in window.UBKG_CACHE.organTypes) {
+        return window.UBKG_CACHE.organTypes[term]
+    }
+
+    if (term in window.UBKG_CACHE.datasetTypes) {
+        return window.UBKG_CACHE.datasetTypes[term]
+    }
+
+    return getNormalizedName(term)
 }
 
 export function getOrganHierarchy(term) {

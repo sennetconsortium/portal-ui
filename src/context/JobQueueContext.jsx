@@ -35,10 +35,10 @@ export const JobQueueProvider = ({ children }) => {
     function getColNames(entityType) {
         let typeCol;
         let labIdCol
-        if (eq(entityType, cache.entities.source)) {
+        if (eq(entityType, cache?.entities?.source)) {
             typeCol = 'source_type'
             labIdCol = 'lab_source_id'
-        } else if (eq(entityType, cache.entities.sample)) {
+        } else if (eq(entityType, cache?.entities?.sample)) {
             typeCol = 'sample_category'
             labIdCol = 'lab_tissue_sample_id'
         } else {
@@ -149,8 +149,8 @@ export const JobQueueProvider = ({ children }) => {
 
         let columns = getDefaultModalTableCols(entityType)
 
-        console.log('ENT', entityType, eq(entityType, cache.entities.sample))
-        if (eq(entityType, cache.entities.sample)) {
+        console.log('ENT', entityType, eq(entityType, cache?.entities?.sample))
+        if (eq(entityType, cache?.entities?.sample)) {
             columns.push({
                 name: 'organ_type',
                 selector: row => row.organ_type ? row.organ_type : '',
@@ -165,7 +165,7 @@ export const JobQueueProvider = ({ children }) => {
         )
 
         const isBulkMetadataSupported = (cat) => {
-            let supported = supportedMetadata()[cache.entities[entityType]]
+            let supported = supportedMetadata()[cache?.entities[entityType]]
             return supported ? supported.categories.includes(cat) : false
         }
 

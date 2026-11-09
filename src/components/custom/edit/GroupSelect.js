@@ -8,7 +8,7 @@ const GroupSelect = ({groups, onGroupSelectChange, entity_type, plural, popover,
                          title = 'Group', controlId='group_uuid', required = true, optionValueProp = 'uuid'}) => {
     const {cache} = useContext(AppContext)
     popover = popover || <>{`You are a member of more than one Globus group and need to pick a group to associate with ${plural ? 'these ' : 'this '}`}
-        <code>{cache.entities[entity_type]}</code>.</>
+        <code>{cache?.entities[entity_type]}</code>.</>
     return (
         <>
             <Form.Group className="mb-3" controlId={controlId}>

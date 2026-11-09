@@ -61,7 +61,7 @@ function ViewJobs({isAdmin = false}) {
     const [errorModal, setErrorModal] = useState(false)
     const currentColumns = useRef([])
     const [hiddenColumns, setHiddenColumns] = useState(null)
-    const [rowColoring, setRowColoring] = useState(eq(localStorage.getItem(rowSettingKey), 'true'))
+    const [rowColoring, setRowColoring] = useState(null)
     const [resultsPerPage, setResultsPerPage] = useState(RESULTS_PER_PAGE[1])
     const [showModal, setShowModal] = useState(false)
     const [modalBody, setModalBody] = useState(null)
@@ -653,6 +653,7 @@ function ViewJobs({isAdmin = false}) {
     })
 
     useEffect(() => {
+        updateRowColoring(localStorage.getItem(rowSettingKey))
         updateSocket()
     }, [])
 

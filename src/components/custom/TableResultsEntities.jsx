@@ -290,20 +290,20 @@ function TableResultsEntities({children, filters, onRowClicked, currentColumns =
                     let includeLabIdCol = true
                     let includeGroupCol = true
                     tableContext.current = entityType
-                    if (hasOneEntity && eq(entityType, cache.entities.source)) {
+                    if (hasOneEntity && eq(entityType, cache?.entities?.source)) {
                         columns = sourceColumns
-                    } else if (hasOneEntity && eq(entityType, cache.entities.sample)) {
+                    } else if (hasOneEntity && eq(entityType, cache?.entities?.sample)) {
                         columns = sampleColumns
-                    } else if (hasOneEntity && eq(entityType, cache.entities.dataset)) {
+                    } else if (hasOneEntity && eq(entityType, cache?.entities?.dataset)) {
                         columns = datasetColumns
-                    } else if (hasOneEntity && eq(entityType, cache.entities.upload)) {
+                    } else if (hasOneEntity && eq(entityType, cache?.entities?.upload)) {
                         includeLabIdCol = false
                         columns = uploadColumns
-                    } else if (hasOneEntity && (eq(entityType, cache.entities.collection) || eq(entityType, cache.entities.epicollection))) {
+                    } else if (hasOneEntity && (eq(entityType, cache?.entities?.collection) || eq(entityType, cache?.entities?.epicollection))) {
                         includeLabIdCol = false
                         includeGroupCol = false
                         columns = collectionColumns
-                    } else if (hasOneEntity && eq(entityType, cache.entities.publication)) {
+                    } else if (hasOneEntity && eq(entityType, cache?.entities?.publication)) {
                         includeLabIdCol = false
                         columns = publicationColumns
                     } else {

@@ -138,7 +138,7 @@ export default function EditPublication() {
         toggleBusyOverlay(false)
 
         setModalDetails({
-            entity: cache.entities.publication,
+            entity: cache?.entities?.publication,
             type: response.title,
             typeHeader: _t('Title'),
             response
@@ -249,7 +249,7 @@ export default function EditPublication() {
                         <Layout
                             bodyHeader={
                                 <EntityHeader
-                                    entity={cache.entities.publication}
+                                    entity={cache?.entities?.publication}
                                     data={data}
                                     values={values}
                                     showGroup={false}
@@ -275,7 +275,7 @@ export default function EditPublication() {
                                     {editMode && (
                                         <AncestorIdsBulkButton
                                             bulkSupportedEntities={[
-                                                cache.entities.dataset
+                                                cache?.entities?.dataset
                                             ]}
                                             setAncestors={setAncestors}
                                             data={data}

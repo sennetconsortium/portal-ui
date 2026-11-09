@@ -75,7 +75,7 @@ function DataTypeQuantitiesChart({ organ }) {
         if (organ.codes.indexOf(o.key) !== -1) {
           organCodes[o.key] = o.doc_count
           count += o.doc_count
-          subGroupLabels.current[o.key] = cache.organTypes[o.key]
+          subGroupLabels.current[o.key] = cache?.organTypes[o.key]
         }
       }
       _data.push({ ...organCodes, group: d.key, total: d.doc_count })
