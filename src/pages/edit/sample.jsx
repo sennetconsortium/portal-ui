@@ -66,9 +66,11 @@ function EditSample() {
     const alertStyle = useRef('info')
     const issuedUserWarning = useRef(null)
 
+    const sampleEntity = cache?.entities?.sample
+    const sampleCategoriesMap = cache?.sampleCategories
+
     useEffect(() => {
-        if (!source || !cache?.entities?.sample || !cache?.sampleCategories
-        ) {
+        if (!source || !sampleEntity || !sampleCategoriesMap) {
             return
         }
         const fetchSampleCategories = async () => {
@@ -92,7 +94,7 @@ function EditSample() {
             }
         }
         fetchSampleCategories()
-    }, [source, cache?.entities?.sample, cache?.sampleCategories])
+    }, [source, sampleEntity, sampleCategoriesMap])
 
     // only executed on init rendering, see the []
     useEffect(() => {
@@ -114,7 +116,7 @@ function EditSample() {
 
 
             // Show organ input group if sample category is 'organ'
-            if (eq(_data.sample_category, cache?.sampleCategories?.Organ)) {
+            if (eq(_data.sample_category, sampleCategoriesMap?.Organ)) {
                 set_organ_group_hide('')
             }
 
@@ -247,7 +249,7 @@ function EditSample() {
         icClassName={'bi bi-envelope-fill'} href={'help@sennetconsortium.org'} title={'help desk'}/> to ensure that we can provide appropriate support for your work.</span>
 
     const checkRegistration = () => {
-        if (selectedOtherOrgan(values['organ']) && eq(values['sample_category'], cache?.sampleCategories?.Organ)) {
+        if (selectedOtherOrgan(values['organ']) && eq(values['sample_category'], sampleCategoriesMap?.Organ)) {
             setAllModalDetails({
                 title: <span>"<span className={'text-codePink'}>Other</span>" Organ Registration</span>,
                 isWarning: true,
@@ -329,7 +331,7 @@ function EditSample() {
         // This Sample must a Sample Category: "Block"
         log.debug(ancestorOrgan)
         if (ancestorOrgan.length > 0) {
-            if (values !== null && values['sample_category'] === cache?.sampleCategories?.Block && isRuiSupported(ancestorOrgan, ancestorSourceType)) {
+            if (values !== null && values['sample_category'] === sampleCategoriesMap?.Block && isRuiSupported(ancestorOrgan, ancestorSourceType)) {
                 if (!showRuiButton) {
                     setShowRuiButton(true)
                 }
@@ -384,9 +386,9 @@ function EditSample() {
             if (issuedUserWarning.value === false) {
                 checkRegistration()
             } else {
-                await update_create_entity(uuid, json, editMode, cache?.entities?.sample).then((response) => {
+                await update_create_entity(uuid, json, editMode, sampleEntity).then((response) => {
                     setModalDetails({
-                        entity: cache?.entities?.sample, type: response.sample_category,
+                        entity: sampleEntity, type: response.sample_category,
                         typeHeader: _t('Sample Category'), response
                     })
 
@@ -417,19 +419,19 @@ function EditSample() {
     };
 
     const supportsMetadata = () => {
-        return values.sample_category !== cache?.sampleCategories?.Organ
+        return values.sample_category !== sampleCategoriesMap?.Organ
     }
 
     const metadataNote = () => {
         if (isEditMode() && (values.metadata && Object.values(values.metadata).length)) {
             let text = []
-            text.push(getMetadataNote(cache?.entities?.sample, 0))
-            text.push(getMetadataNote(cache?.entities?.sample, 1))
+            text.push(getMetadataNote(sampleEntity, 0))
+            text.push(getMetadataNote(sampleEntity, 1))
             if (data.sample_category === values.sample_category) {
                 alertStyle.current = 'info'
             } else {
                 alertStyle.current = 'warning'
-                text.push(getMetadataNote(cache?.entities?.sample, 2))
+                text.push(getMetadataNote(sampleEntity, 2))
             }
             return text
         } else {
@@ -469,7 +471,7 @@ function EditSample() {
                     <div className="no_sidebar">
                         <Layout
                             bodyHeader={
-                                <EntityHeader entity={cache?.entities?.sample} data={data}/>
+                                <EntityHeader entity={sampleEntity} data={data}/>
 
                             }
                             bodyContent={
@@ -504,7 +506,7 @@ function EditSample() {
                                             <SampleCategory
                                                 organ_group_hide={organ_group_hide}
                                                 set_organ_group_hide={set_organ_group_hide}
-                                                sample_categories={sampleCategories === null ? cache?.sampleCategories : sampleCategories}
+                                                sample_categories={sampleCategories === null ? sampleCategoriesMap : sampleCategories}
                                                 data={values}
                                                 source={source}
                                                 popoverWarningText={organOtherWarning}

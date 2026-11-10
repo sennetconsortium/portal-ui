@@ -68,8 +68,10 @@ export default function EditDataset() {
     const [dataTypes, setDataTypes] = useState(null)
     const isPrimary = useRef(false)
 
+    const datasetEntity = cache?.entity?.dataset
+
     useEffect(() => {
-        if (!cache?.entities?.dataset) {
+        if (!datasetEntity) {
             return
         }
 
@@ -77,7 +79,7 @@ export default function EditDataset() {
             const fullBody = [
                 {
                     descendants: [{
-                        entity_type: cache.entities.dataset
+                        entity_type: datasetEntity
                     }]
                 }
             ]
@@ -106,7 +108,7 @@ export default function EditDataset() {
         }
 
         fetchAncestorConstraints()
-    }, [cache?.entities?.dataset])
+    }, [datasetEntity])
 
     useEffect(() => {
         const fetchDataTypes = async () => {
@@ -125,7 +127,7 @@ export default function EditDataset() {
 
                         let sub_types = []
                         currentConstraints.forEach(constraint => {
-                            if (eq(constraint.entity_type, cache?.entities?.dataset)) {
+                            if (eq(constraint.entity_type, datasetEntity)) {
                                 sub_types = sub_types.concat(constraint.sub_type || [])
                             }
                         })
@@ -236,7 +238,7 @@ export default function EditDataset() {
         toggleBusyOverlay(false)
         setValues({...values, status: response.status})
         setModalDetails({
-            entity: cache?.entities?.dataset,
+            entity: datasetEntity,
             type: (response.dataset_type ? response.dataset_type : null),
             typeHeader: _t('Dataset Type'),
             response
@@ -487,7 +489,7 @@ export default function EditDataset() {
                     <div className="no_sidebar">
                         <Layout
                             bodyHeader={
-                                <EntityHeader entity={cache?.entities?.dataset} data={data}
+                                <EntityHeader entity={datasetEntity} data={data}
                                               values={values} />
                             }
                             bodyContent={
@@ -612,7 +614,7 @@ export default function EditDataset() {
                                     {adminGroup && <AttributesUpload ingestEndpoint={contactsTSV.uploadEndpoint} showAllInTable={true}
                                                       setAttribute={setContactsAttributes}
                                                       setAttributesOnFail={setContactsAttributesOnFail}
-                                                      entity={cache?.entities?.dataset} excludeColumns={contactsTSV.excludeColumns}
+                                                      entity={datasetEntity} excludeColumns={contactsTSV.excludeColumns}
                                                       attribute={'Contributors'} title={<h6>Contributors</h6>}
                                                       customFileInfo={<span><a
                                                           className='btn btn-outline-primary rounded-0 fs-8' download
@@ -704,7 +706,7 @@ export default function EditDataset() {
 
                                         {!['Processing', 'Published', 'Reorganized'].contains(data['status']) && isPrimary.current && adminGroup && isEditMode() &&
                                             <SenNetPopover
-                                                text={statusRevertTooltip(cache?.entities?.dataset)}
+                                                text={statusRevertTooltip(datasetEntity)}
                                                 className={'initiate-dataset-status-change'}>
                                                 <DatasetRevertButton data={data} onClick={handleRevert}
                                                                      disableSubmit={disableSubmit}

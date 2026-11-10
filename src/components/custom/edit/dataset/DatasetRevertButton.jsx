@@ -13,6 +13,9 @@ export const supportedReverStatuses = () => {
 }
 
 export const statusRevertTooltip = (entity) => {
+    if(!entity) {
+        return
+    }
     const statuses = supportedReverStatuses()[entity]
     const results = []
     for (let i = 0; i < statuses.length; i++) {
