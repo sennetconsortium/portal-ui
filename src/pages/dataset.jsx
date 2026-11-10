@@ -67,7 +67,7 @@ function ViewDataset({initialData, initialCitationData, initialError}) {
     } = useContext(AppContext)
     const [primaryDatasetData, setPrimaryDatasetInfo] = useState(null)
     const [showFilesSection, setShowFilesSection] = useState(null)
-    const [hasViz, setHasViz] = useState(false)
+    const [hasViz, setHasViz] = useState(eq(initialData?.has_visualization, 'true'))
     const {
         showVitessce,
         initVitessceConfig,
@@ -134,10 +134,6 @@ function ViewDataset({initialData, initialCitationData, initialError}) {
             }
 
             setData(_data)
-
-            setHasViz(
-                eq(_data.has_visualization, 'true')
-            )
         }
 
         const uuid = router.query?.uuid
@@ -179,14 +175,19 @@ function ViewDataset({initialData, initialCitationData, initialError}) {
             return
         }
 
+        setHasViz(
+            eq(data.has_visualization, 'true')
+        )
+
         getAncestryData(
             data.uuid,
             {},
             cache?.entities?.dataset
         )
             .then((ancestry) => {
-
-                // Check descendant visualizations
+                // Primary gets processed and updated to QA but the derived dataset is still processed.
+                // This could lead to a scenario where the primary has the property has_visualization: false but the processed is true.
+                // So let's check that a descendant has_visualization: true
                 if (!hasViz) {
                     for (const descendant of ancestry.descendants || []) {
                         if (
