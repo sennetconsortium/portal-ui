@@ -69,11 +69,15 @@ export default function EditDataset() {
     const isPrimary = useRef(false)
 
     useEffect(() => {
+        if (!cache?.entities?.dataset) {
+            return
+        }
+
         async function fetchAncestorConstraints() {
             const fullBody = [
                 {
                     descendants: [{
-                        entity_type: cache?.entities?.dataset
+                        entity_type: cache.entities.dataset
                     }]
                 }
             ]
@@ -102,7 +106,7 @@ export default function EditDataset() {
         }
 
         fetchAncestorConstraints()
-    }, [])
+    }, [cache?.entities?.dataset])
 
     useEffect(() => {
         const fetchDataTypes = async () => {

@@ -1,5 +1,5 @@
 import dynamic from "next/dynamic";
-import React, {useContext, useEffect, useRef, useState, useEffectEvent} from "react";
+import React, {useContext, useEffect, useEffectEvent, useRef, useState} from "react";
 import {useRouter} from 'next/router';
 import Alert from 'react-bootstrap/Alert';
 import Button from 'react-bootstrap/Button';
@@ -11,7 +11,6 @@ import {getAncestryData, getEntityData, parseJson, update_create_entity} from "@
 import AppContext from '@/context/AppContext'
 import EntityContext, {EntityProvider} from '@/context/EntityContext'
 import {APP_TITLE, getUserEmail, getUserName, isRuiSupported} from "@/config/config";
-import {SenPopoverOptions} from "@/components/SenNetPopover";
 import LnkIc from "@/components/custom/layout/LnkIc";
 
 const AncestorId = dynamic(() => import("@/components/custom/edit/sample/AncestorId"))
@@ -68,6 +67,10 @@ function EditSample() {
     const issuedUserWarning = useRef(null)
 
     useEffect(() => {
+        if (!source || !cache?.entities?.sample || !cache?.sampleCategories
+        ) {
+            return
+        }
         const fetchSampleCategories = async () => {
             setSampleCategories(null)
             if (source !== null) {
@@ -77,11 +80,11 @@ function EditSample() {
                     const provenance_constraints = body.description[0].description
                     let sub_types = []
                     provenance_constraints.forEach(constraint => {
-                        if (eq(constraint.entity_type, cache?.entities?.sample)) {
+                        if (eq(constraint.entity_type, cache.entities.sample)) {
                             sub_types = sub_types.concat(constraint.sub_type || [])
                         }
                     })
-                    const filter = Object.entries(cache?.sampleCategories).filter(sample_category => sub_types.includes(sample_category[0]));
+                    const filter = Object.entries(cache.sampleCategories).filter(sample_category => sub_types.includes(sample_category[0]));
                     let sample_categories = {}
                     filter.forEach(entry => sample_categories[entry[0]] = entry[1])
                     setSampleCategories(sample_categories)
@@ -89,7 +92,7 @@ function EditSample() {
             }
         }
         fetchSampleCategories()
-    }, [source])
+    }, [source, cache?.entities?.sample, cache?.sampleCategories])
 
     // only executed on init rendering, see the []
     useEffect(() => {
@@ -115,7 +118,10 @@ function EditSample() {
                 set_organ_group_hide('')
             }
 
-            getAncestryData(_data.uuid, {endpoints: ['ancestors'], otherEndpoints: ['immediate_ancestors']}).then(ancestry => {
+            getAncestryData(_data.uuid, {
+                endpoints: ['ancestors'],
+                otherEndpoints: ['immediate_ancestors']
+            }).then(ancestry => {
                 Object.assign(_data, ancestry)
                 setData(_data)
                 setValues(prevState => ({...prevState, direct_ancestor_uuid: ancestry.immediate_ancestors[0].uuid}))
@@ -237,22 +243,25 @@ function EditSample() {
         handleClose()
     }
 
-    const organOtherWarning = <span>will not be able to register data against this <code>Sample</code>. Please contact our <LnkIc icClassName={'bi bi-envelope-fill'} href={'help@sennetconsortium.org'} title={'help desk'} /> to ensure that we can provide appropriate support for your work.</span>
+    const organOtherWarning = <span>will not be able to register data against this <code>Sample</code>. Please contact our <LnkIc
+        icClassName={'bi bi-envelope-fill'} href={'help@sennetconsortium.org'} title={'help desk'}/> to ensure that we can provide appropriate support for your work.</span>
 
     const checkRegistration = () => {
-       if (selectedOtherOrgan(values['organ']) && eq(values['sample_category'], cache?.sampleCategories?.Organ)) {
-           setAllModalDetails({
-               title: <span>"<span className={'text-codePink'}>Other</span>" Organ Registration</span>,
-               isWarning: true,
-               modalProps: {
+        if (selectedOtherOrgan(values['organ']) && eq(values['sample_category'], cache?.sampleCategories?.Organ)) {
+            setAllModalDetails({
+                title: <span>"<span className={'text-codePink'}>Other</span>" Organ Registration</span>,
+                isWarning: true,
+                modalProps: {
                     actionBtnLabel: 'Confirm',
                     actionBtnHandler: handleSave,
                     secondaryBtnLabel: 'Fix',
                     secondaryBtnHandler: secondaryBtnFixHandler,
-               },
-               body: <p>We have identified that you are registering a <code>Sample Organ</code> with the organ type <code>Other</code>. While it is permissible to register this organ type, you {organOtherWarning} Please click "Confirm" to complete the registration process.</p>
-           })
-       }
+                },
+                body: <p>We have identified that you are registering a <code>Sample Organ</code> with the organ
+                    type <code>Other</code>. While it is permissible to register this organ type,
+                    you {organOtherWarning} Please click "Confirm" to complete the registration process.</p>
+            })
+        }
         issuedUserWarning.value = true
     }
 
@@ -428,7 +437,7 @@ function EditSample() {
         }
     }
 
-    if (isPreview(error))  {
+    if (isPreview(error)) {
         return getPreviewView(data)
     } else {
         return (
@@ -479,7 +488,8 @@ function EditSample() {
                                     {/*Ancestor ID*/}
                                     {/*editMode is only set when page is ready to load */}
                                     {editMode &&
-                                        <AncestorId isDisabled={isEditMode()} data={data} source={source} onChange={_onChange} fetchSource={fetchSource}/>
+                                        <AncestorId isDisabled={isEditMode()} data={data} source={source}
+                                                    onChange={_onChange} fetchSource={fetchSource}/>
                                     }
 
                                     {/*Source Information Box*/}
@@ -517,7 +527,8 @@ function EditSample() {
                                                      controlId='protocol_url' value={data.protocol_url}
                                                      isRequired={true}
                                                      className={warningClasses.protocol_url}
-                                                     popoverWarningText={<>The supplied protocols.io DOI URL, formatting is
+                                                     popoverWarningText={<>The supplied protocols.io DOI URL, formatting
+                                                         is
                                                          correct but does not resolve. This will need to be corrected
                                                          for any <code>Dataset</code> submission that uses this entity
                                                          as an ancestor.</>}
@@ -528,7 +539,7 @@ function EditSample() {
                                                          className="bi bi-box-arrow-up-right"></i></a>.</span>}
                                                      otherInputProps={{
                                                          'data-js-appevent': 'checkProtocolUrl',
-                                                         pattern:getDOIPattern(),
+                                                         pattern: getDOIPattern(),
                                                          onBlur: (e) => _onBlur(e, e.target.id, e.target.value)
                                                      }}
                                     />
