@@ -394,7 +394,6 @@ export const fetchSearchAPIEntities = async (body, index = 'entities') => {
     if (token) {
         headers.append("Authorization", `Bearer ${token}`)
     }
-    Addon.log('SearchAPI', {data: {body, index}, color: 'orange'})
     try {
         const res = await fetch(`${getSearchEndPoint()}${index}/search`, {
             method: "POST",
