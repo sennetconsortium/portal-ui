@@ -44,8 +44,8 @@ const RuiButton = ({showRegisterLocationButton, ruiLocation, setShowRui, ruiSex,
                     </Form.Label>
                     <div className="mb-2 text-muted">
                         CCF Registration User Interface (CCF-RUI) tool is only available
-                        for <code>{cache.sourceTypes.Human}</code> and <code>{cache.sourceTypes['Human Organoid']} </code>
-                        ancestor source types and sample category <code>{cache.sampleCategories.Block}</code>.
+                        for <code>{cache.sourceTypes.Human}</code>
+                        ancestor source type and sample category <code>{cache.sampleCategories.Block}</code>.
                     </div>
                 </>
             }

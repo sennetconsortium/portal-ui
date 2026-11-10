@@ -307,7 +307,6 @@ function ProvenanceGraph({ data }) {
         },
         imageMap: {
             "Source|sennet:source_type|Mouse": null,
-            "Source|sennet:source_type|Mouse Organoid": null,
             "Sample|sennet:sample_category|Organ": null,
             "Sample|sennet:sample_category|Block": null,
             "Sample|sennet:sample_category|Section": null,
@@ -316,15 +315,6 @@ function ProvenanceGraph({ data }) {
         },
         imageMapActions: {
             "Source|sennet:source_type|Mouse": {
-                fn: 'append',
-                type: 'g',
-                data: [
-                    {
-                        draw: 'M22.9,22.9H7.1c-3.5,0-6.4-2.9-6.4-6.4v-2.9c0-3.5,2.9-6.4,6.4-6.4h15.7c3.5,0,6.4,2.9,6.4,6.4v2.9C29.3,20,26.4,22.9,22.9,22.9z'
-                    }
-                ]
-            },
-            "Source|sennet:source_type|Mouse Organoid": {
                 fn: 'append',
                 type: 'g',
                 data: [

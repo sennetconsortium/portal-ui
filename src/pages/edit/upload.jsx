@@ -316,7 +316,7 @@ function EditUpload() {
                                             }}
                                                          defaultValue={data.intended_organ}>
                                                 <option value="">----</option>
-                                                {Object.entries(cache?.organTypes).map(op => {
+                                                {Object.entries(cache?.organTypes || {}).map(op => {
                                                     return (
                                                         <option key={op[0]} value={op[0]}>
                                                             {op[1]}
