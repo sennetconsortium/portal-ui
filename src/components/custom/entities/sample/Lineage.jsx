@@ -1,5 +1,6 @@
 import dynamic from "next/dynamic";
-import React, {useContext, useState} from 'react';
+import React, {useContext, useState} from "react";
+import PropTypes from "prop-types";
 import {
     displayBodyHeader,
     getDatasetTypeDisplay,
@@ -12,18 +13,20 @@ import {
 import ClipboardCopy from "@/components/ClipboardCopy";
 import AppContext from "@/context/AppContext";
 import useAutoHideColumns from "@/hooks/useAutoHideColumns";
-import CLTModal from '@/components/custom/entities/dataset/CLTModal';
+import CLTModal from "@/components/custom/entities/dataset/CLTModal";
 import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
 import {RESULTS_PER_PAGE} from "@/config/config";
 import SenNetPopover from "@/components/SenNetPopover";
 import {categorizeByDatasetType} from "@/components/custom/js/functions";
+import {searchUIQueryString} from "@/components/custom/js/functions";
+import {APP_ROUTES} from "@/config/constants";
 
 const DataTable = dynamic(() => import("react-data-table-component"), {
   ssr: false,
 });
 
-const Lineage = ({lineage, showManifestDownload = true}) => {
+const Lineage = ({lineage, showManifestDownload = true, showViewOnDataPage = true}) => {
     const {isLoggedIn} = useContext(AppContext)
     const {columnVisibility, tableData, updateCount} = useAutoHideColumns({data: lineage})
     const getId = (column) => column.id || column.uuid
@@ -168,6 +171,13 @@ const Lineage = ({lineage, showManifestDownload = true}) => {
     }
     sourceColumns.push(reusableColumns.GroupName)
 
+    const searchUrlForEntities = (sennetIds) => {
+        return (
+            `${APP_ROUTES.search}?` +
+            searchUIQueryString([{ field: 'sennet_id', values: sennetIds, type: 'any' }], 20)
+        )
+    }
+
     const datasetData = tableData.filter(obj => obj.entity_type === "Dataset")
     const sampleData = tableData.filter(obj => obj.entity_type === "Sample")
     const sourceData = tableData.filter(obj => obj.entity_type === "Source")
@@ -181,13 +191,26 @@ const Lineage = ({lineage, showManifestDownload = true}) => {
                 variant="pills"
             >
                 {datasetData && datasetData.length > 0 &&
-                    <Tab eventKey="datasets"
-                         title={<span>{getSubtypeProvenanceShape("Dataset", null, "lg")} ({datasetData.length})</span>}>
-                        {showManifestDownload && (
-                            <div className="d-flex justify-content-end">
-                                <span role="button" className="btn btn-outline-primary mb-4 lnk--ic" onClick={()=> setShowCltModal(true)}>
-                                    Download Files with SenNet CLT <i className={"bi bi-download"}></i>
-                                </span>
+                    <Tab
+                        eventKey="datasets"
+                        title={<span>{getSubtypeProvenanceShape("Dataset", null, "lg")} ({datasetData.length})</span>}>
+                        {(showManifestDownload || showViewOnDataPage) && (
+                            <div className="d-flex justify-content-end mb-4 gap-4">
+                                {showViewOnDataPage && (
+                                    <a
+                                        className="btn btn-outline-primary rounded-0"
+                                        href={searchUrlForEntities(datasetData.map(d => d.sennet_id))}>
+                                        View on search page
+                                    </a>
+                                )}
+                                {showManifestDownload && (
+                                    <span
+                                        role="button"
+                                        className="btn btn-outline-primary lnk--ic"
+                                        onClick={()=> setShowCltModal(true)}>
+                                        Download Files with SenNet CLT <i className={"bi bi-download"}></i>
+                                    </span>
+                                )}
                             </div>
                         )}
                         <DataTable
@@ -200,8 +223,18 @@ const Lineage = ({lineage, showManifestDownload = true}) => {
                 }
 
                 {sampleData && sampleData.length > 0 &&
-                    <Tab eventKey="samples"
-                         title={<div>{getSubtypeProvenanceShape("Sample", null, 'lg')} ({sampleData.length})</div>}>
+                    <Tab
+                        eventKey="samples"
+                        title={<div>{getSubtypeProvenanceShape("Sample", null, 'lg')} ({sampleData.length})</div>}>
+                        {(showViewOnDataPage) && (
+                            <div className="d-flex justify-content-end mb-4 gap-4">
+                                <a
+                                    className="btn btn-outline-primary rounded-0"
+                                    href={searchUrlForEntities(sampleData.map(d => d.sennet_id))}>
+                                    View on search page
+                                </a>
+                            </div>
+                        )}
                         <DataTable
                             columns={sampleColumns}
                             data={sampleData}
@@ -212,8 +245,18 @@ const Lineage = ({lineage, showManifestDownload = true}) => {
                 }
 
                 {sourceData && sourceData.length > 0 &&
-                    <Tab eventKey="sources"
-                         title={<span>{getSubtypeProvenanceShape("Source", null, 'lg')} ({sourceData.length})</span>}>
+                    <Tab
+                        eventKey="sources"
+                        title={<span>{getSubtypeProvenanceShape("Source", null, 'lg')} ({sourceData.length})</span>}>
+                        {(showViewOnDataPage) && (
+                            <div className="d-flex justify-content-end mb-4 gap-4">
+                                <a
+                                    className="btn btn-outline-primary rounded-0"
+                                    href={searchUrlForEntities(sourceData.map(d => d.sennet_id))}>
+                                    View on search page
+                                </a>
+                            </div>
+                        )}
                         <DataTable
                             columns={sourceColumns}
                             data={sourceData}
@@ -237,6 +280,12 @@ const Lineage = ({lineage, showManifestDownload = true}) => {
             }
         </div>
     )
+}
+
+Lineage.propTypes = {
+    lineage: PropTypes.arrayOf(PropTypes.object).isRequired,
+    showManifestDownload: PropTypes.bool,
+    showViewOnDataPage: PropTypes.bool
 }
 
 export default Lineage
