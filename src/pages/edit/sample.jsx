@@ -86,7 +86,7 @@ function EditSample() {
                             sub_types = sub_types.concat(constraint.sub_type || [])
                         }
                     })
-                    const filter = Object.entries(cache.sampleCategories).filter(sample_category => sub_types.includes(sample_category[0]));
+                    const filter = Object.entries(sampleCategoriesMap || {}).filter(sample_category => sub_types.includes(sample_category[0]));
                     let sample_categories = {}
                     filter.forEach(entry => sample_categories[entry[0]] = entry[1])
                     setSampleCategories(sample_categories)

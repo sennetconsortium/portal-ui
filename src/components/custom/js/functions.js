@@ -323,14 +323,12 @@ export const getSubtypeProvenanceShape = (t, cat, sz = 'sm') => {
             break
         case 'Source':
         case 'Human':
-        case 'Human Organoid':
             c = 'yellow'
             break
         case 'Publication':
             c = 'purple'
             break
         case 'Mouse':
-        case 'Mouse Organoid':
             c = ''
             s = 'stadium'
             break

@@ -68,7 +68,7 @@ export default function EditDataset() {
     const [dataTypes, setDataTypes] = useState(null)
     const isPrimary = useRef(false)
 
-    const datasetEntity = cache?.entity?.dataset
+    const datasetEntity = cache?.entities?.dataset
 
     useEffect(() => {
         if (!datasetEntity) {

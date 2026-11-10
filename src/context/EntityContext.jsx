@@ -22,6 +22,7 @@ export const EntityProvider = ({ children }) => {
     const {_t, cache, hasPublicAccess } = useContext(AppContext)
     const router = useRouter()
     const [authorized, setAuthorized] = useState(null)
+    const [authorizationInitialized, setAuthorizationInitialized] = useState(false)
     const [validated, setValidated] = useState(false)
     const [editMode, setEditMode] = useState(null)
     const [data, setData] = useState(null)
@@ -65,7 +66,7 @@ export const EntityProvider = ({ children }) => {
     }
 
     const isAuthorizing = () => {
-        return authorized === null
+        return !authorizationInitialized
     }
 
     const isEditMode = () => {
@@ -91,29 +92,45 @@ export const EntityProvider = ({ children }) => {
 
     // only executed on init rendering, see the []
     useEffect(() => {
-        getReadWritePrivileges()
-            .then((response) => {
-                setAuthorized(response.write_privs)
-            })
-            .catch((error) => log.error(error))
+        async function init() {
+            try {
+                const [
+                    writePrivs,
+                    providerGroups,
+                    writeGroups
+                ] = await Promise.all([
+                    getReadWritePrivileges(),
+                    getProviderGroups(),
+                    getUserWriteGroups()
+                ])
 
-        getProviderGroups()
-            .then((response) => {
-                setProviderGroups(response.groups || [])
-            })
-            .catch((error) => log.error(error))
+                setAuthorized(writePrivs.write_privs)
 
-        getUserWriteGroups()
-            .then((response) => {
-                if (response.user_write_groups?.length === 1) {
+                setProviderGroups(
+                    providerGroups.groups || []
+                )
+
+                if (
+                    writeGroups.user_write_groups?.length === 1
+                ) {
                     setSelectedUserWriteGroupUuid(
-                        response.user_write_groups[0].uuid
+                        writeGroups.user_write_groups[0].uuid
                     )
                 }
-                setUserWriteGroups(response.user_write_groups)
-            })
-            .catch((e) => log.error(e))
+
+                setUserWriteGroups(
+                    writeGroups.user_write_groups
+                )
+            } catch (e) {
+                log.error(e)
+            } finally {
+                setAuthorizationInitialized(true)
+            }
+        }
+
+        init()
     }, [])
+
 
     const isPublic = () => (data?.data_access_level === 'public' || ['Published', 'Reorganized'].contains(data?.status))
 

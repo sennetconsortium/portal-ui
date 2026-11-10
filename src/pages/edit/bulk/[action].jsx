@@ -27,8 +27,12 @@ export default function EditBulk() {
     const router = useRouter()
     let entityType = router.query['entityType']
     entityType = cache?.entities[entityType?.toLowerCase()]
-    let subType = router.query['category']
     const isMetadata = router.query['action'] === 'metadata'
+
+    if (!entityType && !isMetadata) {
+        return <Spinner />
+    }
+    let subType = router.query['category']
     let result
 
     if (isAuthorizing() || isUnauthorized()) {
