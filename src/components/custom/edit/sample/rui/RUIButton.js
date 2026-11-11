@@ -1,10 +1,8 @@
-import React, {useContext, useState} from 'react';
+import React, {useState} from 'react';
 import RUIModal from "./RUIModal";
 import {Button, Form, OverlayTrigger, Popover} from 'react-bootstrap';
-import AppContext from "../../../../../context/AppContext";
 
 const RuiButton = ({showRegisterLocationButton, ruiLocation, setShowRui, ruiSex, setRuiSex}) => {
-    const {cache} = useContext(AppContext)
 
     const [showRuiLocationModal, setShowRuiLocationModal] = useState(false)
 
@@ -44,8 +42,8 @@ const RuiButton = ({showRegisterLocationButton, ruiLocation, setShowRui, ruiSex,
                     </Form.Label>
                     <div className="mb-2 text-muted">
                         CCF Registration User Interface (CCF-RUI) tool is only available
-                        for <code>{cache.sourceTypes.Human}</code>
-                        ancestor source type and sample category <code>{cache.sampleCategories.Block}</code>.
+                        for <code>Human</code>
+                        ancestor source type and sample category <code>Block</code>.
                     </div>
                 </>
             }
