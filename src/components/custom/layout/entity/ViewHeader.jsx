@@ -16,20 +16,20 @@ const EntityViewHeaderButtons = ({entity, data, hasWritePrivilege}) => {
                 {hasWritePrivilege &&
                     <SenNetPopover className={"edit-entity"}
                                    text={<>Make modifications to this entity.</>}>
-                        <Button aria-label={`Edit ${cache.entities[entity]}`} className="js-btn--edit"
+                        <Button aria-label={`Edit ${cache?.entities[entity]}`} className="js-btn--edit"
                                 href={`/edit/${entity}?uuid=${data.uuid}`}
-                                variant="outline-primary rounded-0">{_t('Edit')}</Button>
+                                variant="outline-primary ">{_t('Edit')}</Button>
                     </SenNetPopover>
                 }{' '}
                 <SenNetPopover className={"view-entity"}
                                text={<>View the full JSON document of this entity.</>}>
-                    <Button target='_blank' aria-label={`View JSON of the ${cache.entities[entity]}`}
+                    <Button target='_blank' aria-label={`View JSON of the ${cache?.entities[entity]}`}
                             className='ms-2 js-btn--json'
                             href={`/api/json/${entity}?uuid=${data.uuid}`}
-                            variant="outline-primary rounded-0"><i className="bi bi-filetype-json"></i></Button>
+                            variant="outline-primary "><i className="bi bi-filetype-json"></i></Button>
                 </SenNetPopover>
 
-                {eq(entity, cache.entities.dataset) && (eq(data.status, 'published') || ['qa', 'approval'].contains(data.status))  &&
+                {eq(entity, cache?.entities?.dataset) && (eq(data.status, 'published') || ['qa', 'approval'].contains(data.status)) &&
                     <VersionDropdown className='ms-2' data={data}/>
                 }
             </Stack>
@@ -46,32 +46,40 @@ EntityViewHeaderButtons.propTypes = {
 
 function EntityViewHeader({entity, data, hasWritePrivilege, uniqueHeader, uniqueHeaderUrl}) {
     const {_t, cache} = useContext(AppContext)
+    const datasetEntity =
+        cache?.entities?.dataset?.toLowerCase()
 
-    return (
-        <div style={{width: '100%'}}>
+    const publicationEntity =
+        cache?.entities?.publication?.toLowerCase()
 
-            <h4>{eq(entity, cache.entities.dataset) && <span>{getCreationActionRelationName(data.creation_action)}</span>} {!eq(entity, 'dataset') && entity.upperCaseFirst()}</h4>
-            {!eq(entity, cache.entities.publication) && <h3>{data.sennet_id}
-                <ClipboardCopy text={data.sennet_id}/>
-            </h3>}
-            {eq(entity, cache.entities.publication) && <h3>{data.title}
-            </h3>}
-            <div className="row mb-2">
-                <div className="col-md-8 col-sm-12 entity-subtitle icon-inline">
-                    <ViewHeaderBadges data={data} 
-                                      uniqueHeader={uniqueHeader}
-                                      uniqueHeaderUrl={uniqueHeaderUrl}
-                                      hasWritePrivilege={hasWritePrivilege}/>
-                </div>
+    if (datasetEntity || publicationEntity) {
+        return (
+            <div style={{width: '100%'}}>
 
-                <div className="col-md-4 col-sm-12">
-                    <div className="entity-subtitle icon-inline float-md-end">
-                        <EntityViewHeaderButtons data={data} entity={entity} hasWritePrivilege={hasWritePrivilege}/>
+                <h4>{eq(entity, cache?.entities?.dataset) &&
+                    <span>{getCreationActionRelationName(data.creation_action)}</span>} {!eq(entity, 'dataset') && entity.upperCaseFirst()}</h4>
+                {!eq(entity, cache?.entities?.publication) && <h3>{data.sennet_id}
+                    <ClipboardCopy text={data.sennet_id}/>
+                </h3>}
+                {eq(entity, cache?.entities?.publication) && <h3>{data.title}
+                </h3>}
+                <div className="row mb-2">
+                    <div className="col-md-8 col-sm-12 entity-subtitle icon-inline">
+                        <ViewHeaderBadges data={data}
+                                          uniqueHeader={uniqueHeader}
+                                          uniqueHeaderUrl={uniqueHeaderUrl}
+                                          hasWritePrivilege={hasWritePrivilege}/>
+                    </div>
+
+                    <div className="col-md-4 col-sm-12">
+                        <div className="entity-subtitle icon-inline float-md-end">
+                            <EntityViewHeaderButtons data={data} entity={entity} hasWritePrivilege={hasWritePrivilege}/>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    )
+        )
+    }
 }
 
 EntityViewHeader.propTypes = {

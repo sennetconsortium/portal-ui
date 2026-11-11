@@ -7,12 +7,11 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Box from '@mui/material/Box';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import {autoBlobDownloader, goToTransfers} from '../../js/functions';
-import LnkIc from '../../layout/LnkIc';
-import Button from "react-bootstrap/Button";
+import {autoBlobDownloader, goToTransfers} from '@/components/custom/js/functions';
+import LnkIc from '@/components/custom/layout/LnkIc';
+import Button from 'react-bootstrap/Button';
 
 function CLTModal({data, showModal, setShowModal}) {
-
     const closeModal = () => setShowModal(false)
     const [checked, setChecked] = useState([true, false])
     const [downloadBtnProps, setDownloadBtnProps] = useState({})
@@ -135,7 +134,7 @@ function CLTModal({data, showModal, setShowModal}) {
                     </AccordionDetails>
                 </Accordion>
                 <div className={'d-flex'}>
-                    <Button className={'ms-auto'} variant="outline-primary rounded-0"
+                    <Button className={'ms-auto'} variant="outline-primary "
                             onClick={downloadManifest}>Generate Download Manifest Files</Button>
                 </div>
             </div>

@@ -28,7 +28,7 @@ function SampleCategory({
 
     const handleSampleCategoryChange = (e, onChange) => {
         // If sample category is 'Organ' then display the organ type input group
-        if (eq(e.target.value, cache.sampleCategories.Organ)) {
+        if (eq(e.target.value, cache?.sampleCategories?.Organ)) {
             //Organ Type set display and require
             set_organ_group_hide('')
             document.getElementById("organ").setAttribute("required", "")
@@ -52,9 +52,9 @@ function SampleCategory({
             return [];
         }
 
-        const organs = {...cache.organTypes}
+        const organs = {...cache?.organTypes}
 
-        if (["Human", "Human Organoid"].includes(source["source_type"])) {
+        if (["Human"].includes(source["source_type"])) {
             delete organs["UBERON:0001911"] // mammary gland
         } else {
             delete organs["FMA:57991"] // mammary gland (left)
@@ -73,9 +73,9 @@ function SampleCategory({
                     <SenNetPopover className={'sampleCat--pop'} text={<>
                         The category of this <code>Sample</code>. Choose from one of the available options.<br />
                         <small className='popover-note text-muted mt-2'>Note: CCF Registration User Interface (CCF-RUI)
-                            tool becomes available for the <code>{cache.sampleCategories.Block} Sample</code> category
+                            tool becomes available for the <code>{cache?.sampleCategories?.Block} Sample</code> category
                             where the <em>Ancestor</em> <code>Source</code> is of
-                            type <code>{cache.sourceTypes.Human}</code> or <code>{cache.sourceTypes['Human Organoid']}</code>,
+                            type <code>{cache?.sourceTypes?.Human}</code>,
                             when the block has been sourced from a RUI supported organ.</small>
                     </>}>
                         <i className="bi bi-question-circle-fill"></i>
@@ -90,7 +90,7 @@ function SampleCategory({
                              }}
                              defaultValue={data.sample_category}>
                     {<option value="">----</option>}
-                    {Object.entries(sample_categories).map(sample_category => {
+                    {Object.entries(sample_categories || {}).map(sample_category => {
                         return (
                             <option key={sample_category[0]} value={sample_category[0]}>
                                 {sample_category[1]}

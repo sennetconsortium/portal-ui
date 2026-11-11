@@ -47,7 +47,7 @@ function ViewHeaderBadges({data, uniqueHeader, uniqueHeaderUrl, isMetadataHeader
                            href={`/${data.entity_type.toLowerCase()}?uuid=${data.uuid}`}>{displayBodyHeader(data.sennet_id)}</a>
                     </h5>
 
-                    {!eq(data.entity_type, cache.entities.dataset) ? (
+                    {!eq(data.entity_type, cache?.entities?.dataset) ? (
                         <Fragment>
                             <h5 className={"title-badge"}>
                                 <span className="badge bg-secondary me-2">

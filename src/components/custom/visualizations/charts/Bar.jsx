@@ -2,6 +2,7 @@ import * as d3 from 'd3';
 import { useContext, useEffect, useRef } from 'react'
 import PropTypes from 'prop-types'
 import VisualizationsContext from '@/context/VisualizationsContext';
+import $ from 'jquery';
 
 function Bar({
     setLegend,

@@ -103,7 +103,7 @@ const AppNavbar = ({hidden, signoutHidden, innerRef}) => {
             <Alert severity={'info'}
                    sx={{
                        borderRadius: 0,
-                       py:0,
+                       py: 0,
                        display: 'flex',
                        justifyContent: 'center',
                    }}>
@@ -187,43 +187,49 @@ const AppNavbar = ({hidden, signoutHidden, innerRef}) => {
                             </NavDropdown>
                         </Nav>
                         <Nav>
-                            <NavDropdown
-                                active={false}
-                                variant={'primary'}
-                                hidden={hidden || !isLoggedIn()}
-                                title={_t("Register entity")}
-                                id="nav-dropdown"
-                            >
-                                {['Single', 'Bulk'].map((range, key) => (
-                                    <div key={`dropdownItem-register-${range}`} id={`dropdownItem-register-${range}`}>
-                                        {key !== 0 && <NavDropdown.Divider/>}
-                                        <NavDropdown.Item className='dropdown-item is-heading'
-                                                          aria-controls={`submenu-md-${range}`}>
-                                            {range}
-                                        </NavDropdown.Item>
+                            {cache && (
+                                <NavDropdown
+                                    active={false}
+                                    variant={'primary'}
+                                    hidden={hidden || !isLoggedIn()}
+                                    title={_t("Register entity")}
+                                    id="nav-dropdown"
+                                >
+                                    {['Single', 'Bulk'].map((range, key) => (
+                                        <div key={`dropdownItem-register-${range}`}
+                                             id={`dropdownItem-register-${range}`}>
+                                            {key !== 0 && <NavDropdown.Divider/>}
+                                            <NavDropdown.Item className='dropdown-item is-heading'
+                                                              aria-controls={`submenu-md-${range}`}>
+                                                {range}
+                                            </NavDropdown.Item>
 
-                                        <div className={'submenu'} id={`submenu-md-${range}`}>
-                                            {eq(range, 'single') && supportedSingleRegister().map((entity) => (
-                                                <NavDropdown.Item key={entity} href={formatRegisterUrl(entity, range)}>
-                                                    {eq(entity, cache.entities.upload) ? 'Data Upload' : _t(entity)}
-                                                </NavDropdown.Item>
-                                            ))}
+                                            <div className={'submenu'} id={`submenu-md-${range}`}>
+                                                {eq(range, 'single') && supportedSingleRegister().map((entity) => (
+                                                    <NavDropdown.Item key={entity}
+                                                                      href={formatRegisterUrl(entity, range)}>
+                                                        {eq(entity, cache.entities.upload) ? 'Data Upload' : _t(entity)}
+                                                    </NavDropdown.Item>
+                                                ))}
 
-                                            {eq(range, 'single') && adminGroup && adminSupportedSingleRegister().map((entity) => (
-                                                <NavDropdown.Item key={entity} href={formatRegisterUrl(entity, range)}>
-                                                    {_t(entity)}
-                                                </NavDropdown.Item>
-                                            ))}
+                                                {eq(range, 'single') && adminGroup && adminSupportedSingleRegister().map((entity) => (
+                                                    <NavDropdown.Item key={entity}
+                                                                      href={formatRegisterUrl(entity, range)}>
+                                                        {_t(entity)}
+                                                    </NavDropdown.Item>
+                                                ))}
 
-                                            {eq(range, 'bulk') && supportedBulkRegister().map((entity) => (
-                                                <NavDropdown.Item key={entity} href={formatRegisterUrl(entity, range)}>
-                                                    {eq(entity, 'upload') ? 'Data (IDs and Data Files)' : eq(entity, 'dataset') ? 'Data (IDs Only)' : `${entity}s`}
-                                                </NavDropdown.Item>
-                                            ))}
+                                                {eq(range, 'bulk') && supportedBulkRegister().map((entity) => (
+                                                    <NavDropdown.Item key={entity}
+                                                                      href={formatRegisterUrl(entity, range)}>
+                                                        {eq(entity, 'upload') ? 'Data (IDs and Data Files)' : eq(entity, 'dataset') ? 'Data (IDs Only)' : `${entity}s`}
+                                                    </NavDropdown.Item>
+                                                ))}
+                                            </div>
                                         </div>
-                                    </div>
-                                ))}
-                            </NavDropdown>
+                                    ))}
+                                </NavDropdown>
+                            )}
                             <Nav.Link hidden={hidden || !isLoggedIn()} key={`submenuItem-md-all`}
                                       href={`/edit/bulk/metadata`}
                                       id={'nav-dropdown--upload-metadata'}

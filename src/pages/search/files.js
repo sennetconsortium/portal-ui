@@ -80,14 +80,14 @@ function SearchFiles() {
                                                      text={<>In order to download the files that are included in the
                                             manifest file,&nbsp;
                                         <a href="https://github.com/x-atlas-consortia/clt" target='_blank'
-                                           className={'lnk--ic'}>install <i
+                                           className={'lnk--ic'} rel="noreferrer">install <i
                                             className="bi bi-box-arrow-up-right"></i></a> the CLT and <a
                                             href="https://docs.sennetconsortium.org/libraries/clt/">follow the
                                             instructions</a> for how to use it with the manifest file.
                                         <br/><small className={'text-muted'}>Note: For transferring data to the local
                                             machine, the <a
                                                 href={'https://www.globus.org/globus-connect-personal'} target='_blank'
-                                                className={'lnk--ic'}>Globus
+                                                className={'lnk--ic'} rel="noreferrer">Globus
                                                 Connect Personal (GCP)<i
                                                     className="bi bi-box-arrow-up-right"></i></a> endpoint must also be
                                             up and
@@ -101,12 +101,12 @@ function SearchFiles() {
                                                             <Form.Control
                                                                 value={value}
                                                                 onChange={(e) => onChange(e.currentTarget.value)}
-                                                                className="form-control form-control-lg rounded-0"
+                                                                className="form-control form-control-lg "
                                                                 placeholder="Search"
                                                                 autoFocus={false}
                                                             />
                                                             <Button variant="outline-primary"
-                                                                    className={"rounded-0"}
+                                                                    className={""}
                                                                     onClick={e => handleSearchFormSubmit(e, onSubmit)}>{_t('Search')}</Button>
                                                         </InputGroup>
                                                     </Form.Group>

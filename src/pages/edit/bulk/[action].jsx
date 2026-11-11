@@ -3,7 +3,6 @@ import React, {useContext} from 'react';
 import {useRouter} from 'next/router'
 import EntityContext, {EntityProvider} from "@/context/EntityContext";
 import AppContext from "@/context/AppContext";
-import {eq} from "@/components/custom/js/functions";
 import {JobQueueProvider} from "@/context/JobQueueContext";
 import {APP_TITLE} from "@/config/config";
 
@@ -27,14 +26,14 @@ export default function EditBulk() {
 
     const router = useRouter()
     let entityType = router.query['entityType']
-    entityType = cache.entities[entityType?.toLowerCase()]
-    let subType = router.query['category']
+    entityType = cache?.entities[entityType?.toLowerCase()]
     const isMetadata = router.query['action'] === 'metadata'
-    let result
 
-    if (eq(entityType, cache.entities.dataset)) {
-        window.location = '/edit/upload?uuid=register'
+    if (!entityType && !isMetadata) {
+        return <Spinner />
     }
+    let subType = router.query['category']
+    let result
 
     if (isAuthorizing() || isUnauthorized()) {
         return (
@@ -47,7 +46,7 @@ export default function EditBulk() {
             subType = subType.upperCaseFirst()
         }
 
-        let supportedEntities = Object.values(cache.entities)
+        let supportedEntities = Object.values(cache?.entities ?? {})
         const isSupported = () => {
             console.log('DETAILS', entityType, subType)
             if (isMetadata) {

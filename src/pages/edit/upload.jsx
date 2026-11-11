@@ -100,7 +100,7 @@ function EditUpload() {
     const modalResponse = (response) => {
         setValues({...values, status: response.status})
         setModalDetails({
-            entity: cache.entities.upload,
+            entity: cache?.entities?.upload,
             type: response.status,
             typeHeader: _t('Status'),
             response
@@ -220,7 +220,7 @@ function EditUpload() {
                     <div className="no_sidebar">
                         <Layout
                             bodyHeader={
-                                <EntityHeader entity={cache.entities.upload}
+                                <EntityHeader entity={cache?.entities?.upload}
                                               data={data} values={values}/>
                             }
                             bodyContent={
@@ -233,7 +233,7 @@ function EditUpload() {
                                                          individual datasets with their own SenNet IDs by CODCC
                                                          Curation. Uploads must have directory structures, contributors,
                                                          and metadata files per the <a target="_blank"
-                                                                                       href={"https://docs.sennetconsortium.org/data-submission/"}>Data
+                                                                                       href={"https://docs.sennetconsortium.org/data-submission/"} rel="noreferrer">Data
                                                              Submission Guide</a>.
                                                      </>}
                                                      icon={<i className="bi bi-exclamation-triangle-fill"></i>}/>
@@ -292,7 +292,7 @@ function EditUpload() {
 
                                         {/*/!*Intended Dataset Type*!/*/}
                                          <DatasetType
-                                            datasetTypes={Object.values(cache.datasetTypes)}
+                                            datasetTypes={Object.values(cache?.datasetTypes ?? {})}
                                             label={'Intended Dataset Type'}
                                             labelDescription={<>The dataset type of the intended datasets that will be
                                                 uploaded as part of this <code>Upload</code>.</>}
@@ -316,7 +316,7 @@ function EditUpload() {
                                             }}
                                                          defaultValue={data.intended_organ}>
                                                 <option value="">----</option>
-                                                {Object.entries(cache.organTypes).map(op => {
+                                                {Object.entries(cache?.organTypes || {}).map(op => {
                                                     return (
                                                         <option key={op[0]} value={op[0]}>
                                                             {op[1]}
@@ -378,7 +378,7 @@ function EditUpload() {
                                             {!eq(data['status'], 'Processing') && !eq(data['status'], 'Reorganized') &&
                                                 <SenNetPopover text={<>Save changes to this <code>Upload</code>.</>}
                                                                className={'save-button'}>
-                                                    <Button variant="outline-primary rounded-0 js-btn--save"
+                                                    <Button variant="outline-primary  js-btn--save"
                                                             className={'me-2'}
                                                             onClick={handleSave}
                                                             disabled={disableSubmit}>
@@ -448,7 +448,7 @@ function EditUpload() {
 
                                             {!['Processing', 'Reorganized'].contains(data['status']) && adminGroup && isEditMode() &&
                                                 <SenNetPopover
-                                                    text={statusRevertTooltip(cache.entities.upload)}
+                                                    text={statusRevertTooltip(cache?.entities?.upload)}
                                                     className={'initiate-upload-status-change'}>
                                                     <DatasetRevertButton data={data} onClick={handleRevert}
                                                                          disableSubmit={disableSubmit}

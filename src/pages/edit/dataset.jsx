@@ -68,12 +68,18 @@ export default function EditDataset() {
     const [dataTypes, setDataTypes] = useState(null)
     const isPrimary = useRef(false)
 
+    const datasetEntity = cache?.entities?.dataset
+
     useEffect(() => {
+        if (!datasetEntity) {
+            return
+        }
+
         async function fetchAncestorConstraints() {
             const fullBody = [
                 {
                     descendants: [{
-                        entity_type: cache.entities.dataset
+                        entity_type: datasetEntity
                     }]
                 }
             ]
@@ -102,7 +108,7 @@ export default function EditDataset() {
         }
 
         fetchAncestorConstraints()
-    }, [])
+    }, [datasetEntity])
 
     useEffect(() => {
         const fetchDataTypes = async () => {
@@ -121,7 +127,7 @@ export default function EditDataset() {
 
                         let sub_types = []
                         currentConstraints.forEach(constraint => {
-                            if (eq(constraint.entity_type, cache.entities.dataset)) {
+                            if (eq(constraint.entity_type, datasetEntity)) {
                                 sub_types = sub_types.concat(constraint.sub_type || [])
                             }
                         })
@@ -232,7 +238,7 @@ export default function EditDataset() {
         toggleBusyOverlay(false)
         setValues({...values, status: response.status})
         setModalDetails({
-            entity: cache.entities.dataset,
+            entity: datasetEntity,
             type: (response.dataset_type ? response.dataset_type : null),
             typeHeader: _t('Dataset Type'),
             response
@@ -283,7 +289,7 @@ export default function EditDataset() {
             let apiResult
             let currentValid
             for (const ancestor of data.ancestors) {
-                if (eq(ancestor.entity_type, cache.entities.sample) && eq(ancestor.sample_category, cache.sampleCategories.Block)) {
+                if (eq(ancestor.entity_type, cache?.entities?.sample) && eq(ancestor.sample_category, cache?.sampleCategories?.Block)) {
                     apiResult = await getEntityData(ancestor.uuid)
                     currentValid = true
                     if (!apiResult || (apiResult && !validList.contains(apiResult.has_rui_information))) {
@@ -293,7 +299,7 @@ export default function EditDataset() {
                     let icon = currentValid ? successIcon() : errIcon()
                     results.push(<span key={`rui-check-${i}`}>{icon} <a
                         href={getEntityViewUrl(ancestor.entity_type, ancestor.uuid, {isEdit: true}, {})}
-                        target='_blank'>{ancestor.sennet_id}</a>  <br/></span>)
+                        target='_blank' rel="noreferrer">{ancestor.sennet_id}</a>  <br/></span>)
                     i++
                 }
             }
@@ -322,7 +328,7 @@ export default function EditDataset() {
             let viewResult
             let uri
             for (const ancestor of data.ancestors) {
-                if (eq(ancestor.entity_type, cache.entities.source) || eq(ancestor.entity_type, cache.entities.sample)) {
+                if (eq(ancestor.entity_type, cache?.entities?.source) || eq(ancestor.entity_type, cache?.entities?.sample)) {
                     uri = ancestor.protocol_url
                     apiResult = await fetchProtocols(uri)
                     if (!apiResult) {
@@ -331,7 +337,7 @@ export default function EditDataset() {
                     let icon = apiResult ? successIcon() : errIcon()
                     results.push(<span key={`doi-check-${i}`}>{icon} <a
                         href={getEntityViewUrl(ancestor.entity_type, ancestor.uuid, {isEdit: true}, {})}
-                        target='_blank'>{ancestor.sennet_id}</a>  <br/></span>)
+                        target='_blank' rel="noreferrer">{ancestor.sennet_id}</a>  <br/></span>)
                     i++
                 }
             }
@@ -483,7 +489,7 @@ export default function EditDataset() {
                     <div className="no_sidebar">
                         <Layout
                             bodyHeader={
-                                <EntityHeader entity={cache.entities.dataset} data={data}
+                                <EntityHeader entity={datasetEntity} data={data}
                                               values={values} />
                             }
                             bodyContent={
@@ -601,17 +607,17 @@ export default function EditDataset() {
                                     {/*/!*Dataset Type*!/*/}
                                     {editMode &&
                                         <DatasetType
-                                            datasetTypes={dataTypes === null ? Object.values(cache.datasetTypes) : dataTypes}
+                                            datasetTypes={dataTypes === null ? Object.values(cache?.datasetTypes ?? {}) : dataTypes}
                                             values={values} data={data} onChange={onChange}/>
                                     }
 
                                     {adminGroup && <AttributesUpload ingestEndpoint={contactsTSV.uploadEndpoint} showAllInTable={true}
                                                       setAttribute={setContactsAttributes}
                                                       setAttributesOnFail={setContactsAttributesOnFail}
-                                                      entity={cache.entities.dataset} excludeColumns={contactsTSV.excludeColumns}
+                                                      entity={datasetEntity} excludeColumns={contactsTSV.excludeColumns}
                                                       attribute={'Contributors'} title={<h6>Contributors</h6>}
                                                       customFileInfo={<span><a
-                                                          className='btn btn-outline-primary rounded-0 fs-8' download
+                                                          className='btn btn-outline-primary  fs-8' download
                                                           href={'https://raw.githubusercontent.com/hubmapconsortium/dataset-metadata-spreadsheet/main/contributors/latest/contributors.tsv'}> <FileDownloadIcon/>EXAMPLE.TSV</a></span>}/>}
 
                                     {/*This table is just for showing data.creators list in edit mode. Regular table from AttributesUpload will show if user uploads new file*/}
@@ -631,7 +637,7 @@ export default function EditDataset() {
                                         {!eq(data['status'], 'Processing') &&
                                             <SenNetPopover text={<>Save changes to this <code>Dataset</code>.</>}
                                                            className={'save-button'}>
-                                                <Button variant="outline-primary rounded-0 js-btn--save"
+                                                <Button variant="outline-primary  js-btn--save"
                                                         className={'me-2'}
                                                         onClick={handleSave}
                                                         disabled={disableSubmit}>
@@ -700,7 +706,7 @@ export default function EditDataset() {
 
                                         {!['Processing', 'Published', 'Reorganized'].contains(data['status']) && isPrimary.current && adminGroup && isEditMode() &&
                                             <SenNetPopover
-                                                text={statusRevertTooltip(cache.entities.dataset)}
+                                                text={statusRevertTooltip(datasetEntity)}
                                                 className={'initiate-dataset-status-change'}>
                                                 <DatasetRevertButton data={data} onClick={handleRevert}
                                                                      disableSubmit={disableSubmit}

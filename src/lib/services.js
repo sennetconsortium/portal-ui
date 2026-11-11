@@ -5,6 +5,7 @@ import {
     getEntityEndPoint,
     getIngestEndPoint,
     getIntegratedMappingEndPoint,
+    getRootURL,
     getSearchEndPoint,
     getUUIDEndpoint
 } from "@/config/config";
@@ -318,6 +319,43 @@ export async function getEntityData(uuid, exclude_properties = []) {
     return await callService(null, url, 'GET', getHeaders())
 }
 
+export async function getServerEntityData(
+    uuid,
+    token,
+    exclude_properties = []
+) {
+    let url = `${getRootURL()}/api/find?uuid=${uuid}`
+
+    if (exclude_properties?.length) {
+        url +=
+            "&exclude_properties=" +
+            encodeURIComponent(
+                exclude_properties.join(',')
+            )
+    }
+
+    const headers = {
+        'Content-Type': 'application/json'
+    }
+
+    if (token) {
+        headers.Authorization = `Bearer ${token}`
+    }
+
+    const response = await fetch(url, {
+        method: 'GET',
+        headers
+    })
+
+    if (!response.ok) {
+        throw new Error(
+            `Failed to fetch entity: ${response.status}`
+        )
+    }
+
+    return await response.json()
+}
+
 
 export async function getJSONFromAssetsEndpoint(path) {
     if (path.startsWith('/')) {
@@ -356,7 +394,6 @@ export const fetchSearchAPIEntities = async (body, index = 'entities') => {
     if (token) {
         headers.append("Authorization", `Bearer ${token}`)
     }
-    Addon.log('SearchAPI', {data: {body, index}, color: 'orange'})
     try {
         const res = await fetch(`${getSearchEndPoint()}${index}/search`, {
             method: "POST",

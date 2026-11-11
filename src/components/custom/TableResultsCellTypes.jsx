@@ -17,6 +17,7 @@ import { COLS_ORDER_KEY } from "@/config/config";
 import { getCellTypesByIds, parseJson } from "@/lib/services";
 import { useSearchUIContext } from "@/search-ui/components/core/SearchUIContext";
 import { APP_ROUTES } from '@/config/constants';
+import $ from 'jquery';
 
 function TableResultsCellTypes({ children, onRowClicked, filters, forData = false, rowFn, inModal = false, rawResponse }) {
 

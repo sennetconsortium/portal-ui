@@ -10,7 +10,7 @@ import {
     getEntityViewUrl,
     getRequestHeaders
 } from "@/components/custom/js/functions";
-import {getAncestryData, getEntityData, getWritePrivilegeForGroupUuid} from "@/lib/services";
+import {getAncestryData, getEntityData, getServerEntityData, getWritePrivilegeForGroupUuid} from "@/lib/services";
 import AppContext from "@/context/AppContext";
 import Alert from 'react-bootstrap/Alert';
 import {EntityViewHeader} from "@/components/custom/layout/entity/ViewHeader";
@@ -26,10 +26,12 @@ import SenNetSuspense from "@/components/SenNetSuspense";
 import ProtocolsWorkflow from "@/components/custom/entities/dataset/ProtocolsWorkflow";
 import AssociatedEntity from "@/components/custom/entities/AssociatedEntity";
 import AssociatedEntityTable from "@/components/custom/entities/AssociatedEntityTable";
-import { Skeleton } from "@mui/material";
+import {Skeleton} from "@mui/material";
 import SegmentationMetadata from "@/components/custom/entities/dataset/SegmentationMetadata";
 import {getCanonicalUrl, getJsonLDMetaData} from "@/lib/meta";
 import {APP_TITLE} from "@/config/config";
+import PropTypes from "prop-types";
+import {getCookie} from "cookies-next";
 
 const AppFooter = dynamic(() => import("@/components/custom/layout/AppFooter"))
 const Attribution = dynamic(() => import("@/components/custom/entities/sample/Attribution"))
@@ -44,13 +46,13 @@ const SenNetVitessce = dynamic(() => import("@/components/custom/vitessce/SenNet
 
 const SidebarBtn = dynamic(() => import("@/components/SidebarBtn"))
 
-function ViewDataset() {
-    const [data, setData] = useState(null)
+function ViewDataset({initialData, initialCitationData, initialError}) {
+    const [data, setData] = useState(initialData)
     const [hasAncestry, setHasAncestry] = useState(false)
-    const [citationData, setCitationData] = useState(null)
+    const [citationData, setCitationData] = useState(initialCitationData)
     const [ancestorHasMetadata, setAncestorHasMetadata] = useState(false)
-    const [error, setError] = useState(false)
-    const [errorMessage, setErrorMessage] = useState(null)
+    const [error, setError] = useState(Boolean(initialError))
+    const [errorMessage, setErrorMessage] = useState(initialError)
     const [hasWritePrivilege, setHasWritePrivilege] = useState(false)
     const {
         router,
@@ -65,7 +67,7 @@ function ViewDataset() {
     } = useContext(AppContext)
     const [primaryDatasetData, setPrimaryDatasetInfo] = useState(null)
     const [showFilesSection, setShowFilesSection] = useState(null)
-    const [hasViz, setHasViz] = useState(false)
+    const [hasViz, setHasViz] = useState(eq(initialData?.has_visualization, 'true'))
     const {
         showVitessce,
         initVitessceConfig,
@@ -114,78 +116,133 @@ function ViewDataset() {
         }
     }, [data, isDerivedContextInitialized])
 
+    // Fetch entity if SSR didn't provide it
     useEffect(() => {
         const fetchData = async (uuid) => {
-            log.debug('dataset: getting data...', uuid)
-            // fetch dataset data
-            const _data = await getEntityData(uuid, ['ancestors', 'descendants']);
+            log.info('dataset: getting data...', uuid)
 
-            if (_data.hasOwnProperty("error")) {
+            const _data = await getEntityData(
+                uuid,
+                ['ancestors', 'descendants']
+            )
+
+            if (_data?.error) {
                 setError(true)
-                setErrorMessage(_data["error"])
+                setErrorMessage(_data.error)
                 setData(false)
                 return
             }
 
-            // set state with the result
             setData(_data)
-            let hasViz = eq(_data.has_visualization, 'true')
-            setHasViz(hasViz)
+        }
 
-            // fetch ancestry data
-            getAncestryData(_data.uuid, {}, cache.entities.dataset).then(ancestry => {
+        const uuid = router.query?.uuid
+
+        if (!uuid) {
+            setData(null)
+            return
+        }
+
+        // SSR already provided dataset
+        if (data) {
+            return
+        }
+
+        fetchData(uuid)
+            .catch(log.error)
+    }, [router.query?.uuid])
+
+    // Detect redirection and display toast
+    useEffect(() => {
+        if (!router.query?.redirectedFrom) {
+            return
+        }
+
+        const message =
+            router.query.redirectedFrom.replace(/\/$/, '')
+
+        toast.info(
+            `You have been redirected to the unified view for ${message}.`,
+            {
+                position: 'top-right',
+            }
+        )
+    }, [router.query?.redirectedFrom])
+
+    // Fill in remaining fields when data is available
+    useEffect(() => {
+        if (!data || data === false) {
+            return
+        }
+
+        setHasViz(
+            eq(data.has_visualization, 'true')
+        )
+
+        getAncestryData(
+            data.uuid,
+            {},
+            cache?.entities?.dataset
+        )
+            .then((ancestry) => {
+                // Primary gets processed and updated to QA but the derived dataset is still processed.
+                // This could lead to a scenario where the primary has the property has_visualization: false but the processed is true.
+                // So let's check that a descendant has_visualization: true
                 if (!hasViz) {
-                    // Primary gets processed and updated to QA but the derived dataset is still processed.
-                    // This could lead to a scenario where the primary has the property has_visualization: false but the processed is true.
-                    // So let's check that a descendant has_visualization: true
-                    for (const descendant of ancestry.descendants) {
-                        if (eq(descendant.has_visualization, 'true')) {
+                    for (const descendant of ancestry.descendants || []) {
+                        if (
+                            eq(
+                                descendant.has_visualization,
+                                'true'
+                            )
+                        ) {
                             setHasViz(true)
-                            break;
+                            break
                         }
                     }
                 }
 
-                Object.assign(_data, ancestry)
-                setData(_data)
+                setData(prev => ({
+                    ...prev,
+                    ...ancestry
+                }))
+
                 setHasAncestry(true)
 
-                for (const ancestor of ancestry.ancestors) {
-                    if ((ancestor.metadata && Object.keys(ancestor.metadata).length)) {
+                for (const ancestor of ancestry.ancestors || []) {
+                    if (
+                        ancestor.metadata &&
+                        Object.keys(ancestor.metadata).length
+                    ) {
                         setAncestorHasMetadata(true)
                         break
                     }
                 }
-            }).catch(log.error)
+            })
+            .catch(log.error)
 
-            // fetch citation data
-            if (_data.doi_url) {
-                fetchDataCite(_data.doi_url).then(citation => {
-                    setCitationData(citation)
-                }).catch(log.error)
-            }
-
-            // fetch write privilege
-            getWritePrivilegeForGroupUuid(_data.group_uuid).then(response => {
-                setHasWritePrivilege(response.has_write_privs)
-            }).catch(log.error)
+        // Citation
+        if (data.doi_url) {
+            fetchDataCite(data.doi_url)
+                .then(setCitationData)
+                .catch(log.error)
         }
 
-        if (router.query.hasOwnProperty("uuid")) {
-            // fetch dataset data
-            fetchData(router.query.uuid)
-                .catch(log.error);
+        // Write privileges
+        getWritePrivilegeForGroupUuid(
+            data.group_uuid
+        )
+            .then(response => {
+                setHasWritePrivilege(
+                    response.has_write_privs
+                )
+            })
+            .catch(log.error)
 
-            if (router.query.hasOwnProperty("redirectedFrom")) {
-                let message = router.query.redirectedFrom.replace(/\/$/, '')
-                toast.info(`You have been redirected to the unified view for ${message}.`, {
-                    position: 'top-right',
-                });
-            }
-        } else {
-            setData(null);
-        }
-    }, [router]);
+    }, [
+        data?.uuid,
+        cache?.entities?.dataset
+    ])
 
     const toggleFilesSection = ({hasData, filepath, status}) => {
         if (hasData != null && showFilesSection !== true) {
@@ -205,7 +262,13 @@ function ViewDataset() {
         </>
     )
 
-    if (isPreview(data, error) || !cache) {
+    const jsonLD =
+        data?.status === "Published" &&
+        datasetIs.primary(data.creation_action)
+            ? getJsonLDMetaData(data, citationData)
+            : undefined
+
+    if (isPreview(data, error)) {
         return getPreviewView(data)
     } else {
         return (
@@ -214,7 +277,7 @@ function ViewDataset() {
                     <Header
                         title={`${data.sennet_id || ''} | Dataset | ${APP_TITLE}`}
                         description={data.description || data.title}
-                        jsonLD={citationData && data.status === "Published" && datasetIs.primary(data.creation_action) ? getJsonLDMetaData(data, citationData) : undefined}
+                        jsonLD={jsonLD}
                         canonical={getCanonicalUrl(data)}
                     />
                 }
@@ -241,7 +304,7 @@ function ViewDataset() {
                         }
 
                         {/*Banner for Multi Assaay Datasets when a user has been redirected*/}
-                        {router.query.hasOwnProperty("redirectedFrom") && datasetIs.primary(data.creation_action) && datasetCategories && (datasetCategories.component.length > 0) &&
+                        {router.query.redirectedFrom && datasetIs.primary(data.creation_action) && datasetCategories && (datasetCategories.component.length > 0) &&
                             <Alert className={'mt-4'} variant='info'><WarningIcon/>
                                 You have been redirect to
                                 the <code>{getCreationActionRelationName(data.creation_action)}</code>, which contains
@@ -260,7 +323,7 @@ function ViewDataset() {
                             <div className="col-auto p-0">
                                 <div id="sidebar"
                                      className="collapse collapse-horizontal sticky-top custom-sticky">
-                                    <ul id="sidebar-nav" className="nav list-group rounded-0 text-sm-start">
+                                    <ul id="sidebar-nav" className="nav list-group  text-sm-start">
                                         <li className="nav-item">
                                             <a href="#Summary"
                                                className="nav-link "
@@ -355,7 +418,7 @@ function ViewDataset() {
 
                                 <EntityViewHeader data={data}
                                                   uniqueHeader={getDatasetTypeDisplay(data)}
-                                                  entity={cache.entities?.dataset?.toLowerCase()}
+                                                  entity={"dataset"}
                                                   hasWritePrivilege={hasWritePrivilege || false}/>
 
                                 <div className="row">
@@ -376,32 +439,38 @@ function ViewDataset() {
                                         }
 
                                         {/*Upload*/}
-                                        {isLoggedIn() && data.upload && <AssociatedEntity data={data.upload} currentEntity={data.entity_type} grammar="is contained in the data" />}
+                                        {isLoggedIn() && data.upload &&
+                                            <AssociatedEntity data={data.upload} currentEntity={data.entity_type}
+                                                              grammar="is contained in the data"/>}
 
                                         {/*Collections*/}
                                         {data.collections && data.collections.length > 0 && (
-                                            <AssociatedEntityTable id="Collections" propertyName={'collections'} data={data} />
+                                            <AssociatedEntityTable id="Collections" propertyName={'collections'}
+                                                                   data={data}/>
                                         )}
 
                                         {/*Publications*/}
                                         {data.publications && data.publications.length > 0 && (
-                                            <AssociatedEntityTable id="Publications" propertyName={'publications'} data={data} />
+                                            <AssociatedEntityTable id="Publications" propertyName={'publications'}
+                                                                   data={data}/>
                                         )}
 
                                         {/* Vitessce */}
                                         {data && hasViz && <SenNetSuspense showChildren={showVitessce}
                                                                            suspenseElements={<>
 
-                                                                               <Skeleton width={'20%'} />
-                                                                               <Skeleton width={'60%'} />
-                                                                               <Skeleton variant="rounded" className={'mt-2 mb-2'} height={700} />
-                                                                                {/* This is a static block and already read for showing, so show it
+                                                                               <Skeleton width={'20%'}/>
+                                                                               <Skeleton width={'60%'}/>
+                                                                               <Skeleton variant="rounded"
+                                                                                         className={'mt-2 mb-2'}
+                                                                                         height={700}/>
+                                                                               {/* This is a static block and already read for showing, so show it
                                                                                 while loading vitessce */}
-                                                                                {SegmentationMetadataBlock}
+                                                                               {SegmentationMetadataBlock}
                                                                            </>}
                                                                            id="Visualization" title="Visualization"
                                                                            style={{minHeight: '800px'}}>
-                                            <SenNetVitessce />
+                                            <SenNetVitessce/>
                                             {SegmentationMetadataBlock}
                                         </SenNetSuspense>}
 
@@ -451,8 +520,62 @@ function ViewDataset() {
     }
 }
 
+export async function getServerSideProps(context) {
+    const { uuid } = context.query
+
+    const token = getCookie('groups_token', {
+        req: context.req,
+        res: context.res
+    })
+
+    try {
+        const initialData = await getServerEntityData(
+            uuid,
+            token,
+            ['ancestors', 'descendants']
+        )
+
+        let initialCitationData = null
+
+        if (initialData?.doi_url) {
+            try {
+                initialCitationData = await fetchDataCite(
+                    initialData.doi_url
+                )
+            } catch (e) {
+                console.error(
+                    'Failed to fetch citation data',
+                    e
+                )
+            }
+        }
+
+        return {
+            props: {
+                initialData,
+                initialCitationData,
+                initialError: null
+            }
+        }
+    } catch (e) {
+        return {
+            props: {
+                initialData: null,
+                initialCitationData: null,
+                initialError: e.message
+            }
+        }
+    }
+}
+
 ViewDataset.withWrapper = function (page) {
     return <DerivedProvider>{page}</DerivedProvider>
+}
+
+ViewDataset.propTypes = {
+    initialData: PropTypes.object,
+    initialCitationData: PropTypes.string,
+    initialError: PropTypes.string
 }
 
 export default ViewDataset

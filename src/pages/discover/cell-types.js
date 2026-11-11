@@ -276,7 +276,7 @@ function CellTypes() {
                         <h1 className="m-0 flex-grow-1 bd-highlight fs-2">Cell Types</h1>
                         <div className="bd-highlight">
                             <a href={APP_ROUTES.search + '/cell-types'}
-                               className="btn btn-outline-primary rounded-0 clear-filter-button"
+                               className="btn btn-outline-primary  clear-filter-button"
                             >
                                 Search All {Object.values(subGroupLabels.current).length} Cell Types
                             </a>

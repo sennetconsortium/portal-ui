@@ -48,12 +48,12 @@ const AppModal = ({ children, showModal = false, modalTitle, modalBody, modalSiz
                 </Modal.Body>
                 {(showSecondaryBtn || showPrimaryBtn || footer) && <Modal.Footer>
                     {showSecondaryBtn &&
-                        <Button {...secondaryBtnProps} variant="outline-secondary rounded-0" className={secondaryBtnClassName}  onClick={handleSecondaryBtn}>
+                        <Button {...secondaryBtnProps} variant="outline-secondary " className={secondaryBtnClassName}  onClick={handleSecondaryBtn}>
                             {_t(secondaryBtnLabel)}
                         </Button>
                     }
                     {showPrimaryBtn &&
-                        <Button {...primaryBtnProps} variant="outline-primary rounded-0" className={primaryBtnClassName} onClick={handlePrimaryBtn}>
+                        <Button {...primaryBtnProps} variant="outline-primary " className={primaryBtnClassName} onClick={handlePrimaryBtn}>
                             {_t(primaryBtnLabel)}
                         </Button>
                     }

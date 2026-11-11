@@ -35,10 +35,10 @@ export const JobQueueProvider = ({ children }) => {
     function getColNames(entityType) {
         let typeCol;
         let labIdCol
-        if (eq(entityType, cache.entities.source)) {
+        if (eq(entityType, cache?.entities?.source)) {
             typeCol = 'source_type'
             labIdCol = 'lab_source_id'
-        } else if (eq(entityType, cache.entities.sample)) {
+        } else if (eq(entityType, cache?.entities?.sample)) {
             typeCol = 'sample_category'
             labIdCol = 'lab_tissue_sample_id'
         } else {
@@ -149,8 +149,8 @@ export const JobQueueProvider = ({ children }) => {
 
         let columns = getDefaultModalTableCols(entityType)
 
-        console.log('ENT', entityType, eq(entityType, cache.entities.sample))
-        if (eq(entityType, cache.entities.sample)) {
+        console.log('ENT', entityType, eq(entityType, cache?.entities?.sample))
+        if (eq(entityType, cache?.entities?.sample)) {
             columns.push({
                 name: 'organ_type',
                 selector: row => row.organ_type ? row.organ_type : '',
@@ -165,7 +165,7 @@ export const JobQueueProvider = ({ children }) => {
         )
 
         const isBulkMetadataSupported = (cat) => {
-            let supported = supportedMetadata()[cache.entities[entityType]]
+            let supported = supportedMetadata()[cache?.entities[entityType]]
             return supported ? supported.categories.includes(cat) : false
         }
 
@@ -181,11 +181,11 @@ export const JobQueueProvider = ({ children }) => {
         body.push(
             <Row key='modal-download-area' className={'mt-4 pull-right'}>
                 <Stack direction='horizontal' gap={3}>
-                    <a role={'button'} className={'btn btn-outline-success rounded-0'}
+                    <a role={'button'} className={'btn btn-outline-success '}
                        href={downloadURL} download={`${_file.name}`}>Download registered data <i
                         className="bi bi-download"></i></a>
                     {(categories.length === 1) &&
-                        <a className={'btn btn-primary rounded-0'}
+                        <a className={'btn btn-primary '}
                            href={`/edit/bulk/${entityType}?action=metadata&category=${categories[0]}`}>
                             Continue to metadata upload <i className="bi bi-arrow-right-square-fill"></i>
                         </a>
@@ -231,13 +231,13 @@ export const JobQueueProvider = ({ children }) => {
                 <Stack direction="horizontal" gap={3}>
                     { data.passes.length > 0 &&
                         <a role={'button'} title={'Download successfully uploaded metadata details'}
-                           className={'btn btn-outline-success rounded-0'}
+                           className={'btn btn-outline-success '}
                            href={downloadURLPasses} download={`${_file.name.replace('.tsv', '-success.tsv')}`}>Download
                             upload data <i className="bi bi-download"></i></a>
                     }
                     { data.fails.length > 0 &&
                         <a role={'button'} title={'Download unsuccessfully uploaded metadata details'}
-                           className={'btn btn-outline-danger rounded-0'}
+                           className={'btn btn-outline-danger '}
                            href={downloadURLFails} download={`${_file.name.replace('.tsv', '-fails.tsv')}`}>Download
                             failed uploads data <i className="bi bi-download"></i></a>
                     }

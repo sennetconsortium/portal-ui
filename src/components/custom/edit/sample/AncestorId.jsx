@@ -126,14 +126,14 @@ const AncestorId = ({fetchSource, onChange, source, data, isDisabled}) => {
                                                         <Form.Control
                                                             value={value}
                                                             onChange={(e) => onChange(e.currentTarget.value)}
-                                                            className="right-border-none form-control form-control-lg rounded-0"
+                                                            className="right-border-none form-control form-control-lg "
                                                             placeholder="Search"
                                                             autoFocus={true}
                                                         />
                                                         <InputGroup.Text
                                                             className={"transparent"}><i className="bi bi-search"></i></InputGroup.Text>
                                                         <Button variant="outline-primary"
-                                                                className={"rounded-0"}
+                                                                className={""}
                                                                 onClick={e => handleSearchFormSubmit(e, onSubmit)}>Search</Button>
                                                     </InputGroup>
                                                 </Form.Group>
@@ -159,7 +159,7 @@ const AncestorId = ({fetchSource, onChange, source, data, isDisabled}) => {
                     </SearchUIContainer>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="outline-secondary rounded-0" onClick={hideModal}>
+                    <Button variant="outline-secondary " onClick={hideModal}>
                         Close
                     </Button>
                 </Modal.Footer>

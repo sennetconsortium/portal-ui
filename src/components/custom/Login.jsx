@@ -44,7 +44,7 @@ function Login() {
                                     className={'d-flex justify-content-center'}
                                 >
                                     <a
-                                        className="btn btn-outline-success rounded-0 btn-lg js-btn--login"
+                                        className="btn btn-outline-success  btn-lg js-btn--login"
                                         href={loginUrl}
                                     >
                                         {_t('Log in with your institution credentials')}

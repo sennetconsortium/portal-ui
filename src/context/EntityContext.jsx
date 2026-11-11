@@ -22,6 +22,7 @@ export const EntityProvider = ({ children }) => {
     const {_t, cache, hasPublicAccess } = useContext(AppContext)
     const router = useRouter()
     const [authorized, setAuthorized] = useState(null)
+    const [authorizationInitialized, setAuthorizationInitialized] = useState(false)
     const [validated, setValidated] = useState(false)
     const [editMode, setEditMode] = useState(null)
     const [data, setData] = useState(null)
@@ -65,7 +66,7 @@ export const EntityProvider = ({ children }) => {
     }
 
     const isAuthorizing = () => {
-        return authorized === null
+        return !authorizationInitialized
     }
 
     const isEditMode = () => {
@@ -91,29 +92,45 @@ export const EntityProvider = ({ children }) => {
 
     // only executed on init rendering, see the []
     useEffect(() => {
-        getReadWritePrivileges()
-            .then((response) => {
-                setAuthorized(response.write_privs)
-            })
-            .catch((error) => log.error(error))
+        async function init() {
+            try {
+                const [
+                    writePrivs,
+                    providerGroups,
+                    writeGroups
+                ] = await Promise.all([
+                    getReadWritePrivileges(),
+                    getProviderGroups(),
+                    getUserWriteGroups()
+                ])
 
-        getProviderGroups()
-            .then((response) => {
-                setProviderGroups(response.groups || [])
-            })
-            .catch((error) => log.error(error))
+                setAuthorized(writePrivs.write_privs)
 
-        getUserWriteGroups()
-            .then((response) => {
-                if (response.user_write_groups?.length === 1) {
+                setProviderGroups(
+                    providerGroups.groups || []
+                )
+
+                if (
+                    writeGroups.user_write_groups?.length === 1
+                ) {
                     setSelectedUserWriteGroupUuid(
-                        response.user_write_groups[0].uuid
+                        writeGroups.user_write_groups[0].uuid
                     )
                 }
-                setUserWriteGroups(response.user_write_groups)
-            })
-            .catch((e) => log.error(e))
+
+                setUserWriteGroups(
+                    writeGroups.user_write_groups
+                )
+            } catch (e) {
+                log.error(e)
+            } finally {
+                setAuthorizationInitialized(true)
+            }
+        }
+
+        init()
     }, [])
+
 
     const isPublic = () => (data?.data_access_level === 'public' || ['Published', 'Reorganized'].contains(data?.status))
 
@@ -199,11 +216,11 @@ export const EntityProvider = ({ children }) => {
 
     const buildConstraint = (entity, constraint = [], key = 'ancestors') => {
         const entityType = entity.entity_type.toLowerCase()
-        let body = {entity_type: cache.entities[entityType]}
-        if (eq(entityType, cache.entities.sample)) {
+        let body = {entity_type: cache?.entities[entityType]}
+        if (eq(entityType, cache?.entities?.sample)) {
             const sample_category = entity.sample_category.toLowerCase()
             body['sub_type'] = [sample_category]
-            if (eq(sample_category, cache.sampleCategories.Organ)) {
+            if (eq(sample_category, cache?.sampleCategories?.Organ)) {
                 body['sub_type_val'] = [getUBKGFullName(entity.organ)]
             }
         }
@@ -227,7 +244,7 @@ export const EntityProvider = ({ children }) => {
                 note = <span key={'md-0'}>Metadata for this <code>{entity}</code> exists. </span>
                 break
             case 1:
-                note = <span key={'md-1'}>You may view it via <a target='_blank' className={'js-btn--json lnk--ic'} href={`/api/json/${entity.toLowerCase()}?uuid=${data.uuid}`}> the full entity JSON  <i className="bi bi-box-arrow-up-right"></i></a>. </span>
+                note = <span key={'md-1'}>You may view it via <a target='_blank' className={'js-btn--json lnk--ic'} href={`/api/json/${entity.toLowerCase()}?uuid=${data.uuid}`} rel="noreferrer"> the full entity JSON  <i className="bi bi-box-arrow-up-right"></i></a>. </span>
                 break
             case 2:
                 let prop = `${entity.toLowerCase()}_${field}`
@@ -338,7 +355,7 @@ export const EntityProvider = ({ children }) => {
         const isRegister = router.query.uuid === 'register'
         const url = isRegister ? APP_ROUTES.search : `/${entity}?uuid=${router.query.uuid}`
         return (
-            <Button variant="outline-primary rounded-0 js-btn--cancel"
+            <Button variant="outline-primary  js-btn--cancel"
                     href={url} > Cancel
             </Button>
         )

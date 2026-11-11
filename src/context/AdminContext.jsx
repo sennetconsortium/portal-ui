@@ -29,7 +29,7 @@ export const AdminProvider = ({ children }) => {
     useEffect(() => {
         if (isUnauthorized()) {
             router.push(APP_ROUTES.login)
-            return
+
         }
     }, [authorized])
 

@@ -1,4 +1,5 @@
 import {useCallback, useEffect, useRef} from 'react'
+import $ from 'jquery';
 
 export const getCheckboxes = () => $('.rdt_TableBody [type=checkbox]')
 

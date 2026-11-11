@@ -89,7 +89,13 @@ export async function fetchProtocols(protocolUrl) {
 }
 
 export function createDownloadUrl(fileStr, fileType) {
-    return window.URL.createObjectURL(new Blob([fileStr], {type: fileType}));
+    if (typeof window === 'undefined') {
+        return null
+    }
+
+    return window.URL.createObjectURL(
+        new Blob([fileStr], { type: fileType })
+    )
 }
 
 export function tableDataToTSV(tableData) {
@@ -118,14 +124,22 @@ export function displayBodyHeader(header) {
 
 
 export function getUBKGFullName(term) {
-    if (!window.UBKG_CACHE) return term
-    if (term in window.UBKG_CACHE.organTypes) {
-        return window.UBKG_CACHE.organTypes[term]
-    } else if (term in window.UBKG_CACHE.datasetTypes) {
-        return window.UBKG_CACHE.datasetTypes[term]
-    } else {
+    if (
+        typeof window === 'undefined' ||
+        !window.UBKG_CACHE
+    ) {
         return getNormalizedName(term)
     }
+
+    if (term in window.UBKG_CACHE.organTypes) {
+        return window.UBKG_CACHE.organTypes[term]
+    }
+
+    if (term in window.UBKG_CACHE.datasetTypes) {
+        return window.UBKG_CACHE.datasetTypes[term]
+    }
+
+    return getNormalizedName(term)
 }
 
 export function getOrganHierarchy(term) {
@@ -309,14 +323,12 @@ export const getSubtypeProvenanceShape = (t, cat, sz = 'sm') => {
             break
         case 'Source':
         case 'Human':
-        case 'Human Organoid':
             c = 'yellow'
             break
         case 'Publication':
             c = 'purple'
             break
         case 'Mouse':
-        case 'Mouse Organoid':
             c = ''
             s = 'stadium'
             break
@@ -415,6 +427,29 @@ export const datasetIs = {
     processed: (creationAction) => creationAction.includes('Process'),
     component: (creationAction) => creationAction.includes('Multi-Assay Split'),
     primary: (creationAction) => eq(creationAction, 'create dataset activity')
+}
+
+export const categorizeByDatasetType = (data) => {
+    const categorized = {
+        component: [],
+        primary: [],
+        processed: []
+    }
+    for (const item of data) {
+        if (!item || !item.creation_action) {
+            continue;
+        }
+
+        if (datasetIs.component(item.creation_action)) {
+            categorized.component.push(item)
+        } else if (datasetIs.primary(item.creation_action)) {
+            categorized.primary.push(item)
+        } else if (datasetIs.processed(item.creation_action)) {
+            categorized.processed.push(item)
+        }
+    }
+
+    return categorized
 }
 
 export function getCreationActionRelationName(creationAction) {

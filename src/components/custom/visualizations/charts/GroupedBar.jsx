@@ -3,6 +3,7 @@ import React from 'react'
 import * as d3 from 'd3';
 import { useContext, useEffect, useRef } from 'react'
 import VisualizationsContext from '@/context/VisualizationsContext';
+import $ from 'jquery';
 
 /***
  * @param {function} setLegend The react useState method for setting legend items

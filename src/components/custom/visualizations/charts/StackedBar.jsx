@@ -4,7 +4,7 @@ import * as d3 from 'd3';
 import { transition } from 'd3-transition';
 import { useContext, useEffect, useRef } from 'react'
 import VisualizationsContext from '@/context/VisualizationsContext';
-
+import $ from 'jquery';
 
 function StackedBar({
     setLegend,

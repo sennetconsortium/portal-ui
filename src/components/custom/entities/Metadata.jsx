@@ -9,7 +9,6 @@ import AppContext from "@/context/AppContext";
 import MetadataTable from "./MetadataTable";
 import PropTypes from "prop-types";
 import * as d3 from "d3";
-import $ from 'jquery';
 import {ViewHeaderBadges} from "../layout/entity/ViewHeaderBadges";
 import log from 'xac-loglevel';
 import { getProvenanceMetadata } from "@/lib/services";
@@ -41,7 +40,7 @@ function Metadata({data, metadata, mappedMetadata, groups}) {
     }, [data]);
 
     useEffect(() => {
-        if (!eq(data.entity_type, cache.entities.dataset) || !data.ancestors) {
+        if (!eq(data.entity_type, cache?.entities?.dataset) || !data.ancestors) {
             return
         }
 
@@ -54,17 +53,17 @@ function Metadata({data, metadata, mappedMetadata, groups}) {
         let list = []
         let sources = 0
         for (let e of data?.ancestors || []) {
-            if (eq(e.entity_type, cache.entities.source)) {
+            if (eq(e.entity_type, cache?.entities?.source)) {
                 list.unshift(e)
                 sources++
-            } else if (eq(e.entity_type, cache.entities.sample)) {
+            } else if (eq(e.entity_type, cache?.entities?.sample)) {
                 list.splice(sources, 0, e)
-            } else if (eq(e.entity_type, cache.entities.dataset)) {
+            } else if (eq(e.entity_type, cache?.entities?.dataset)) {
                 list.push(e)
             }
         }
         for (let e of (data?.descendants || [])) {
-            if (eq(e.entity_type, cache.entities.dataset) && datasetIs.component(e.creation_action || '')) {
+            if (eq(e.entity_type, cache?.entities?.dataset) && datasetIs.component(e.creation_action || '')) {
                 e['isDescendant'] = true
                 list.push(e)
             }
@@ -96,12 +95,28 @@ function Metadata({data, metadata, mappedMetadata, groups}) {
     const triggerNode = (e, uuid) => {
         // Coupled with Provenance.onNodeClick
         const sel = `node--${uuid}`
-        const $list = $(`[id="${sel}"]`)
-        const $target = $list.eq($list.length - 1)
-        const treeId = $target.parents('.c-provenance--Tree').attr('id')
-        $(`#${treeId} .node`).removeClass('is-active')
-        $target.addClass('is-active')
-        d3.select(`#${treeId} #${sel}`).dispatch('click', {detail: {metadata: true}})
+
+        const nodes = document.querySelectorAll(`[id="${sel}"]`)
+        const target = nodes[nodes.length - 1]
+
+        if (!target) {
+            return
+        }
+
+        const tree = target.closest('.c-provenance--Tree')
+
+        if (!tree) {
+            return
+        }
+
+        tree.querySelectorAll('.node').forEach(node => {
+            node.classList.remove('is-active')
+        })
+
+        target.classList.add('is-active')
+
+        d3.select(`#${tree.id} #${sel}`)
+            .dispatch('click', {detail: {metadata: true}})
     }
 
     const updateHeader = (data) => {
@@ -111,7 +126,7 @@ function Metadata({data, metadata, mappedMetadata, groups}) {
     const popoverCommon = (index, entity, data) => {
         return (
             <SenNetPopover key={`sennet-popover-${entity}-${index}`} className={`${index}-${entity}-metadata`}
-                           text={<>View the metadata for the {data?.isDescendant ? "descendant": "ancestor"} <code>{cache.entities[entity]}</code> of this
+                           text={<>View the metadata for the {data?.isDescendant ? "descendant": "ancestor"} <code>{cache?.entities[entity]}</code> of this
                                entity.</>}>
                 <Nav.Item className='p-0'>
                     <Nav.Link
@@ -121,7 +136,7 @@ function Metadata({data, metadata, mappedMetadata, groups}) {
                         }}
                         data-uuid={data.uuid}
                         eventKey={data.sennet_id}
-                        bsPrefix={`btn btn-${entity} rounded-0`}
+                        bsPrefix={`btn btn-${entity} `}
                     >
                         {data.sennet_id}
                     </Nav.Link>
@@ -168,7 +183,7 @@ function Metadata({data, metadata, mappedMetadata, groups}) {
                             {/*We want to reverse the ordering of this array so that the furthest ancestor is on the left*/}
                             {getOrderedTabList().map((entity, index) => {
                                 // The source nav link
-                                if (eq(entity.entity_type, cache.entities.source)) {
+                                if (eq(entity.entity_type, cache?.entities?.source)) {
                                     if ((entity.source_mapped_metadata && Object.keys(entity.source_mapped_metadata).length) ||
                                         (objIsNotEmpty(entity.metadata))) {
                                         return (
@@ -176,14 +191,14 @@ function Metadata({data, metadata, mappedMetadata, groups}) {
                                         )
                                     }
                                     // The sample nav link
-                                } else if (eq(entity.entity_type, cache.entities.sample)) {
+                                } else if (eq(entity.entity_type, cache?.entities?.sample)) {
                                     if (objIsNotEmpty(entity.metadata)) {
                                         return (
                                             popoverCommon(index, 'sample', entity)
                                         )
                                     }
                                     // The dataset nav link
-                                } else if (eq(entity.entity_type, cache.entities.dataset)) {
+                                } else if (eq(entity.entity_type, cache?.entities?.dataset)) {
                                         if (objIsNotEmpty(entity.metadata)) {
                                         return (
                                             popoverCommon(index, 'dataset', entity)
@@ -224,7 +239,7 @@ function Metadata({data, metadata, mappedMetadata, groups}) {
                         {getOrderedTabList().map((entity, index) => {
                             // Handle human source table
                             // Human sources have their metadata inside "source_mapped_metadata"
-                            if (eq(entity.entity_type, cache.entities.source) && eq(entity.source_type, cache.sourceTypes.Human)) {
+                            if (eq(entity.entity_type, cache?.entities?.source) && eq(entity.source_type, cache?.sourceTypes?.Human)) {
                                 if (entity.source_mapped_metadata && Object.keys(entity.source_mapped_metadata).length) {
                                     const {groups, metadata} = extractSourceMappedMetadataInfo(entity.source_mapped_metadata)
                                     return (

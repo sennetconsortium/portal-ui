@@ -1,11 +1,11 @@
 import CellTypes from '@/components/custom/organ/CellTypes'
 import HumanReferenceAtlas from '@/components/custom/organ/HumanReferenceAtlas'
 import AppContext from '@/context/AppContext'
-import useOrganDetail from '@/hooks/organ/useOrganDetail'
 import dynamic from 'next/dynamic'
-import {useRouter} from 'next/router'
 import React, {useContext, useState} from 'react'
 import {APP_TITLE} from '@/config/config'
+import {getOrganByPath} from "@/config/organs";
+import PropTypes from "prop-types";
 
 const AppFooter = dynamic(() => import('@/components/custom/layout/AppFooter'))
 const AppNavbar = dynamic(() => import('@/components/custom/layout/AppNavbar'))
@@ -17,12 +17,9 @@ const Samples = dynamic(() => import('@/components/custom/organ/Samples'))
 const SidebarBtn = dynamic(() => import('@/components/SidebarBtn'))
 const Header = dynamic(() => import("@/components/custom/layout/Header"))
 
-const Organ = () => {
+function Organ({organDetail}) {
     const {isRegisterHidden} = useContext(AppContext)
 
-    const router = useRouter()
-    const {organ} = router.query
-    const {organDetail} = useOrganDetail(organ)
     const [showCellTypesSide, setShowCellTypesSide] = useState(false)
     const [showIntegratedMapsSide, setShowIntegratedMapsSide] = useState(false)
 
@@ -133,5 +130,26 @@ const Organ = () => {
         </>
     )
 }
+
+export async function getServerSideProps({params}) {
+    const organDetail = getOrganByPath(params.organ)
+
+    if (!organDetail) {
+        return {
+            notFound: true
+        }
+    }
+
+    return {
+        props: {
+            organDetail
+        }
+    }
+}
+
+Organ.propTypes = {
+    organDetail: PropTypes.object
+}
+
 
 export default Organ

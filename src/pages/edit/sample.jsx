@@ -1,5 +1,5 @@
 import dynamic from "next/dynamic";
-import React, {useContext, useEffect, useRef, useState, useEffectEvent} from "react";
+import React, {useContext, useEffect, useEffectEvent, useRef, useState} from "react";
 import {useRouter} from 'next/router';
 import Alert from 'react-bootstrap/Alert';
 import Button from 'react-bootstrap/Button';
@@ -11,7 +11,6 @@ import {getAncestryData, getEntityData, parseJson, update_create_entity} from "@
 import AppContext from '@/context/AppContext'
 import EntityContext, {EntityProvider} from '@/context/EntityContext'
 import {APP_TITLE, getUserEmail, getUserName, isRuiSupported} from "@/config/config";
-import {SenPopoverOptions} from "@/components/SenNetPopover";
 import LnkIc from "@/components/custom/layout/LnkIc";
 
 const AncestorId = dynamic(() => import("@/components/custom/edit/sample/AncestorId"))
@@ -67,7 +66,13 @@ function EditSample() {
     const alertStyle = useRef('info')
     const issuedUserWarning = useRef(null)
 
+    const sampleEntity = cache?.entities?.sample
+    const sampleCategoriesMap = cache?.sampleCategories
+
     useEffect(() => {
+        if (!source || !sampleEntity || !sampleCategoriesMap) {
+            return
+        }
         const fetchSampleCategories = async () => {
             setSampleCategories(null)
             if (source !== null) {
@@ -81,7 +86,7 @@ function EditSample() {
                             sub_types = sub_types.concat(constraint.sub_type || [])
                         }
                     })
-                    const filter = Object.entries(cache.sampleCategories).filter(sample_category => sub_types.includes(sample_category[0]));
+                    const filter = Object.entries(sampleCategoriesMap || {}).filter(sample_category => sub_types.includes(sample_category[0]));
                     let sample_categories = {}
                     filter.forEach(entry => sample_categories[entry[0]] = entry[1])
                     setSampleCategories(sample_categories)
@@ -89,7 +94,7 @@ function EditSample() {
             }
         }
         fetchSampleCategories()
-    }, [source])
+    }, [source, sampleEntity, sampleCategoriesMap])
 
     // only executed on init rendering, see the []
     useEffect(() => {
@@ -111,11 +116,14 @@ function EditSample() {
 
 
             // Show organ input group if sample category is 'organ'
-            if (eq(_data.sample_category, cache.sampleCategories.Organ)) {
+            if (eq(_data.sample_category, sampleCategoriesMap?.Organ)) {
                 set_organ_group_hide('')
             }
 
-            getAncestryData(_data.uuid, {endpoints: ['ancestors'], otherEndpoints: ['immediate_ancestors']}).then(ancestry => {
+            getAncestryData(_data.uuid, {
+                endpoints: ['ancestors'],
+                otherEndpoints: ['immediate_ancestors']
+            }).then(ancestry => {
                 Object.assign(_data, ancestry)
                 setData(_data)
                 setValues(prevState => ({...prevState, direct_ancestor_uuid: ancestry.immediate_ancestors[0].uuid}))
@@ -237,22 +245,25 @@ function EditSample() {
         handleClose()
     }
 
-    const organOtherWarning = <span>will not be able to register data against this <code>Sample</code>. Please contact our <LnkIc icClassName={'bi bi-envelope-fill'} href={'help@sennetconsortium.org'} title={'help desk'} /> to ensure that we can provide appropriate support for your work.</span>
+    const organOtherWarning = <span>will not be able to register data against this <code>Sample</code>. Please contact our <LnkIc
+        icClassName={'bi bi-envelope-fill'} href={'help@sennetconsortium.org'} title={'help desk'}/> to ensure that we can provide appropriate support for your work.</span>
 
     const checkRegistration = () => {
-       if (selectedOtherOrgan(values['organ']) && eq(values['sample_category'], cache.sampleCategories.Organ)) {
-           setAllModalDetails({
-               title: <span>"<span className={'text-codePink'}>Other</span>" Organ Registration</span>,
-               isWarning: true,
-               modalProps: {
+        if (selectedOtherOrgan(values['organ']) && eq(values['sample_category'], sampleCategoriesMap?.Organ)) {
+            setAllModalDetails({
+                title: <span>"<span className={'text-codePink'}>Other</span>" Organ Registration</span>,
+                isWarning: true,
+                modalProps: {
                     actionBtnLabel: 'Confirm',
                     actionBtnHandler: handleSave,
                     secondaryBtnLabel: 'Fix',
                     secondaryBtnHandler: secondaryBtnFixHandler,
-               },
-               body: <p>We have identified that you are registering a <code>Sample Organ</code> with the organ type <code>Other</code>. While it is permissible to register this organ type, you {organOtherWarning} Please click "Confirm" to complete the registration process.</p>
-           })
-       }
+                },
+                body: <p>We have identified that you are registering a <code>Sample Organ</code> with the organ
+                    type <code>Other</code>. While it is permissible to register this organ type,
+                    you {organOtherWarning} Please click "Confirm" to complete the registration process.</p>
+            })
+        }
         issuedUserWarning.value = true
     }
 
@@ -320,7 +331,7 @@ function EditSample() {
         // This Sample must a Sample Category: "Block"
         log.debug(ancestorOrgan)
         if (ancestorOrgan.length > 0) {
-            if (values !== null && values['sample_category'] === cache.sampleCategories.Block && isRuiSupported(ancestorOrgan, ancestorSourceType)) {
+            if (values !== null && values['sample_category'] === sampleCategoriesMap?.Block && isRuiSupported(ancestorOrgan, ancestorSourceType)) {
                 if (!showRuiButton) {
                     setShowRuiButton(true)
                 }
@@ -375,9 +386,9 @@ function EditSample() {
             if (issuedUserWarning.value === false) {
                 checkRegistration()
             } else {
-                await update_create_entity(uuid, json, editMode, cache.entities.sample).then((response) => {
+                await update_create_entity(uuid, json, editMode, sampleEntity).then((response) => {
                     setModalDetails({
-                        entity: cache.entities.sample, type: response.sample_category,
+                        entity: sampleEntity, type: response.sample_category,
                         typeHeader: _t('Sample Category'), response
                     })
 
@@ -408,19 +419,19 @@ function EditSample() {
     };
 
     const supportsMetadata = () => {
-        return values.sample_category !== cache.sampleCategories.Organ
+        return values.sample_category !== sampleCategoriesMap?.Organ
     }
 
     const metadataNote = () => {
         if (isEditMode() && (values.metadata && Object.values(values.metadata).length)) {
             let text = []
-            text.push(getMetadataNote(cache.entities.sample, 0))
-            text.push(getMetadataNote(cache.entities.sample, 1))
+            text.push(getMetadataNote(sampleEntity, 0))
+            text.push(getMetadataNote(sampleEntity, 1))
             if (data.sample_category === values.sample_category) {
                 alertStyle.current = 'info'
             } else {
                 alertStyle.current = 'warning'
-                text.push(getMetadataNote(cache.entities.sample, 2))
+                text.push(getMetadataNote(sampleEntity, 2))
             }
             return text
         } else {
@@ -428,7 +439,7 @@ function EditSample() {
         }
     }
 
-    if (isPreview(error))  {
+    if (isPreview(error)) {
         return getPreviewView(data)
     } else {
         return (
@@ -460,7 +471,7 @@ function EditSample() {
                     <div className="no_sidebar">
                         <Layout
                             bodyHeader={
-                                <EntityHeader entity={cache.entities.sample} data={data}/>
+                                <EntityHeader entity={sampleEntity} data={data}/>
 
                             }
                             bodyContent={
@@ -479,7 +490,8 @@ function EditSample() {
                                     {/*Ancestor ID*/}
                                     {/*editMode is only set when page is ready to load */}
                                     {editMode &&
-                                        <AncestorId isDisabled={isEditMode()} data={data} source={source} onChange={_onChange} fetchSource={fetchSource}/>
+                                        <AncestorId isDisabled={isEditMode()} data={data} source={source}
+                                                    onChange={_onChange} fetchSource={fetchSource}/>
                                     }
 
                                     {/*Source Information Box*/}
@@ -494,7 +506,7 @@ function EditSample() {
                                             <SampleCategory
                                                 organ_group_hide={organ_group_hide}
                                                 set_organ_group_hide={set_organ_group_hide}
-                                                sample_categories={sampleCategories === null ? cache.sampleCategories : sampleCategories}
+                                                sample_categories={sampleCategories === null ? sampleCategoriesMap : sampleCategories}
                                                 data={values}
                                                 source={source}
                                                 popoverWarningText={organOtherWarning}
@@ -517,18 +529,19 @@ function EditSample() {
                                                      controlId='protocol_url' value={data.protocol_url}
                                                      isRequired={true}
                                                      className={warningClasses.protocol_url}
-                                                     popoverWarningText={<>The supplied protocols.io DOI URL, formatting is
+                                                     popoverWarningText={<>The supplied protocols.io DOI URL, formatting
+                                                         is
                                                          correct but does not resolve. This will need to be corrected
                                                          for any <code>Dataset</code> submission that uses this entity
                                                          as an ancestor.</>}
                                                      onChange={_onChange}
                                                      popoverHelpText={<span>The protocol used when procuring or preparing the tissue. This must be provided as a protocols.io DOI URL see: <a
                                                          href="https://www.protocols.io/." target='_blank'
-                                                         className='lnk--ic'>https://www.protocols.io/ <i
+                                                         className='lnk--ic' rel="noreferrer">https://www.protocols.io/ <i
                                                          className="bi bi-box-arrow-up-right"></i></a>.</span>}
                                                      otherInputProps={{
                                                          'data-js-appevent': 'checkProtocolUrl',
-                                                         pattern:getDOIPattern(),
+                                                         pattern: getDOIPattern(),
                                                          onBlur: (e) => _onBlur(e, e.target.id, e.target.value)
                                                      }}
                                     />
@@ -573,7 +586,7 @@ function EditSample() {
 
                                     <div className={'d-flex flex-row-reverse'}>
                                         {getCancelBtn('sample')}
-                                        <Button className={"me-2"} variant="outline-primary rounded-0 js-btn--save"
+                                        <Button className={"me-2"} variant="outline-primary  js-btn--save"
                                                 onClick={handleSave}
                                                 disabled={disableSubmit}>
                                             {_t('Save')}

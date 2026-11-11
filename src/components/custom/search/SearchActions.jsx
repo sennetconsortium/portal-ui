@@ -15,6 +15,7 @@ import AppContext from '@/context/AppContext';
 import StyledMenu from '@/components/custom/layout/StyledMenu';
 import NestedMenuItem from '../layout/NestedMenuItem';
 import ListItemText from '@mui/material/ListItemText';
+import $ from 'jquery';
 
 function SearchActions({
                            selectedRows,
@@ -229,10 +230,10 @@ function SearchActions({
                 <br/>
                 <small className={'text-muted'}>Note: In order to download the files that are included in the manifest
                     file,&nbsp;
-                    <a href="https://github.com/x-atlas-consortia/clt" target='_blank' className={'lnk--ic'}>install <i
+                    <a href="https://github.com/x-atlas-consortia/clt" target='_blank' className={'lnk--ic'} rel="noreferrer">install <i
                         className="bi bi-box-arrow-up-right"></i></a> the CLT and <a target='_blank'
                                                                                      className={'lnk--ic'}
-                                                                                     href="https://docs.sennetconsortium.org/libraries/clt/">follow
+                                                                                     href="https://docs.sennetconsortium.org/libraries/clt/" rel="noreferrer">follow
                         the instructions<i
                             className="bi bi-box-arrow-up-right"></i></a> for how to use it with the manifest
                     file.</small>

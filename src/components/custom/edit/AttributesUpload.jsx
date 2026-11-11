@@ -247,7 +247,7 @@ function AttributesUpload({ setAttribute, attribute = 'metadata', ingestEndpoint
                                className={`c-metadataUpload__popover--${attribute}`}
                                text={getTooltip()}
                 >
-                    <Button variant={'outline-primary rounded-0'} onClick={handleUploadMetadataClick}>
+                    <Button variant={'outline-primary '} onClick={handleUploadMetadataClick}>
                         Upload {attribute.toLowerCase()} file
                         <i className={'bi bi-paperclip ms-2'}/>
                     </Button>

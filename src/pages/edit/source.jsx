@@ -121,9 +121,9 @@ function EditSource() {
             let uuid = data.uuid
 
 
-            await update_create_entity(uuid, json, editMode, cache.entities.source).then((response) => {
+            await update_create_entity(uuid, json, editMode, cache?.entities?.source).then((response) => {
                 setModalDetails({
-                    entity: cache.entities.source,
+                    entity: cache?.entities?.source,
                     type: response.source_type,
                     typeHeader: _t('Source Type'),
                     response
@@ -145,15 +145,18 @@ function EditSource() {
     };
 
     const supportsMetadata = () => {
-        return values.source_type === cache.sourceTypes.Mouse
+        return values.source_type === cache?.sourceTypes?.Mouse
     }
 
     const curatorHandledMetadata = () => {
-        // TODO: check about Human Organoid
-        return eq(values.source_type, cache.sourceTypes.Human)
+        return eq(values.source_type, cache?.sourceTypes?.Human)
     }
 
     const metadataNote = () => {
+        if (!cache?.entities?.source) {
+            return false
+        }
+
         let text = []
 
         const notEq = !eq(data.source_type, values.source_type)
@@ -165,11 +168,11 @@ function EditSource() {
         alertStyle.current = notEq && values.metadata ? 'warning' : 'info'
 
         if (isEditMode() && values.metadata) {
-            text.push(getMetadataNote(cache.entities.source, 0, 'type'))
-            text.push(getMetadataNote(cache.entities.source, 1, 'type'))
+            text.push(getMetadataNote(cache?.entities?.source, 0, 'type'))
+            text.push(getMetadataNote(cache?.entities?.source, 1, 'type'))
 
             if (notEq) {
-                text.push(getMetadataNote(cache.entities.source, 2, 'type'))
+                text.push(getMetadataNote(cache?.entities?.source, 2, 'type'))
                 if (!curatorHandledMetadata()) {
                     text.push(noSupportMessage)
                 }
@@ -222,7 +225,7 @@ function EditSource() {
                     <div className="no_sidebar">
                         <Layout
                             bodyHeader={
-                                <EntityHeader entity={cache.entities.source} data={data}/>
+                                <EntityHeader entity={cache?.entities?.source} data={data}/>
                             }
                             bodyContent={
                                 <Form noValidate validated={validated} onSubmit={handleSave} id={"source-form"} ref={entityForm}>
@@ -262,7 +265,7 @@ function EditSource() {
                                                      onChange={onChange}
                                                      popoverHelpText={<span>The protocol used for <code>Source</code> selection including any inclusion or exclusion criteria. This must  be provided  as a protocols.io DOI see: <a
                                                          href="https://www.protocols.io/." target='_blank'
-                                                         className='lnk--ic'>https://www.protocols.io/ <i
+                                                         className='lnk--ic' rel="noreferrer">https://www.protocols.io/ <i
                                                          className="bi bi-box-arrow-up-right"></i></a>.</span>}
                                                      otherInputProps={{
                                                          pattern:getDOIPattern(),
@@ -293,7 +296,7 @@ function EditSource() {
 
                                     <div className={'d-flex flex-row-reverse'}>
                                         {getCancelBtn('source')}
-                                        <Button className={"me-2"} variant="outline-primary rounded-0 js-btn--save"
+                                        <Button className={"me-2"} variant="outline-primary  js-btn--save"
                                                 onClick={handleSave}
                                                 disabled={disableSubmit}>
                                             {_t('Save')}

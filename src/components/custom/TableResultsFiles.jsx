@@ -22,6 +22,7 @@ import {useSearchUIContext} from "@/search-ui/components/core/SearchUIContext";
 import DataUsageModal from "@/components/custom/entities/dataset/DataUsageModal";
 import {Button} from 'react-bootstrap'
 import { Skeleton } from '@mui/material';
+import $ from 'jquery';
 
 function TableResultsFiles({children, onRowClicked, filters, forData = false, rowFn, inModal = false, rawResponse}) {
     const fileTypeField = 'file_extension'
@@ -495,7 +496,7 @@ function TableResultsFiles({children, onRowClicked, filters, forData = false, ro
                     showPrimaryBtn={showModalDownloadBtn}
                     primaryBtnLabel={'Download Manifest'}
                     footer={<>
-                        {showModalDownloadBtn && <Button variant="outline-primary rounded-0" onClick={transferModalSelectedFiles}>
+                        {showModalDownloadBtn && <Button variant="outline-primary " onClick={transferModalSelectedFiles}>
                             Transfer Files
                         </Button>}
                     </>}

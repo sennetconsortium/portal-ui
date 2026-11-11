@@ -1,6 +1,7 @@
 import React, {useRef, useState, useEffect} from 'react'
 import SenNetPopover from '@/components/SenNetPopover';
 import PropTypes from 'prop-types';
+import $ from 'jquery';
 
 /**
  * 

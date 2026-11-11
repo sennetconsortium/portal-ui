@@ -1,14 +1,14 @@
 import dynamic from "next/dynamic";
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {Container, Row} from 'react-bootstrap'
 import {createDownloadUrl, tableDataToTSV} from '../js/functions';
-
-const DataTable = dynamic(() => import('react-data-table-component'), {
-  ssr: false,
-});
 import useDataTableSearch from '@/hooks/useDataTableSearch';
 import GroupedDataTable from './GroupedDataTable';
 import SenNetPopover from '@/components/SenNetPopover';
+
+const DataTable = dynamic(() => import('react-data-table-component'), {
+    ssr: false,
+});
 
 export default function MetadataTable({data, metadata, mappedMetadata, metadataKey, filename, groups}) {
     let columns = [
@@ -52,21 +52,30 @@ export default function MetadataTable({data, metadata, mappedMetadata, metadataK
     }
 
     const {filteredItems, searchBarComponent} = useDataTableSearch({data: tableData, fieldsToSearch: ['value', 'key']})
-
+    const [downloadURL, setDownloadURL] = useState(null)
     const tableDataTSV = tableDataToTSV(metadata);
-    const downloadURL = createDownloadUrl(tableDataTSV, 'text/tab-separated-values')
+
+    useEffect(() => {
+        setDownloadURL(
+            createDownloadUrl(
+                tableDataTSV,
+                'text/tab-separated-values'
+            )
+        )
+    }, [tableDataTSV])
+
     return (
         <Container fluid={true} className={'rdt-container-wrap'}>
             <Row className="mb-2">
                 <div className="col-sm-12">
                     <div className="entity-subtitle icon-inline float-md-end">
                         <SenNetPopover className='download-entity-metadata'
-                                       text={<>Download the metadata for <code>{data.entity_type} {data.sennet_id}</code>.</>}>
+                                       text={<>Download the metadata
+                                           for <code>{data.entity_type} {data.sennet_id}</code>.</>}>
                             <a href={downloadURL}
-                               download={`${filename}.tsv`}
-                               className="float-end">
+                               download={downloadURL ? `${filename}.tsv` : undefined} className="float-end">
                                 <span className="btn btn-primary"
-                                    role='button'>
+                                      role='button'>
                                     <i className="bi bi-download"></i>
                                 </span>
                             </a>

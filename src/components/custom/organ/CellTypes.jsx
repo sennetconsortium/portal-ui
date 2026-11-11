@@ -13,6 +13,7 @@ import {Chip} from "@mui/material";
 import dynamic from "next/dynamic";
 import {useEffect, useRef, useState} from 'react';
 import CellTypeDistributionAcrossOrgansTab from '../cell-types/CellTypeDistributionAcrossOrgansTab';
+import $ from 'jquery';
 import log from "xac-loglevel";
 
 const DataTable = dynamic(() => import('react-data-table-component'), {
@@ -250,7 +251,7 @@ function CellTypes({organ, setShowCellTypesSide}) {
 
                     {tableData.length > 0 && <div className='d-flex flex-row-reverse'>
           <span
-              className='btn btn-outline-primary rounded-0'
+              className='btn btn-outline-primary '
               role='button'
               onClick={downloadData}
           >

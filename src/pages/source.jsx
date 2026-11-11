@@ -3,7 +3,7 @@ import React, {useContext, useEffect, useState} from "react";
 import {useRouter} from 'next/router';
 import log from 'xac-loglevel'
 import {eq, extractSourceMappedMetadataInfo} from "@/components/custom/js/functions";
-import {getWritePrivilegeForGroupUuid, getAncestryData, getEntityData} from "@/lib/services";
+import {getAncestryData, getEntityData, getServerEntityData, getWritePrivilegeForGroupUuid} from "@/lib/services";
 import AppContext from "@/context/AppContext";
 import Alert from 'react-bootstrap/Alert';
 import {EntityViewHeader} from "@/components/custom/layout/entity/ViewHeader";
@@ -13,6 +13,8 @@ import Description from "@/components/custom/entities/sample/Description";
 import Collections from "@/components/custom/entities/Collections";
 import {getCanonicalUrl} from "@/lib/meta";
 import {APP_TITLE} from "@/config/config";
+import PropTypes from "prop-types";
+import {getCookie} from "cookies-next";
 
 const AppFooter = dynamic(() => import("@/components/custom/layout/AppFooter"))
 const Attribution = dynamic(() => import("@/components/custom/entities/sample/Attribution"))
@@ -20,72 +22,118 @@ const Header = dynamic(() => import("@/components/custom/layout/Header"))
 const Metadata = dynamic(() => import("@/components/custom/entities/Metadata"))
 const Protocols = dynamic(() => import("@/components/custom/entities/sample/Protocols"))
 const Provenance = dynamic(() => import("@/components/custom/entities/Provenance"), {
-    loading: () => <LoadingAccordion id="Provenance" title="Provenance" style={{ height:'490px' }} />
+    loading: () => <LoadingAccordion id="Provenance" title="Provenance" style={{height: '490px'}}/>
 })
 const SidebarBtn = dynamic(() => import("@/components/SidebarBtn"))
 
-function ViewSource() {
+function ViewSource({initialData, initialError}) {
     const router = useRouter()
-    const [data, setData] = useState(null)
+    const [data, setData] = useState(initialData)
     const [hasAncestry, setHasAncestry] = useState(false)
     const [metadata, setMetadata] = useState(null)
     const [mappedMetadata, setMappedMetadata] = useState(null)
     const [groups, setGroups] = useState(null)
-    const [error, setError] = useState(false)
-    const [errorMessage, setErrorMessage] = useState(null)
+    const [error, setError] = useState(Boolean(initialError))
+    const [errorMessage, setErrorMessage] = useState(initialError)
     const [hasWritePrivilege, setHasWritePrivilege] = useState(false)
     const {isRegisterHidden, _t, cache, isPreview, getPreviewView} = useContext(AppContext);
 
+    // Fetch entity if SSR didn't provide it
     useEffect(() => {
         const fetchData = async (uuid) => {
             log.debug('source: getting data...', uuid)
-            // fetch source data
-            const _data = await getEntityData(uuid, ['ancestors', 'descendants']);
+
+            const _data = await getEntityData(
+                uuid,
+                ['ancestors', 'descendants']
+            )
 
             log.debug('source: Got data', _data)
-            if (_data.hasOwnProperty("error")) {
+
+            if (_data?.error) {
                 setError(true)
-                setErrorMessage(_data["error"])
+                setErrorMessage(_data.error)
                 setData(false)
                 return
             }
 
-            // set state with the result
-            if (eq(_data.source_type, cache.sourceTypes.Human) && _data.source_mapped_metadata) {
-                // Humans have their metadata inside "source_mapped_metadata" while mice have theirs inside "metadata"
-                // Humans have grouped metadata
-                const {groups, metadata} = extractSourceMappedMetadataInfo(_data.source_mapped_metadata)
-                setGroups(groups)
-                setMetadata(metadata)
-            } else if (eq(_data.source_type, cache.sourceTypes.Mouse) && _data.metadata) {
-                setMappedMetadata(_data.cedar_mapped_metadata)
-                setMetadata(_data.metadata)
-            }
             setData(_data)
+        }
 
-            // fetch ancestry data
-            getAncestryData(_data.uuid).then(ancestry => {
-                Object.assign(_data, ancestry)
-                setData(_data)
+        if (!router.query.uuid) {
+            setData(null)
+            return
+        }
+
+        // SSR already provided the entity
+        if (data) {
+            return
+        }
+
+        fetchData(router.query.uuid)
+            .catch(console.error)
+
+    }, [router.query.uuid])
+
+    // Fill in remaining fields when data is available
+    useEffect(() => {
+        if (!data || data === false) {
+            return
+        }
+
+        // Metadata handling
+        if (
+            eq(data.source_type, cache?.sourceTypes?.Human) &&
+            data.source_mapped_metadata
+        ) {
+            const {groups, metadata} =
+                extractSourceMappedMetadataInfo(
+                    data.source_mapped_metadata
+                )
+
+            setGroups(groups)
+            setMetadata(metadata)
+        } else if (
+            eq(data.source_type, cache?.sourceTypes?.Mouse) &&
+            data.metadata
+        ) {
+            setMappedMetadata(
+                data.cedar_mapped_metadata
+            )
+
+            setMetadata(data.metadata)
+        }
+
+        // Ancestry
+        getAncestryData(data.uuid)
+            .then(ancestry => {
+                setData(prev => ({
+                    ...prev,
+                    ...ancestry
+                }))
+
                 setHasAncestry(true)
-            }).catch(log.error)
+            })
+            .catch(log.error)
 
-            // fetch write privilege
-            getWritePrivilegeForGroupUuid(_data.group_uuid).then(response => {
-                setHasWritePrivilege(response.has_write_privs)
-            }).catch(log.error)
-        }
+        // Write privileges
+        getWritePrivilegeForGroupUuid(
+            data.group_uuid
+        )
+            .then(response => {
+                setHasWritePrivilege(
+                    response.has_write_privs
+                )
+            })
+            .catch(log.error)
 
-        if (router.query.hasOwnProperty("uuid")) {
-            // fetch source data
-            fetchData(router.query.uuid)
-                .catch(console.error);
-        } else {
-            setData(null);
-        }
-    }, [router]);
+    }, [
+        data?.uuid,
+        cache?.sourceTypes?.Human,
+        cache?.sourceTypes?.Mouse
+    ])
 
-    if (isPreview(data, error))  {
+    if (isPreview(data, error)) {
         return getPreviewView(data)
     } else {
         return (
@@ -111,7 +159,7 @@ function ViewSource() {
                                     <div id="sidebar"
                                          className="collapse collapse-horizontal sticky-top custom-sticky">
                                         <ul id="sidebar-nav"
-                                            className="nav list-group rounded-0 text-sm-start">
+                                            className="nav list-group  text-sm-start">
                                             <li className="nav-item">
                                                 <a href="#Summary"
                                                    className="nav-link "
@@ -129,8 +177,8 @@ function ViewSource() {
                                                    className="nav-link"
                                                    data-bs-parent="#sidebar">Provenance</a>
                                             </li>
-                                            {!!((eq(data.source_type, cache.sourceTypes.Mouse) && data.metadata && Object.keys(data.metadata).length) ||
-                                                    (eq(data.source_type, cache.sourceTypes.Human) && data.source_mapped_metadata && Object.keys(data.source_mapped_metadata).length)) &&
+                                            {!!((eq(data.source_type, cache?.sourceTypes.Mouse) && data.metadata && Object.keys(data.metadata).length) ||
+                                                    (eq(data.source_type, cache?.sourceTypes.Human) && data.source_mapped_metadata && Object.keys(data.source_mapped_metadata).length)) &&
                                                 <li className="nav-item">
                                                     <a href="#Metadata"
                                                        className="nav-link"
@@ -154,7 +202,7 @@ function ViewSource() {
                                 <main className="col m-md-3 entity-details">
                                     <SidebarBtn/>
 
-                                    <EntityViewHeader data={data} entity={cache.entities.source.toLowerCase()}
+                                    <EntityViewHeader data={data} entity={cache?.entities?.source.toLowerCase()}
                                                       hasWritePrivilege={hasWritePrivilege}/>
 
                                     <div className="row">
@@ -173,7 +221,7 @@ function ViewSource() {
                                             )}
 
                                             {/*Provenance*/}
-                                            <Provenance data={data} hasAncestry={hasAncestry} />
+                                            <Provenance data={data} hasAncestry={hasAncestry}/>
 
                                             {/*Metadata*/}
                                             {metadata &&
@@ -205,5 +253,39 @@ function ViewSource() {
 
 }
 
+export async function getServerSideProps(context) {
+    const {uuid} = context.query
+    const token = getCookie('groups_token', {
+        req: context.req,
+        res: context.res
+    })
+
+    try {
+        const initialData = await getServerEntityData(
+            uuid,
+            token,
+            ['ancestors', 'descendants']
+        )
+
+        return {
+            props: {
+                initialData,
+                initialError: null
+            }
+        }
+    } catch (e) {
+        return {
+            props: {
+                initialData: null,
+                initialError: e.message
+            }
+        }
+    }
+}
+
+ViewSource.propTypes = {
+    initialData: PropTypes.object,
+    initialError: PropTypes.string
+}
 
 export default ViewSource

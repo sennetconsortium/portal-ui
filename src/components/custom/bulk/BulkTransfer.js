@@ -23,6 +23,7 @@ import SenNetAlert from "@/components/SenNetAlert";
 import FileTransfersContext from "@/context/FileTransfersContext";
 import OptionsSelect from "../layout/entity/OptionsSelect";
 import SenNetPopover from "@/components/SenNetPopover";
+import $ from 'jquery';
 
 const DataTable = dynamic(() => import('react-data-table-component'), {
   ssr: false,
@@ -42,7 +43,7 @@ export default function BulkTransfer({
                                          
                                          handlePrimaryBtn,
                                      }) {
-    const buttonVariant = "btn btn-outline-primary rounded-0"
+    const buttonVariant = "btn btn-outline-primary "
 
     const [activeStep, setActiveStep] = useState(0)
     const [isNextButtonDisabled, setIsNextButtonDisabled] = useState(false)
@@ -514,7 +515,7 @@ export default function BulkTransfer({
                     <Grid container spacing={3} className={'text-center justify-content-center mt-3'}>
                         <Grid item xs>
                             <Button
-                                variant={'outline-dark rounded-0'}
+                                variant={'outline-dark '}
                                 disabled={activeStep === 0}
                                 onClick={handleBack}
                             >

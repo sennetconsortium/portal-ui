@@ -1,5 +1,6 @@
 import dynamic from "next/dynamic";
-import React, {useContext} from 'react';
+import React, {useContext, useState} from "react";
+import PropTypes from "prop-types";
 import {
     displayBodyHeader,
     getDatasetTypeDisplay,
@@ -8,25 +9,29 @@ import {
     getStatusDefinition,
     getSubtypeProvenanceShape,
     getUBKGFullName
-} from "../../js/functions";
+} from "@/components/custom/js/functions";
 import ClipboardCopy from "@/components/ClipboardCopy";
 import AppContext from "@/context/AppContext";
 import useAutoHideColumns from "@/hooks/useAutoHideColumns";
-
-const DataTable = dynamic(() => import('react-data-table-component'), {
-  ssr: false,
-});
-import Tab from 'react-bootstrap/Tab';
-import Tabs from 'react-bootstrap/Tabs';
+import CLTModal from "@/components/custom/entities/dataset/CLTModal";
+import Tab from "react-bootstrap/Tab";
+import Tabs from "react-bootstrap/Tabs";
 import {RESULTS_PER_PAGE} from "@/config/config";
 import SenNetPopover from "@/components/SenNetPopover";
+import {categorizeByDatasetType} from "@/components/custom/js/functions";
+import {searchUIQueryString} from "@/components/custom/js/functions";
+import {APP_ROUTES} from "@/config/constants";
 
-const Lineage = ({lineage}) => {
+const DataTable = dynamic(() => import("react-data-table-component"), {
+  ssr: false,
+});
+
+const Lineage = ({lineage, showManifestDownload = true, showViewOnDataPage = true}) => {
     const {isLoggedIn} = useContext(AppContext)
     const {columnVisibility, tableData, updateCount} = useAutoHideColumns({data: lineage})
     const getId = (column) => column.id || column.uuid
+    const [showCltModal, setShowCltModal] = useState(false)
 
-    console.log(tableData)
     const reusableColumns = {}
     reusableColumns['SenNetID'] = {
         name: 'SenNet ID',
@@ -166,56 +171,121 @@ const Lineage = ({lineage}) => {
     }
     sourceColumns.push(reusableColumns.GroupName)
 
+    const searchUrlForEntities = (sennetIds) => {
+        return (
+            `${APP_ROUTES.search}?` +
+            searchUIQueryString([{ field: 'sennet_id', values: sennetIds, type: 'any' }], 20)
+        )
+    }
 
     const datasetData = tableData.filter(obj => obj.entity_type === "Dataset")
     const sampleData = tableData.filter(obj => obj.entity_type === "Sample")
     const sourceData = tableData.filter(obj => obj.entity_type === "Source")
+    const noData = datasetData.length === 0 && sampleData.length === 0 && sourceData.length === 0
 
     return (
-        <div className={"p-tree mb-3"}>
+        <div className="mb-3">
             <Tabs
                 defaultActiveKey={datasetData.length > 0 ? "datasets" : sampleData.length > 0 ? "samples" : "sources"}
                 className="c-provenance__lineage__tabs mb-3"
                 variant="pills"
             >
                 {datasetData && datasetData.length > 0 &&
-                    <Tab eventKey="datasets"
-                         title={<span>{getSubtypeProvenanceShape("Dataset", null, 'lg')} ({datasetData.length})</span>}>
+                    <Tab
+                        eventKey="datasets"
+                        title={<span>{getSubtypeProvenanceShape("Dataset", null, "lg")} ({datasetData.length})</span>}>
+                        {(showManifestDownload || showViewOnDataPage) && (
+                            <div className="d-flex justify-content-end mb-4 gap-4">
+                                {showViewOnDataPage && (
+                                    <a
+                                        className="btn btn-outline-primary "
+                                        href={searchUrlForEntities(datasetData.map(d => d.sennet_id))}>
+                                        View on search page
+                                    </a>
+                                )}
+                                {showManifestDownload && (
+                                    <span
+                                        role="button"
+                                        className="btn btn-outline-primary lnk--ic"
+                                        onClick={()=> setShowCltModal(true)}>
+                                        Download Files with SenNet CLT <i className={"bi bi-download"}></i>
+                                    </span>
+                                )}
+                            </div>
+                        )}
                         <DataTable
                             columns={datasetColumns}
                             data={datasetData}
                             fixedHeader={true}
                             paginationRowsPerPageOptions={RESULTS_PER_PAGE}
-                            pagination/>
+                            pagination />
                     </Tab>
                 }
 
-
                 {sampleData && sampleData.length > 0 &&
-                    <Tab eventKey="samples"
-                         title={<div>{getSubtypeProvenanceShape("Sample", null, 'lg')} ({sampleData.length})</div>}>
+                    <Tab
+                        eventKey="samples"
+                        title={<div>{getSubtypeProvenanceShape("Sample", null, 'lg')} ({sampleData.length})</div>}>
+                        {(showViewOnDataPage) && (
+                            <div className="d-flex justify-content-end mb-4 gap-4">
+                                <a
+                                    className="btn btn-outline-primary "
+                                    href={searchUrlForEntities(sampleData.map(d => d.sennet_id))}>
+                                    View on search page
+                                </a>
+                            </div>
+                        )}
                         <DataTable
                             columns={sampleColumns}
                             data={sampleData}
                             fixedHeader={true}
                             paginationRowsPerPageOptions={RESULTS_PER_PAGE}
-                            pagination/>
+                            pagination />
                     </Tab>
                 }
+
                 {sourceData && sourceData.length > 0 &&
-                    <Tab eventKey="sources"
-                         title={<span>{getSubtypeProvenanceShape("Source", null, 'lg')} ({sourceData.length})</span>}>
+                    <Tab
+                        eventKey="sources"
+                        title={<span>{getSubtypeProvenanceShape("Source", null, 'lg')} ({sourceData.length})</span>}>
+                        {(showViewOnDataPage) && (
+                            <div className="d-flex justify-content-end mb-4 gap-4">
+                                <a
+                                    className="btn btn-outline-primary "
+                                    href={searchUrlForEntities(sourceData.map(d => d.sennet_id))}>
+                                    View on search page
+                                </a>
+                            </div>
+                        )}
                         <DataTable
                             columns={sourceColumns}
                             data={sourceData}
                             fixedHeader={true}
                             paginationRowsPerPageOptions={RESULTS_PER_PAGE}
-                            pagination/>
+                            pagination />
                     </Tab>
                 }
             </Tabs>
+
+            {noData &&
+                <DataTable data={[]} />
+            }
+
+            {showManifestDownload && datasetData && datasetData.length > 0 &&
+                <CLTModal
+                    data={categorizeByDatasetType(datasetData)}
+                    setShowModal={setShowCltModal}
+                    showModal={showCltModal}
+                />
+            }
         </div>
     )
+}
+
+Lineage.propTypes = {
+    lineage: PropTypes.arrayOf(PropTypes.object).isRequired,
+    showManifestDownload: PropTypes.bool,
+    showViewOnDataPage: PropTypes.bool
 }
 
 export default Lineage

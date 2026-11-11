@@ -13,6 +13,9 @@ export const supportedReverStatuses = () => {
 }
 
 export const statusRevertTooltip = (entity) => {
+    if(!entity) {
+        return
+    }
     const statuses = supportedReverStatuses()[entity]
     const results = []
     for (let i = 0; i < statuses.length; i++) {
@@ -39,7 +42,7 @@ function DatasetRevertButton({disableSubmit, onClick, onStatusChange, data}) {
 
     return (
         <>
-            <Button className="me-2" variant="outline-primary rounded-0" disabled={disableSubmit}
+            <Button className="me-2" variant="outline-primary " disabled={disableSubmit}
                     onClick={showModal}>
                 Revert
             </Button>
