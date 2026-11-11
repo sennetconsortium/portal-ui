@@ -3,8 +3,8 @@ import {Form} from 'react-bootstrap';
 import SenNetPopover from '../../../SenNetPopover'
 import AppContext from '../../../../context/AppContext'
 
-function SourceType( { data, dataValue, onChange, label, labelDescription, isDisabled} ) {
-    const { cache } = useContext(AppContext)
+function SourceType({data, dataValue, onChange, label, labelDescription, isDisabled}) {
+    const {cache} = useContext(AppContext)
 
     useEffect(() => {
     }, [])
@@ -13,19 +13,24 @@ function SourceType( { data, dataValue, onChange, label, labelDescription, isDis
         //Source Type
         <>
             <Form.Group className="mb-3" controlId={dataValue ? dataValue : "source_type"}>
-                <Form.Label>{label ? label : `Source Type` }<span
+                <Form.Label>{label ? label : `Source Type`}<span
                     className="required">* </span>
-                    <SenNetPopover className={dataValue ? dataValue : 'source_type'} text={labelDescription ? labelDescription : <>
-                        The type of this <code>Source</code>. Choose from one of the available options.<br />
-                        <small className='popover-note text-muted'>Note: CCF Registration User Interface (CCF-RUI) tool is only available for <code>Human</code> types.</small>
-                    </>}>
+                    <SenNetPopover className={dataValue ? dataValue : 'source_type'}
+                                   text={labelDescription ? labelDescription : <>
+                                       The type of this <code>Source</code>. Choose from one of the available
+                                       options.<br/>
+                                       <small className='popover-note text-muted'>Note: CCF Registration User Interface
+                                           (CCF-RUI) tool is only available for <code>Human</code> types.</small>
+                                   </>}>
                         <i className="bi bi-question-circle-fill"></i>
                     </SenNetPopover>
                 </Form.Label>
 
                 <Form.Select required aria-label={label ? label : `Source Type`} disabled={isDisabled}
-                             onChange={e => { onChange(e, dataValue ? dataValue : 'source_type', e.target.value) }}
-                             defaultValue={dataValue ? data?.[dataValue] : data?.source_type}>
+                             onChange={e => {
+                                 onChange(e, dataValue ? dataValue : 'source_type', e.target.value)
+                             }}
+                             value={dataValue ? data?.[dataValue] ?? '' : data?.source_type ?? ''}>
                     <option value="">----</option>
                     {Object.entries(cache?.sourceTypes || {}).map(op => {
                         return (
