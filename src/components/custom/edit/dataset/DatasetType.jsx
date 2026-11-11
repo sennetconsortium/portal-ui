@@ -29,9 +29,11 @@ export default function DatasetType({datasetTypes, data, label, labelDescription
                         <Form.Select required aria-label={label ? label : `Dataset Type`}
                                      onChange={(e) => onChange(e, dataValue ? dataValue : 'dataset_type', e.target.value)}
                                      name={dataValue ? dataValue : 'dataset_type'}
-                                     defaultValue={dataValue ? data?.[dataValue] : data?.dataset_type}>
+                                     value={dataValue ? data?.[dataValue] ?? '' : data?.dataset_type ?? ''}>
                             <option value="">----</option>
-                            {datasetTypes.sort().map(data_type => {
+                            {[...(datasetTypes || [])]
+                                .sort()
+                                .map(data_type => {
                                 return (
                                     <option key={data_type} value={data_type.trim()}>
                                         {getUBKGFullName(data_type)}
