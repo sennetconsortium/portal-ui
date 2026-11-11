@@ -153,6 +153,10 @@ function EditSource() {
     }
 
     const metadataNote = () => {
+        if (!cache?.entities?.source) {
+            return false
+        }
+
         let text = []
 
         const notEq = !eq(data.source_type, values.source_type)
