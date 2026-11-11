@@ -1,7 +1,7 @@
 import dynamic from "next/dynamic";
 import React, {useContext, useEffect, useState} from "react";
 import log from 'xac-loglevel'
-import {eq, fetchDataCite} from "@/components/custom/js/functions";
+import {fetchDataCite} from "@/components/custom/js/functions";
 import Header from "@/components/custom/layout/Header";
 import AppContext from "@/context/AppContext";
 import Alert from 'react-bootstrap/Alert';
@@ -18,13 +18,15 @@ import {
 import {APP_TITLE, getEntityEndPoint} from "@/config/config";
 import AppNavbar from "@/components/custom/layout/AppNavbar"
 import Description from "@/components/custom/entities/sample/Description";
-import Datasets from "@/components/custom/entities/collection/Datasets"
 import ContributorsContacts from "@/components/custom/entities/ContributorsContacts"
 import AssociatedEntityTable from "../AssociatedEntityTable";
 import Lineage from "@/components/custom/entities/sample/Lineage";
 import SenNetAccordion from "@/components/custom/layout/SenNetAccordion";
 import SenNetSuspense from "@/components/SenNetSuspense";
 import {getCanonicalUrl} from "@/lib/meta";
+import TableSkeleton from "@/components/custom/skeleton/TableSkeleton";
+import TabsSkeleton from "@/components/custom/skeleton/TabsSkeleton";
+import ToolbarSkeleton from "@/components/custom/skeleton/ToolbarSkeleton";
 import PropTypes from "prop-types";
 import {getCookie} from "cookies-next";
 
@@ -125,7 +127,17 @@ function ViewCollection({collectionType = 'Collection', entitiesLabel = 'Entitie
 
     }, [data?.uuid])
 
-    if (isPreview(data, error)) {
+    const entitiesSkeletonComponent = () =>  {
+        return (
+            <div role='status' aria-busy='true' aria-label='Loading entities' className='pt-3'>
+                <TabsSkeleton tabCount={3} />
+                <ToolbarSkeleton />
+                <TableSkeleton rows={3} columns={6} />
+            </div>
+        )
+    }
+
+    if (isPreview(data, error))  {
         return getPreviewView(data)
     } else {
         return (
@@ -198,32 +210,28 @@ function ViewCollection({collectionType = 'Collection', entitiesLabel = 'Entitie
                                                 primaryDateTitle="Creation Date"
                                                 primaryDate={data.created_timestamp}
                                                 secondaryDateTitle="Modification Date"
-                                                secondaryDate={data.last_modified_timestamp}
-                                            />
+                                                secondaryDate={data.last_modified_timestamp} />
 
+                                            {/*Associated Publications*/}
                                             {data.associated_publication && Object.values(data.associated_publication).length > 0 &&
-                                                <AssociatedEntityTable id='AssociatedEntity--Publication' data={{
-                                                    ...data,
-                                                    publications: [data.associated_publication]
-                                                }} propertyName={'publications'}/>}
+                                                <AssociatedEntityTable
+                                                    id='AssociatedEntity--Publication'
+                                                    data={{...data, publications: [data.associated_publication]}}
+                                                    propertyName={'publications'} />
+                                            }
 
                                             {/*Entities*/}
-                                            <SenNetSuspense showChildren={!isEntitiesLoading}>
-                                                {eq(entitiesLabel, 'entities') &&
-                                                    <SenNetAccordion title={entitiesLabel}>
-                                                        <Lineage lineage={data.entities}/>
-                                                    </SenNetAccordion>}
-
-                                                {!eq(entitiesLabel, 'entities') &&
-                                                    <Datasets data={data.entities} label={entitiesLabel}/>}
+                                            <SenNetSuspense title="Entities" showChildren={!isEntitiesLoading} style={{ height:'410px' }} suspenseElements={entitiesSkeletonComponent()}>
+                                                <SenNetAccordion id="Entities" title={entitiesLabel}>
+                                                    <Lineage lineage={data.entities} />
+                                                </SenNetAccordion>
                                             </SenNetSuspense>
 
-
                                             {/*Contributors*/}
-                                            <ContributorsContacts title={'Contributors'} data={data.contributors}/>
+                                            <ContributorsContacts title={'Contributors'} data={data.contributors} />
 
                                             {/*Attribution*/}
-                                            <Attribution data={data}/>
+                                            <Attribution data={data} />
                                         </div>
                                     </div>
                                 </main>
