@@ -6,6 +6,7 @@ import ChartContainer from '../visualizations/ChartContainer'
 import { formatNum, percentage } from '../js/functions'
 import { prepareOverlapData } from '../visualizations/charts/OverlappedBar'
 import * as d3 from 'd3';
+import $ from 'jquery';
 
 /**
  * @param {object} organ The current organ

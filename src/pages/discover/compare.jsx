@@ -8,7 +8,7 @@ import {eq} from "@/components/custom/js/functions";
 import VitessceQuadrant from "@/components/custom/vitessce/VitessceQuadrant";
 import {DerivedProvider} from "@/context/DerivedContext";
 import AddQuadrant from "@/components/custom/vitessce/AddQuadrant";
-
+import $ from 'jquery';
 const AppNavbar = dynamic(() => import("../../components/custom/layout/AppNavbar"))
 const Header = dynamic(() => import("../../components/custom/layout/Header"))
 const Spinner = dynamic(() => import("../../components/custom/Spinner"))

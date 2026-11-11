@@ -9,7 +9,6 @@ import AppContext from "@/context/AppContext";
 import MetadataTable from "./MetadataTable";
 import PropTypes from "prop-types";
 import * as d3 from "d3";
-import $ from 'jquery';
 import {ViewHeaderBadges} from "../layout/entity/ViewHeaderBadges";
 import log from 'xac-loglevel';
 import { getProvenanceMetadata } from "@/lib/services";
@@ -96,12 +95,28 @@ function Metadata({data, metadata, mappedMetadata, groups}) {
     const triggerNode = (e, uuid) => {
         // Coupled with Provenance.onNodeClick
         const sel = `node--${uuid}`
-        const $list = $(`[id="${sel}"]`)
-        const $target = $list.eq($list.length - 1)
-        const treeId = $target.parents('.c-provenance--Tree').attr('id')
-        $(`#${treeId} .node`).removeClass('is-active')
-        $target.addClass('is-active')
-        d3.select(`#${treeId} #${sel}`).dispatch('click', {detail: {metadata: true}})
+
+        const nodes = document.querySelectorAll(`[id="${sel}"]`)
+        const target = nodes[nodes.length - 1]
+
+        if (!target) {
+            return
+        }
+
+        const tree = target.closest('.c-provenance--Tree')
+
+        if (!tree) {
+            return
+        }
+
+        tree.querySelectorAll('.node').forEach(node => {
+            node.classList.remove('is-active')
+        })
+
+        target.classList.add('is-active')
+
+        d3.select(`#${tree.id} #${sel}`)
+            .dispatch('click', {detail: {metadata: true}})
     }
 
     const updateHeader = (data) => {
