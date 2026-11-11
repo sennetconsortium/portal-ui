@@ -73,9 +73,9 @@ function SampleCategory({
                     <SenNetPopover className={'sampleCat--pop'} text={<>
                         The category of this <code>Sample</code>. Choose from one of the available options.<br />
                         <small className='popover-note text-muted mt-2'>Note: CCF Registration User Interface (CCF-RUI)
-                            tool becomes available for the <code>{cache?.sampleCategories?.Block} Sample</code> category
+                            tool becomes available for the <code>Block Sample</code> category
                             where the <em>Ancestor</em> <code>Source</code> is of
-                            type <code>{cache?.sourceTypes?.Human}</code>,
+                            type <code>Human</code>,
                             when the block has been sourced from a RUI supported organ.</small>
                     </>}>
                         <i className="bi bi-question-circle-fill"></i>
