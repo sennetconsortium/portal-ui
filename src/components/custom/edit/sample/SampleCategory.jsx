@@ -37,7 +37,7 @@ function SampleCategory({
             resetOrganType(e, onChange);
         }
     };
-    
+
     const resetOrganType = (e, onChange) => {
         set_organ_group_hide('none')
         document.getElementById("organ").removeAttribute("required")
@@ -71,11 +71,11 @@ function SampleCategory({
                 <Form.Label>Sample Category <span
                     className="required">* </span>
                     <SenNetPopover className={'sampleCat--pop'} text={<>
-                        The category of this <code>Sample</code>. Choose from one of the available options.<br />
+                        The category of this <code>Sample</code>. Choose from one of the available options.<br/>
                         <small className='popover-note text-muted mt-2'>Note: CCF Registration User Interface (CCF-RUI)
-                            tool becomes available for the <code>{cache?.sampleCategories?.Block} Sample</code> category
+                            tool becomes available for the <code>Block Sample</code> category
                             where the <em>Ancestor</em> <code>Source</code> is of
-                            type <code>{cache?.sourceTypes?.Human}</code>,
+                            type <code>Human</code>,
                             when the block has been sourced from a RUI supported organ.</small>
                     </>}>
                         <i className="bi bi-question-circle-fill"></i>
@@ -83,12 +83,16 @@ function SampleCategory({
 
                 </Form.Label>
 
-                <Form.Select required aria-label="Sample Category" disabled={isDisabled}
-                             onChange={e => {
-                                 handleSampleCategoryChange(e, onChange);
-                                 onChange(e, e.target.id, e.target.value)
-                             }}
-                             defaultValue={data.sample_category}>
+                <Form.Select
+                    required
+                    aria-label="Sample Category"
+                    disabled={isDisabled}
+                    onChange={e => {
+                        handleSampleCategoryChange(e, onChange);
+                        onChange(e, e.target.id, e.target.value);
+                    }}
+                    value={data?.sample_category ?? ''}
+                >
                     {<option value="">----</option>}
                     {Object.entries(sample_categories || {}).map(sample_category => {
                         return (
@@ -101,15 +105,22 @@ function SampleCategory({
             </Form.Group>
 
             {/*Organ Type*/}
-            <Form.Group as={Row} className={`mb-3 form-group select-group ${selectedOtherOrgan(data.organ) ? 'has-warning' : ''}`} id="organ_group"
+            <Form.Group as={Row}
+                        className={`mb-3 form-group select-group ${selectedOtherOrgan(data.organ) ? 'has-warning' : ''}`}
+                        id="organ_group"
                         style={{display: organ_group_hide}}>
                 <Form.Label column sm="2">Organ Type <span
                     className="required">*</span></Form.Label>
                 <Col sm="10">
-                    <Form.Select aria-label="Organ Type" id="organ" disabled={isDisabled} onChange={e => {
-                        onChange(e, e.target.id, e.target.value)
-                    }}
-                                 defaultValue={data.organ}>
+                    <Form.Select
+                        aria-label="Organ Type"
+                        id="organ"
+                        disabled={isDisabled}
+                        onChange={e => {
+                            onChange(e, e.target.id, e.target.value)
+                        }}
+                        value={data?.organ ?? ''}
+                    >
                         <option value="">----</option>
                         {Object.entries(filteredOrgans()).map(op => {
                             return (
@@ -122,7 +133,7 @@ function SampleCategory({
                     </Form.Select>
                     {selectedOtherOrgan(data.organ) && <div className={'warning-icon-trigger'}>
                         <SenNetPopover text={<>You {popoverWarningText}</>} className={`popover-warning-organ`}>
-                            <span ><WarningAmberIcon sx={{color: '#ffc107'}} /></span>
+                            <span><WarningAmberIcon sx={{color: '#ffc107'}}/></span>
                         </SenNetPopover>
                     </div>}
                 </Col>
@@ -134,18 +145,18 @@ function SampleCategory({
 }
 
 SampleCategory.propTypes = {
-  data: PropTypes.shape({
-    organ: PropTypes.any,
-    sample_category: PropTypes.any
-  }),
-  isDisabled: PropTypes.any,
-  onChange: PropTypes.func,
-  organ_group_hide: PropTypes.any,
-  popoverWarningText: PropTypes.any,
-  sample_categories: PropTypes.any,
-  selectedOtherOrgan: PropTypes.func,
-  set_organ_group_hide: PropTypes.func,
-  source: PropTypes.any
+    data: PropTypes.shape({
+        organ: PropTypes.any,
+        sample_category: PropTypes.any
+    }),
+    isDisabled: PropTypes.any,
+    onChange: PropTypes.func,
+    organ_group_hide: PropTypes.any,
+    popoverWarningText: PropTypes.any,
+    sample_categories: PropTypes.any,
+    selectedOtherOrgan: PropTypes.func,
+    set_organ_group_hide: PropTypes.func,
+    source: PropTypes.any
 }
 
 export default SampleCategory

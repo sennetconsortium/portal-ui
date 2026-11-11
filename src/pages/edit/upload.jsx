@@ -197,12 +197,12 @@ function EditUpload() {
 
     const handleAnticipatedDateChange = (date) => {
         let m = date?.getMonth() + 1
-        m = m < 10 ? '0'+m : m
+        m = m < 10 ? '0' + m : m
         onChange(null, 'anticipated_complete_upload_month', `${date?.getFullYear()}-${m}`)
         setAnticipatedDate(date)
     }
 
-    if (isPreview(error))  {
+    if (isPreview(error)) {
         return getPreviewView(data)
     } else {
         return (
@@ -233,12 +233,14 @@ function EditUpload() {
                                                          individual datasets with their own SenNet IDs by CODCC
                                                          Curation. Uploads must have directory structures, contributors,
                                                          and metadata files per the <a target="_blank"
-                                                                                       href={"https://docs.sennetconsortium.org/data-submission/"} rel="noreferrer">Data
+                                                                                       href={"https://docs.sennetconsortium.org/data-submission/"}
+                                                                                       rel="noreferrer">Data
                                                              Submission Guide</a>.
                                                      </>}
                                                      icon={<i className="bi bi-exclamation-triangle-fill"></i>}/>
                                     }
-                                    <Form noValidate validated={validated} onSubmit={handleSave} id={"upload-form"} ref={entityForm}>
+                                    <Form noValidate validated={validated} onSubmit={handleSave} id={"upload-form"}
+                                          ref={entityForm}>
                                         {/*Group select*/}
                                         {
                                             !(userWriteGroups.length === 1 || isEditMode()) &&
@@ -273,14 +275,16 @@ function EditUpload() {
                                                              type={'textarea'}
                                                              controlId='ingest_task' value={data.ingest_task}
                                                              onChange={onChange}
-                                                             popoverHelpText={<>The next task in the data ingest process.</>}/>}
+                                                             popoverHelpText={<>The next task in the data ingest
+                                                                 process.</>}/>}
 
                                         {/*Title*/}
                                         <EntityFormGroup label="Upload Title" placeholder='Upload Title'
                                                          controlId='title' value={data.title}
                                                          isRequired={true}
                                                          onChange={onChange}
-                                                         popoverHelpText={<>A meaningful title for the <code>Upload</code>.
+                                                         popoverHelpText={<>A meaningful title for
+                                                             the <code>Upload</code>.
                                                          </>}/>
 
                                         {/*/!*Description*!/*/}
@@ -291,7 +295,7 @@ function EditUpload() {
                                                              the <code>Upload</code>.</>}/>
 
                                         {/*/!*Intended Dataset Type*!/*/}
-                                         <DatasetType
+                                        <DatasetType
                                             datasetTypes={Object.values(cache?.datasetTypes ?? {})}
                                             label={'Intended Dataset Type'}
                                             labelDescription={<>The dataset type of the intended datasets that will be
@@ -311,10 +315,11 @@ function EditUpload() {
                                                 </SenNetPopover>
                                             </Form.Label>
 
-                                            <Form.Select required aria-label="Intended Organ" id="intended_organ" onChange={e => {
-                                                onChange(e, e.target.id, e.target.value)
-                                            }}
-                                                         defaultValue={data.intended_organ}>
+                                            <Form.Select required aria-label="Intended Organ" id="intended_organ"
+                                                         onChange={e => {
+                                                             onChange(e, e.target.id, e.target.value)
+                                                         }}
+                                                         value={values?.intended_organ ?? data?.intended_organ ?? ''}>
                                                 <option value="">----</option>
                                                 {Object.entries(cache?.organTypes || {}).map(op => {
                                                     return (
@@ -340,9 +345,13 @@ function EditUpload() {
                                         <div className='row'>
                                             <div className='col-md-3'>
                                                 {/*/!*Anticipated Completion Month/Year*!/*/}
-                                                <EntityFormGroup label='Anticipated Completion Year/Month' controlId='anticipated_complete_upload_month'
+                                                <EntityFormGroup label='Anticipated Completion Year/Month'
+                                                                 controlId='anticipated_complete_upload_month'
 
-                                                                 popoverHelpText={<>The year and month that this <code>Upload</code> will have all required data uploaded and be ready for reorganization into <code>Datasets</code>.</>}>
+                                                                 popoverHelpText={<>The year and month that
+                                                                     this <code>Upload</code> will have all required
+                                                                     data uploaded and be ready for reorganization
+                                                                     into <code>Datasets</code>.</>}>
                                                     <DatePicker
                                                         selected={anticipatedDate}
                                                         onChange={(date) => handleAnticipatedDateChange(date)}
@@ -360,15 +369,17 @@ function EditUpload() {
                                             {/*/!*Anticipated number of datasets*!/*/}
                                             <div className='col-md-3'>
                                                 <EntityFormGroup label='Anticipated Number of Datasets'
-                                                                 controlId='anticipated_dataset_count' value={data.anticipated_dataset_count}
+                                                                 controlId='anticipated_dataset_count'
+                                                                 value={data.anticipated_dataset_count}
                                                                  onChange={onChange}
                                                                  type={'number'}
                                                                  otherInputProps={{min: 0}}
-                                                                 popoverHelpText={<>The total number of <code>Datasets</code> that this <code>Upload</code> will eventually contain.</>}/>
+                                                                 popoverHelpText={<>The total number
+                                                                     of <code>Datasets</code> that
+                                                                     this <code>Upload</code> will eventually
+                                                                     contain.</>}/>
                                             </div>
                                         </div>
-
-
 
 
                                         <div className={'d-flex flex-row-reverse'}>

@@ -96,6 +96,18 @@ function EditSample() {
         fetchSampleCategories()
     }, [source, sampleEntity, sampleCategoriesMap])
 
+    useEffect(() => {
+        if (!sampleCategoriesMap) {
+            return
+        }
+
+        if (eq(values?.sample_category, sampleCategoriesMap.Organ)) {
+            set_organ_group_hide('')
+        } else {
+            set_organ_group_hide('none')
+        }
+    }, [values?.sample_category, sampleCategoriesMap])
+
     // only executed on init rendering, see the []
     useEffect(() => {
         const fetchData = async (uuid) => {
@@ -113,12 +125,6 @@ function EditSample() {
 
             setData(_data)
             setRuiSex(extractSourceSex(_data.source))
-
-
-            // Show organ input group if sample category is 'organ'
-            if (eq(_data.sample_category, sampleCategoriesMap?.Organ)) {
-                set_organ_group_hide('')
-            }
 
             getAncestryData(_data.uuid, {
                 endpoints: ['ancestors'],
