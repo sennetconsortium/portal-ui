@@ -15,6 +15,7 @@ import IdleTimerPopup from "@/components/IdleTimerPopup";
 import useScrollToAnchor from "@/hooks/useScrollToAnchor";
 
 import {loadUBKGCache} from '@/lib/cache'
+import $ from 'jquery'
 
 function MyApp({Component, pageProps}) {
     const router = useRouter()
@@ -28,6 +29,8 @@ function MyApp({Component, pageProps}) {
 
     useEffect(() => {
         if (typeof window !== 'undefined') {
+            window.$ = $
+            window.jQuery = $
             log.setLevel(getLogLevel())
         }
     }, [])

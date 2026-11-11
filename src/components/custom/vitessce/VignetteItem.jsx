@@ -8,6 +8,7 @@ import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 import Tooltip from 'react-bootstrap/Tooltip'
 import SenNetAccordion from '../layout/SenNetAccordion'
 import SuspendVitessce from './SuspendVitessce'
+import $ from 'jquery';
 
 function VignetteItem({ publication, vignette }) {
     const accordionRef = useRef(null)

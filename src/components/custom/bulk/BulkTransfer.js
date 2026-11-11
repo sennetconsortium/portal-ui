@@ -23,6 +23,7 @@ import SenNetAlert from "@/components/SenNetAlert";
 import FileTransfersContext from "@/context/FileTransfersContext";
 import OptionsSelect from "../layout/entity/OptionsSelect";
 import SenNetPopover from "@/components/SenNetPopover";
+import $ from 'jquery';
 
 const DataTable = dynamic(() => import('react-data-table-component'), {
   ssr: false,

@@ -12,7 +12,7 @@ import SenNetStats from "@/components/SenNetStats";
 import Sankey from "@/components/custom/Sankey";
 import SenNetBanner from "@/components/SenNetBanner";
 import {APP_TITLE} from "@/config/config";
-
+import $ from 'jquery';
 const Header = dynamic(() => import("@/components/custom/layout/Header"))
 
 function ViewHome({children}) {

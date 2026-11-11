@@ -15,6 +15,7 @@ import AppContext from '@/context/AppContext';
 import StyledMenu from '@/components/custom/layout/StyledMenu';
 import NestedMenuItem from '../layout/NestedMenuItem';
 import ListItemText from '@mui/material/ListItemText';
+import $ from 'jquery';
 
 function SearchActions({
                            selectedRows,

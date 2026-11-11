@@ -2,6 +2,7 @@ import React, {useContext, useEffect, useState} from 'react'
 import AppContext from "@/context/AppContext";
 import Tooltip from '@mui/material/Tooltip';
 import Zoom from '@mui/material/Zoom';
+import $ from 'jquery';
 
 function SidebarBtn({target = '#sidebar', onClick, tooltip, className = '', initialClass = ''}) {
     const {sidebarVisible, handleSidebar} = useContext(AppContext)

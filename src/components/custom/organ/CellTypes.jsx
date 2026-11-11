@@ -13,6 +13,7 @@ import {Chip} from "@mui/material";
 import dynamic from "next/dynamic";
 import {useEffect, useRef, useState} from 'react';
 import CellTypeDistributionAcrossOrgansTab from '../cell-types/CellTypeDistributionAcrossOrgansTab';
+import $ from 'jquery';
 import log from "xac-loglevel";
 
 const DataTable = dynamic(() => import('react-data-table-component'), {

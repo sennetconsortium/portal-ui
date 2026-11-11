@@ -4,6 +4,7 @@ import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import { formatNum, percentage} from '../js/functions'
 import VisualizationsContext from '@/context/VisualizationsContext';
+import $ from 'jquery';
 
 /**
  * @param {object} organ The current organ
