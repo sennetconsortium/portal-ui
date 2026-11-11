@@ -423,6 +423,10 @@ function EditSample() {
     }
 
     const metadataNote = () => {
+        if (!sampleEntity) {
+            return false
+        }
+
         if (isEditMode() && (values.metadata && Object.values(values.metadata).length)) {
             let text = []
             text.push(getMetadataNote(sampleEntity, 0))
