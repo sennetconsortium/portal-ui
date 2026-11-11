@@ -18,7 +18,9 @@
     "sass": "sass --watch sass/main.scss public/css/main.css ",
     "sass-build": "sass sass/main.scss public/css/main.css ",
     "plugins": "node ./node_modules/xac-esbuild/index.js -o=public/js/ -s=components/custom/js/addons/plugins/ -outfile=public/js/main-plugins.js",
-    "watch": "npm-watch"
+    "watch": "npm-watch",
+    "lint": "eslint .",
+    "lint-fix": "eslint . --fix"
   },
   "dependencies": {
     "@elastic/react-search-ui": "^1.24.2",
