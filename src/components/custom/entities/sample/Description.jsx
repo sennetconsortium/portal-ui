@@ -49,7 +49,7 @@ export default function Description({data, citationData, labId, primaryDateTitle
             const organCode = getOrganByCode(code)
             const path = `${APP_ROUTES.organs}/${organCode?.path}`
             const icon = organIcons[code] || organIcons.OT
-            res.push(<li key={organ}><span><a href={path}>{organ}</a> <img alt={name} src={icon} width={'24px'} /></span></li>)
+            res.push(<li key={organ}><span><a href={path}>{organ}</a> <img alt={organ} src={icon} width={'24px'} /></span></li>)
         })
         return res
     }

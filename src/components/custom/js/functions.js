@@ -429,6 +429,29 @@ export const datasetIs = {
     primary: (creationAction) => eq(creationAction, 'create dataset activity')
 }
 
+export const categorizeByDatasetType = (data) => {
+    const categorized = {
+        component: [],
+        primary: [],
+        processed: []
+    }
+    for (const item of data) {
+        if (!item || !item.creation_action) {
+            continue;
+        }
+
+        if (datasetIs.component(item.creation_action)) {
+            categorized.component.push(item)
+        } else if (datasetIs.primary(item.creation_action)) {
+            categorized.primary.push(item)
+        } else if (datasetIs.processed(item.creation_action)) {
+            categorized.processed.push(item)
+        }
+    }
+
+    return categorized
+}
+
 export function getCreationActionRelationName(creationAction) {
     if (datasetIs.processed(creationAction)) {
         return 'Processed Dataset'

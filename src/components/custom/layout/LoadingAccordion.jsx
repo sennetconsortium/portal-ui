@@ -1,4 +1,5 @@
-import Spinner from "../Spinner"
+import React from 'react'
+import Spinner from "@/components/custom/Spinner"
 
 const LoadingAccordion = ({id, title, children, style={ height:'100px' }, expanded=true}) => {
     return (

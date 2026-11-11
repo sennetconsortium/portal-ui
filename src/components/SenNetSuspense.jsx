@@ -3,8 +3,7 @@ import PropTypes from 'prop-types'
 import LoadingAccordion from "@/components/custom/layout/LoadingAccordion";
 import { Skeleton } from '@mui/material';
 
-function SenNetSuspense({children, showChildren,  suspenseElements, id, title, style}) {
-
+function SenNetSuspense({children, showChildren, suspenseElements, id, title, style}) {
     if (showChildren) {
         return children
     }
