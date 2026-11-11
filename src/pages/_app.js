@@ -27,6 +27,12 @@ function MyApp({Component, pageProps}) {
     useScrollToAnchor()
 
     useEffect(() => {
+        if (typeof window !== 'undefined') {
+            log.setLevel(getLogLevel())
+        }
+    }, [])
+
+    useEffect(() => {
         let mounted = true
 
         const init = async () => {
@@ -57,8 +63,6 @@ function MyApp({Component, pageProps}) {
             mounted = false
         }
     }, [router])
-
-    log.setLevel(getLogLevel())
 
     const withWrapper = Component.withWrapper || ((page) => page)
 
