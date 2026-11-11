@@ -44,6 +44,8 @@ export function getJsonLDMetaData(dataset, citation) {
 
     if (dataset.title) {
         meta.name = dataset.title
+        // Default setting the description to the title, update it if dataset has an actual description/doi abstract
+        meta.description = dataset.title
     }
     if (dataset.description) {
         meta.description = dataset.description
