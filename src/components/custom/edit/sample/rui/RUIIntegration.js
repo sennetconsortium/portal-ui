@@ -182,7 +182,7 @@ class RUIIntegration extends Component {
                     </div>
                     <Modal.Footer id="rui-footer">
                         <Button
-                            variant="outline-secondary rounded-0 my-3 mx-2"
+                            variant="outline-secondary  my-3 mx-2"
                             onClick={() =>
                                 this.setState({showCancelModal: true})
                             }
@@ -190,7 +190,7 @@ class RUIIntegration extends Component {
                             Cancel
                         </Button>
                         <Button
-                            variant="outline-primary rounded-0 my-3 mx-2"
+                            variant="outline-primary  my-3 mx-2"
                             disabled={!this.state.ruiLoaded}
                             onClick={() => this.clickRegister()}
                         >

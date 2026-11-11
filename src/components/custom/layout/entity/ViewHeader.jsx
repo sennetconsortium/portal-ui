@@ -18,7 +18,7 @@ const EntityViewHeaderButtons = ({entity, data, hasWritePrivilege}) => {
                                    text={<>Make modifications to this entity.</>}>
                         <Button aria-label={`Edit ${cache?.entities[entity]}`} className="js-btn--edit"
                                 href={`/edit/${entity}?uuid=${data.uuid}`}
-                                variant="outline-primary rounded-0">{_t('Edit')}</Button>
+                                variant="outline-primary ">{_t('Edit')}</Button>
                     </SenNetPopover>
                 }{' '}
                 <SenNetPopover className={"view-entity"}
@@ -26,7 +26,7 @@ const EntityViewHeaderButtons = ({entity, data, hasWritePrivilege}) => {
                     <Button target='_blank' aria-label={`View JSON of the ${cache?.entities[entity]}`}
                             className='ms-2 js-btn--json'
                             href={`/api/json/${entity}?uuid=${data.uuid}`}
-                            variant="outline-primary rounded-0"><i className="bi bi-filetype-json"></i></Button>
+                            variant="outline-primary "><i className="bi bi-filetype-json"></i></Button>
                 </SenNetPopover>
 
                 {eq(entity, cache?.entities?.dataset) && (eq(data.status, 'published') || ['qa', 'approval'].contains(data.status)) &&

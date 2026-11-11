@@ -261,7 +261,7 @@ function EditSource() {
                                                      onChange={onChange}
                                                      popoverHelpText={<span>The protocol used for <code>Source</code> selection including any inclusion or exclusion criteria. This must  be provided  as a protocols.io DOI see: <a
                                                          href="https://www.protocols.io/." target='_blank'
-                                                         className='lnk--ic'>https://www.protocols.io/ <i
+                                                         className='lnk--ic' rel="noreferrer">https://www.protocols.io/ <i
                                                          className="bi bi-box-arrow-up-right"></i></a>.</span>}
                                                      otherInputProps={{
                                                          pattern:getDOIPattern(),
@@ -292,7 +292,7 @@ function EditSource() {
 
                                     <div className={'d-flex flex-row-reverse'}>
                                         {getCancelBtn('source')}
-                                        <Button className={"me-2"} variant="outline-primary rounded-0 js-btn--save"
+                                        <Button className={"me-2"} variant="outline-primary  js-btn--save"
                                                 onClick={handleSave}
                                                 disabled={disableSubmit}>
                                             {_t('Save')}

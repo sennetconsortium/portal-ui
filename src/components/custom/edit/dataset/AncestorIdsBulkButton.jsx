@@ -262,7 +262,7 @@ export default function AncestorIdsBulkButton({
                             text={bulkAddBtnTooltip}
                         >
                             <Button
-                                variant='outline-secondary rounded-0 mt-1'
+                                variant='outline-secondary  mt-1'
                                 onClick={
                                     !bulkAddField ? showBulkAdd : handleBulkAdd
                                 }
@@ -326,7 +326,7 @@ export default function AncestorIdsBulkButton({
                             <span
                                 role={'button'}
                                 aria-label={'Cancel/close this field'}
-                                className={`rounded-0 btn btn-outline-secondary btn-cancel ${bulkAddField ? 'is-visible' : ''}`}
+                                className={` btn btn-outline-secondary btn-cancel ${bulkAddField ? 'is-visible' : ''}`}
                                 onClick={hideBulkAdd}
                             >
                                 Cancel
@@ -352,7 +352,7 @@ export default function AncestorIdsBulkButton({
                                             ? undefined
                                             : handleBulkAdd
                                     }
-                                    className={`rounded-0 btn btn-success btn-add ${bulkAddField && bulkAddTextareaVal ? 'is-visible' : ''}`}
+                                    className={` btn btn-success btn-add ${bulkAddField && bulkAddTextareaVal ? 'is-visible' : ''}`}
                                 >
                                     {' '}
                                     {!bulkAddSpinnerVisible && (

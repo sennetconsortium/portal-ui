@@ -139,7 +139,7 @@ export default function Description({data, citationData, labId, primaryDateTitle
                         <Card.Text>
                             <a className='lnk--ic'
                                target="_blank"
-                               href={data.publication_url}>
+                               href={data.publication_url} rel="noreferrer">
                                View Manuscript Page <i className="bi bi-box-arrow-up-right"></i>
                             </a>
                         </Card.Text>
@@ -164,7 +164,7 @@ export default function Description({data, citationData, labId, primaryDateTitle
                             <Card.Text>
                                 <a className='lnk--ic'
                                    target="_blank"
-                                   href={getCitationUrl()}>
+                                   href={getCitationUrl()} rel="noreferrer">
                                    View DataCite Page <i className="bi bi-box-arrow-up-right"></i>
                                 </a>
                             </Card.Text>

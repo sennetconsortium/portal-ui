@@ -318,7 +318,7 @@ export default function EditCollection({ collectionType = 'Collection', entities
                                         customFileInfo={
                                             <span>
                                                 <a
-                                                    className='btn btn-outline-primary rounded-0 fs-8'
+                                                    className='btn btn-outline-primary  fs-8'
                                                     download
                                                     href={
                                                         'https://raw.githubusercontent.com/hubmapconsortium/dataset-metadata-spreadsheet/main/contributors/latest/contributors.tsv'
@@ -368,7 +368,7 @@ export default function EditCollection({ collectionType = 'Collection', entities
                                                 className={'save-button'}
                                             >
                                                 <Button
-                                                    variant='outline-primary rounded-0 js-btn--save'
+                                                    variant='outline-primary  js-btn--save'
                                                     className={'me-2'}
                                                     onClick={handleSave}
                                                     disabled={disableSubmit}
@@ -394,7 +394,7 @@ export default function EditCollection({ collectionType = 'Collection', entities
                                                     className={'publish-button'}
                                                 >
                                                     <Button
-                                                        variant='outline-primary rounded-0 js-btn--publish'
+                                                        variant='outline-primary  js-btn--publish'
                                                         className={'me-2'}
                                                         onClick={handlePublish}
                                                         disabled={disableSubmit}

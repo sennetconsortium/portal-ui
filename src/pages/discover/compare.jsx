@@ -167,7 +167,7 @@ function ViewCompare() {
                 <div className="mb-5 container-fluid">
                     <div className={'mx-3 mt-4'}>
                         <h3>Datasets Comparison {datasetType && <span className={'badge badge-secondary'}>{datasetType}</span>}</h3>
-                        {(q1 || q2 || q3 || q4) && <button onClick={clearSelections} className='btn btn-outline-primary rounded-0'>Reset selections &nbsp;<i
+                        {(q1 || q2 || q3 || q4) && <button onClick={clearSelections} className='btn btn-outline-primary '>Reset selections &nbsp;<i
                             className="bi bi-x-circle"></i></button>}
                     </div>
                     {/*<DataTable  columns={} data={} />*/}

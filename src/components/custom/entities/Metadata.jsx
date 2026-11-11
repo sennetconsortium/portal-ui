@@ -136,7 +136,7 @@ function Metadata({data, metadata, mappedMetadata, groups}) {
                         }}
                         data-uuid={data.uuid}
                         eventKey={data.sennet_id}
-                        bsPrefix={`btn btn-${entity} rounded-0`}
+                        bsPrefix={`btn btn-${entity} `}
                     >
                         {data.sennet_id}
                     </Nav.Link>

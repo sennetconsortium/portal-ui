@@ -244,7 +244,7 @@ export const EntityProvider = ({ children }) => {
                 note = <span key={'md-0'}>Metadata for this <code>{entity}</code> exists. </span>
                 break
             case 1:
-                note = <span key={'md-1'}>You may view it via <a target='_blank' className={'js-btn--json lnk--ic'} href={`/api/json/${entity.toLowerCase()}?uuid=${data.uuid}`}> the full entity JSON  <i className="bi bi-box-arrow-up-right"></i></a>. </span>
+                note = <span key={'md-1'}>You may view it via <a target='_blank' className={'js-btn--json lnk--ic'} href={`/api/json/${entity.toLowerCase()}?uuid=${data.uuid}`} rel="noreferrer"> the full entity JSON  <i className="bi bi-box-arrow-up-right"></i></a>. </span>
                 break
             case 2:
                 let prop = `${entity.toLowerCase()}_${field}`
@@ -355,7 +355,7 @@ export const EntityProvider = ({ children }) => {
         const isRegister = router.query.uuid === 'register'
         const url = isRegister ? APP_ROUTES.search : `/${entity}?uuid=${router.query.uuid}`
         return (
-            <Button variant="outline-primary rounded-0 js-btn--cancel"
+            <Button variant="outline-primary  js-btn--cancel"
                     href={url} > Cancel
             </Button>
         )

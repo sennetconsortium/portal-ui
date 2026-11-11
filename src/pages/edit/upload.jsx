@@ -233,7 +233,7 @@ function EditUpload() {
                                                          individual datasets with their own SenNet IDs by CODCC
                                                          Curation. Uploads must have directory structures, contributors,
                                                          and metadata files per the <a target="_blank"
-                                                                                       href={"https://docs.sennetconsortium.org/data-submission/"}>Data
+                                                                                       href={"https://docs.sennetconsortium.org/data-submission/"} rel="noreferrer">Data
                                                              Submission Guide</a>.
                                                      </>}
                                                      icon={<i className="bi bi-exclamation-triangle-fill"></i>}/>
@@ -378,7 +378,7 @@ function EditUpload() {
                                             {!eq(data['status'], 'Processing') && !eq(data['status'], 'Reorganized') &&
                                                 <SenNetPopover text={<>Save changes to this <code>Upload</code>.</>}
                                                                className={'save-button'}>
-                                                    <Button variant="outline-primary rounded-0 js-btn--save"
+                                                    <Button variant="outline-primary  js-btn--save"
                                                             className={'me-2'}
                                                             onClick={handleSave}
                                                             disabled={disableSubmit}>

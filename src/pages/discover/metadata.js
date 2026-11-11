@@ -53,13 +53,13 @@ function Metadata() {
                                  text=<>To conduct a comprehensive search across all metadata fields, please utilize our
                         Search API’s <code>param-search</code> endpoint. For detailed instructions on how to utilize this
                         feature, please refer to the provided <a target={"_blank"}
-                        href="https://docs.sennetconsortium.org/param-search/">documentation</a>.
+                        href="https://docs.sennetconsortium.org/param-search/" rel="noreferrer">documentation</a>.
                     </> />
                     <Row>
                         <div className="py-4 d-flex bd-highlight align-items-center">
                             <h2 className="m-0 flex-grow-1 bd-highlight">Browse by Popular Searches</h2>
                             <div className="bd-highlight">
-                                <button className="btn btn-outline-primary rounded-0 clear-filter-button"
+                                <button className="btn btn-outline-primary  clear-filter-button"
                                         onClick={handleBrowseAllMetadataClicked}>
                                     Search All Metadata
                                 </button>
@@ -71,7 +71,7 @@ function Metadata() {
                         {SEARCH_METADATA.discover.map((item) => {
                             return (
                                 <Col key={item.title}>
-                                    <Card className="p-4 rounded-0 h-100">
+                                    <Card className="p-4  h-100">
                                         <Card.Body
                                             className="d-flex flex-column justify-content-between align-items-start">
                                             <div className="mb-2">
@@ -80,7 +80,7 @@ function Metadata() {
                                                 <Card.Text className="mb-2">{item.description}</Card.Text>
                                             </div>
                                             <Link href={{pathname: METADATA_SEARCH, query: item.queryString}}>
-                                                <Button variant="primary rounded-0">Search</Button>
+                                                <Button variant="primary ">Search</Button>
                                             </Link>
                                         </Card.Body>
                                     </Card>

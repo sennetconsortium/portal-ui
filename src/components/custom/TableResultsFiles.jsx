@@ -496,7 +496,7 @@ function TableResultsFiles({children, onRowClicked, filters, forData = false, ro
                     showPrimaryBtn={showModalDownloadBtn}
                     primaryBtnLabel={'Download Manifest'}
                     footer={<>
-                        {showModalDownloadBtn && <Button variant="outline-primary rounded-0" onClick={transferModalSelectedFiles}>
+                        {showModalDownloadBtn && <Button variant="outline-primary " onClick={transferModalSelectedFiles}>
                             Transfer Files
                         </Button>}
                     </>}

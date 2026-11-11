@@ -59,7 +59,7 @@ export default function Tissue({ data }) {
             width: '50%',
             omit: data && data.rui_location ? data.rui_location?.length <= 0 : true,
             format: row => {
-                return <div>The <a href={`/api/json?view=${btoa(JSON.stringify(row.rui_location))}`} target={'_blank'}>spatial coordinates of this sample</a> have been registered and it can be found in the <a target={'_blank'} href={'/ccf-eui'}>Common Coordinate Framework Exploration User Interface</a>.</div>
+                return <div>The <a href={`/api/json?view=${btoa(JSON.stringify(row.rui_location))}`} target={'_blank'} rel="noreferrer">spatial coordinates of this sample</a> have been registered and it can be found in the <a target={'_blank'} href={'/ccf-eui'} rel="noreferrer">Common Coordinate Framework Exploration User Interface</a>.</div>
             }
         }
     ]

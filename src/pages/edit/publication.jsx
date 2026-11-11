@@ -584,7 +584,7 @@ export default function EditPublication() {
                                                 className={'save-button'}
                                             >
                                                 <Button
-                                                    variant='outline-primary rounded-0 js-btn--save'
+                                                    variant='outline-primary  js-btn--save'
                                                     className={'me-2'}
                                                     onClick={handleSave}
                                                     disabled={disableSubmit}

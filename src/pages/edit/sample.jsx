@@ -537,7 +537,7 @@ function EditSample() {
                                                      onChange={_onChange}
                                                      popoverHelpText={<span>The protocol used when procuring or preparing the tissue. This must be provided as a protocols.io DOI URL see: <a
                                                          href="https://www.protocols.io/." target='_blank'
-                                                         className='lnk--ic'>https://www.protocols.io/ <i
+                                                         className='lnk--ic' rel="noreferrer">https://www.protocols.io/ <i
                                                          className="bi bi-box-arrow-up-right"></i></a>.</span>}
                                                      otherInputProps={{
                                                          'data-js-appevent': 'checkProtocolUrl',
@@ -586,7 +586,7 @@ function EditSample() {
 
                                     <div className={'d-flex flex-row-reverse'}>
                                         {getCancelBtn('sample')}
-                                        <Button className={"me-2"} variant="outline-primary rounded-0 js-btn--save"
+                                        <Button className={"me-2"} variant="outline-primary  js-btn--save"
                                                 onClick={handleSave}
                                                 disabled={disableSubmit}>
                                             {_t('Save')}

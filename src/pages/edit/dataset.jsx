@@ -299,7 +299,7 @@ export default function EditDataset() {
                     let icon = currentValid ? successIcon() : errIcon()
                     results.push(<span key={`rui-check-${i}`}>{icon} <a
                         href={getEntityViewUrl(ancestor.entity_type, ancestor.uuid, {isEdit: true}, {})}
-                        target='_blank'>{ancestor.sennet_id}</a>  <br/></span>)
+                        target='_blank' rel="noreferrer">{ancestor.sennet_id}</a>  <br/></span>)
                     i++
                 }
             }
@@ -337,7 +337,7 @@ export default function EditDataset() {
                     let icon = apiResult ? successIcon() : errIcon()
                     results.push(<span key={`doi-check-${i}`}>{icon} <a
                         href={getEntityViewUrl(ancestor.entity_type, ancestor.uuid, {isEdit: true}, {})}
-                        target='_blank'>{ancestor.sennet_id}</a>  <br/></span>)
+                        target='_blank' rel="noreferrer">{ancestor.sennet_id}</a>  <br/></span>)
                     i++
                 }
             }
@@ -617,7 +617,7 @@ export default function EditDataset() {
                                                       entity={datasetEntity} excludeColumns={contactsTSV.excludeColumns}
                                                       attribute={'Contributors'} title={<h6>Contributors</h6>}
                                                       customFileInfo={<span><a
-                                                          className='btn btn-outline-primary rounded-0 fs-8' download
+                                                          className='btn btn-outline-primary  fs-8' download
                                                           href={'https://raw.githubusercontent.com/hubmapconsortium/dataset-metadata-spreadsheet/main/contributors/latest/contributors.tsv'}> <FileDownloadIcon/>EXAMPLE.TSV</a></span>}/>}
 
                                     {/*This table is just for showing data.creators list in edit mode. Regular table from AttributesUpload will show if user uploads new file*/}
@@ -637,7 +637,7 @@ export default function EditDataset() {
                                         {!eq(data['status'], 'Processing') &&
                                             <SenNetPopover text={<>Save changes to this <code>Dataset</code>.</>}
                                                            className={'save-button'}>
-                                                <Button variant="outline-primary rounded-0 js-btn--save"
+                                                <Button variant="outline-primary  js-btn--save"
                                                         className={'me-2'}
                                                         onClick={handleSave}
                                                         disabled={disableSubmit}>

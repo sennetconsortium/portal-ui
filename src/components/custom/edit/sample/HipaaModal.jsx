@@ -72,7 +72,7 @@ const HipaaModal = ({}) => {
                         </ol>
                     </Modal.Body>
                     <Modal.Footer>
-                        <Button variant="outline-secondary rounded-0" onClick={hideModal}>
+                        <Button variant="outline-secondary " onClick={hideModal}>
                             Close
                         </Button>
                     </Modal.Footer>

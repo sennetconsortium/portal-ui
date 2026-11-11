@@ -110,7 +110,7 @@ const DataTypeQuantities = ({ id, organ }) => {
         <SenNetAccordion id={id} title='Dataset Types' afterTitle={undefined}>
             <div className='d-flex flex-row-reverse'>
                 <Link
-                    className='btn btn-outline-primary rounded-0'
+                    className='btn btn-outline-primary '
                     href={searchUrl}
                     onClick={handleSearchPageClick}
                 >

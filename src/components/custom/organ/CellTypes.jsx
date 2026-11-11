@@ -251,7 +251,7 @@ function CellTypes({organ, setShowCellTypesSide}) {
 
                     {tableData.length > 0 && <div className='d-flex flex-row-reverse'>
           <span
-              className='btn btn-outline-primary rounded-0'
+              className='btn btn-outline-primary '
               role='button'
               onClick={downloadData}
           >
