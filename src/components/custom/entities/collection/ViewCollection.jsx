@@ -163,7 +163,7 @@ function ViewCollection({collectionType = 'Collection', entitiesLabel = 'Entitie
                                     <div id="sidebar"
                                          className="collapse collapse-horizontal sticky-top custom-sticky">
                                         <ul id="sidebar-nav"
-                                            className="nav list-group rounded-0 text-sm-start">
+                                            className="nav list-group  text-sm-start">
                                             <li className="nav-item">
                                                 <a href="#Summary"
                                                    className="nav-link "

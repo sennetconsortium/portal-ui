@@ -181,11 +181,11 @@ export const JobQueueProvider = ({ children }) => {
         body.push(
             <Row key='modal-download-area' className={'mt-4 pull-right'}>
                 <Stack direction='horizontal' gap={3}>
-                    <a role={'button'} className={'btn btn-outline-success rounded-0'}
+                    <a role={'button'} className={'btn btn-outline-success '}
                        href={downloadURL} download={`${_file.name}`}>Download registered data <i
                         className="bi bi-download"></i></a>
                     {(categories.length === 1) &&
-                        <a className={'btn btn-primary rounded-0'}
+                        <a className={'btn btn-primary '}
                            href={`/edit/bulk/${entityType}?action=metadata&category=${categories[0]}`}>
                             Continue to metadata upload <i className="bi bi-arrow-right-square-fill"></i>
                         </a>
@@ -231,13 +231,13 @@ export const JobQueueProvider = ({ children }) => {
                 <Stack direction="horizontal" gap={3}>
                     { data.passes.length > 0 &&
                         <a role={'button'} title={'Download successfully uploaded metadata details'}
-                           className={'btn btn-outline-success rounded-0'}
+                           className={'btn btn-outline-success '}
                            href={downloadURLPasses} download={`${_file.name.replace('.tsv', '-success.tsv')}`}>Download
                             upload data <i className="bi bi-download"></i></a>
                     }
                     { data.fails.length > 0 &&
                         <a role={'button'} title={'Download unsuccessfully uploaded metadata details'}
-                           className={'btn btn-outline-danger rounded-0'}
+                           className={'btn btn-outline-danger '}
                            href={downloadURLFails} download={`${_file.name.replace('.tsv', '-fails.tsv')}`}>Download
                             failed uploads data <i className="bi bi-download"></i></a>
                     }

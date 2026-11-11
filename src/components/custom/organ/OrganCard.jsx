@@ -15,7 +15,7 @@ const OrganCard = ({ organ }) => {
     }
 
     return (
-        <Card className='p-4 rounded-0 h-100 text-dark card-hover'>
+        <Card className='p-4  h-100 text-dark card-hover'>
             <Card.Body className='d-flex flex-row justify-content-between'>
                 <div>
                     <div className='mb-1 h4'>{organ.label}</div>

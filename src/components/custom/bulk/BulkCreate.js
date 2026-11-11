@@ -32,7 +32,7 @@ export default function BulkCreate({
                                        entityDetails = {},
                                        isMetadata=false,
                                    }) {
-    const buttonVariant = "btn btn-outline-primary rounded-0"
+    const buttonVariant = "btn btn-outline-primary "
     const inputFileRef = useRef(null)
     const [activeStep, setActiveStep] = useState(0)
     const [isNextButtonDisabled, setIsNextButtonDisabled] = useState(true)
@@ -631,7 +631,7 @@ export default function BulkCreate({
                     <Grid container spacing={3} className={'text-center justify-content-center mt-3'}>
                         <Grid item xs>
                             <Button
-                                variant={'outline-dark rounded-0'}
+                                variant={'outline-dark '}
                                 disabled={activeStep === 0 || activeStep === getStepsLength() - 1 || isValidationStep()}
                                 onClick={handleBack}
                             >
@@ -649,7 +649,7 @@ export default function BulkCreate({
                                         ref={inputFileRef}
                                         onChange={handleFileChange}
                                     />
-                                    <Button variant={'outline-success rounded-0'}
+                                    <Button variant={'outline-success '}
                                             onClick={handleBrowseFilesClick}>
                                         Browse files
                                     </Button>{' '}

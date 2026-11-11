@@ -323,7 +323,7 @@ function ViewDataset({initialData, initialCitationData, initialError}) {
                             <div className="col-auto p-0">
                                 <div id="sidebar"
                                      className="collapse collapse-horizontal sticky-top custom-sticky">
-                                    <ul id="sidebar-nav" className="nav list-group rounded-0 text-sm-start">
+                                    <ul id="sidebar-nav" className="nav list-group  text-sm-start">
                                         <li className="nav-item">
                                             <a href="#Summary"
                                                className="nav-link "

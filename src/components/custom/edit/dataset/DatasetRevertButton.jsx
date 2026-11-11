@@ -42,7 +42,7 @@ function DatasetRevertButton({disableSubmit, onClick, onStatusChange, data}) {
 
     return (
         <>
-            <Button className="me-2" variant="outline-primary rounded-0" disabled={disableSubmit}
+            <Button className="me-2" variant="outline-primary " disabled={disableSubmit}
                     onClick={showModal}>
                 Revert
             </Button>

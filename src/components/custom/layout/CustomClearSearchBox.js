@@ -14,7 +14,7 @@ function CustomClearSearchBox({shouldClearFilters = true}) {
 
     return (
         <div className="clear-filter-div">
-            <button className="btn btn-primary rounded-0 clear-filter-button"
+            <button className="btn btn-primary  clear-filter-button"
                     onClick={handleClearFiltersClick}>Clear Filters
             </button>
         </div>

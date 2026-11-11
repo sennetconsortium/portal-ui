@@ -84,7 +84,7 @@ function SearchEntities() {
                                                             <Form.Control
                                                                 value={value}
                                                                 onChange={(e) => onChange(e.currentTarget.value)}
-                                                                className="right-border-none form-control form-control-lg rounded-0"
+                                                                className="right-border-none form-control form-control-lg "
                                                                 placeholder="Search"
                                                                 autoFocus={false}
                                                             />
@@ -92,7 +92,7 @@ function SearchEntities() {
                                                                 className={"transparent"}><i
                                                                 className="bi bi-search"></i></InputGroup.Text>
                                                             <Button variant="outline-primary"
-                                                                    className={"rounded-0"}
+                                                                    className={""}
                                                                     onClick={e => handleSearchFormSubmit(e, onSubmit)}>{_t('Search')}</Button>
                                                         </InputGroup>
                                                     </Form.Group>

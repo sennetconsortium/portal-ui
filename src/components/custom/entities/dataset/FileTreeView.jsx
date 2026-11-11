@@ -239,7 +239,7 @@ function FileTreeView({
                         <Col lg={8}>
                             {Object.values(selection).length <= 0 && <a target="_blank"
                                                                         className={"icon-inline js-file"}
-                                                                        href={`${getAssetsURL(node.data.uuid, node.data.rel_path)}`}><span
+                                                                        href={`${getAssetsURL(node.data.uuid, node.data.rel_path)}`} rel="noreferrer"><span
                                 className="me-1">{node.label}</span>
                             </a>}
                             {Object.values(selection).length > 0 && <span
@@ -294,7 +294,7 @@ function FileTreeView({
                         <InputGroup>
                             <Form.Control
                                 onChange={(e) => handleFileSearchInputChange(e, filterOptions)}
-                                className="right-border-none rounded-0"
+                                className="right-border-none "
                                 placeholder="Search"
                             />
                             <InputGroup.Text
@@ -311,7 +311,7 @@ function FileTreeView({
 
                     {showQAButton && <Form.Group as={Col} xl={3} lg={6} className="mt-xl-0 mt-md-2">
                         <ToggleButton
-                            className="rounded-0 w-100"
+                            className=" w-100"
                             id="toggle-check-qa"
                             type="checkbox"
                             variant="outline-primary"
@@ -326,7 +326,7 @@ function FileTreeView({
 
                     {showDataProductButton && <Form.Group as={Col} xl={3} lg={6} className="mt-xl-0 mt-md-2">
                         <ToggleButton
-                            className="rounded-0 w-100"
+                            className=" w-100"
                             id="toggle-check-data-product"
                             type="checkbox"
                             variant="outline-primary"
@@ -342,7 +342,7 @@ function FileTreeView({
 
                     {showDownloadAllButton && <Form.Group as={Col} xl={3} lg={6} className="mt-xl-0 mt-md-2">
                         <Button
-                            className="rounded-0 w-100"
+                            className=" w-100"
                             id="download-all-data-products"
                             variant="outline-primary"
                             value="true"

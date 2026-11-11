@@ -55,7 +55,7 @@ export default function ThumbnailSelector({ editMode, values, setValues, isDisab
         }
 
         <SenNetPopover className={'thumbnail-selector'} placement={'top'} text={isDisabled ? 'The thumbnail files of this entity cannot be updated under its current publication status' : 'Click here to attach a single thumbnail image'}>
-            <Button disabled={isDisabled} className={'mb-2'} variant={'outline-primary rounded-0'} onClick={isDisabled ? null : handleUploadThumbnailClick}>
+            <Button disabled={isDisabled} className={'mb-2'} variant={'outline-primary '} onClick={isDisabled ? null : handleUploadThumbnailClick}>
                 Upload a thumbnail file
                 <i className={'bi bi-paperclip ms-2'}/>
             </Button>

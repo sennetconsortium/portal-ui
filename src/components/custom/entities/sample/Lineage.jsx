@@ -198,7 +198,7 @@ const Lineage = ({lineage, showManifestDownload = true, showViewOnDataPage = tru
                             <div className="d-flex justify-content-end mb-4 gap-4">
                                 {showViewOnDataPage && (
                                     <a
-                                        className="btn btn-outline-primary rounded-0"
+                                        className="btn btn-outline-primary "
                                         href={searchUrlForEntities(datasetData.map(d => d.sennet_id))}>
                                         View on search page
                                     </a>
@@ -229,7 +229,7 @@ const Lineage = ({lineage, showManifestDownload = true, showViewOnDataPage = tru
                         {(showViewOnDataPage) && (
                             <div className="d-flex justify-content-end mb-4 gap-4">
                                 <a
-                                    className="btn btn-outline-primary rounded-0"
+                                    className="btn btn-outline-primary "
                                     href={searchUrlForEntities(sampleData.map(d => d.sennet_id))}>
                                     View on search page
                                 </a>
@@ -251,7 +251,7 @@ const Lineage = ({lineage, showManifestDownload = true, showViewOnDataPage = tru
                         {(showViewOnDataPage) && (
                             <div className="d-flex justify-content-end mb-4 gap-4">
                                 <a
-                                    className="btn btn-outline-primary rounded-0"
+                                    className="btn btn-outline-primary "
                                     href={searchUrlForEntities(sourceData.map(d => d.sennet_id))}>
                                     View on search page
                                 </a>

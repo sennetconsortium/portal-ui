@@ -134,7 +134,7 @@ function CLTModal({data, showModal, setShowModal}) {
                     </AccordionDetails>
                 </Accordion>
                 <div className={'d-flex'}>
-                    <Button className={'ms-auto'} variant="outline-primary rounded-0"
+                    <Button className={'ms-auto'} variant="outline-primary "
                             onClick={downloadManifest}>Generate Download Manifest Files</Button>
                 </div>
             </div>

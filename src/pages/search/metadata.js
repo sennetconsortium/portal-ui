@@ -87,7 +87,7 @@ function SearchMetadata() {
                                             Search API’s <code>param-search</code> endpoint. For detailed instructions
                                             on how to utilize this
                                             feature, please refer to the provided <a target={"_blank"}
-                                                                                     href="https://docs.sennetconsortium.org/param-search/">documentation</a>.
+                                                                                     href="https://docs.sennetconsortium.org/param-search/" rel="noreferrer">documentation</a>.
                                         </> />
 
                                         <SearchBox

@@ -143,7 +143,7 @@ const SearchTypeButton = ({ title }) => {
                 className = eq(b, 'files') && onCondition('more').canShow ? 'w-65' : 'w-100'
                 res.push (
                     <div key={b} className="searchType__wrap">
-                    {!eq(b, 'more') && <a key={b} className={`btn btn-outline-primary rounded-0 ${className} js-searchType mt-2`}
+                    {!eq(b, 'more') && <a key={b} className={`btn btn-outline-primary  ${className} js-searchType mt-2`}
                        href={`${validButtons[b]}${condition.entity ? `?addFilters=entity_type=${condition.entity}` : ''}`}>
                         Search {b}
                     </a>}

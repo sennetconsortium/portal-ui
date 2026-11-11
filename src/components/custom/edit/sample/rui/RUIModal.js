@@ -33,9 +33,9 @@ const RUIModal = ({hide, show, tissueBlockSpatialData}) => {
             <Modal.Footer>
                 <SenNetPopover text={'Copied!'} trigger={SenPopoverOptions.triggers.click}
                                className={`popover-clipboard`}>
-                    <Button variant={'outline-primary'} className={'rounded-0'} onClick={copyToClipboard}>Copy</Button>
+                    <Button variant={'outline-primary'} className={''} onClick={copyToClipboard}>Copy</Button>
                 </SenNetPopover>
-                <Button variant={'outline-secondary'} className={'rounded-0'} onClick={hide}>Close</Button>
+                <Button variant={'outline-secondary'} className={''} onClick={hide}>Close</Button>
             </Modal.Footer>
         </Modal>
     )

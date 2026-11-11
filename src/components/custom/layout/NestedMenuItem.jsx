@@ -29,7 +29,7 @@ function NestedMenuItem({ children, idPrefix, parentLabel, parentClassName }) {
         
         <ListItemText>{parentLabel}</ListItemText>
           <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-            <i class="bi bi-chevron-right"></i>
+            <i className="bi bi-chevron-right"></i>
           </Typography>
       </MenuItem>
       <StyledMenu

@@ -55,20 +55,20 @@ const RuiButton = ({showRegisterLocationButton, ruiLocation, setShowRui, ruiSex,
                     <>
                         {ruiLocation ? (
                             <Button variant={'outline-primary'}
-                                    className={'rounded-0 mb-2'}
+                                    className={' mb-2'}
                                     onClick={handleRegisterLocationClick}>
                                 Edit Location
                             </Button>
                         ) : (ruiSex !== undefined) ? (
                             <Button variant={'outline-primary'}
-                                    className={'rounded-0 mb-2'}
+                                    className={' mb-2'}
                                     onClick={handleRegisterLocationClick}>
                                 Register Location
                             </Button>
                         ) : (
                             <>
                                 <Button variant={'outline-primary'}
-                                        className={'rounded-0 mb-2'}
+                                        className={' mb-2'}
                                         onClick={() => {
                                             setRuiSex('Male');
                                             handleRegisterLocationClick()
@@ -76,7 +76,7 @@ const RuiButton = ({showRegisterLocationButton, ruiLocation, setShowRui, ruiSex,
                                     Register location (Male Source)
                                 </Button>
                                 <Button variant={'outline-primary'}
-                                        className={'rounded-0 mb-2 ms-2'}
+                                        className={' mb-2 ms-2'}
                                         onClick={() => {
                                             setRuiSex('Female');
                                             handleRegisterLocationClick()
@@ -93,7 +93,7 @@ const RuiButton = ({showRegisterLocationButton, ruiLocation, setShowRui, ruiSex,
                     <>
                         <Button id={'view-rui-json-btn'}
                                 variant={'outline-success'}
-                                className={'rounded-0 mb-2 ms-2'}
+                                className={' mb-2 ms-2'}
                                 onClick={() => setShowRuiLocationModal(true)}>
                             View JSON
                         </Button>

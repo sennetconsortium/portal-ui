@@ -97,7 +97,7 @@ function ViewCellType() {
                         >
                             <ul
                                 id='sidebar-nav'
-                                className='nav list-group rounded-0 text-sm-start'
+                                className='nav list-group  text-sm-start'
                             >
                                 {/* Description */}
                                 <li className='nav-item'>
@@ -185,7 +185,7 @@ function ViewCellType() {
                                         <a
                                             target='_blank'
                                             href={`http://purl.obolibrary.org/obo/${data?.hits?.hits[0]?._source?.cl_id.replace(':', '_')}`}
-                                            className='icon-inline'
+                                            className='icon-inline' rel="noreferrer"
                                         >
                                             <span className='me-1'>
                                                 {
