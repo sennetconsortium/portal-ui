@@ -2,7 +2,7 @@ import CellTypes from '@/components/custom/organ/CellTypes'
 import HumanReferenceAtlas from '@/components/custom/organ/HumanReferenceAtlas'
 import AppContext from '@/context/AppContext'
 import dynamic from 'next/dynamic'
-import React, {useContext, useState} from 'react'
+import {useContext, useState} from 'react'
 import {APP_TITLE} from '@/config/config'
 import {getOrganByPath} from "@/config/organs";
 import PropTypes from "prop-types";
@@ -103,7 +103,6 @@ function Organ({organDetail}) {
 
                         {/* Cell Types */}
                         <CellTypes organ={organDetail} setShowCellTypesSide={setShowCellTypesSide}/>
-
 
                         {/* Integrated Maps */}
                         <IntegratedMaps

@@ -761,3 +761,14 @@ export const searchUIEncodedQueryString = (filters, size = 20) => {
     }
     return compressToEncodedURIComponent(JSON.stringify(state))
 }
+
+/**
+ * Generates a search page URL for the given filters
+ *
+ * @param {Filter[]} filters - The filters to include in the search URL
+ * @param {number} [size] - The number of results to return per page
+ * @returns {string} - The search page URL with the encoded filters
+ */
+export const searchPageUrl = (filters, size = 20) => {
+    return `${APP_ROUTES.search}?s=` + searchUIEncodedQueryString(filters, size)
+}
