@@ -5,7 +5,7 @@ import log from 'xac-loglevel'
 import {useContext, useEffect, useState} from 'react'
 import {Card} from 'react-bootstrap'
 import DataTable from 'react-data-table-component'
-import {formatByteSize, getOrganHierarchy, getOrganMeta, searchUIQueryString} from '../js/functions'
+import {formatByteSize, getOrganMeta, searchPageUrl} from '@/components/custom/js/functions'
 import {Skeleton} from '@mui/material'
 import AppContext from '@/context/AppContext'
 import {getOrganByCode} from "@/config/organs";
@@ -250,7 +250,7 @@ function IntegratedMaps({id, title, organ, setShowIntegratedMapsSide = null}) {
                     )
                 }
 
-                const {primarySennetIds, url} = buildUrl(row.dataSets)
+                const {count, url} = buildUrl(row.dataSets)
                 if (url == null) {
                     return (
                         <button className='btn btn-outline-primary my-1' disabled>
@@ -261,7 +261,7 @@ function IntegratedMaps({id, title, organ, setShowIntegratedMapsSide = null}) {
 
                 return (
                     <a className='btn btn-outline-primary my-1' href={url}>
-                        View {primarySennetIds.length} datasets
+                        View {count} datasets
                     </a>
                 )
             },
@@ -290,15 +290,14 @@ function IntegratedMaps({id, title, organ, setShowIntegratedMapsSide = null}) {
         // build a search url for the entity search page
         return (
             {
-                primarySennetIds,
-                url: `${APP_ROUTES.search}?` +
-                    searchUIQueryString(
-                        [
-                            {field: 'sennet_id', values: primarySennetIds, type: 'any'},
-                            {field: 'entity_type', values: ['Dataset'], type: 'any'}
-                        ],
-                        20
-                    )
+                count: primarySennetIds.length,
+                url: searchPageUrl(
+                    [
+                        {field: 'sennet_id', values: primarySennetIds, type: 'any'},
+                        {field: 'entity_type', values: ['Dataset'], type: 'any'}
+                    ],
+                    20
+                )
             }
         )
     }
