@@ -1,6 +1,7 @@
 import dynamic from "next/dynamic";
 import {useContext, useEffect} from "react"
 import {useRouter} from "next/router"
+import {APP_ROUTES} from "@/config/constants"
 import {APP_TITLE} from "@/config/config"
 import {SEARCH_METADATA} from "@/config/search/metadata"
 import AppContext from "@/context/AppContext"
@@ -19,7 +20,7 @@ function Metadata() {
     const {logout, isRegisterHidden, isAuthorizing, isUnauthorized, hasAuthenticationCookie} = useContext(AppContext)
     const router = useRouter()
 
-    const METADATA_SEARCH = "/search/metadata"
+    const METADATA_SEARCH = APP_ROUTES.metadataSearch
 
     useEffect(() => {
         Sui.keyPrefix = "metadata"
