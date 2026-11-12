@@ -1,4 +1,4 @@
-import { getCreationActionRelationName, searchUIQueryString } from '@/components/custom/js/functions';
+import { getCreationActionRelationName, searchUIEncodedQueryString } from '@/components/custom/js/functions';
 import SearchAPIConnector from 'search-ui/packages/search-api-connector';
 import {
     doFiltersContainField,
@@ -967,7 +967,7 @@ export const SEARCH_METADATA = {
             title: 'All Human Sources',
             description: 'Human sources of all ages and sexes.',
             entityType: 'source',
-            queryString: searchUIQueryString([
+            queryString: searchUIEncodedQueryString([
                 { field: 'entity_type', values: ['Source'], type: 'any' },
                 { field: 'source_type', values: ['Human'], type: 'any' }
             ])
@@ -976,7 +976,7 @@ export const SEARCH_METADATA = {
             title: 'C57BL/6 Mouse Sources',
             description: 'Mouse sources from the C57BL/6 strain',
             entityType: 'source',
-            queryString: searchUIQueryString([
+            queryString: searchUIEncodedQueryString([
                 { field: 'entity_type', values: ['Source'], type: 'any' },
                 { field: 'source_type', values: ['Mouse'], type: 'any' },
                 { field: 'metadata.strain', values: ['C57BL/6'], type: 'any' }
@@ -987,7 +987,7 @@ export const SEARCH_METADATA = {
             description:
                 'Mouse sources of all strains, sexes, and embryo statuses.',
             entityType: 'source',
-            queryString: searchUIQueryString([
+            queryString: searchUIEncodedQueryString([
                 { field: 'entity_type', values: ['Source'], type: 'any' },
                 { field: 'source_type', values: ['Mouse'], type: 'any' }
             ])
@@ -997,7 +997,7 @@ export const SEARCH_METADATA = {
             description:
                 'Block samples of all weights, volumes, and preparation conditions.',
             entityType: 'sample',
-            queryString: searchUIQueryString([
+            queryString: searchUIEncodedQueryString([
                 { field: 'entity_type', values: ['Sample'], type: 'any' },
                 { field: 'sample_category', values: ['Block'], type: 'any' }
             ])
@@ -1007,7 +1007,7 @@ export const SEARCH_METADATA = {
             description:
                 'Section samples of all thicknesses and preparation conditions.',
             entityType: 'sample',
-            queryString: searchUIQueryString([
+            queryString: searchUIEncodedQueryString([
                 { field: 'entity_type', values: ['Sample'], type: 'any' },
                 { field: 'sample_category', values: ['Section'], type: 'any' }
             ])
@@ -1017,7 +1017,7 @@ export const SEARCH_METADATA = {
             description:
                 'Suspension samples of all entity types, enrichment, and preparation conditions.',
             entityType: 'sample',
-            queryString: searchUIQueryString([
+            queryString: searchUIEncodedQueryString([
                 { field: 'entity_type', values: ['Sample'], type: 'any' },
                 {
                     field: 'sample_category',
@@ -1031,7 +1031,7 @@ export const SEARCH_METADATA = {
             description:
                 'Datasets with the nucleic acid and protein analyte class.',
             entityType: 'dataset',
-            queryString: searchUIQueryString([
+            queryString: searchUIEncodedQueryString([
                 { field: 'entity_type', values: ['Dataset'], type: 'any' },
                 {
                     field: 'metadata.analyte_class',
@@ -1044,7 +1044,7 @@ export const SEARCH_METADATA = {
             title: 'All RNA Datasets',
             description: 'Datasets with the RNA analyte class.',
             entityType: 'dataset',
-            queryString: searchUIQueryString([
+            queryString: searchUIEncodedQueryString([
                 { field: 'entity_type', values: ['Dataset'], type: 'any' },
                 {
                     field: 'metadata.analyte_class',
@@ -1057,7 +1057,7 @@ export const SEARCH_METADATA = {
             title: 'All Sequence Datasets',
             description: 'Datasets with the sequence assay category.',
             entityType: 'dataset',
-            queryString: searchUIQueryString([
+            queryString: searchUIEncodedQueryString([
                 { field: 'entity_type', values: ['Dataset'], type: 'any' },
                 {
                     field: 'metadata.assay_category',
