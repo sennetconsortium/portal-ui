@@ -1,8 +1,8 @@
 import {getAuth, getRootURL} from "@/config/config";
 import {APP_ROUTES} from "@/config/constants";
 import log from 'xac-loglevel'
-import React from "react";
 import {getOrganByCode, organIcons} from "@/config/organs";
+import {compressToEncodedURIComponent} from 'lz-string';
 
 export function getHeaders() {
     const myHeaders = new Headers();
@@ -731,7 +731,7 @@ export const extractSourceMappedMetadataInfo = (sourceMappedMetadata) => {
 /**
  * @param {Filter[]} filters - The filters to convert to a query string
  * @param {number} [size] - The number of results to return per page
- * @returns {string} - The url encodes query string
+ * @returns {string} - The url encoded query string
  */
 export const searchUIQueryString = (filters, size = 20) => {
     const segments = filters.map((filter, idx) => {
@@ -744,4 +744,20 @@ export const searchUIQueryString = (filters, size = 20) => {
     })
 
     return `size=n_${size}_n&` + segments.join('&')
+}
+
+
+/**
+ * Converts the filters into a compressed lz-string encoded query string
+ *
+ * @param {Filter[]} filters - The filters to convert to a lz-string encoded query string
+ * @param {number} [size] - The number of results to return per page
+ * @returns {string} - The lz-string encoded query string
+ */
+export const searchUIEncodedQueryString = (filters, size = 20) => {
+    const state = {
+        f: filters,
+        n: size
+    }
+    return compressToEncodedURIComponent(JSON.stringify(state))
 }
