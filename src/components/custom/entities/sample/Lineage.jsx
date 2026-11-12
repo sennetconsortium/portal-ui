@@ -19,6 +19,7 @@ import Tabs from "react-bootstrap/Tabs";
 import {RESULTS_PER_PAGE} from "@/config/config";
 import SenNetPopover from "@/components/SenNetPopover";
 import {categorizeByDatasetType} from "@/components/custom/js/functions";
+import {searchUIEncodedQueryString} from "@/components/custom/js/functions";
 import {APP_ROUTES} from "@/config/constants";
 
 const DataTable = dynamic(() => import("react-data-table-component"), {
@@ -170,16 +171,17 @@ const Lineage = ({lineage, showManifestDownload = true, showViewOnDataPage = tru
     }
     sourceColumns.push(reusableColumns.GroupName)
 
+    const searchUrlForEntities = (sennetIds) => {
+        return (
+            `${APP_ROUTES.search}?s=` +
+            searchUIEncodedQueryString([{ field: 'sennet_id', values: sennetIds, type: 'any' }], 20)
+        )
+    }
+
     const datasetData = tableData.filter(obj => obj.entity_type === "Dataset")
     const sampleData = tableData.filter(obj => obj.entity_type === "Sample")
     const sourceData = tableData.filter(obj => obj.entity_type === "Source")
     const noData = datasetData.length === 0 && sampleData.length === 0 && sourceData.length === 0
-
-    const navigateToSearchPage = async (e, sennetIds) => {
-        e.preventDefault()
-        localStorage.setItem('entities.filters', JSON.stringify([{"field": "sennet_id", "values": sennetIds, "type": "any"}]))
-        window.location.href = APP_ROUTES.search
-    }
 
     return (
         <div className="mb-3">
@@ -195,12 +197,11 @@ const Lineage = ({lineage, showManifestDownload = true, showViewOnDataPage = tru
                         {(showManifestDownload || showViewOnDataPage) && (
                             <div className="d-flex justify-content-end mb-4 gap-4">
                                 {showViewOnDataPage && (
-                                    <span
-                                        role="button"
+                                    <a
                                         className="btn btn-outline-primary "
-                                        onClick={(e) => navigateToSearchPage(e, datasetData.map(d => d.sennet_id))}>
-                                            View on search page
-                                    </span>
+                                        href={searchUrlForEntities(datasetData.map(d => d.sennet_id))}>
+                                        View on search page
+                                    </a>
                                 )}
                                 {showManifestDownload && (
                                     <span
@@ -227,12 +228,11 @@ const Lineage = ({lineage, showManifestDownload = true, showViewOnDataPage = tru
                         title={<div>{getSubtypeProvenanceShape("Sample", null, 'lg')} ({sampleData.length})</div>}>
                         {(showViewOnDataPage) && (
                             <div className="d-flex justify-content-end mb-4 gap-4">
-                                <span
-                                    role="button"
-                                    className="btn btn-outline-primary "
-                                    onClick={(e) => navigateToSearchPage(e, sampleData.map(d => d.sennet_id))}>
-                                        View on search page
-                                </span>
+                                <a
+                                    className="btn btn-outline-primary"
+                                    href={searchUrlForEntities(sampleData.map(d => d.sennet_id))}>
+                                    View on search page
+                                </a>
                             </div>
                         )}
                         <DataTable
@@ -250,12 +250,11 @@ const Lineage = ({lineage, showManifestDownload = true, showViewOnDataPage = tru
                         title={<span>{getSubtypeProvenanceShape("Source", null, 'lg')} ({sourceData.length})</span>}>
                         {(showViewOnDataPage) && (
                             <div className="d-flex justify-content-end mb-4 gap-4">
-                                <span
-                                    role="button"
-                                    className="btn btn-outline-primary "
-                                    onClick={(e) => navigateToSearchPage(e, sourceData.map(d => d.sennet_id))}>
-                                        View on search page
-                                </span>
+                                <a
+                                    className="btn btn-outline-primary"
+                                    href={searchUrlForEntities(sourceData.map(d => d.sennet_id))}>
+                                    View on search page
+                                </a>
                             </div>
                         )}
                         <DataTable
