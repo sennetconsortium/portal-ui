@@ -703,22 +703,6 @@ export const SEARCH_METADATA = {
                     'metadata.acquisition_instrument_vendor'
                 )
             },
-            // 'metadata.analyte_class': {
-            //     label: 'Analyte Class',
-            //     type: 'value',
-            //     field: 'metadata.analyte_class.keyword',
-            //     isExpanded: false,
-            //     filterType: 'any',
-            //     isFilterable: false,
-            //     facetType: 'term',
-            //     isAggregationActive: doesTermFilterContainValues(
-            //         'entity_type',
-            //         ['Dataset']
-            //     ),
-            //     isFacetVisible: doesAggregationHaveBuckets(
-            //         'metadata.analyte_class'
-            //     )
-            // },
             'metadata.assay_category': {
                 label: 'Assay Category',
                 type: 'value',
@@ -1027,28 +1011,27 @@ export const SEARCH_METADATA = {
             ])
         },
         {
-            title: 'All Nucleic Datasets',
-            description:
-                'Datasets with the nucleic acid and protein analyte class.',
+            title: 'All Single Nucleus Datasets',
+            description: 'Datasets with the single nucleus analyte input.',
             entityType: 'dataset',
             queryString: searchUIEncodedQueryString([
                 { field: 'entity_type', values: ['Dataset'], type: 'any' },
                 {
-                    field: 'metadata.analyte_class',
-                    values: ['Nucleic acid + protein'],
+                    field: 'metadata.assay_input_entity',
+                    values: ['single nucleus'],
                     type: 'any'
                 }
             ])
         },
         {
-            title: 'All RNA Datasets',
-            description: 'Datasets with the RNA analyte class.',
+            title: 'All Single Cell Datasets',
+            description: 'Datasets with the single cell analyte input.',
             entityType: 'dataset',
             queryString: searchUIEncodedQueryString([
                 { field: 'entity_type', values: ['Dataset'], type: 'any' },
                 {
-                    field: 'metadata.analyte_class',
-                    values: ['RNA'],
+                    field: 'metadata.assay_input_entity',
+                    values: ['single cell'],
                     type: 'any'
                 }
             ])
