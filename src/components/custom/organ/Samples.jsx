@@ -1,5 +1,5 @@
 import ClipboardCopy from '@/components/ClipboardCopy';
-import { searchUIQueryString } from '@/components/custom/js/functions';
+import { searchPageUrl } from '@/components/custom/js/functions';
 import SenNetAccordion from '@/components/custom/layout/SenNetAccordion';
 import { APP_ROUTES } from '@/config/constants';
 import AppContext from '@/context/AppContext';
@@ -73,8 +73,7 @@ const Samples = ({ id, organ }) => {
     ]
 
     const searchUrl =
-        `${APP_ROUTES.search}?` +
-        searchUIQueryString(
+        searchPageUrl(
             [
                 { field: 'entity_type', values: ['Sample'], type: 'any' },
                 { field: 'organ', values: organ.codes, type: 'any' }

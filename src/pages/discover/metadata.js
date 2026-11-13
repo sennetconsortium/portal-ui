@@ -1,7 +1,7 @@
 import dynamic from "next/dynamic";
-import React, {useContext, useEffect} from "react"
+import {useContext, useEffect} from "react"
 import {useRouter} from "next/router"
-import Link from "next/link"
+import {APP_ROUTES} from "@/config/constants"
 import {APP_TITLE} from "@/config/config"
 import {SEARCH_METADATA} from "@/config/search/metadata"
 import AppContext from "@/context/AppContext"
@@ -9,19 +9,18 @@ import Card from "react-bootstrap/Card"
 import Container from "react-bootstrap/Container"
 import Row from "react-bootstrap/Row"
 import Col from "react-bootstrap/Col"
-import Button from "react-bootstrap/Button"
 import {Sui} from "search-ui/lib/search-tools"
 import SenNetAlert from "@/components/SenNetAlert";
 
-const AppNavbar = dynamic(() => import("../../components/custom/layout/AppNavbar"))
-const Header = dynamic(() => import("../../components/custom/layout/Header"))
-const Spinner = dynamic(() => import("../../components/custom/Spinner"))
+const AppNavbar = dynamic(() => import("@/components/custom/layout/AppNavbar"))
+const Header = dynamic(() => import("@/components/custom/layout/Header"))
+const Spinner = dynamic(() => import("@/components/custom/Spinner"))
 
 function Metadata() {
     const {logout, isRegisterHidden, isAuthorizing, isUnauthorized, hasAuthenticationCookie} = useContext(AppContext)
     const router = useRouter()
 
-    const METADATA_SEARCH = "/search/metadata"
+    const METADATA_SEARCH = APP_ROUTES.metadataSearch
 
     useEffect(() => {
         Sui.keyPrefix = "metadata"
@@ -79,9 +78,11 @@ function Metadata() {
                                                 <Card.Title className="mb-2">{item.title}</Card.Title>
                                                 <Card.Text className="mb-2">{item.description}</Card.Text>
                                             </div>
-                                            <Link href={{pathname: METADATA_SEARCH, query: item.queryString}}>
-                                                <Button variant="primary ">Search</Button>
-                                            </Link>
+                                            <a
+                                                className="btn btn-primary"
+                                                href={`${METADATA_SEARCH}?s=${item.queryString}`}>
+                                                Search
+                                            </a>
                                         </Card.Body>
                                     </Card>
                                 </Col>

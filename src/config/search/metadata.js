@@ -1,4 +1,4 @@
-import { getCreationActionRelationName, searchUIQueryString } from '@/components/custom/js/functions';
+import { getCreationActionRelationName, searchUIEncodedQueryString } from '@/components/custom/js/functions';
 import SearchAPIConnector from 'search-ui/packages/search-api-connector';
 import {
     doFiltersContainField,
@@ -703,22 +703,6 @@ export const SEARCH_METADATA = {
                     'metadata.acquisition_instrument_vendor'
                 )
             },
-            // 'metadata.analyte_class': {
-            //     label: 'Analyte Class',
-            //     type: 'value',
-            //     field: 'metadata.analyte_class.keyword',
-            //     isExpanded: false,
-            //     filterType: 'any',
-            //     isFilterable: false,
-            //     facetType: 'term',
-            //     isAggregationActive: doesTermFilterContainValues(
-            //         'entity_type',
-            //         ['Dataset']
-            //     ),
-            //     isFacetVisible: doesAggregationHaveBuckets(
-            //         'metadata.analyte_class'
-            //     )
-            // },
             'metadata.assay_category': {
                 label: 'Assay Category',
                 type: 'value',
@@ -967,7 +951,7 @@ export const SEARCH_METADATA = {
             title: 'All Human Sources',
             description: 'Human sources of all ages and sexes.',
             entityType: 'source',
-            queryString: searchUIQueryString([
+            queryString: searchUIEncodedQueryString([
                 { field: 'entity_type', values: ['Source'], type: 'any' },
                 { field: 'source_type', values: ['Human'], type: 'any' }
             ])
@@ -976,7 +960,7 @@ export const SEARCH_METADATA = {
             title: 'C57BL/6 Mouse Sources',
             description: 'Mouse sources from the C57BL/6 strain',
             entityType: 'source',
-            queryString: searchUIQueryString([
+            queryString: searchUIEncodedQueryString([
                 { field: 'entity_type', values: ['Source'], type: 'any' },
                 { field: 'source_type', values: ['Mouse'], type: 'any' },
                 { field: 'metadata.strain', values: ['C57BL/6'], type: 'any' }
@@ -987,7 +971,7 @@ export const SEARCH_METADATA = {
             description:
                 'Mouse sources of all strains, sexes, and embryo statuses.',
             entityType: 'source',
-            queryString: searchUIQueryString([
+            queryString: searchUIEncodedQueryString([
                 { field: 'entity_type', values: ['Source'], type: 'any' },
                 { field: 'source_type', values: ['Mouse'], type: 'any' }
             ])
@@ -997,7 +981,7 @@ export const SEARCH_METADATA = {
             description:
                 'Block samples of all weights, volumes, and preparation conditions.',
             entityType: 'sample',
-            queryString: searchUIQueryString([
+            queryString: searchUIEncodedQueryString([
                 { field: 'entity_type', values: ['Sample'], type: 'any' },
                 { field: 'sample_category', values: ['Block'], type: 'any' }
             ])
@@ -1007,7 +991,7 @@ export const SEARCH_METADATA = {
             description:
                 'Section samples of all thicknesses and preparation conditions.',
             entityType: 'sample',
-            queryString: searchUIQueryString([
+            queryString: searchUIEncodedQueryString([
                 { field: 'entity_type', values: ['Sample'], type: 'any' },
                 { field: 'sample_category', values: ['Section'], type: 'any' }
             ])
@@ -1017,7 +1001,7 @@ export const SEARCH_METADATA = {
             description:
                 'Suspension samples of all entity types, enrichment, and preparation conditions.',
             entityType: 'sample',
-            queryString: searchUIQueryString([
+            queryString: searchUIEncodedQueryString([
                 { field: 'entity_type', values: ['Sample'], type: 'any' },
                 {
                     field: 'sample_category',
@@ -1027,28 +1011,27 @@ export const SEARCH_METADATA = {
             ])
         },
         {
-            title: 'All Nucleic Datasets',
-            description:
-                'Datasets with the nucleic acid and protein analyte class.',
+            title: 'All Single Nucleus Datasets',
+            description: 'Datasets with the single nucleus analyte input.',
             entityType: 'dataset',
-            queryString: searchUIQueryString([
+            queryString: searchUIEncodedQueryString([
                 { field: 'entity_type', values: ['Dataset'], type: 'any' },
                 {
-                    field: 'metadata.analyte_class',
-                    values: ['Nucleic acid + protein'],
+                    field: 'metadata.assay_input_entity',
+                    values: ['single nucleus'],
                     type: 'any'
                 }
             ])
         },
         {
-            title: 'All RNA Datasets',
-            description: 'Datasets with the RNA analyte class.',
+            title: 'All Single Cell Datasets',
+            description: 'Datasets with the single cell analyte input.',
             entityType: 'dataset',
-            queryString: searchUIQueryString([
+            queryString: searchUIEncodedQueryString([
                 { field: 'entity_type', values: ['Dataset'], type: 'any' },
                 {
-                    field: 'metadata.analyte_class',
-                    values: ['RNA'],
+                    field: 'metadata.assay_input_entity',
+                    values: ['single cell'],
                     type: 'any'
                 }
             ])
@@ -1057,7 +1040,7 @@ export const SEARCH_METADATA = {
             title: 'All Sequence Datasets',
             description: 'Datasets with the sequence assay category.',
             entityType: 'dataset',
-            queryString: searchUIQueryString([
+            queryString: searchUIEncodedQueryString([
                 { field: 'entity_type', values: ['Dataset'], type: 'any' },
                 {
                     field: 'metadata.assay_category',
