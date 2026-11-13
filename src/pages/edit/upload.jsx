@@ -335,6 +335,7 @@ function EditUpload() {
 
                                         {/*Intended Source Type*/}
                                         <SourceType data={data} onChange={onChange}
+                                                    values={values}
                                                     label={'Intended Source Type'}
                                                     dataValue={'intended_source_type'}
                                                     labelDescription={<>The source type that the data contained in

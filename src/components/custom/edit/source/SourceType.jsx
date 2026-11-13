@@ -2,8 +2,9 @@ import React, {useContext, useEffect} from 'react'
 import {Form} from 'react-bootstrap';
 import SenNetPopover from '../../../SenNetPopover'
 import AppContext from '../../../../context/AppContext'
+import PropTypes from "prop-types";
 
-function SourceType({data, dataValue, onChange, label, labelDescription, isDisabled}) {
+function SourceType({data, dataValue, onChange, label, labelDescription, values, isDisabled}) {
     const {cache} = useContext(AppContext)
 
     useEffect(() => {
@@ -30,7 +31,11 @@ function SourceType({data, dataValue, onChange, label, labelDescription, isDisab
                              onChange={e => {
                                  onChange(e, dataValue ? dataValue : 'source_type', e.target.value)
                              }}
-                             value={dataValue ? data?.[dataValue] ?? '' : data?.source_type ?? ''}>
+                             value={
+                                 dataValue
+                                     ? (values?.[dataValue] ?? '')
+                                     : (values?.source_type ?? '')
+                             }>
                     <option value="">----</option>
                     {Object.entries(cache?.sourceTypes || {}).map(op => {
                         return (
@@ -44,6 +49,16 @@ function SourceType({data, dataValue, onChange, label, labelDescription, isDisab
             </Form.Group>
         </>
     )
+}
+
+SourceType.propTypes = {
+    data: PropTypes.object,
+    label: PropTypes.string,
+    labelDescription: PropTypes.string,
+    dataValue: PropTypes.string,
+    onChange: PropTypes.func,
+    values: PropTypes.object,
+    isDisabled: PropTypes.bool
 }
 
 export default SourceType
