@@ -729,25 +729,6 @@ export const extractSourceMappedMetadataInfo = (sourceMappedMetadata) => {
  */
 
 /**
- * @param {Filter[]} filters - The filters to convert to a query string
- * @param {number} [size] - The number of results to return per page
- * @returns {string} - The url encoded query string
- */
-export const searchUIQueryString = (filters, size = 20) => {
-    const segments = filters.map((filter, idx) => {
-        let segment = encodeURIComponent(`filters[${idx}][field]`) + `=${filter.field}&`
-        segment += filter.values
-            .map((value, i) => encodeURIComponent(`filters[${idx}][values][${i}]`) + `=${encodeURIComponent(value)}&`)
-            .join('')
-        segment += encodeURIComponent(`filters[${idx}][type]`) + `=${filter.type}`
-        return segment
-    })
-
-    return `size=n_${size}_n&` + segments.join('&')
-}
-
-
-/**
  * Converts the filters into a compressed lz-string encoded query string
  *
  * @param {Filter[]} filters - The filters to convert to a lz-string encoded query string
