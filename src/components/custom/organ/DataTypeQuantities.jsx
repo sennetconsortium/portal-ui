@@ -1,11 +1,9 @@
-import { searchUIQueryString } from '@/components/custom/js/functions'
+import { searchPageUrl } from '@/components/custom/js/functions'
 import SenNetAccordion from '@/components/custom/layout/SenNetAccordion'
 import { RESULTS_PER_PAGE } from '@/config/config'
-import { APP_ROUTES } from '@/config/constants'
 import useLocalSettings from '@/hooks/useLocalSettings'
 import { getOrganDataTypeQuantities } from '@/lib/services'
 import dynamic from 'next/dynamic'
-import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import DataTypeQuantitiesChart from './DataTypeQuantitiesChart'
 
@@ -40,8 +38,7 @@ const DataTypeQuantities = ({ id, organ }) => {
     }, [organ])
 
     const searchUrl =
-        `${APP_ROUTES.search}?` +
-        searchUIQueryString(
+        searchPageUrl(
             [
                 { field: 'entity_type', values: ['Dataset'], type: 'any' },
                 { field: 'origin_samples.organ.keyword', values: organ.codes, type: 'any' }
@@ -51,8 +48,7 @@ const DataTypeQuantities = ({ id, organ }) => {
 
     const searchUrlForDatasetType = (types) => {
         return (
-            `${APP_ROUTES.search}?` +
-            searchUIQueryString(
+            searchPageUrl(
                 [
                     { field: 'entity_type', values: ['Dataset'], type: 'any' },
                     { field: 'origin_samples.organ.keyword', values: organ.codes, type: 'any' },
@@ -90,12 +86,12 @@ const DataTypeQuantities = ({ id, organ }) => {
             sortable: true,
             cell: (row, index, column, id) => {
                 return (
-                    <Link
+                    <a
                         href={searchUrlForDatasetType(datasetTypes[row.datasetTypeHierarchy])}
                         onClick={handleDatasetTypeRowClick}
                     >
                         {row.datasetTypeHierarchy}
-                    </Link>
+                    </a>
                 )
             }
         },
@@ -109,13 +105,13 @@ const DataTypeQuantities = ({ id, organ }) => {
     return (
         <SenNetAccordion id={id} title='Dataset Types' afterTitle={undefined}>
             <div className='d-flex flex-row-reverse'>
-                <Link
+                <a
                     className='btn btn-outline-primary '
                     href={searchUrl}
                     onClick={handleSearchPageClick}
                 >
                     View on search page
-                </Link>
+                </a>
             </div>
             {datasetTypeHierarchy && (
                 <DataTable
