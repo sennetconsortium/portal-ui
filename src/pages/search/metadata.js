@@ -2,7 +2,7 @@ import dynamic from "next/dynamic";
 import React, {useContext} from "react";
 import {ErrorBoundary, SearchBox} from "@elastic/react-search-ui";
 import {Layout} from "@elastic/react-search-ui-views";
-import {APP_TITLE} from "@/config/config";
+import {APP_TITLE, getRootURL} from "@/config/config";
 import {SEARCH_METADATA} from "@/config/search/metadata"
 import CustomClearSearchBox from "../../components/custom/layout/CustomClearSearchBox";
 import Button from 'react-bootstrap/Button';
@@ -70,7 +70,7 @@ function SearchMetadata() {
 
         return (
             <>
-                <Header title={`Metadata | ${APP_TITLE}`}/>
+                <Header title={`Metadata | ${APP_TITLE}`} canonical={`${getRootURL().replace(/\/+$/, '')}/search/metadata`}/>
 
                 <SearchUIContainer config={SEARCH_METADATA} name='metadata' authState={authState}>
                     <AppNavbar hidden={isRegisterHidden}/>
