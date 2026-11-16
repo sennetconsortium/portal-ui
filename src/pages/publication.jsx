@@ -301,6 +301,11 @@ function ViewPublication({initialData, initialError}) {
 
 export async function getServerSideProps(context) {
     const {uuid} = context.query
+    if (!uuid) {
+        return {
+            notFound: true,
+        }
+    }
     const token = getCookie('groups_token', {
         req: context.req,
         res: context.res

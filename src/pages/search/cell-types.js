@@ -2,7 +2,7 @@ import dynamic from "next/dynamic";
 import React, {useContext, useEffect, useState} from "react";
 import {ErrorBoundary, SearchBox} from "@elastic/react-search-ui";
 import {Layout} from "@elastic/react-search-ui-views";
-import {APP_TITLE} from "@/config/config";
+import {APP_TITLE, getRootURL} from "@/config/config";
 import CustomClearSearchBox from "../../components/custom/layout/CustomClearSearchBox";
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
@@ -84,7 +84,7 @@ function SearchCellTypes() {
 
         return (
             <>
-                <Header title={`Cell Types | ${APP_TITLE}`}/>
+                <Header title={`Cell Types | ${APP_TITLE}`} canonical={`${getRootURL().replace(/\/+$/, '')}/search/cell-types`}/>
 
                 <SearchUIContainer config={SEARCH_CELL_TYPES} name='cellTypes' authState={authState}>
                     <AppNavbar hidden={isRegisterHidden}/>

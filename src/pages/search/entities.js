@@ -2,7 +2,7 @@ import dynamic from "next/dynamic";
 import React, {useContext} from "react";
 import {ErrorBoundary, SearchBox, SearchProvider} from "@elastic/react-search-ui";
 import {Layout} from "@elastic/react-search-ui-views";
-import {APP_TITLE} from "@/config/config";
+import {APP_TITLE, getRootURL} from "@/config/config";
 import {SEARCH_ENTITIES} from "@/config/search/entities"
 import CustomClearSearchBox from "@/components/custom/layout/CustomClearSearchBox";
 import Button from 'react-bootstrap/Button';
@@ -65,7 +65,7 @@ function SearchEntities() {
         return (
             
             <>
-                <Header title={`Data | ${APP_TITLE}`}/>
+                <Header title={`Data | ${APP_TITLE}`} canonical={`${getRootURL().replace(/\/+$/, '')}/search`}/>
 
                 <SearchUIContainer config={SEARCH_ENTITIES} name='entities' authState={authState}>
                     <AppNavbar hidden={isRegisterHidden}/>
