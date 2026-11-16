@@ -3,7 +3,7 @@ import React, {useContext} from "react";
 import {ErrorBoundary, SearchBox} from "@elastic/react-search-ui";
 import {Layout} from "@elastic/react-search-ui-views";
 import {TableResultsFiles} from '@/components/custom/TableResultsFiles'
-import {APP_TITLE} from "@/config/config";
+import {APP_TITLE, getRootURL} from "@/config/config";
 import {SEARCH_FILES} from "@/config/search/files"
 import CustomClearSearchBox from "../../components/custom/layout/CustomClearSearchBox";
 import Button from 'react-bootstrap/Button';
@@ -65,7 +65,7 @@ function SearchFiles() {
 
         return (
             <>
-                <Header title={`Files | ${APP_TITLE}`}/>
+                <Header title={`Files | ${APP_TITLE}`} canonical={`${getRootURL().replace(/\/+$/, '')}/search/files`}/>
 
                 <SearchUIContainer config={SEARCH_FILES} name='files' authState={authState}>
                     <AppNavbar hidden={isRegisterHidden}/>
