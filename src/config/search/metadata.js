@@ -1,4 +1,4 @@
-import { getCreationActionRelationName, searchUIEncodedQueryString } from '@/components/custom/js/functions';
+import { getCreationActionRelationName } from '@/components/custom/js/functions';
 import SearchAPIConnector from 'search-ui/packages/search-api-connector';
 import {
     doFiltersContainField,
@@ -7,7 +7,8 @@ import {
     getAuth,
     getEntitiesIndex,
     getSearchEndPoint,
-} from '../config';
+} from '@/config/config';
+import { encodeSearchQueryParam } from "@/search-ui/lib/search-tools";
 
 const connector = new SearchAPIConnector({
     indexName: getEntitiesIndex(),
@@ -944,110 +945,110 @@ export const SEARCH_METADATA = {
         searchResults: ({ start, end, totalResults, searchTerm }) =>
             `Searching for '${searchTerm}'. Showing ${start} to ${end} results out of ${totalResults}.`
     },
-
-    // Discover page configuration
-    discover: [
-        {
-            title: 'All Human Sources',
-            description: 'Human sources of all ages and sexes.',
-            entityType: 'source',
-            queryString: searchUIEncodedQueryString([
-                { field: 'entity_type', values: ['Source'], type: 'any' },
-                { field: 'source_type', values: ['Human'], type: 'any' }
-            ])
-        },
-        {
-            title: 'C57BL/6 Mouse Sources',
-            description: 'Mouse sources from the C57BL/6 strain',
-            entityType: 'source',
-            queryString: searchUIEncodedQueryString([
-                { field: 'entity_type', values: ['Source'], type: 'any' },
-                { field: 'source_type', values: ['Mouse'], type: 'any' },
-                { field: 'metadata.strain', values: ['C57BL/6'], type: 'any' }
-            ])
-        },
-        {
-            title: 'All Mouse Sources',
-            description:
-                'Mouse sources of all strains, sexes, and embryo statuses.',
-            entityType: 'source',
-            queryString: searchUIEncodedQueryString([
-                { field: 'entity_type', values: ['Source'], type: 'any' },
-                { field: 'source_type', values: ['Mouse'], type: 'any' }
-            ])
-        },
-        {
-            title: 'All Block Samples',
-            description:
-                'Block samples of all weights, volumes, and preparation conditions.',
-            entityType: 'sample',
-            queryString: searchUIEncodedQueryString([
-                { field: 'entity_type', values: ['Sample'], type: 'any' },
-                { field: 'sample_category', values: ['Block'], type: 'any' }
-            ])
-        },
-        {
-            title: 'All Section Samples',
-            description:
-                'Section samples of all thicknesses and preparation conditions.',
-            entityType: 'sample',
-            queryString: searchUIEncodedQueryString([
-                { field: 'entity_type', values: ['Sample'], type: 'any' },
-                { field: 'sample_category', values: ['Section'], type: 'any' }
-            ])
-        },
-        {
-            title: 'All Suspension Samples',
-            description:
-                'Suspension samples of all entity types, enrichment, and preparation conditions.',
-            entityType: 'sample',
-            queryString: searchUIEncodedQueryString([
-                { field: 'entity_type', values: ['Sample'], type: 'any' },
-                {
-                    field: 'sample_category',
-                    values: ['Suspension'],
-                    type: 'any'
-                }
-            ])
-        },
-        {
-            title: 'All Single Nucleus Datasets',
-            description: 'Datasets with the single nucleus analyte input.',
-            entityType: 'dataset',
-            queryString: searchUIEncodedQueryString([
-                { field: 'entity_type', values: ['Dataset'], type: 'any' },
-                {
-                    field: 'metadata.assay_input_entity',
-                    values: ['single nucleus'],
-                    type: 'any'
-                }
-            ])
-        },
-        {
-            title: 'All Single Cell Datasets',
-            description: 'Datasets with the single cell analyte input.',
-            entityType: 'dataset',
-            queryString: searchUIEncodedQueryString([
-                { field: 'entity_type', values: ['Dataset'], type: 'any' },
-                {
-                    field: 'metadata.assay_input_entity',
-                    values: ['single cell'],
-                    type: 'any'
-                }
-            ])
-        },
-        {
-            title: 'All Sequence Datasets',
-            description: 'Datasets with the sequence assay category.',
-            entityType: 'dataset',
-            queryString: searchUIEncodedQueryString([
-                { field: 'entity_type', values: ['Dataset'], type: 'any' },
-                {
-                    field: 'metadata.assay_category',
-                    values: ['sequence'],
-                    type: 'any'
-                }
-            ])
-        }
-    ]
 }
+
+// Discover page configuration
+SEARCH_METADATA.discover = [
+    {
+        title: 'All Human Sources',
+        description: 'Human sources of all ages and sexes.',
+        entityType: 'source',
+        queryString: encodeSearchQueryParam([
+            { field: 'entity_type', values: ['Source'], type: 'any' },
+            { field: 'source_type', values: ['Human'], type: 'any' }
+        ], SEARCH_METADATA.searchQuery.facets)
+    },
+    {
+        title: 'C57BL/6 Mouse Sources',
+        description: 'Mouse sources from the C57BL/6 strain',
+        entityType: 'source',
+        queryString: encodeSearchQueryParam([
+            { field: 'entity_type', values: ['Source'], type: 'any' },
+            { field: 'source_type', values: ['Mouse'], type: 'any' },
+            { field: 'metadata.strain', values: ['C57BL/6'], type: 'any' }
+        ], SEARCH_METADATA.searchQuery.facets)
+    },
+    {
+        title: 'All Mouse Sources',
+        description:
+            'Mouse sources of all strains, sexes, and embryo statuses.',
+        entityType: 'source',
+        queryString: encodeSearchQueryParam([
+            { field: 'entity_type', values: ['Source'], type: 'any' },
+            { field: 'source_type', values: ['Mouse'], type: 'any' }
+        ], SEARCH_METADATA.searchQuery.facets)
+    },
+    {
+        title: 'All Block Samples',
+        description:
+            'Block samples of all weights, volumes, and preparation conditions.',
+        entityType: 'sample',
+        queryString: encodeSearchQueryParam([
+            { field: 'entity_type', values: ['Sample'], type: 'any' },
+            { field: 'sample_category', values: ['Block'], type: 'any' }
+        ], SEARCH_METADATA.searchQuery.facets)
+    },
+    {
+        title: 'All Section Samples',
+        description:
+            'Section samples of all thicknesses and preparation conditions.',
+        entityType: 'sample',
+        queryString: encodeSearchQueryParam([
+            { field: 'entity_type', values: ['Sample'], type: 'any' },
+            { field: 'sample_category', values: ['Section'], type: 'any' }
+        ], SEARCH_METADATA.searchQuery.facets)
+    },
+    {
+        title: 'All Suspension Samples',
+        description:
+            'Suspension samples of all entity types, enrichment, and preparation conditions.',
+        entityType: 'sample',
+        queryString: encodeSearchQueryParam([
+            { field: 'entity_type', values: ['Sample'], type: 'any' },
+            {
+                field: 'sample_category',
+                values: ['Suspension'],
+                type: 'any'
+            }
+        ], SEARCH_METADATA.searchQuery.facets)
+    },
+    {
+        title: 'All Single Nucleus Datasets',
+        description: 'Datasets with the single nucleus analyte input.',
+        entityType: 'dataset',
+        queryString: encodeSearchQueryParam([
+            { field: 'entity_type', values: ['Dataset'], type: 'any' },
+            {
+                field: 'metadata.assay_input_entity',
+                values: ['single nucleus'],
+                type: 'any'
+            }
+        ], SEARCH_METADATA.searchQuery.facets)
+    },
+    {
+        title: 'All Single Cell Datasets',
+        description: 'Datasets with the single cell analyte input.',
+        entityType: 'dataset',
+        queryString: encodeSearchQueryParam([
+            { field: 'entity_type', values: ['Dataset'], type: 'any' },
+            {
+                field: 'metadata.assay_input_entity',
+                values: ['single cell'],
+                type: 'any'
+            }
+        ], SEARCH_METADATA.searchQuery.facets)
+    },
+    {
+        title: 'All Sequence Datasets',
+        description: 'Datasets with the sequence assay category.',
+        entityType: 'dataset',
+        queryString: encodeSearchQueryParam([
+            { field: 'entity_type', values: ['Dataset'], type: 'any' },
+            {
+                field: 'metadata.assay_category',
+                values: ['sequence'],
+                type: 'any'
+            }
+        ], SEARCH_METADATA.searchQuery.facets)
+    }
+]
