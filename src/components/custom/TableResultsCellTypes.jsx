@@ -1,9 +1,6 @@
-import React, { useRef, useState, useEffect, useEffectEvent } from 'react'
-import PropTypes from 'prop-types'
-import {
-  checkFilterType,
-  getOrganHierarchy, matchArrayOrder, 
-} from './js/functions'
+import { useRef, useState, useEffect, useEffectEvent } from 'react';
+import PropTypes from 'prop-types';
+import { checkFilterType, getOrganHierarchy, matchArrayOrder } from './js/functions';
 import { getOptions } from "./search/ResultsPerPage";
 import ResultsBlock from "./search/ResultsBlock";
 import { TableResultsProvider } from "@/context/TableResultsContext";
@@ -33,8 +30,7 @@ function TableResultsCellTypes({ children, onRowClicked, filters, forData = fals
   const hiddenColumns = useRef(null)
   const tableContext = useRef(null)
   const [isBusy, setIsBusy] = useState(true)
-  const [searchResponse, setSearchResponse] = useState({})
-  const {pageSize} = useSearchUIContext()
+  const {pageSize, createEncodedSearchQueryParam} = useSearchUIContext()
   const isSearching = useRef(false)
 
   function updatePagingInfo(resultsCount) {
@@ -92,7 +88,8 @@ function TableResultsCellTypes({ children, onRowClicked, filters, forData = fals
         }
 
         if (ids.length) {
-          window.location = APP_ROUTES.search + `?addFilters=sennet_id=${ids.join(',')};entity_type=Dataset;sources.source_type=Human;dataset_type=RNAseq&fct=1`
+          const filters = `sennet_id=${ids.join(',')}`
+          window.location = APP_ROUTES.search + `?s=${createEncodedSearchQueryParam(filters)}`
         }
         $(btnSelector).removeClass('btn-disabled')
         isSearching.current = false
