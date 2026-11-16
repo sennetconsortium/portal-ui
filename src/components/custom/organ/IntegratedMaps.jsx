@@ -2,13 +2,14 @@ import SenNetAccordion from '@/components/custom/layout/SenNetAccordion'
 import {APP_ROUTES} from '@/config/constants'
 import {getIntegratedMapsForOrganism, getPrimaryDatasets} from '@/lib/services'
 import log from 'xac-loglevel'
-import {useContext, useEffect, useState} from 'react'
+import {useEffect, useState} from 'react'
 import {Card} from 'react-bootstrap'
 import DataTable from 'react-data-table-component'
-import {formatByteSize, getOrganMeta, searchPageUrl} from '@/components/custom/js/functions'
+import {formatByteSize, getOrganMeta} from '@/components/custom/js/functions'
 import {Skeleton} from '@mui/material'
-import AppContext from '@/context/AppContext'
-import {getOrganByCode} from "@/config/organs";
+import {getOrganByCode} from "@/config/organs"
+import {SEARCH_ENTITIES} from '@/config/search/entities'
+import {encodeSearchQueryParam} from "@/search-ui/lib/search-tools"
 
 /**
  * Displays the latest integrated maps in a table.
@@ -23,7 +24,6 @@ function IntegratedMaps({id, title, organ, setShowIntegratedMapsSide = null}) {
     const [data, setData] = useState(null)
     const [error, setError] = useState(null)
     const [primaryDatasets, setPrimaryDatasets] = useState(null)
-    const {cache} = useContext(AppContext)
 
     const getOrganRoute = (code) => {
         const organ = getOrganByCode(code)
@@ -60,10 +60,8 @@ function IntegratedMaps({id, title, organ, setShowIntegratedMapsSide = null}) {
     useEffect(() => {
         const fetchData = async () => {
             let integratedMaps
-            let organTerms
             const humanDict = {}
             const mouseDict = {}
-            const organTypes = cache?.organTypes
 
             // Get results for all organisms
             const humanResults = await getIntegratedMapsForOrganism('human')
@@ -287,17 +285,18 @@ function IntegratedMaps({id, title, organ, setShowIntegratedMapsSide = null}) {
 
         primarySennetIds = Array.from((new Set(primarySennetIds)))
 
+        const filters = [
+            {field: 'sennet_id', values: primarySennetIds},
+            {field: 'entity_type', values: ['Dataset']}
+        ]
+        const encodedParams = encodeSearchQueryParam(filters, SEARCH_ENTITIES.searchQuery.facets)
+        const url = APP_ROUTES.search + "?s=" + encodedParams
+
         // build a search url for the entity search page
         return (
             {
                 count: primarySennetIds.length,
-                url: searchPageUrl(
-                    [
-                        {field: 'sennet_id', values: primarySennetIds, type: 'any'},
-                        {field: 'entity_type', values: ['Dataset'], type: 'any'}
-                    ],
-                    20
-                )
+                url: url
             }
         )
     }
