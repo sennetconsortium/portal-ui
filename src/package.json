@@ -54,7 +54,7 @@
     "sweetalert2": "^11.26.23",
     "vitessce": "4.1.3",
     "xac-loglevel": "github:x-atlas-consortia/xac-loglevel#1.0.4",
-    "xac-sankey": "github:x-atlas-consortia/data-sankey#1.1.2"
+    "xac-sankey": "github:x-atlas-consortia/data-sankey#1.1.3-test"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
