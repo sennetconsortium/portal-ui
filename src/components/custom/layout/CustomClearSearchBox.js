@@ -10,6 +10,13 @@ function CustomClearSearchBox({shouldClearFilters = true}) {
         setPageNumber(1)
         clearSearchTerm(shouldClearFilters)
         sessionStorage.clear()
+
+        // Remove all query params
+        window.history.replaceState(
+            {},
+            document.title,
+            window.location.pathname
+        );
     }
 
     return (
