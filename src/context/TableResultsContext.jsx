@@ -1,7 +1,6 @@
 import PropTypes from "prop-types"
-import React, {createContext, useContext, useEffect, useRef, useState} from "react";
+import {createContext, useContext, useEffect, useRef, useState} from "react";
 import $ from 'jquery';
-import {useRouter} from 'next/router'
 import AppContext from "./AppContext";
 import {RESULTS_PER_PAGE} from "@/config/config";
 import {handleTableControls} from "@/components/custom/search/ResultsPerPage";
@@ -33,11 +32,8 @@ export const TableResultsProvider = ({
         pageSize,
         setPageSize,
         setSort,
-        addFilter,
-        clearSearchTerm
     } = useSearchUIContext()
     const sortedFields = useRef({})
-    const router = useRouter()
 
     const hasLoaded = useRef(false)
     let pageData = []
@@ -45,28 +41,6 @@ export const TableResultsProvider = ({
 
     const currentColumns = useRef(columnsRef)
     const [isSearching, setIsSearching] = useState(isLoading)
-
-
-    useEffect(() => {
-        if (!router.isReady) return
-
-        // ?addFilters=organ=LL,RL;entity_type=Sample,Dataset
-        let reqFilters = router.query.addFilters
-        if (reqFilters) {
-            clearSearchTerm()
-            reqFilters = reqFilters.trim().split(';')
-            let esq = []
-            for (let f of reqFilters) {
-                // handle the actual facets sent in request
-                let kv = f.split('=')
-                let values = kv[1].split(',')
-                for (let v of values) {
-                    addFilter(kv[0], v)
-                }
-            }
-        }
-
-    }, [router.isReady, router.query])
 
     const hasSearch = () => {
         // Guard against SSR (no DOM on the server)
@@ -231,10 +205,10 @@ export const TableResultsProvider = ({
         updateTablePagination
     }}>
         <Draggable>
-            <SidebarBtn 
+            <SidebarBtn
             className={'draggable-sidebarBtn'}
-            tooltip={<small className="text-muted"><br/>Click and hold to drag.</small>} 
-            target='.sui-layout-sidebar' 
+            tooltip={<small className="text-muted"><br/>Click and hold to drag.</small>}
+            target='.sui-layout-sidebar'
             initialClass="show"
             onClick={onClickSidebarToggle} />
         </Draggable>

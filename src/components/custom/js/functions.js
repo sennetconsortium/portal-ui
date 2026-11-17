@@ -2,7 +2,6 @@ import {getAuth, getRootURL} from "@/config/config";
 import {APP_ROUTES} from "@/config/constants";
 import log from 'xac-loglevel'
 import {getOrganByCode, organIcons} from "@/config/organs";
-import {compressToEncodedURIComponent} from 'lz-string';
 
 export function getHeaders() {
     const myHeaders = new Headers();
@@ -719,37 +718,4 @@ export const extractSourceMappedMetadataInfo = (sourceMappedMetadata) => {
         groups: groups,
         metadata: metadata
     }
-}
-
-/**
- * @typedef {Object} Filter
- * @property {string} field - The field to filter on
- * @property {string[]} values - The values to filter on
- * @property {string} type - The type of filter
- */
-
-/**
- * Converts the filters into a compressed lz-string encoded query string
- *
- * @param {Filter[]} filters - The filters to convert to a lz-string encoded query string
- * @param {number} [size] - The number of results to return per page
- * @returns {string} - The lz-string encoded query string
- */
-export const searchUIEncodedQueryString = (filters, size = 20) => {
-    const state = {
-        f: filters,
-        n: size
-    }
-    return compressToEncodedURIComponent(JSON.stringify(state))
-}
-
-/**
- * Generates a search page URL for the given filters
- *
- * @param {Filter[]} filters - The filters to include in the search URL
- * @param {number} [size] - The number of results to return per page
- * @returns {string} - The search page URL with the encoded filters
- */
-export const searchPageUrl = (filters, size = 20) => {
-    return `${APP_ROUTES.search}?s=` + searchUIEncodedQueryString(filters, size)
 }

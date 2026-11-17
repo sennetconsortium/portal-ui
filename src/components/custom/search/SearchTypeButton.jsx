@@ -3,12 +3,11 @@ import {useSearchUIContext} from "@/search-ui/components/core/SearchUIContext";
 import {useEffect, useState} from "react";
 import {eq} from "@/components/custom/js/functions";
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import StyledMenu from '@/components/custom/layout/StyledMenu';
 
 const SearchTypeButton = ({ title }) => {
-    const { filters } = useSearchUIContext()
+    const { filters, createEncodedSearchQueryParam } = useSearchUIContext()
     const [links, setLinks] = useState(<></>)
 
     const [moreMenuAnchorEl, setMoreMenuAnchorEl] = useState(null)
@@ -66,7 +65,7 @@ const SearchTypeButton = ({ title }) => {
                 if (eq(filters[i].field, 'sources.source_type') && eq(filters[i].values[0], 'human')) {
                      canShowPoints++
                 }
-       
+
                 if (eq(filters[i].field, 'dataset_type') && ['transcriptomics', 'rnaseq'].contains(filters[i].values[0])) {
                     canShowPoints++
                 }
@@ -76,7 +75,7 @@ const SearchTypeButton = ({ title }) => {
         return {canShow}
     }
 
-  
+
 
     const getMoreMenu = () => {
 
@@ -127,7 +126,7 @@ const SearchTypeButton = ({ title }) => {
                 onClose={handleMoreMenuClose}
                 onClick={handleMoreMenuClose}
             >
-                
+
         <MenuItem onClick={() => window.location = validButtons.more.cellTypes}>
           Search Cell Types
         </MenuItem>
@@ -144,17 +143,17 @@ const SearchTypeButton = ({ title }) => {
                 res.push (
                     <div key={b} className="searchType__wrap">
                     {!eq(b, 'more') && <a key={b} className={`btn btn-outline-primary  ${className} js-searchType mt-2`}
-                       href={`${validButtons[b]}${condition.entity ? `?addFilters=entity_type=${condition.entity}` : ''}`}>
+                       href={`${validButtons[b]}${condition.entity ? `?${createEncodedSearchQueryParam(`entity_type=${condition.entity}`)}` : ''}`}>
                         Search {b}
                     </a>}
-                    {eq(className, 'w-65') && <span 
+                    {eq(className, 'w-65') && <span
                         role="button"
                         onClick={handleMoreMenuClick}
                         aria-controls={'searchTypes-more-menu'}
                         aria-haspopup="true"
                         aria-expanded={openMoreMenu ? 'true' : undefined}
                         className="btn mt-2 mx-2"><MoreVertIcon /></span>}
-                   
+
                     </div>
                 );
             }

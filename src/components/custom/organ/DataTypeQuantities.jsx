@@ -1,4 +1,3 @@
-import { searchPageUrl } from '@/components/custom/js/functions'
 import SenNetAccordion from '@/components/custom/layout/SenNetAccordion'
 import { RESULTS_PER_PAGE } from '@/config/config'
 import useLocalSettings from '@/hooks/useLocalSettings'
@@ -6,6 +5,9 @@ import { getOrganDataTypeQuantities } from '@/lib/services'
 import dynamic from 'next/dynamic'
 import { useEffect, useState } from 'react'
 import DataTypeQuantitiesChart from './DataTypeQuantitiesChart'
+import { APP_ROUTES } from '@/config/constants';
+import { SEARCH_ENTITIES } from '@/config/search/entities';
+import { encodeSearchQueryParam } from "@/search-ui/lib/search-tools";
 
 const DataTable = dynamic(() => import('react-data-table-component'), {
     ssr: false
@@ -37,24 +39,29 @@ const DataTypeQuantities = ({ id, organ }) => {
         getQuantities()
     }, [organ])
 
-    const searchUrl =
-        searchPageUrl(
-            [
-                { field: 'entity_type', values: ['Dataset'], type: 'any' },
-                { field: 'origin_samples.organ.keyword', values: organ.codes, type: 'any' }
-            ],
-            20
-        )
-
-    const searchUrlForDatasetType = (types) => {
+    const searchUrl = (organCodes) => {
         return (
-            searchPageUrl(
+            APP_ROUTES.search + "?s=" +
+            encodeSearchQueryParam(
                 [
-                    { field: 'entity_type', values: ['Dataset'], type: 'any' },
-                    { field: 'origin_samples.organ.keyword', values: organ.codes, type: 'any' },
-                    { field: 'dataset_type_hierarchy.dataset_type.keyword', values: types, type: 'any' }
+                    { field: 'entity_type', values: ['Dataset'] },
+                    { field: 'origin_samples.organ.keyword', values: organCodes }
                 ],
-                20
+                SEARCH_ENTITIES.searchQuery.facets
+            )
+        )
+    }
+
+    const searchUrlForDatasetType = (types, organCodes) => {
+        return (
+            APP_ROUTES.search + "?s=" +
+            encodeSearchQueryParam(
+                [
+                    { field: 'entity_type', values: ['Dataset'] },
+                    { field: 'origin_samples.organ.keyword', values: organCodes },
+                    { field: 'dataset_type_hierarchy.dataset_type.keyword', values: types }
+                ],
+                SEARCH_ENTITIES.searchQuery.facets
             )
         )
     }
@@ -87,7 +94,7 @@ const DataTypeQuantities = ({ id, organ }) => {
             cell: (row, index, column, id) => {
                 return (
                     <a
-                        href={searchUrlForDatasetType(datasetTypes[row.datasetTypeHierarchy])}
+                        href={searchUrlForDatasetType(datasetTypes[row.datasetTypeHierarchy], organ.codes)}
                         onClick={handleDatasetTypeRowClick}
                     >
                         {row.datasetTypeHierarchy}
@@ -107,7 +114,7 @@ const DataTypeQuantities = ({ id, organ }) => {
             <div className='d-flex flex-row-reverse'>
                 <a
                     className='btn btn-outline-primary '
-                    href={searchUrl}
+                    href={searchUrl(organ.codes)}
                     onClick={handleSearchPageClick}
                 >
                     View on search page

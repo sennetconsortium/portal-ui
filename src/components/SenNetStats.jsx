@@ -1,8 +1,11 @@
-import React, {useEffect, useState, useEffectEvent} from 'react'
-import PropTypes from 'prop-types'
+import {useEffect, useState, useEffectEvent} from 'react';
+import PropTypes from 'prop-types';
 import {Col, Container, Row} from 'react-bootstrap';
 import {eq, getSubtypeProvenanceShape, goIntent} from "@/components/custom/js/functions";
 import {getEntityTypeQuantities, getOrganQuantities} from "@/lib/services";
+import {APP_ROUTES} from '@/config/constants';
+import {SEARCH_ENTITIES} from '@/config/search/entities';
+import {encodeSearchQueryParam} from "@/search-ui/lib/search-tools";
 
 function SenNetStats({children}) {
     const [stats, setStats] = useState(null)
@@ -59,8 +62,10 @@ function SenNetStats({children}) {
         let i = 0;
         for (let e of stats) {
             if (e.count) {
+                const filters = getFilter(e)
+                const searchUrl = APP_ROUTES.search + `?s=${encodeSearchQueryParam(filters, SEARCH_ENTITIES.searchQuery.facets)}`
                 res.push(
-                    <Col className='snStat' key={e.name} onClick={() => goIntent(`/search?addFilters=${getFilter(e)}`)}>
+                    <Col className='snStat' key={e.name} onClick={() => goIntent(searchUrl)}>
                         <Row>
                             <Col className={'snStat__shape'} lg={4}>
                                 <div>
