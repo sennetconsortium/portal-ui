@@ -19,7 +19,9 @@ import Tabs from "react-bootstrap/Tabs";
 import {RESULTS_PER_PAGE} from "@/config/config";
 import SenNetPopover from "@/components/SenNetPopover";
 import {categorizeByDatasetType} from "@/components/custom/js/functions";
-import {searchPageUrl} from "@/components/custom/js/functions";
+import {APP_ROUTES} from '@/config/constants';
+import {SEARCH_ENTITIES} from '@/config/search/entities';
+import {encodeSearchQueryParam} from "@/search-ui/lib/search-tools";
 
 const DataTable = dynamic(() => import("react-data-table-component"), {
   ssr: false,
@@ -171,7 +173,9 @@ const Lineage = ({lineage, showManifestDownload = true, showViewOnDataPage = tru
     sourceColumns.push(reusableColumns.GroupName)
 
     const searchUrlForEntities = (sennetIds) => {
-        return searchPageUrl([{ field: 'sennet_id', values: sennetIds, type: 'any' }], 20)
+        const filters = [{ field: 'sennet_id', values: sennetIds }]
+        const encodedParams = encodeSearchQueryParam(filters, SEARCH_ENTITIES.searchQuery.facets)
+        return APP_ROUTES.search + '?s=' + encodedParams
     }
 
     const datasetData = tableData.filter(obj => obj.entity_type === "Dataset")

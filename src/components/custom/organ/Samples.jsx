@@ -1,5 +1,4 @@
 import ClipboardCopy from '@/components/ClipboardCopy';
-import { searchPageUrl } from '@/components/custom/js/functions';
 import SenNetAccordion from '@/components/custom/layout/SenNetAccordion';
 import { APP_ROUTES } from '@/config/constants';
 import AppContext from '@/context/AppContext';
@@ -8,6 +7,8 @@ import { getSamplesByOrgan } from '@/lib/services';
 import dynamic from "next/dynamic";
 import Link from 'next/link';
 import { useContext, useEffect, useState } from 'react';
+import { SEARCH_ENTITIES } from '@/config/search/entities';
+import { encodeSearchQueryParam } from "@/search-ui/lib/search-tools";
 
 const DataTable = dynamic(() => import('react-data-table-component'), {
   ssr: false,
@@ -72,14 +73,18 @@ const Samples = ({ id, organ }) => {
         }
     ]
 
-    const searchUrl =
-        searchPageUrl(
-            [
-                { field: 'entity_type', values: ['Sample'], type: 'any' },
-                { field: 'organ', values: organ.codes, type: 'any' }
-            ],
-            20
+    const searchUrl = (organCodes) => {
+        return (
+            APP_ROUTES.search + "?s=" +
+            encodeSearchQueryParam(
+                [
+                    { field: 'entity_type', values: ['Sample'] },
+                    { field: 'organ', values: organCodes }
+                ],
+                SEARCH_ENTITIES.searchQuery.facets
+            )
         )
+    }
 
     const handleSearchPageClick = (e) => {
         e.preventDefault()
@@ -96,7 +101,7 @@ const Samples = ({ id, organ }) => {
             <div className='d-flex flex-row-reverse'>
                 <Link
                     className='btn btn-outline-primary '
-                    href={searchUrl}
+                    href={searchUrl(organ.codes)}
                     onClick={handleSearchPageClick}
                 >
                     View on search page

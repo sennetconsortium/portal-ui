@@ -12,9 +12,11 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import {Chip} from "@mui/material";
 import dynamic from "next/dynamic";
 import {useEffect, useRef, useState} from 'react';
-import CellTypeDistributionAcrossOrgansTab from '../cell-types/CellTypeDistributionAcrossOrgansTab';
+import CellTypeDistributionAcrossOrgansTab from '@/components/custom/cell-types/CellTypeDistributionAcrossOrgansTab';
 import $ from 'jquery';
 import log from "xac-loglevel";
+import {SEARCH_ENTITIES} from '@/config/search/entities';
+import {encodeSearchQueryParam} from "@/search-ui/lib/search-tools";
 
 const DataTable = dynamic(() => import('react-data-table-component'), {
     ssr: false,
@@ -93,7 +95,8 @@ function CellTypes({organ, setShowCellTypesSide}) {
                 }
 
                 if (ids.length) {
-                    window.location = APP_ROUTES.search + `?addFilters=sennet_id=${ids.join(',')};entity_type=Dataset;sources.source_type=Human;dataset_type=RNAseq;origin_samples.organ=${organ.codes.join(',')}`
+                    const filters = `sennet_id=${ids.join(',')}`
+                    window.location = APP_ROUTES.search + `?s=${encodeSearchQueryParam(filters, SEARCH_ENTITIES.searchQuery.facets)}`
                 }
                 $(btnSelector).removeClass('btn-disabled')
                 isSearching.current = false
