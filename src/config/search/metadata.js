@@ -660,6 +660,7 @@ export const SEARCH_METADATA = {
                     'origin_samples.organ_hierarchy.keyword',
                     'origin_samples.organ.keyword'
                 ],
+                collapseSingleChild: true,
                 isAggregationActive: [
                     doesTermFilterContainValues('entity_type', ['Dataset']),
                     doesTermFilterContainValues('sample_category', [

@@ -164,6 +164,7 @@ export const SEARCH_ENTITIES = {
                     'organ_hierarchy.keyword',
                     'organ.keyword',
                 ],
+                collapseSingleChild: true,
                 isAggregationActive: doesTermFilterContainValues('entity_type', ['Sample']),
                 isFacetVisible: doesAggregationHaveBuckets('organ')
             },
@@ -179,6 +180,7 @@ export const SEARCH_ENTITIES = {
                     'origin_samples.organ_hierarchy.keyword',
                     'origin_samples.organ.keyword',
                 ],
+                collapseSingleChild: true,
                 isAggregationActive: [
                     doesTermFilterContainValues('entity_type', ['Dataset']),
                     doesTermFilterContainValues('sample_category', ['Block', 'Section', 'Suspension'])
