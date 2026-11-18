@@ -146,6 +146,7 @@ export const SEARCH_FILES = {
                     'organs.hierarchy.keyword',
                     'organs.label.keyword',
                 ],
+                collapseSingleChild: true,
                 isAggregationActive: true,
                 isFacetVisible: doesAggregationHaveBuckets('organs.label')
             },
