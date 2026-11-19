@@ -1,6 +1,6 @@
 import dynamic from "next/dynamic";
 import React, {useContext} from "react";
-import {ErrorBoundary, SearchBox, SearchProvider} from "@elastic/react-search-ui";
+import {ErrorBoundary, SearchBox} from "@elastic/react-search-ui";
 import {Layout} from "@elastic/react-search-ui-views";
 import {APP_TITLE, getRootURL} from "@/config/config";
 import {SEARCH_ENTITIES} from "@/config/search/entities"
@@ -63,13 +63,14 @@ function SearchEntities() {
         }
 
         return (
-            
+
             <>
                 <Header title={`Data | ${APP_TITLE}`} canonical={`${getRootURL().replace(/\/+$/, '')}/search`}/>
 
                 <SearchUIContainer config={SEARCH_ENTITIES} name='entities' authState={authState}>
                     <AppNavbar hidden={isRegisterHidden}/>
-                    <ErrorBoundary className={'js-app--searchErrorBoundary'} data-components={getStringifiedComponents()}>
+                    <ErrorBoundary className={'js-app--searchErrorBoundary'}
+                                   data-components={getStringifiedComponents()}>
                         <Layout
                             header={
                                 <>
@@ -101,7 +102,7 @@ function SearchEntities() {
                                         />
                                     </div>
                                     <div className='sui-filters-summary'>
-                                        <SelectedFacets searchContext={'entities'} />
+                                        <SelectedFacets searchContext={'entities'}/>
                                     </div>
                                 </>
                             }
@@ -126,7 +127,7 @@ function SearchEntities() {
 
                 <AppFooter/>
             </>
-          
+
         )
     }
 }
