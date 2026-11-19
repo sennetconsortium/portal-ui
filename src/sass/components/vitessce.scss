@@ -1,5 +1,5 @@
 html {
-    height: 100%;
+  height: 100%;
 }
 
 .vitessce-container {
@@ -8,12 +8,12 @@ html {
 }
 
 .vitessce_fullscreen {
-  z-index: 1000;
-  width: 100%;
-  height: 100%;
   position: fixed !important;
-  top: 0;
+  top: 100px;
   left: 0;
+  width: 100%;
+  height: calc(100vh - 92px);
+  z-index: 1000;
 }
 
 .vitessce-container .card {
@@ -37,7 +37,7 @@ html {
 }
 
 .vitessce-container.vitessce-theme-light .card {
-  border: 1px solid rgba(241,241,241,.125);
+  border: 1px solid rgba(241, 241, 241, .125);
 }
 
 .vitessce-container.vitessce-theme-light .scroll {
