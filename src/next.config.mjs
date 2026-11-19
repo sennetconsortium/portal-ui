@@ -1,5 +1,3 @@
-import {resolve} from 'path'
-
 import pkg from './package.json' with {type: 'json'};
 
 /** @type {import('next').NextConfig} */

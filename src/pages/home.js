@@ -76,7 +76,7 @@ function ViewHome({children}) {
                         <Card className='mt-4 smc--highlighted'>
                             <div className='p-3 card-content bg-white'>
                                 <Card.Title><div className='d-flex d-flex-row justify-space-between'>
-                                 <img src='/static/cell-type.svg' width='50' alt /> &nbsp;<h2>Search By Cell Types</h2>
+                                 <img src='/static/cell-type.svg' width='50' alt={''} /> &nbsp;<h2>Search By Cell Types</h2>
                             </div>
                             
                             </Card.Title>
