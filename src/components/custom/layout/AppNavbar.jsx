@@ -347,11 +347,7 @@ const AppNavbar = ({hidden, signoutHidden, innerRef}) => {
                         items: [
                             ...supportedSingleRegister().map(
                                 entity => ({
-                                    label:
-                                        entity ===
-                                        cache.entities.upload
-                                            ? 'Data Upload'
-                                            : _t(entity),
+                                    label: _t(entity),
 
                                     href: formatRegisterUrl(
                                         entity,
@@ -384,10 +380,9 @@ const AppNavbar = ({hidden, signoutHidden, innerRef}) => {
                                         entity ===
                                         'upload'
                                             ? 'Data (IDs and Data Files)'
-                                            : entity ===
-                                            'dataset'
-                                                ? 'Data (IDs Only)'
-                                                : `${entity}s`,
+                                            : `${entity}s`,
+                                    disabled: entity ===
+                                        'upload',
 
                                     href: formatRegisterUrl(
                                         entity,
