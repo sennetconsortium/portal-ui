@@ -24,6 +24,7 @@ const AppNavbar = ({hidden, signoutHidden, innerRef}) => {
         tutorialTrigger,
         deleteTutorialCookies
     } = useContext(AppContext)
+    const [dataDrawerOpen, setDataDrawerOpen] = useState(false)
     const [resourceDrawerOpen, setResourceDrawerOpen] = useState(false)
     const [documentationDrawerOpen, setDocumentationDrawerOpen] = useState(false)
     const [registatrationDrawerOpen, setRegistatrationDrawerOpen] = useState(false)
@@ -149,9 +150,12 @@ const AppNavbar = ({hidden, signoutHidden, innerRef}) => {
                                           href='https://sennetconsortium.org'>
                                     <span>{_t('SenNet Home')}</span>
                                 </Nav.Link>
-                                <Nav.Link key={`dd-portal-search`}
-                                          href={APP_ROUTES.search}>
-                                    <span>Data</span>
+                                <Nav.Link
+                                    onClick={() =>
+                                        setDataDrawerOpen(true)
+                                    }
+                                >
+                                    Data
                                 </Nav.Link>
                                 <Nav.Link
                                     onClick={() =>
@@ -213,6 +217,44 @@ const AppNavbar = ({hidden, signoutHidden, innerRef}) => {
                     </Container>
                 </Navbar>
             </Box>
+
+            {/*Data drawer*/}
+            <NavbarDrawer
+                open={dataDrawerOpen}
+                onClose={() =>
+                    setDataDrawerOpen(false)
+                }
+                anchor="left"
+                title="Data"
+                sections={[
+                    {
+                        title: 'Search',
+                        items: [
+                            {
+                                label: 'Entities',
+                                href: `${APP_ROUTES.search}`
+                            },
+                            {
+                                label: 'Files',
+                                href: `${APP_ROUTES.search}/files`
+                            }
+                        ]
+                    },
+                    {
+                        title: 'Discover',
+                        items: [
+                            {
+                                label: 'Cell Types',
+                                href: `${APP_ROUTES.discover}/cell-types`
+                            },
+                            {
+                                label: 'Metadata',
+                                href: `${APP_ROUTES.discover}/metadata`
+                            }
+                        ]
+                    }
+                ]}
+            />
 
             {/*Resources drawer*/}
             <NavbarDrawer
