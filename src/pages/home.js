@@ -238,7 +238,7 @@ function ViewHome({children}) {
                                 <Col lg={3} className='smcHolder smcHolder--right'>
                                     <SiteMapCard title={<div className={"d-flex d-flex-row justify-content-between"}>
                                         <h4>Take a Deeper Dive</h4>
-                                        <i className="icon-inline bi bi-book" style={{fontSize: '2.1em'}}/>
+                                        <i className="icon-inline bi bi-book-half" style={{fontSize: '2.1em'}}/>
                                     </div>}
                                                  body={<p>Read on to learn more about&nbsp;
                                                      <LnkIc title='entity registration'
