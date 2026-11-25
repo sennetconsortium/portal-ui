@@ -29,8 +29,8 @@ function GroupedDataTable({ metadata, groups }) {
             sortable: true,
             wrap: true,
             style: {
-                'padding-top': '16px',
-                'padding-bottom': '16px',
+                paddingTop: '16px',
+                paddingBottom: '16px',
             }
         },
         {
@@ -39,8 +39,8 @@ function GroupedDataTable({ metadata, groups }) {
             sortable: true,
             wrap: true,
             style: {
-                'padding-top': '16px',
-                'padding-bottom': '16px',
+                paddingTop: '16px',
+                paddingBottom: '16px',
             }
         }
     ]

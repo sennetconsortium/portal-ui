@@ -18,8 +18,8 @@ export default function MetadataTable({data, metadata, mappedMetadata, metadataK
             sortable: true,
             wrap: true,
             style: {
-                'padding-top': '16px',
-                'padding-bottom': '16px',
+                paddingTop: '16px',
+                paddingBottom: '16px',
             }
         },
         {
@@ -28,8 +28,8 @@ export default function MetadataTable({data, metadata, mappedMetadata, metadataK
             sortable: true,
             wrap: true,
             style: {
-                'padding-top': '16px',
-                'padding-bottom': '16px',
+                paddingTop: '16px',
+                paddingBottom: '16px',
             }
         }
     ];
