@@ -176,6 +176,7 @@ const AppNavbar = ({hidden, signoutHidden, innerRef}) => {
                             <Nav>
                                 {cache && (
                                     <Nav.Link
+                                        id="app-nav-register"
                                         hidden={hidden || !isLoggedIn()}
                                         onClick={() =>
                                             setRegistatrationDrawerOpen(true)
