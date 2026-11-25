@@ -375,9 +375,6 @@ const AppNavbar = ({hidden, signoutHidden, innerRef}) => {
                                         'upload'
                                             ? 'Data (IDs and Data Files)'
                                             : `${entity}s`,
-                                    disabled: entity ===
-                                        'upload',
-
                                     href: formatRegisterUrl(
                                         entity,
                                         'bulk'
