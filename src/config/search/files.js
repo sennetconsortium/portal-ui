@@ -4,7 +4,7 @@ import {
     getAuth,
     getFilesIndex,
     getSearchEndPoint,
-} from '../config';
+} from '@/config/config';
 
 const connector = new SearchAPIConnector({
     indexName: getFilesIndex(),

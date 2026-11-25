@@ -7,8 +7,8 @@ import log from 'xac-loglevel'
 import {checkValidToken, getReadWritePrivileges, getUserWriteGroups, hasDataAdminPrivs} from '@/lib/services'
 import {deleteCookies} from "@/lib/auth";
 import {APP_ROUTES_NO_REDIRECT, REDIRECT_COOKIE_KEY} from "@/config/constants";
-import AppModal from "../components/AppModal";
-import Spinner from "../components/custom/Spinner";
+import AppModal from "@/components/AppModal";
+import Spinner from "@/components/custom/Spinner";
 import Unauthorized from "@/components/custom/layout/Unauthorized";
 import ReactDOMServer from "react-dom/server";
 import InvalidToken from "@/components/custom/layout/InvalidToken";

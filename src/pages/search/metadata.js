@@ -1,10 +1,10 @@
 import dynamic from "next/dynamic";
-import React, {useContext} from "react";
+import {useContext} from "react";
 import {ErrorBoundary, SearchBox} from "@elastic/react-search-ui";
 import {Layout} from "@elastic/react-search-ui-views";
 import {APP_TITLE, getRootURL} from "@/config/config";
 import {SEARCH_METADATA} from "@/config/search/metadata"
-import CustomClearSearchBox from "../../components/custom/layout/CustomClearSearchBox";
+import CustomClearSearchBox from "@/components/custom/layout/CustomClearSearchBox";
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';

@@ -1,7 +1,7 @@
-import React, {useContext, useEffect} from 'react'
+import {useContext, useEffect} from 'react'
 import {Form} from 'react-bootstrap';
-import SenNetPopover from '../../../SenNetPopover'
-import AppContext from '../../../../context/AppContext'
+import SenNetPopover from '@/components/SenNetPopover'
+import AppContext from '@/context/AppContext'
 import PropTypes from "prop-types";
 
 function SourceType({data, dataValue, onChange, label, labelDescription, values, isDisabled}) {

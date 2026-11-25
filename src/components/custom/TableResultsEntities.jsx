@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useRef, useState} from 'react'
+import {useContext, useEffect, useRef, useState} from 'react'
 import PropTypes from 'prop-types'
 import {
     checkFilterType,
@@ -8,14 +8,14 @@ import {
 } from './js/functions'
 import AppContext from "@/context/AppContext"
 import log from 'xac-loglevel'
-import ClipboardCopy from "../ClipboardCopy";
+import ClipboardCopy from "@/components/ClipboardCopy";
 import {getOptions} from "./search/ResultsPerPage";
 import ResultsBlock from "./search/ResultsBlock";
 import {TableResultsProvider} from "@/context/TableResultsContext";
-import SenNetPopover from "../SenNetPopover";
+import SenNetPopover from "@/components/SenNetPopover";
 import {Chip} from "@mui/material";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
-import AppModal from "../AppModal";
+import AppModal from "@/components/AppModal";
 import {parseJson} from "@/lib/services";
 import {COLS_ORDER_KEY} from "@/config/config";
 import useSelectedFacetsOffer from '@/hooks/useSelectedFacetsOffer'

@@ -1,19 +1,19 @@
 import dynamic from "next/dynamic";
-import React, {useContext, useEffect, useState} from 'react'
+import {useContext, useEffect, useState} from 'react'
 import PropTypes from 'prop-types'
 import SenNetSuspense from "@/components/SenNetSuspense";
 import SenNetAccordion from "@/components/custom/layout/SenNetAccordion";
 import {eq, getDatasetTypeDisplay} from "@/components/custom/js/functions";
-
-const DataTable = dynamic(() => import('react-data-table-component'), {
-  ssr: false,
-});
 import LnkIc from "@/components/custom/layout/LnkIc";
 import useAutoHideColumns from "@/hooks/useAutoHideColumns";
 import ClipboardCopy from "@/components/ClipboardCopy";
 import DerivedContext from "@/context/DerivedContext";
 import Link from "next/link";
 import { Skeleton } from "@mui/material";
+
+const DataTable = dynamic(() => import('react-data-table-component'), {
+  ssr: false,
+});
 
 function ProtocolsWorkflow({data}) {
     const [rawTableData, setRawTableData] = useState([])

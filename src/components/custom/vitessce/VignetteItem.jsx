@@ -3,10 +3,10 @@ import useVitessceEncoder from '@/hooks/useVitessceEncoder'
 import { getJSONFromAssetsEndpoint } from '@/lib/services'
 import { Snackbar } from '@mui/material'
 import MuiAlert from '@mui/material/Alert'
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 import Tooltip from 'react-bootstrap/Tooltip'
-import SenNetAccordion from '../layout/SenNetAccordion'
+import SenNetAccordion from '@/components/custom/layout/SenNetAccordion'
 import SuspendVitessce from './SuspendVitessce'
 import $ from 'jquery';
 

@@ -5,14 +5,14 @@ import {Button} from 'react-bootstrap';
 import {InputGroup} from 'react-bootstrap';
 import {getDocsRootURL, getIngestEndPoint} from "@/config/config";
 import log from 'xac-loglevel'
+import $ from 'jquery';
+import { getAuthHeader } from "@/lib/services";
+import SenNetPopover, {SenPopoverOptions} from "@/components/SenNetPopover";
+import {eq, urlify} from "@/components/custom/js/functions";
 
 const DataTable = dynamic(() => import('react-data-table-component'), {
   ssr: false,
 });
-import $ from 'jquery';
-import { getAuthHeader } from "@/lib/services";
-import SenNetPopover, {SenPopoverOptions} from "../../SenNetPopover";
-import {eq, urlify} from "../js/functions";
 
 const handleErrorRow = (row) => {
     let err = row.error || row.message

@@ -7,13 +7,13 @@ import {JobQueueProvider} from "@/context/JobQueueContext";
 import {APP_TITLE} from "@/config/config";
 import log from 'xac-loglevel'
 
-const AppFooter = dynamic(() => import("../../../components/custom/layout/AppFooter"))
-const AppNavbar = dynamic(() => import("../../../components/custom/layout/AppNavbar"))
-const BulkCreate = dynamic(() => import("../../../components/custom/bulk/BulkCreate"))
-const Header = dynamic(() => import("../../../components/custom/layout/Header"))
-const NotFound = dynamic(() => import("../../../components/custom/NotFound"))
-const Spinner = dynamic(() => import("../../../components/custom/Spinner"))
-const Unauthorized = dynamic(() => import("../../../components/custom/layout/Unauthorized"))
+const AppFooter = dynamic(() => import("@/components/custom/layout/AppFooter"))
+const AppNavbar = dynamic(() => import("@/components/custom/layout/AppNavbar"))
+const BulkCreate = dynamic(() => import("@/components/custom/bulk/BulkCreate"))
+const Header = dynamic(() => import("@/components/custom/layout/Header"))
+const NotFound = dynamic(() => import("@/components/custom/NotFound"))
+const Spinner = dynamic(() => import("@/components/custom/Spinner"))
+const Unauthorized = dynamic(() => import("@/components/custom/layout/Unauthorized"))
 
 export default function EditBulk() {
     const {cache} = useContext(AppContext)

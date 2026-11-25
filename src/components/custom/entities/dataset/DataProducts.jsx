@@ -1,6 +1,6 @@
-import React, {useContext} from 'react'
+import {useContext} from 'react'
 import PropTypes from 'prop-types'
-import {datasetIs} from "../../js/functions";
+import {datasetIs} from "@/components/custom/js/functions";
 import FileTreeView from "./FileTreeView";
 import Link from "next/link";
 import SenNetPopover from "@/components/SenNetPopover";

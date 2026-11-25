@@ -1,7 +1,7 @@
-import React, {useEffect, useState} from 'react'
+import {useEffect, useState} from 'react'
 import PropTypes from 'prop-types'
-import SenNetAccordion from "../../layout/SenNetAccordion";
-import {datasetIs} from "../../js/functions";
+import SenNetAccordion from "@/components/custom/layout/SenNetAccordion";
+import {datasetIs} from "@/components/custom/js/functions";
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
 import FileTreeView from "@/components/custom/entities/dataset/FileTreeView";

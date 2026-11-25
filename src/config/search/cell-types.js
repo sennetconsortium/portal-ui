@@ -4,7 +4,7 @@ import {
     getAuth,
     getCellTypesIndex,
     getSearchEndPoint,
-} from '../config';
+} from '@/config/config';
 
 const connector = new SearchAPIConnector({
     indexName: getCellTypesIndex(),

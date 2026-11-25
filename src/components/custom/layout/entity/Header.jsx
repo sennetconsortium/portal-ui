@@ -1,12 +1,12 @@
-import React, {useContext, useEffect, useState} from 'react'
+import {useContext, useEffect, useState} from 'react'
 import {Col, Container, Row} from 'react-bootstrap'
 import AppContext from '@/context/AppContext'
 import EntityContext from '@/context/EntityContext'
-import HipaaModal from "../../edit/sample/HipaaModal";
-import {getStatusColor, getStatusDefinition} from "../../js/functions";
-import ClipboardCopy from "../../../ClipboardCopy";
-import SenNetAlert from "../../../SenNetAlert";
-import SenNetPopover from "../../../SenNetPopover";
+import HipaaModal from "@/components/custom/edit/sample/HipaaModal";
+import {getStatusColor, getStatusDefinition} from "@/components/custom/js/functions";
+import ClipboardCopy from "@/components/ClipboardCopy";
+import SenNetAlert from "@/components/SenNetAlert";
+import SenNetPopover from "@/components/SenNetPopover";
 import {fetchPipelineMessages} from "@/lib/services";
 import log from 'xac-loglevel'
 

@@ -10,7 +10,6 @@ import {Skeleton} from '@mui/material'
 import {getOrganByCode} from "@/config/organs"
 import {SEARCH_ENTITIES} from '@/config/search/entities'
 import {encodeSearchQueryParam} from "@/search-ui/lib/search-tools"
-import log from 'xac-loglevel'
 
 /**
  * Displays the latest integrated maps in a table.

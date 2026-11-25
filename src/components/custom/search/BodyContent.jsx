@@ -1,6 +1,6 @@
 import { Results } from '@elastic/react-search-ui'
 import { useSearchUIContext } from "search-ui/components/core/SearchUIContext";
-import Spinner from '../Spinner'
+import Spinner from '@/components/custom/Spinner'
 
 function BodyContent({ view }) {
     const { wasSearched, filters, rawResponse } = useSearchUIContext()

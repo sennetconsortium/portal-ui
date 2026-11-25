@@ -7,7 +7,7 @@ import {
     getEntitiesIndex,
     getSearchEndPoint,
     isDateFacetVisible,
-} from '../config';
+} from '@/config/config';
 
 const connector = new SearchAPIConnector({
     indexName: getEntitiesIndex(),

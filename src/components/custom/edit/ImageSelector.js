@@ -1,14 +1,13 @@
-import React, {useState, useRef} from 'react'
+import {useState, useRef} from 'react'
 import {Button, Badge, Alert, Form, InputGroup, CloseButton} from 'react-bootstrap';
 import {uploadFile} from "@/lib/services";
-import SenNetPopover from "../../SenNetPopover";
-
+import SenNetPopover from "@/components/SenNetPopover";
 
 export default function ImageSelector({ editMode, values, setValues, imageByteArray, setImageByteArray, isDisabled }) {
     const imageInputRef = useRef()
     const [error, setError] = useState(null)
     const [inputInformation, setInputInformation] = useState(null)
-    
+
     const handleFileChange = (index, description) => {
         const image = event.target.files && event.target.files[0]
         if (!image) return
@@ -18,11 +17,11 @@ export default function ImageSelector({ editMode, values, setValues, imageByteAr
                     ...temp_file_id,
                     ...description
                 }
-                
+
                 const imageFilesToAddCopy = [...values.image_files_to_add]
                 imageFilesToAddCopy[index] = merged
                 setValues(prevState => ({...prevState, image_files_to_add: imageFilesToAddCopy}))
-                
+
                 const c = [...imageByteArray]
                 c[index] = image
                 setImageByteArray(c)
@@ -35,7 +34,7 @@ export default function ImageSelector({ editMode, values, setValues, imageByteAr
         setInputInformation({index, fileDetail})
         imageInputRef.current.click()
     }
-    
+
     const handleUploadImagesClick = () => {
         setImageByteArray(prevState => [...prevState, {}])
         setValues(prevState => {
@@ -48,7 +47,7 @@ export default function ImageSelector({ editMode, values, setValues, imageByteAr
             }
         })
     }
-    
+
     const removeImageFile = index => {
         setImageByteArray(imageByteArray.filter((_, i) => i !== index))
         let imageFiles = []
@@ -80,7 +79,7 @@ export default function ImageSelector({ editMode, values, setValues, imageByteAr
             }
         })
     }
-    
+
     const removeImageFilesToAdd = index => {
         setImageByteArray(imageByteArray.filter((_, i) => i !== index))
         let imageFilesToAdd = []
@@ -116,7 +115,7 @@ export default function ImageSelector({ editMode, values, setValues, imageByteAr
     return (
         <div className={'row'}>
             <div className={'col mb-2'}>
-                { error && 
+                { error &&
                     <Alert className={'w-50'} variant={'danger'} onClose={() => setError(false)} dismissible>
                         <Alert.Heading>File is too large</Alert.Heading>
                         {error}

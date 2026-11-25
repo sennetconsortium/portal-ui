@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useRef, useState} from 'react'
+import {useContext, useEffect, useRef} from 'react'
 import PropTypes from 'prop-types'
 import CustomClearSearchBox from "@/components/custom/layout/CustomClearSearchBox";
 import SelectedFilters from "@/components/custom/layout/SelectedFilters";
@@ -15,7 +15,7 @@ import {TableResultsEntities} from '@/components/custom/TableResultsEntities'
 import { useSearchUIContext } from 'search-ui/components/core/SearchUIContext';
 import {Results, SearchBox} from '@elastic/react-search-ui';
 import {Form} from 'react-bootstrap';
-import { TableResultsFiles } from '../../TableResultsFiles';
+import { TableResultsFiles } from '@/components/custom/TableResultsFiles';
 import { SEARCH_FILES } from '@/config/search/files';
 import { cloneDeep } from 'lodash';
 
@@ -71,7 +71,7 @@ export function FilesBodyContent({ handleChangeAncestor, data, resultsFilterCall
     const { wasSearched, filters, addFilter, setStateProps, rawResponse } = useSearchUIContext();
 
     useEffect(() => {
-       
+
         if (resultsFilterCallback) {
             resultsFilterCallback(cloneDeep(SEARCH_FILES), {addFilter, setStateProps})
         }

@@ -1,8 +1,8 @@
-import React, { useContext, useEffect, useState, memo } from 'react'
+import { useContext, useEffect, useState, memo } from 'react'
 import VizLegend from '@/components/custom/visualizations/VizLegend'
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
-import { formatNum, percentage} from '../js/functions'
+import { formatNum, percentage} from '@/components/custom/js/functions'
 import VisualizationsContext from '@/context/VisualizationsContext';
 import $ from 'jquery';
 

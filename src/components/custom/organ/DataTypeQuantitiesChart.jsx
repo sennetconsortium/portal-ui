@@ -1,14 +1,14 @@
 import { VisualizationsProvider } from '@/context/VisualizationsContext'
-import React, { useContext, useRef, useState } from 'react'
+import { useContext, useRef, useState } from 'react'
 import useSearchUIQuery from '@/hooks/useSearchUIQuery'
 import { getEntitiesIndex } from '@/config/config'
 import { SEARCH_ENTITIES } from '@/config/search/entities'
-import StackedBar from '../visualizations/charts/StackedBar'
+import StackedBar from '@/components/custom/visualizations/charts/StackedBar'
 import AppContext from '@/context/AppContext'
 import { Skeleton } from '@mui/material'
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import VizLegend from '../visualizations/VizLegend'
+import VizLegend from '@/components/custom/visualizations/VizLegend'
 
 function DataTypeQuantitiesChart({ organ }) {
   const [legend, setLegend] = useState({})

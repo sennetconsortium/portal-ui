@@ -1,6 +1,5 @@
 import dynamic from "next/dynamic";
-import LnkIc from "../layout/LnkIc";
-import { eq, getEntityViewUrl } from "../js/functions";
+import { eq, getEntityViewUrl } from "@/components/custom/js/functions";
 import ClipboardCopy from "@/components/ClipboardCopy";
 import SenNetAccordion from "@/components/custom/layout/SenNetAccordion";
 import Card from 'react-bootstrap/Card';
@@ -30,7 +29,7 @@ function AssociatedEntityTable({ id, propertyName, data }) {
     }
 
     return subTitle
-    
+
   }
   const columns = [
     {
@@ -51,7 +50,7 @@ function AssociatedEntityTable({ id, propertyName, data }) {
         reorder: true,
         format: row => <div><a href={getHotLink(row)}><span>{row.title}</span></a><br /><span className='text-muted'>{getSubTitle()}</span></div>,
       },
-      
+
   ]
 
   if (isPublication) {
@@ -78,8 +77,8 @@ function AssociatedEntityTable({ id, propertyName, data }) {
             <Card border='0'>
                 <Card.Body>
                     <p className='fw-light fs-6'>This <code>{data.entity_type}</code> is contained in the following <code>{getAssociatedEntityPluralization()}</code><SenNetPopover text={ <small className="text-muted">{propertyName.upperCaseFirst()} may contain references to either raw or processed datasets. </small>}><sup><i className="bi bi-info-circle"></i></sup></SenNetPopover>.<br />
-                     
-                    </p>                        
+
+                    </p>
                     <DataTable data={data[propertyName]} columns={columns} pagination={data[propertyName].length > 10 ? true : undefined} />
                 </Card.Body>
             </Card>

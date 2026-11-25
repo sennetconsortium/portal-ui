@@ -2,9 +2,9 @@ import {useRouter} from 'next/router'
 import {Container, Nav, Navbar} from 'react-bootstrap'
 import {getDataIngestBoardEndpoint, NAVBAR_TITLE} from '@/config/config'
 import {APP_ROUTES, SWAL_DEL_CONFIG} from '@/config/constants'
-import React, {useContext, useEffect, useState} from 'react'
-import AppContext from '../../../context/AppContext'
-import {eq} from "../js/functions";
+import {useContext, useEffect, useState} from 'react'
+import AppContext from '@/context/AppContext'
+import {eq} from "@/components/custom/js/functions";
 import {getCookie} from "cookies-next";
 import Swal from 'sweetalert2'
 import {Alert} from "@mui/material";

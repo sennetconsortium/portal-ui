@@ -1,8 +1,8 @@
-import React, {useContext} from 'react'
+import {useContext} from 'react'
 import { Form } from 'react-bootstrap'
 import PropTypes from 'prop-types'
-import AppContext from '../../../../context/AppContext'
-import SenNetPopover from "../../../SenNetPopover";
+import AppContext from '@/context/AppContext'
+import SenNetPopover from "@/components/SenNetPopover";
 import WarningAmberIcon from "@mui/icons-material/WarningAmber";
 
 /**
@@ -32,7 +32,7 @@ function EntityFormGroup({children, controlId, label, onChange, value, isDisable
 
   return (
     <>
-    
+
         <Form.Group className={`mb-3 form-group ${className}`} controlId={controlId}>
             <Form.Label>{_t(label)} {isRequired && <span className="required">* </span>}
                 <SenNetPopover text={popoverHelpText} trigger={popoverTrigger} className={`popover-${controlId}`}>
@@ -56,7 +56,7 @@ function EntityFormGroup({children, controlId, label, onChange, value, isDisable
 
         </Form.Group>
     </>
-    
+
   )
 }
 

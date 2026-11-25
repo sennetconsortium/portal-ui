@@ -2,9 +2,9 @@ import PropTypes from "prop-types"
 import {useState, memo} from 'react'
 import CellTypeDistributionAcrossOrgansLayout from './CellTypeDistributionAcrossOrgansLayout'
 import { VisualizationsProvider } from '@/context/VisualizationsContext'
-import ChartContainer from '../visualizations/ChartContainer'
-import { formatNum, percentage } from '../js/functions'
-import { prepareOverlapData } from '../visualizations/charts/OverlappedBar'
+import ChartContainer from '@/components/custom/visualizations/ChartContainer'
+import { formatNum, percentage } from '@/components/custom/js/functions'
+import { prepareOverlapData } from '@/components/custom/visualizations/charts/OverlappedBar'
 import * as d3 from 'd3';
 import $ from 'jquery';
 import log from 'xac-loglevel'

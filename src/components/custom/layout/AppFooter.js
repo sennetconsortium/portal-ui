@@ -1,6 +1,6 @@
-import React, {useContext} from 'react';
+import {useContext} from 'react';
 import {Row, Col} from 'react-bootstrap'
-import AppContext from "../../../context/AppContext";
+import AppContext from "@/context/AppContext";
 import {ToastContainer} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 

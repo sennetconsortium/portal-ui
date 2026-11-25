@@ -1,5 +1,4 @@
 import dynamic from "next/dynamic";
-import React from 'react';
 import {
     getStatusColor,
     getStatusDefinition,
@@ -8,13 +7,13 @@ import {
 import Button from 'react-bootstrap/Button';
 import SenNetPopover from '@/components/SenNetPopover';
 import ClipboardCopy from '@/components/ClipboardCopy';
+import log from 'xac-loglevel'
+import useAutoHideColumns from "@/hooks/useAutoHideColumns";
+import {formatOrganRow} from "@/components/custom/TableResultsEntities";
 
 const DataTable = dynamic(() => import('react-data-table-component'), {
   ssr: false,
 });
-import log from 'xac-loglevel'
-import useAutoHideColumns from "@/hooks/useAutoHideColumns";
-import {formatOrganRow} from "@/components/custom/TableResultsEntities";
 
 export default function AncestorsTable({formLabel, onChange, deleteAncestor, values, controlId, ancestors, disableDelete}) {
     const {columnVisibility, tableData, updateCount} = useAutoHideColumns( {data: ancestors})

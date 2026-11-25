@@ -1,5 +1,5 @@
 import dynamic from "next/dynamic";
-import React, {useContext, useEffect, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import log from 'xac-loglevel'
 import {fetchDataCite} from "@/components/custom/js/functions";
 import Header from "@/components/custom/layout/Header";
@@ -19,7 +19,7 @@ import {APP_TITLE, getEntityEndPoint} from "@/config/config";
 import AppNavbar from "@/components/custom/layout/AppNavbar"
 import Description from "@/components/custom/entities/sample/Description";
 import ContributorsContacts from "@/components/custom/entities/ContributorsContacts"
-import AssociatedEntityTable from "../AssociatedEntityTable";
+import AssociatedEntityTable from "@/components/custom/entities/AssociatedEntityTable";
 import Lineage from "@/components/custom/entities/sample/Lineage";
 import SenNetAccordion from "@/components/custom/layout/SenNetAccordion";
 import SenNetSuspense from "@/components/SenNetSuspense";

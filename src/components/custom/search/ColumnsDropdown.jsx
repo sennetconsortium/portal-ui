@@ -4,7 +4,7 @@ import Select from 'react-select'
 import $ from 'jquery';
 import {parseJson} from "@/lib/services";
 import {COLS_ORDER_KEY} from "@/config/config";
-import {deleteFromLocalStorageWithSuffix} from "../js/functions";
+import {deleteFromLocalStorageWithSuffix} from "@/components/custom/js/functions";
 
 
 function ColumnsDropdown({ getTableColumns, setHiddenColumns, currentColumns, filters, searchContext, defaultHiddenColumns = [] , deleteFirst = true}) {
@@ -91,7 +91,7 @@ function ColumnsDropdown({ getTableColumns, setHiddenColumns, currentColumns, fi
         })
 
         handleDefaultHidden()
-        
+
     }, [multiVals, filters])
 
     return (

@@ -4,7 +4,7 @@ import SenNetAccordion from "@/components/custom/layout/SenNetAccordion";
 import Link from "next/link";
 import DerivedContext from "@/context/DerivedContext";
 import {FILE_KEY_SEPARATOR, getAssetsEndpoint, getAuth} from "@/config/config";
-import SenNetPopover from "../../../SenNetPopover";
+import SenNetPopover from "@/components/SenNetPopover";
 import {formatByteSize, getDatasetTypeDisplay, urlify} from "@/components/custom/js/functions";
 import {Button, Row} from 'react-bootstrap';
 import Col from 'react-bootstrap/Col';

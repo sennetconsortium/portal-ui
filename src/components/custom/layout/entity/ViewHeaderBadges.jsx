@@ -5,7 +5,7 @@ import { getOrganByCode } from "@/config/organs";
 import AppContext from "@/context/AppContext";
 import Link from "next/link";
 import PropTypes from "prop-types";
-import React, {Fragment, useContext, useEffect, useState} from "react";
+import {Fragment, useContext, useEffect, useState} from "react";
 import {
     getDatasetTypeDisplay,
     displayBodyHeader,
@@ -14,7 +14,7 @@ import {
     getStatusDefinition,
     getUBKGFullName,
     getOrganMeta
-} from "../../js/functions";
+} from "@/components/custom/js/functions";
 
 function ViewHeaderBadges({data, uniqueHeader, uniqueHeaderUrl, isMetadataHeader, hasWritePrivilege}) {
     const {cache} = useContext(AppContext)

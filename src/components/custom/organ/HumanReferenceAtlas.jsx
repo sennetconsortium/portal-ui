@@ -1,4 +1,4 @@
-import SenNetAccordion from '../layout/SenNetAccordion'
+import SenNetAccordion from '@/components/custom/layout/SenNetAccordion'
 import CCFOrganInfo from './CCFOrganInfo'
 
 /**

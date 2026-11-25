@@ -1,14 +1,14 @@
-import React, {useRef, useState} from 'react'
+import {useRef, useState} from 'react'
 import {Button, Badge, Alert, CloseButton} from 'react-bootstrap'
 import {uploadFile} from "@/lib/services";
-import SenNetPopover from "../../SenNetPopover";
+import SenNetPopover from "@/components/SenNetPopover";
 
 
 export default function ThumbnailSelector({ editMode, values, setValues, isDisabled }) {
     const thumbnailInputRef = useRef()
     const [thumbnail, setThumbnail] = useState(null)
     const [error, setError] = useState(null)
-    
+
     const handleThumbnailChange = () => {
         const thumbnailFile = event.target.files && event.target.files[0]
         if (!thumbnailFile) return
@@ -46,8 +46,8 @@ export default function ThumbnailSelector({ editMode, values, setValues, isDisab
             ref={thumbnailInputRef}
             onChange={handleThumbnailChange}
         />
-        
-        { error && 
+
+        { error &&
             <Alert className={'w-50'} variant={'danger'} onClose={() => setError(false)} dismissible>
                 <Alert.Heading>File is too large</Alert.Heading>
                 {error}
@@ -60,7 +60,7 @@ export default function ThumbnailSelector({ editMode, values, setValues, isDisab
                 <i className={'bi bi-paperclip ms-2'}/>
             </Button>
         </SenNetPopover>
-        
+
         <div className={'row'}>
             <div className={'col align-items-center d-flex'}>
                 { thumbnail &&

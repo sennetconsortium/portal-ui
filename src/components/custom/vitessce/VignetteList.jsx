@@ -2,9 +2,9 @@ import VignetteItem from '@/components/custom/vitessce/VignetteItem'
 import { getJSONFromAssetsEndpoint } from '@/lib/services'
 import $ from 'jquery';
 import log from 'xac-loglevel'
-import React, { useEffect, useState } from 'react'
-import Spinner from '../Spinner'
-import SenNetAccordion from '../layout/SenNetAccordion'
+import { useEffect, useState } from 'react'
+import Spinner from '@/components/custom/Spinner'
+import SenNetAccordion from '@/components/custom/layout/SenNetAccordion'
 
 function VignetteList({ publication, ancillaryPublication }) {
     const [loading, setLoading] = useState(true)

@@ -1,10 +1,10 @@
-import React, {useEffect, useRef, useState} from 'react'
+import {useEffect, useRef, useState} from 'react'
 import log from 'xac-loglevel'
 import {DataConverterNeo4J, GraphGeneric, ProvenanceUI, Legend} from 'provenance-ui/dist/index'
 import 'provenance-ui/dist/ProvenanceUI.css'
-import Spinner from '../Spinner'
+import Spinner from '@/components/custom/Spinner'
 import {getAuth, getEntityEndPoint} from "@/config/config";
-import AppModal from "../../AppModal";
+import AppModal from "@/components/AppModal";
 import $ from 'jquery';
 import {
     datasetIs,
@@ -13,7 +13,7 @@ import {
     getClickableLink,
     getCreationActionRelationName,
     getUBKGFullName
-} from "../js/functions";
+} from "@/components/custom/js/functions";
 import * as d3 from "d3";
 import LnkIc from "@/components/custom/layout/LnkIc";
 import ReactDOMServer from "react-dom/server";
@@ -443,7 +443,7 @@ function ProvenanceGraph({ data }) {
     const help = {
         title: 'Help: Provenance Graph',
         legend: `<li><code>Source</code> shapes <span class="shape yellow shape--circle">circle</span> and <span class="shape shape--stadium">stadium</span> correspond to <code>source_type</code> of Human and Mouse respectively. </li>
-                <li><code>Sample</code> shapes <span class="shape pink shape--diamond">diamond</span>, <span class="shape pink shape--sq">square</span>, 
+                <li><code>Sample</code> shapes <span class="shape pink shape--diamond">diamond</span>, <span class="shape pink shape--sq">square</span>,
                     <span class="shape pink shape--rect">rectangle</span> and <span class="shape pink shape--circle">circle</span> correspond to <code>sample_category</code>  of
                 <code>organ</code>, <code>block</code>, <code>section</code> and <code>suspension</code> respectively.</li>
                 <li><code>Dataset</code> shapes <span class="shape green shape--circle">circle</span>, <span class="shape shape--blob">"blob"</span>, and <span class="shape shape--triangle">triangle</span> correspond to <code>category</code> of <code>primary</code>, <code>processed</code> and <code>component</code> respectively.</li>`,

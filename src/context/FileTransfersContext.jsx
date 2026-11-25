@@ -1,17 +1,16 @@
 import dynamic from "next/dynamic";
-import React, {createContext, useContext, useEffect, useRef, useState} from "react";
+import {createContext, useContext, useEffect, useRef, useState} from "react";
 import {getDatasetsByIds, getTransferAuthJsonHeaders, parseJson} from "@/lib/services";
 import {getIngestEndPoint} from "@/config/config";
 import {APP_ROUTES} from "@/config/constants";
 import LnkIc from "@/components/custom/layout/LnkIc";
 import {getStatusColor, getStatusDefinition,} from "@/components/custom/js/functions"
+import SenNetPopover from "@/components/SenNetPopover";
+import AppContext from "@/context/AppContext";
 
 const DataTable = dynamic(() => import('react-data-table-component'), {
   ssr: false,
 });
-
-import SenNetPopover from "@/components/SenNetPopover";
-import AppContext from "@/context/AppContext";
 
 const FileTransfersContext = createContext()
 
@@ -118,13 +117,13 @@ export const FileTransfersProvider = ({ children }) => {
             setGlobusRunURLs(globusRunURLs)
             setIsLoading(false)
         } else {
-           
+
             let ids = manifest.map((g) => g.dataset)
             let datasets = await getDatasetsByIds(ids)
-            
+
             let jsonResponse = await response.json()
             setError(<>
-            <p>Transfering files from the <code>Datasets</code> listed below failed. If these <code>Datasets</code> are not <span className={`${getStatusColor('Published')} badge`}>Published</span>, you must belong to the 
+            <p>Transfering files from the <code>Datasets</code> listed below failed. If these <code>Datasets</code> are not <span className={`${getStatusColor('Published')} badge`}>Published</span>, you must belong to the
                 corresponding group to transfer files. </p>
             <p>Additionally, please make sure there are no duplicate transfers at <LnkIc text={'Globus Activity'} href="https://app.globus.org/activity" /> before continuing.</p>
             <DataTable columns={referenceColumns} data={datasets} pagination/>

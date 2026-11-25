@@ -1,11 +1,11 @@
 import dynamic from "next/dynamic";
-import React, {useContext} from "react";
+import {useContext} from "react";
 import {ErrorBoundary, SearchBox} from "@elastic/react-search-ui";
 import {Layout} from "@elastic/react-search-ui-views";
 import {TableResultsFiles} from '@/components/custom/TableResultsFiles'
 import {APP_TITLE, getRootURL} from "@/config/config";
 import {SEARCH_FILES} from "@/config/search/files"
-import CustomClearSearchBox from "../../components/custom/layout/CustomClearSearchBox";
+import CustomClearSearchBox from "@/components/custom/layout/CustomClearSearchBox";
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';

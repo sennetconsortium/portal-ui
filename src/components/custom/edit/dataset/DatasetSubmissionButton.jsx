@@ -1,6 +1,6 @@
-import React, {useState} from "react";
+import {useState} from "react";
 import {Button} from 'react-bootstrap';
-import AppModal from "../../../AppModal";
+import AppModal from "@/components/AppModal";
 
 const DatasetSubmissionButton = ({onClick, btnLabel, actionBtnClassName, modalBody, modalTitle, disableSubmit}) => {
     const [showModal, setShowModal] = useState(false)

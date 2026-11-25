@@ -1,22 +1,21 @@
 import dynamic from "next/dynamic";
-import React, {useContext, useEffect, useState} from 'react'
+import {useContext, useEffect, useState} from 'react'
 import PropTypes from 'prop-types'
 import {opsDict, ResultsPerPage} from "./ResultsPerPage";
+import TableResultsContext from "@/context/TableResultsContext";
+import ColumnsDropdown from "./ColumnsDropdown";
+import {eq} from '@/components/custom/js/functions'
+import {COLS_ORDER_KEY} from "@/config/config";
+import Spinner from '@/components/custom/Spinner';
+import SearchActions from "@/components/custom/search/SearchActions";
+import useSelectedRows from "@/hooks/useSelectedRows";
 
 const DataTable = dynamic(() => import('react-data-table-component'), {
   ssr: false,
 });
 
-import TableResultsContext from "@/context/TableResultsContext";
-import ColumnsDropdown from "./ColumnsDropdown";
-import {eq} from '../js/functions'
-import {COLS_ORDER_KEY} from "@/config/config";
-import Spinner from '../Spinner';
-import SearchActions from "@/components/custom/search/SearchActions";
-import useSelectedRows from "@/hooks/useSelectedRows";
-
 /**
- * 
+ *
  * @param {function} getTableColumns Returns a list of DataTable type columns
  * @param {function} onCheckboxChange A function to run on change of DataTable checkbox
  * @param {bool} disableRowClick Whether or not to disable row clicks
@@ -28,7 +27,7 @@ import useSelectedRows from "@/hooks/useSelectedRows";
  * @param {bool} isBusy
  * @param {string} index (entities | files) The type of search index
  * @param {object} searchActionHandlers An object of callbacks for various search actions. getModalSelectedFiles: Returns a list of files selected in row level FileTree modal
- * @returns 
+ * @returns
  */
 function ResultsBlock({getTableColumns, onCheckboxChange, disableRowClick, tableClassName = '', selectableRows,
     exportKind, defaultHiddenColumns = [], searchContext, totalRows, isBusy, index, searchActionHandlers}) {
@@ -72,10 +71,10 @@ function ResultsBlock({getTableColumns, onCheckboxChange, disableRowClick, table
             <div className='sui-layout-main-header'>
                 <div className='sui-layout-main-header__inner'>
 
-                    <SearchActions handleOnRowClicked={handleOnRowClicked}  context={index} setRefresh={setRefresh} 
-                    inModal={inModal} exportKind={exportKind} selectedRows={selectedRows} filters={filters} data={getTableData()} 
+                    <SearchActions handleOnRowClicked={handleOnRowClicked}  context={index} setRefresh={setRefresh}
+                    inModal={inModal} exportKind={exportKind} selectedRows={selectedRows} filters={filters} data={getTableData()}
                     raw={raw} hiddenColumns={hiddenColumns} columns={currentColumns.current} actionHandlers={searchActionHandlers} />
-                    
+
                     <div className='sui-tools-right'>
                         {rows.length > 0 && <ColumnsDropdown searchContext={searchContext} filters={filters} defaultHiddenColumns={defaultHiddenColumns} getTableColumns={getTableColumns} setHiddenColumns={setHiddenColumns}
                                         currentColumns={currentColumns.current} />}

@@ -1,12 +1,11 @@
 import dynamic from "next/dynamic";
 import PropTypes from 'prop-types'
+import SenNetAccordion from "@/components/custom/layout/SenNetAccordion";
+import {eq} from "@/components/custom/js/functions";
 
 const DataTable = dynamic(() => import('react-data-table-component'), {
   ssr: false,
 });
-import SenNetAccordion from "@/components/custom/layout/SenNetAccordion";
-import {eq} from "@/components/custom/js/functions";
-
 
 function ContributorsContacts({data, title}) {
     const getColumns = () => {

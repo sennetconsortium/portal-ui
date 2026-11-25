@@ -5,12 +5,11 @@ import {getEntityEndPoint} from "@/config/config";
 import {createDownloadUrl, eq} from "@/components/custom/js/functions";
 import AppContext from "./AppContext";
 import log from 'xac-loglevel'
+import {Row, Stack} from "react-bootstrap";
 
 const DataTable = dynamic(() => import('react-data-table-component'), {
   ssr: false,
 });
-
-import {Row, Stack} from "react-bootstrap";
 
 const JobQueueContext = createContext()
 

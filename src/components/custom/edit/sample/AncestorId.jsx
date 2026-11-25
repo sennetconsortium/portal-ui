@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useRef, useState} from 'react';
+import {useContext, useEffect, useRef, useState} from 'react';
 import {Form} from 'react-bootstrap';
 import {Results, SearchBox} from "@elastic/react-search-ui";
 import {Layout} from "@elastic/react-search-ui-views";
@@ -6,14 +6,14 @@ import InputGroup from 'react-bootstrap/InputGroup';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import {exclude_dataset_config} from "@/config/config";
-import {TableResultsEntities} from '../../TableResultsEntities';
-import CustomClearSearchBox from "../../layout/CustomClearSearchBox";
-import SelectedFilters from "../../layout/SelectedFilters";
-import {getUBKGFullName} from "../../js/functions";
-import SenNetPopover from "../../../SenNetPopover";
+import {TableResultsEntities} from '@/components/custom/TableResultsEntities';
+import CustomClearSearchBox from "@/components/custom/layout/CustomClearSearchBox";
+import SelectedFilters from "@/components/custom/layout/SelectedFilters";
+import {getUBKGFullName} from "@/components/custom/js/functions";
+import SenNetPopover from "@/components/SenNetPopover";
 import SearchUIContainer from 'search-ui/components/core/SearchUIContainer';
-import FacetsContent from '../../search/FacetsContent';
-import AppContext from "../../../../context/AppContext";
+import FacetsContent from '@/components/custom/search/FacetsContent';
+import AppContext from "@/context/AppContext";
 import { useSearchUIContext } from "search-ui/components/core/SearchUIContext";
 
 function BodyContent({ handleChangeSource, data }) {

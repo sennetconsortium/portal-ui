@@ -1,5 +1,5 @@
 import {getRootURL} from "@/config/config";
-import {formatMessageForCloudwatch} from "../find";
+import {formatMessageForCloudwatch} from "@/pages/api/find";
 import {getAuthHeader, getHeadersFromRequest, getJsonHeader} from "@/lib/services";
 import log from 'xac-loglevel'
 

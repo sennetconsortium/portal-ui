@@ -1,11 +1,11 @@
-import React, {useContext} from 'react'
-import AppContext from '../../../../context/AppContext'
+import {useContext} from 'react'
+import AppContext from '@/context/AppContext'
 import {Button, Stack} from 'react-bootstrap';
-import {eq, getCreationActionRelationName} from "../../js/functions";
+import {eq, getCreationActionRelationName} from "@/components/custom/js/functions";
 import PropTypes from 'prop-types'
-import ClipboardCopy from "../../../ClipboardCopy";
+import ClipboardCopy from "@/components/ClipboardCopy";
 import {ViewHeaderBadges} from "./ViewHeaderBadges";
-import SenNetPopover from "../../../SenNetPopover";
+import SenNetPopover from "@/components/SenNetPopover";
 import VersionDropdown from "./VersionDropdown";
 
 const EntityViewHeaderButtons = ({entity, data, hasWritePrivilege}) => {

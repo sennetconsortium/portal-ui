@@ -1,13 +1,12 @@
 import PropTypes from "prop-types"
-import React from 'react';
 import Spinner from '@/components/custom/Spinner'
 import { getCellTypesIndex } from '@/config/config'
 import { VisualizationsProvider } from '@/context/VisualizationsContext'
 import { fetchSearchAPIEntities } from '@/lib/services'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Form } from 'react-bootstrap'
-import ChartContainer from '../visualizations/ChartContainer'
-import VizLegend from '../visualizations/VizLegend'
+import ChartContainer from '@/components/custom/visualizations/ChartContainer'
+import VizLegend from '@/components/custom/visualizations/VizLegend'
 
 const ageBins = [
     {

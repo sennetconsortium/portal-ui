@@ -1,5 +1,5 @@
 import React, { Suspense } from 'react'
-import Spinner from '../Spinner'
+import Spinner from '@/components/custom/Spinner'
 
 const Vitessce = React.lazy(() => import('./VitessceWrapper.js'))
 

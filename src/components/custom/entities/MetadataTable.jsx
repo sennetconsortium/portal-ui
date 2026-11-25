@@ -1,7 +1,7 @@
 import dynamic from "next/dynamic";
-import React, {useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import {Container, Row} from 'react-bootstrap'
-import {createDownloadUrl, tableDataToTSV} from '../js/functions';
+import {createDownloadUrl, tableDataToTSV} from '@/components/custom/js/functions';
 import useDataTableSearch from '@/hooks/useDataTableSearch';
 import GroupedDataTable from './GroupedDataTable';
 import SenNetPopover from '@/components/SenNetPopover';

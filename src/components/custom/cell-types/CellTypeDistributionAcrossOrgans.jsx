@@ -1,5 +1,4 @@
-
-import React, { memo, useEffect, useRef, useState } from 'react';
+import { memo, useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types'
 import { getCellTypesIndex } from '@/config/config'
 import { getOrganByCode } from '@/config/organs'
@@ -7,8 +6,7 @@ import useSearchUIQuery from '@/hooks/useSearchUIQuery'
 import Image from 'next/image'
 import Nav from 'react-bootstrap/Nav'
 import Tab from 'react-bootstrap/Tab'
-import Spinner from '../Spinner';
-
+import Spinner from '@/components/custom/Spinner';
 import CellTypeDistributionAcrossOrgansTab from './CellTypeDistributionAcrossOrgansTab'
 
 /**

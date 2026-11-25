@@ -1,17 +1,17 @@
 import dynamic from "next/dynamic";
-import React, {Fragment, useContext, useEffect, useState} from 'react';
+import {Fragment, useContext, useEffect, useState} from 'react';
 import {fetchGlobusFilepath} from "@/lib/services";
-import SenNetAccordion from "../../layout/SenNetAccordion";
+import SenNetAccordion from "@/components/custom/layout/SenNetAccordion";
 import Card from 'react-bootstrap/Card';
+import {formatByteSize} from "@/components/custom/js/functions";
+import SenNetPopover from "@/components/SenNetPopover";
+import {getAssetsEndpoint, getAuth, RESULTS_PER_PAGE} from "@/config/config";
+import DerivedContext from "@/context/DerivedContext";
+import Link from "next/link";
 
 const DataTable = dynamic(() => import('react-data-table-component'), {
   ssr: false,
 });
-import {formatByteSize} from "../../js/functions";
-import SenNetPopover from "../../../SenNetPopover";
-import {getAssetsEndpoint, getAuth, RESULTS_PER_PAGE} from "@/config/config";
-import DerivedContext from "@/context/DerivedContext";
-import Link from "next/link";
 
 export const Files = ({data}) => {
     const [status, setStatus] = useState(null)

@@ -1,5 +1,5 @@
 import { Chip } from '@mui/material'
-import { getUBKGFullName } from '../js/functions'
+import { getUBKGFullName } from '@/components/custom/js/functions'
 import { useSearchUIContext } from "search-ui/components/core/SearchUIContext";
 
 function SelectedFacets() {
@@ -103,7 +103,7 @@ function SelectedFacets() {
     }
 
     const buildListValuesFacetChip = (filter) => {
-        const field = filter.field 
+        const field = filter.field
         const value = filter.values.join(', ')
         return (
             <Chip
@@ -141,7 +141,7 @@ function SelectedFacets() {
                         }
                     }
                 }
-                
+
                 return acc
             }, [])}
         </div>

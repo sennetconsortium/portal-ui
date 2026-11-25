@@ -22,13 +22,12 @@ import EntityContext, {EntityProvider} from '@/context/EntityContext'
 import {APP_TITLE, getIngestEndPoint, valid_dataset_ancestor_config} from "@/config/config";
 import $ from 'jquery';
 import DatasetRevertButton, {statusRevertTooltip} from "@/components/custom/edit/dataset/DatasetRevertButton";
+import AttributesUpload, {getResponseList} from "@/components/custom/edit/AttributesUpload";
+import FileDownloadIcon from "@mui/icons-material/FileDownload";
 
 const DataTable = dynamic(() => import('react-data-table-component'), {
   ssr: false,
 });
-
-import AttributesUpload, {getResponseList} from "@/components/custom/edit/AttributesUpload";
-import FileDownloadIcon from "@mui/icons-material/FileDownload";
 
 const AncestorIds = dynamic(() => import('@/components/custom/edit/dataset/AncestorIds'))
 const AppFooter = dynamic(() => import("@/components/custom/layout/AppFooter"))

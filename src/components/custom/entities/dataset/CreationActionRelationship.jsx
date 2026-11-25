@@ -1,17 +1,16 @@
 import dynamic from "next/dynamic";
-import React from 'react'
 import PropTypes from 'prop-types'
-import SenNetAccordion from "../../layout/SenNetAccordion";
-import {getCreationActionRelationName, getDatasetTypeDisplay} from "../../js/functions";
+import SenNetAccordion from "@/components/custom/layout/SenNetAccordion";
+import {getCreationActionRelationName, getDatasetTypeDisplay} from "@/components/custom/js/functions";
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
+import ClipboardCopy from "@/components/ClipboardCopy";
+import InfoIcon from "@mui/icons-material/Info";
+import Alert from 'react-bootstrap/Alert';
 
 const DataTable = dynamic(() => import('react-data-table-component'), {
   ssr: false,
 });
-import ClipboardCopy from "../../../ClipboardCopy";
-import InfoIcon from "@mui/icons-material/Info";
-import Alert from 'react-bootstrap/Alert';
 
 function CreationActionRelationship({entity, data}) {
     const relationshipNames = {

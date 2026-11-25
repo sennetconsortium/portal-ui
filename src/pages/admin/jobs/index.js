@@ -1,12 +1,12 @@
 import dynamic from "next/dynamic";
-import React, {useContext} from "react";
+import {useContext} from "react";
 import AppContext from "@/context/AppContext";
 import {JobQueueProvider} from "@/context/JobQueueContext";
 import AdminContext, {AdminProvider} from "@/context/AdminContext";
 
-const ViewJobs = dynamic(() => import('../../user/jobs'));
-const Spinner = dynamic(() => import('../../../components/custom/Spinner'));
-const Unauthorized = dynamic(() => import('../../../components/custom/layout/Unauthorized'));
+const ViewJobs = dynamic(() => import('@/pages/user/jobs'));
+const Spinner = dynamic(() => import('@/components/custom/Spinner'));
+const Unauthorized = dynamic(() => import('@/components/custom/layout/Unauthorized'));
 
 function ViewJobsAdmin() {
     const {adminGroup, authorized} = useContext(AppContext)

@@ -5,12 +5,12 @@ import AppContext from "@/context/AppContext";
 import { Chip, Stack } from "@mui/material";
 import { useContext } from 'react';
 import { Card } from 'react-bootstrap';
+import {displayBodyHeader, getUBKGFullName} from "@/components/custom/js/functions";
+import SenNetAccordion from "@/components/custom/layout/SenNetAccordion";
 
 const DataTable = dynamic(() => import('react-data-table-component'), {
   ssr: false,
 });
-import {displayBodyHeader, getUBKGFullName} from "@/components/custom/js/functions";
-import SenNetAccordion from "@/components/custom/layout/SenNetAccordion";
 
 export default function Tissue({ data }) {
     const {cache} = useContext(AppContext)

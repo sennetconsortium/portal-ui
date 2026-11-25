@@ -12,11 +12,6 @@ import {
     getStatusColor,
     THEME
 } from "@/components/custom/js/functions";
-
-const DataTable = dynamic(() => import('react-data-table-component'), {
-  ssr: false,
-});
-
 import Alert from "react-bootstrap/Alert"
 import Button from "react-bootstrap/Button"
 import Container from "react-bootstrap/Container"
@@ -38,6 +33,10 @@ import "driver.js/dist/driver.css";
 import {SWAL_DEL_CONFIG } from "@/config/constants";
 import JobDashboardTutorialSteps from "@/components/custom/layout/JobDashboardTutorialSteps";
 import Spinner, {SpinnerEl} from "@/components/custom/Spinner";
+
+const DataTable = dynamic(() => import('react-data-table-component'), {
+  ssr: false,
+});
 
 const AppFooter = dynamic(() => import("@/components/custom/layout/AppFooter"))
 const AppNavbar = dynamic(() => import("@/components/custom/layout/AppNavbar"))

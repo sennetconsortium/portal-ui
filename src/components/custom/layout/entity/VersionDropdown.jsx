@@ -1,8 +1,8 @@
 import {useContext, useEffect, useState} from 'react'
 import PropTypes from 'prop-types'
 import Dropdown from 'react-bootstrap/Dropdown'
-import AppContext from "../../../../context/AppContext";
-import {getEntityViewUrl, getHeaders} from "../../js/functions";
+import AppContext from "@/context/AppContext";
+import {getEntityViewUrl, getHeaders} from "@/components/custom/js/functions";
 import SenNetPopover, {SenPopoverOptions} from "@/components/SenNetPopover";
 import {getEntityEndPoint} from "@/config/config";
 

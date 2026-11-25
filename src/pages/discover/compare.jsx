@@ -1,5 +1,5 @@
 import dynamic from "next/dynamic";
-import React, {useContext, useEffect, useState} from "react"
+import {useContext, useEffect, useState} from "react"
 import {APP_TITLE} from "@/config/config"
 import AppContext from "@/context/AppContext"
 import { useRouter } from 'next/router'
@@ -9,9 +9,9 @@ import VitessceQuadrant from "@/components/custom/vitessce/VitessceQuadrant";
 import {DerivedProvider} from "@/context/DerivedContext";
 import AddQuadrant from "@/components/custom/vitessce/AddQuadrant";
 import $ from 'jquery';
-const AppNavbar = dynamic(() => import("../../components/custom/layout/AppNavbar"))
-const Header = dynamic(() => import("../../components/custom/layout/Header"))
-const Spinner = dynamic(() => import("../../components/custom/Spinner"))
+const AppNavbar = dynamic(() => import("@/components/custom/layout/AppNavbar"))
+const Header = dynamic(() => import("@/components/custom/layout/Header"))
+const Spinner = dynamic(() => import("@/components/custom/Spinner"))
 
 function ViewCompare() {
     const {logout, isRegisterHidden, isAuthorizing, isUnauthorized, hasAuthenticationCookie} = useContext(AppContext)

@@ -1,8 +1,8 @@
 import {useContext, useEffect, useState} from 'react'
 import {getCookie, setCookie} from "cookies-next";
 import TutorialSteps from "./TutorialSteps";
-import AppContext from "../../../context/AppContext";
-import {eq} from "../js/functions";
+import AppContext from "@/context/AppContext";
+import {eq} from "@/components/custom/js/functions";
 import {Alert} from 'react-bootstrap'
 import {useRouter} from 'next/router'
 import {driver} from "driver.js";

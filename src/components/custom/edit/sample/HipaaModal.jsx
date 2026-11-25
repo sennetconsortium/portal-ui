@@ -1,7 +1,7 @@
-import React, {useState} from "react";
+import {useState} from "react";
 import Modal from 'react-bootstrap/Modal';
 import {Button} from 'react-bootstrap';
-import SenNetAlert from '../../../SenNetAlert';
+import SenNetAlert from '@/components/SenNetAlert';
 
 
 const HipaaModal = ({}) => {

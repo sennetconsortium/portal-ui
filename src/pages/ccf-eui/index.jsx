@@ -1,4 +1,4 @@
-import EUIIntegration from "../../components/custom/eui/EUIIntegration";
+import EUIIntegration from "@/components/custom/eui/EUIIntegration";
 
 const EUIExploration = () => {
 

@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState, useContext} from 'react';
+import {useEffect, useRef, useState, useContext} from 'react';
 import PropTypes from 'prop-types';
 import {styled} from '@mui/material/styles';
 import Stepper from '@mui/material/Stepper';
@@ -17,9 +17,9 @@ import {Alert, Container, Grid} from "@mui/material";
 import {getDocsRootURL, getIngestEndPoint} from "@/config/config";
 import Spinner, { SpinnerEl } from '@/components/custom/Spinner'
 import GroupsIcon from '@mui/icons-material/Groups';
-import GroupSelect from "../edit/GroupSelect";
+import GroupSelect from "@/components/custom/edit/GroupSelect";
 import AppModal from '@/components/AppModal'
-import {eq, getHeaders, getStatusColor} from "../js/functions";
+import {eq, getHeaders, getStatusColor} from "@/components/custom/js/functions";
 import AppContext from "@/context/AppContext";
 import {getAuthJsonHeaders, getAuthHeader} from "@/lib/services";
 import JobQueueContext from "@/context/JobQueueContext";

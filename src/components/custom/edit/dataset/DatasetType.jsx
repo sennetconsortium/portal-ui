@@ -1,7 +1,6 @@
-import React from 'react';
 import {Form} from 'react-bootstrap';
-import SenNetPopover from "../../../SenNetPopover";
-import {eq, getUBKGFullName} from "../../js/functions";
+import SenNetPopover from "@/components/SenNetPopover";
+import {eq, getUBKGFullName} from "@/components/custom/js/functions";
 import PropTypes from "prop-types";
 
 export default function DatasetType({datasetTypes, data, label, labelDescription, dataValue, values, onChange}) {

@@ -1,5 +1,5 @@
 import dynamic from "next/dynamic";
-import React, {useContext, useEffect, useRef, useState} from 'react';
+import {useContext, useEffect, useRef, useState} from 'react';
 import PropTypes from 'prop-types';
 import {styled} from '@mui/material/styles';
 import Stepper from '@mui/material/Stepper';
@@ -17,30 +17,28 @@ import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import {Button, Form} from "react-bootstrap";
 import {Alert, Container, Grid} from "@mui/material";
-import Spinner from "../Spinner";
-import AppModal from "../../AppModal";
+import Spinner from "@/components/custom/Spinner";
+import AppModal from "@/components/AppModal";
 import SenNetAlert from "@/components/SenNetAlert";
 import FileTransfersContext from "@/context/FileTransfersContext";
-import OptionsSelect from "../layout/entity/OptionsSelect";
+import OptionsSelect from "@/components/custom/layout/entity/OptionsSelect";
 import SenNetPopover from "@/components/SenNetPopover";
 import $ from 'jquery';
-
-const DataTable = dynamic(() => import('react-data-table-component'), {
-  ssr: false,
-});
-
-import LnkIc from "../layout/LnkIc";
-import AncestorsModal, { FilesBodyContent } from "../edit/dataset/AncestorsModal";
+import LnkIc from "@/components/custom/layout/LnkIc";
+import AncestorsModal, { FilesBodyContent } from "@/components/custom/edit/dataset/AncestorsModal";
 import { SEARCH_FILES } from "@/config/search/files";
 import { cloneDeep } from 'lodash';
 import { APP_ROUTES } from "@/config/constants";
 import Select, { components } from "react-select";
 const { Option } = components;
 
+const DataTable = dynamic(() => import('react-data-table-component'), {
+  ssr: false,
+});
 const EntityFormGroup = dynamic(() => import('@/components/custom/layout/entity/FormGroup'))
 
 export default function BulkTransfer({
-                                         
+
                                          handlePrimaryBtn,
                                      }) {
     const buttonVariant = "btn btn-outline-primary "
@@ -138,7 +136,7 @@ export default function BulkTransfer({
     useEffect(() => {
         setIsNextButtonDisabled(error != null)
     }, [error])
-    
+
 
     useEffect(() => {
         setIsNextButtonDisabled(!tableData.length)
@@ -182,7 +180,7 @@ export default function BulkTransfer({
     }
 
     const handleBack = () => {
-       
+
         setError(null)
 
         if (activeStep !== 0 || activeStep !== isAtLastStep()) {
@@ -338,7 +336,7 @@ export default function BulkTransfer({
 
     const getDestinationOptions = () => {
         let options = []
-        
+
         const icon = (v) => {
             return v.startsWith('GCP') ? <LanIcon fontSize="small" /> : <PublicIcon fontSize="small" />
         }
@@ -351,11 +349,11 @@ export default function BulkTransfer({
                 value: o.id, label: o.display_name, icon: icon(o.entity_type), description: o.description
             })
             if (_formData.current.destination_collection_id === o.id) {
-                selectedIndex = index 
+                selectedIndex = index
             }
             index++
         }
-        
+
 
         return (<Select className="form__destinationCollectionSelect"
             classNamePrefix="destinationCollectionSelect"
@@ -469,7 +467,7 @@ export default function BulkTransfer({
                         <Grid container className={'form--transfer w-75 mx-auto mt-5'}>
                             <Form className={"w-100"} noValidate validated={validated} id={"transfers-form"}>
                                 <Grid item xs>
-                                    
+
                                     <OptionsSelect
                                         className={'form__flexGroup form__destinationCollection'}
                                         popover={<>Select the Globus collection you wish to transfer files to. </>}

@@ -4,12 +4,12 @@ import { checkFilterType, getOrganHierarchy, matchArrayOrder } from './js/functi
 import { getOptions } from "./search/ResultsPerPage";
 import ResultsBlock from "./search/ResultsBlock";
 import { TableResultsProvider } from "@/context/TableResultsContext";
-import ClipboardCopy from "../ClipboardCopy";
+import ClipboardCopy from "@/components/ClipboardCopy";
 import 'primeicons/primeicons.css';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import { Chip } from "@mui/material";
-import SenNetPopover from "../SenNetPopover";
-import AppModal from "../AppModal";
+import SenNetPopover from "@/components/SenNetPopover";
+import AppModal from "@/components/AppModal";
 import { COLS_ORDER_KEY } from "@/config/config";
 import { getCellTypesByIds, parseJson } from "@/lib/services";
 import { useSearchUIContext } from "@/search-ui/components/core/SearchUIContext";
