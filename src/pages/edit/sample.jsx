@@ -1,5 +1,5 @@
 import dynamic from "next/dynamic";
-import React, {useContext, useEffect, useEffectEvent, useRef, useState} from "react";
+import {useContext, useEffect, useEffectEvent, useRef, useState} from "react";
 import {useRouter} from 'next/router';
 import Alert from 'react-bootstrap/Alert';
 import Button from 'react-bootstrap/Button';
@@ -21,12 +21,9 @@ const EntityHeader = dynamic(() => import('@/components/custom/layout/entity/Hea
 const EntityFormGroup = dynamic(() => import('@/components/custom/layout/entity/FormGroup'))
 const GroupSelect = dynamic(() => import("@/components/custom/edit/GroupSelect"))
 const Header = dynamic(() => import("@/components/custom/layout/Header"))
-const ImageSelector = dynamic(() => import("@/components/custom/edit/ImageSelector"))
 const RUIIntegration = dynamic(() => import("@/components/custom/edit/sample/rui/RUIIntegration"))
 const RUIButton = dynamic(() => import("@/components/custom/edit/sample/rui/RUIButton"))
 const SampleCategory = dynamic(() => import("@/components/custom/edit/sample/SampleCategory"))
-const SenNetAlert = dynamic(() => import("@/components/SenNetAlert"))
-const ThumbnailSelector = dynamic(() => import("@/components/custom/edit/ThumbnailSelector"))
 
 function EditSample() {
     const {
@@ -41,12 +38,12 @@ function EditSample() {
         showModal, setAllModalDetails, handleClose, setModalProps,
         selectedUserWriteGroupUuid,
         disableSubmit, setDisableSubmit,
-        entityForm, disabled, imageDisabled,
+        entityForm,
         getSampleEntityConstraints,
         getMetadataNote, checkProtocolUrl,
         warningClasses, getCancelBtn
     } = useContext(EntityContext)
-    const {_t, cache, filterImageFilesToAdd, getPreviewView} = useContext(AppContext)
+    const {_t, cache, getPreviewView} = useContext(AppContext)
     const router = useRouter()
     const [source, setSource] = useState(null)
     const [ruiSex, setRuiSex] = useState(undefined)
@@ -58,11 +55,6 @@ function EditSample() {
     const [sampleCategories, setSampleCategories] = useState(null)
     const [organ_group_hide, set_organ_group_hide] = useState('none')
 
-    const [imageFilesToAdd, setImageFilesToAdd] = useState([])
-    const [imageFilesToRemove, setImageFilesToRemove] = useState([])
-    const [thumbnailFileToAdd, setThumbnailFileToAdd] = useState(null)
-    const [thumbnailFileToRemove, setThumbnailFileToRemove] = useState(null)
-    const [imageByteArray, setImageByteArray] = useState([])
     const alertStyle = useRef('info')
     const issuedUserWarning = useRef(null)
 
@@ -161,8 +153,6 @@ function EditSample() {
             }
             setValues(vals)
 
-            setImageFilesToAdd(_data.image_files)
-            setThumbnailFileToAdd(_data.thumbnail_file)
             setEditMode('Edit')
 
             setAncestorOrgan(_data.organ ? [_data.organ] : [_data?.origin_samples[0].organ])
@@ -371,20 +361,6 @@ function EditSample() {
                 values['rui_location'] = parseJson(ruiLocation)
             }
 
-            filterImageFilesToAdd(values);
-
-            if (imageFilesToRemove.length !== 0) {
-                values['image_files_to_remove'] = imageFilesToRemove
-            }
-
-            if (thumbnailFileToAdd && thumbnailFileToAdd.temp_file_id !== undefined) {
-                values['thumbnail_file_to_add'] = thumbnailFileToAdd
-            }
-
-            if (thumbnailFileToRemove) {
-                values['thumbnail_file_to_remove'] = thumbnailFileToRemove
-            }
-
             // Remove empty strings
             let json = cleanJson(values);
             let uuid = data.uuid
@@ -404,29 +380,12 @@ function EditSample() {
                     if (response.thumbnail_file) {
                         setValues(prevState => ({...prevState, thumbnail_file: response.thumbnail_file}))
                     }
-                    if (values.image_files_to_add) {
-                        delete values.image_files_to_add
-                    }
-                    if (values.image_files_to_remove) {
-                        delete values.image_files_to_remove
-                    }
-                    if (values.thumbnail_file_to_add) {
-                        delete values.thumbnail_file_to_add
-                    }
-                    if (values.thumbnail_file_to_remove) {
-                        delete values.thumbnail_file_to_remove
-                    }
-                    setImageByteArray([])
                 }).catch((e) => log.error(e))
             }
         }
 
         setValidated(true);
     };
-
-    const supportsMetadata = () => {
-        return values.sample_category !== sampleCategoriesMap?.Organ
-    }
 
     const metadataNote = () => {
         if (!sampleEntity) {
@@ -574,25 +533,6 @@ function EditSample() {
 
                                     {metadataNote() &&
                                         <Alert variant={alertStyle.current}><span>{metadataNote()}</span></Alert>}
-
-                                    {/* Deidentify images warning */}
-                                    <SenNetAlert className='deidentify-alert'
-                                                 text='Upload de-identified images and thumbnails only'/>
-
-                                    {/* Images */}
-                                    <ImageSelector editMode={editMode}
-                                                   isDisabled={imageDisabled}
-                                                   values={values}
-                                                   setValues={setValues}
-                                                   imageByteArray={imageByteArray}
-                                                   setImageByteArray={setImageByteArray}/>
-
-                                    {/* Thumbnail */}
-                                    <ThumbnailSelector editMode={editMode}
-                                                       isDisabled={imageDisabled}
-                                                       values={values}
-                                                       setValues={setValues}/>
-
 
                                     <div className={'d-flex flex-row-reverse'}>
                                         {getCancelBtn('sample')}
