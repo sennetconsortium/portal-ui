@@ -1,5 +1,4 @@
 import PropTypes from "prop-types"
-import React from 'react'
 import * as d3 from 'd3';
 import { useContext, useEffect, useRef } from 'react'
 import VisualizationsContext from '@/context/VisualizationsContext';
@@ -78,7 +77,7 @@ function OverlappedBar({
                 maxY = Math.max(maxY, d[subgroup] || 0)
             }
         }
-        
+
         let stackedSorted = []
         for (let d of data) {
             let subgroupsSorted = []
@@ -92,7 +91,7 @@ function OverlappedBar({
 
         const {y, minY, ticks} = svgAppend({}).yAxis({data, g, yAxis, sizing, maxY})
 
-        svgAppend({xAxis, yAxis}).axisLabels({svg, sizing})    
+        svgAppend({xAxis, yAxis}).axisLabels({svg, sizing})
 
         // color palette = one color per subgroup
         const colorScale = d3.scaleOrdinal(style.colorScheme || d3.schemeCategory10)

@@ -1,4 +1,4 @@
-import React, {useRef, useState, useEffect} from 'react'
+import {useRef, useState, useEffect} from 'react'
 import PropTypes from 'prop-types'
 import {
     autoBlobDownloader,
@@ -12,7 +12,7 @@ import {TableResultsProvider} from "@/context/TableResultsContext";
 import ClipboardCopy from '@/components/ClipboardCopy'
 import 'primeicons/primeicons.css';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-import {Chip} from "@mui/material";
+import {Chip, Skeleton} from "@mui/material";
 import SenNetPopover from '@/components/SenNetPopover'
 import AppModal from '@/components/AppModal'
 import FileTreeView from "./entities/dataset/FileTreeView";
@@ -21,7 +21,6 @@ import {fetchGlobusFilepath, parseJson} from "@/lib/services";
 import {useSearchUIContext} from "@/search-ui/components/core/SearchUIContext";
 import DataUsageModal from "@/components/custom/entities/dataset/DataUsageModal";
 import {Button} from 'react-bootstrap'
-import { Skeleton } from '@mui/material';
 import $ from 'jquery';
 
 function TableResultsFiles({children, onRowClicked, filters, forData = false, rowFn, inModal = false, rawResponse}) {
@@ -87,18 +86,18 @@ function TableResultsFiles({children, onRowClicked, filters, forData = false, ro
             }
         }
         for (let uuid of fileTreeSelectionsUuids) {
-            // the name of the checkbox input is "Select row <uuid>", 
+            // the name of the checkbox input is "Select row <uuid>",
             // may need to be updated if the table library changes
             $el = $(`[name="Select row ${uuid}"]`)
-            
+
             if (!_dict[uuid] && $el.length) {
-                // If the row is not already selected from the main table, 
+                // If the row is not already selected from the main table,
                 // set the checkbox to be indeterminate to reflect selections in the fileTree modal
-                $el?.prop("indeterminate", true) 
+                $el?.prop("indeterminate", true)
                 fileTreeSelections++
             } else {
                 _fileSelections = {}
-                // The row is already selected on the main table, 
+                // The row is already selected on the main table,
                 // so delete any fileTree modal selections on that row
                 for (let fileKey in fileSelection) {
                     if (!fileKey.startsWith(uuid)) {
@@ -167,7 +166,7 @@ function TableResultsFiles({children, onRowClicked, filters, forData = false, ro
                     entity_type: 'Dataset',
                     list: list,
                     meta: meta,
-                }    
+                }
             }
 
 
@@ -231,9 +230,9 @@ function TableResultsFiles({children, onRowClicked, filters, forData = false, ro
         if (inModal && onRowClicked) {
             onRowClicked(null, null, transferList)
         } else {
-          goToTransfers(transferList)  
+          goToTransfers(transferList)
         }
-        
+
     }
 
     const filesModal = (row) => {
@@ -271,7 +270,7 @@ function TableResultsFiles({children, onRowClicked, filters, forData = false, ro
             delete selectedFilesModal.current[row.dataset_uuid]
         }
         if (deselectMainTableRow.current) {
-            // the user selected specifically from the file tree modal, 
+            // the user selected specifically from the file tree modal,
             // so uncheck row from main table (if selected)
             deselectMainTableRow.current(row.dataset_uuid)
         }

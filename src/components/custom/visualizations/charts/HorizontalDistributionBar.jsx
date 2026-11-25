@@ -1,5 +1,4 @@
 import PropTypes from "prop-types"
-import React from 'react'
 import * as d3 from 'd3';
 import { useContext, useEffect, useRef } from 'react'
 import VisualizationsContext from '@/context/VisualizationsContext';
@@ -42,19 +41,19 @@ function HorizontalDistributionBar({
 
     const buildChart = () => {
 
-       
+
         const sizing = handleSvgSizing(style, chartId, chartType)
 
         // append the svg object to the body of the page
         const svg = d3.create("svg")
             .attr("viewBox", [0, 0, sizing.width + sizing.margin.X * 1.1, sizing.height + sizing.margin.Y * 1.5])
-        
+
 
         const g = svg
             .append("g")
             .attr("transform", style.transform || `translate(${sizing.margin.left * 1.5},${sizing.margin.top + 50})`)
 
-    
+
         subGroupLabels = getSubgroupLabels(data, subGroupLabels)
 
         const subgroups = Object.keys(subGroupLabels)
@@ -70,7 +69,7 @@ function HorizontalDistributionBar({
         const stackGen = d3.stack()
           .keys(subgroups)
 
-        const stackedSeries = stackGen(data); 
+        const stackedSeries = stackGen(data);
 
         const ticks = yAxis.scaleLog || yAxis.ticks ? yAxis.ticks || 3 : undefined
         const scaleMethod = yAxis.scaleLog ? d3.scaleLog : d3.scaleLinear
@@ -91,7 +90,7 @@ function HorizontalDistributionBar({
             .attr("transform", `translate(0, ${sizing.height})`)
             .call(d3.axisBottom(x).ticks(ticks))
 
-        svgAppend({xAxis, yAxis}).axisLabels({svg, sizing})   
+        svgAppend({xAxis, yAxis}).axisLabels({svg, sizing})
 
         // color palette = one color per subgroup
         const colorScale = d3.scaleOrdinal(style.colorScheme || d3.schemeCategory10)
@@ -111,7 +110,7 @@ function HorizontalDistributionBar({
             .style("stroke", "#eee") // Light gray
             .style("stroke-width", "1px")
         }
-      
+
         // Show the bars
         g.append("g")
             .selectAll("g")
@@ -155,8 +154,8 @@ function HorizontalDistributionBar({
             .transition()
             .duration(800)
             .attr("width", d => x(d[1]) - x(d[0]))
-          
-           
+
+
         g.append("g")
             .attr("class", `y-axis`)
             .call(d3.axisLeft(y));
@@ -191,7 +190,7 @@ function HorizontalDistributionBar({
         updateChart()
     }, [filters, yAxis])
 
-    
+
     useEffect(() => {
         window.addEventListener('resize', updateChart);
         return () => window.removeEventListener('resize', updateChart);

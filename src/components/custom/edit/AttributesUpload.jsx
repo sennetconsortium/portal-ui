@@ -1,8 +1,7 @@
 import dynamic from "next/dynamic";
 import {useEffect, useState, useRef} from 'react'
 import PropTypes from 'prop-types'
-import {Button} from 'react-bootstrap';
-import {InputGroup} from 'react-bootstrap';
+import {Button, InputGroup} from 'react-bootstrap';
 import {getDocsRootURL, getIngestEndPoint} from "@/config/config";
 import log from 'xac-loglevel'
 import $ from 'jquery';

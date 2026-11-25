@@ -1,4 +1,3 @@
-import React from 'react';
 import PropTypes from 'prop-types';
 import { getCellTypesIndex } from '@/config/config'
 import { getOrganByCode } from '@/config/organs'
@@ -99,7 +98,7 @@ export default function CellTypeDistribution({ clId }) {
                     style={{ height: 420 }}
                 />
             </div>
-            
+
         </VisualizationsProvider>
     )
 }

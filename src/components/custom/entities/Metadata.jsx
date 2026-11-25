@@ -1,6 +1,6 @@
 import {useContext, useEffect, useRef, useState} from "react";
 import SenNetPopover from '@/components/SenNetPopover';
-import {eq, extractSourceMappedMetadataInfo} from "@/components/custom/js/functions";
+import {datasetIs, eq, extractSourceMappedMetadataInfo, objIsNotEmpty} from "@/components/custom/js/functions";
 import SenNetAccordion from "@/components/custom/layout/SenNetAccordion";
 import Tab from 'react-bootstrap/Tab';
 import Nav from 'react-bootstrap/Nav';
@@ -12,7 +12,6 @@ import * as d3 from "d3";
 import {ViewHeaderBadges} from "@/components/custom/layout/entity/ViewHeaderBadges";
 import log from 'xac-loglevel';
 import { getProvenanceMetadata } from "@/lib/services";
-import {datasetIs, objIsNotEmpty} from "@/components/custom/js/functions";
 
 /**
  * Component that displays metadata information.

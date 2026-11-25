@@ -1,5 +1,4 @@
 import PropTypes from "prop-types"
-import React from 'react'
 import * as d3 from 'd3';
 import { transition } from 'd3-transition';
 import { useContext, useEffect, useRef } from 'react'
@@ -44,7 +43,7 @@ function StackedBar({
     const buildChart = () => {
 
         const groups = data.map(d => (d?.group))
-   
+
         const sizing = handleSvgSizing(style, chartId, chartType)
         const rotateLabels = xAxis.rotateLabels || sizing.isMobile
 
@@ -57,12 +56,12 @@ function StackedBar({
         const g = svg
             .append("g")
             .attr("transform", `translate(${sizing.margin.left * 1.5},${sizing.margin.top})`)
-    
+
         subGroupLabels = getSubgroupLabels(data, subGroupLabels)
 
         const subgroups = Object.keys(subGroupLabels)
 
-        
+
 
         const _minY = yAxis.minY || (yAxis.scaleLog ? 1 : 0)
 
@@ -79,7 +78,7 @@ function StackedBar({
         // Add Y axis
         const {y, ticks, minY, minRange} = svgAppend({}).yAxis({data, g, yAxis, sizing, maxY})
 
-        svgAppend({xAxis, yAxis}).axisLabels({svg, sizing})   
+        svgAppend({xAxis, yAxis}).axisLabels({svg, sizing})
 
         svgAppend({}).grid({g, y, hideGrid: yAxis.hideGrid, ticks, sizing})
 
@@ -91,7 +90,7 @@ function StackedBar({
         const _tooltipValFormatter = (ops) => tooltipValFormatter({...ops, xAxis})
 
         const getSubgroupLabel = (v) => subGroupLabels[v] || v
-      
+
         // Show the bars
         g.append("g")
             .selectAll("g")
@@ -116,7 +115,7 @@ function StackedBar({
                 return getSubgroupLabel(d.key)
             })
             .attr("class", d => `bar--${getSubgroupLabel(d.key)?.toDashedCase()} ${style.highlight === d.key ? 'bar--highlighted' : ''}`)
-            
+
             .attr("x", d => x(d.data.group))
             .attr("y", d => {
               return y(minY)
@@ -144,7 +143,7 @@ function StackedBar({
                 const x = d[0] == _minY ? minRange : y(d[0] || minY)
                 return x - y(d[1])
             })
-          
+
 
         return svg.node();
     }
