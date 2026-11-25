@@ -53,6 +53,7 @@ export default function NavbarDrawer({
                             >
                                 {items.map(item => (
                                     <ListItemButton
+                                        disabled={item.disabled}
                                         key={item.label}
                                         onClick={() =>
                                             handleItemClick(item)
