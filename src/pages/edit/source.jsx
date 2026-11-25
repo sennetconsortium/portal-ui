@@ -1,5 +1,5 @@
 import dynamic from "next/dynamic";
-import React, {useContext, useEffect, useRef, useState} from "react";
+import {useContext, useEffect, useRef} from "react";
 import {useRouter} from 'next/router';
 import Alert from 'react-bootstrap/Alert';
 import Button from 'react-bootstrap/Button';
@@ -19,8 +19,6 @@ const EntityHeader = dynamic(() => import('@/components/custom/layout/entity/Hea
 const EntityFormGroup = dynamic(() => import('@/components/custom/layout/entity/FormGroup'))
 const GroupSelect = dynamic(() => import("@/components/custom/edit/GroupSelect"))
 const Header = dynamic(() => import("@/components/custom/layout/Header"))
-const ImageSelector = dynamic(() => import("@/components/custom/edit/ImageSelector"))
-const SenNetAlert = dynamic(() => import("@/components/SenNetAlert"))
 const SourceType = dynamic(() => import("@/components/custom/edit/source/SourceType"))
 
 function EditSource() {
@@ -36,15 +34,13 @@ function EditSource() {
         showModal,
         selectedUserWriteGroupUuid,
         disableSubmit, setDisableSubmit,
-        entityForm, disabled, imageDisabled,
+        entityForm,
         getMetadataNote, checkProtocolUrl,
         warningClasses, getCancelBtn
     } = useContext(EntityContext)
-    const {_t, filterImageFilesToAdd, cache, getPreviewView} = useContext(AppContext)
+    const {_t, cache, getPreviewView} = useContext(AppContext)
 
     const router = useRouter()
-    const [source, setSource] = useState(null)
-    const [imageByteArray, setImageByteArray] = useState([])
     const alertStyle = useRef('info')
 
     // only executed on init rendering, see the []
@@ -94,7 +90,6 @@ function EditSource() {
             }
         } else {
             setData(null);
-            setSource(null)
         }
     }, [router]);
 
@@ -114,8 +109,6 @@ function EditSource() {
                 values['group_uuid'] = selectedUserWriteGroupUuid
             }
 
-            filterImageFilesToAdd(values)
-
             // Remove empty strings
             let json = cleanJson(values);
             let uuid = data.uuid
@@ -131,22 +124,11 @@ function EditSource() {
                 if (response.image_files) {
                     setValues(prevState => ({...prevState, image_files: response.image_files}))
                 }
-                if (values.image_files_to_add) {
-                    delete values.image_files_to_add
-                }
-                if (values.image_files_to_remove) {
-                    delete values.image_files_to_remove
-                }
-                setImageByteArray([])
             }).catch((e) => log.error(e))
         }
 
         setValidated(true);
     };
-
-    const supportsMetadata = () => {
-        return values.source_type === cache?.sourceTypes?.Mouse
-    }
 
     const curatorHandledMetadata = () => {
         return eq(values.source_type, cache?.sourceTypes?.Human)
@@ -282,17 +264,6 @@ function EditSource() {
 
                                     {metadataNote() &&
                                         <Alert variant={alertStyle.current}><span>{metadataNote()}</span></Alert>}
-
-                                    {/* Deidentify images warning */}
-                                    <SenNetAlert className='deidentify-alert'
-                                                 text='Upload de-identified images only'/>
-
-                                    {/* Images */}
-                                    <ImageSelector isDisabled={imageDisabled} editMode={editMode}
-                                                   values={values}
-                                                   setValues={setValues}
-                                                   imageByteArray={imageByteArray}
-                                                   setImageByteArray={setImageByteArray}/>
 
                                     <div className={'d-flex flex-row-reverse'}>
                                         {getCancelBtn('source')}

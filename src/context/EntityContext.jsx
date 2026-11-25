@@ -1,4 +1,4 @@
-import React, {createContext, useEffect, useState, useContext, useRef, useEffectEvent} from 'react'
+import {createContext, useEffect, useState, useContext, useRef, useEffectEvent} from 'react'
 import { useRouter } from 'next/router'
 import {
     getAuthJsonHeaders,
@@ -44,7 +44,6 @@ export const EntityProvider = ({ children }) => {
 
     const entityForm = useRef(null)
     const [disabled, setDisabled] = useState(true)
-    const [imageDisabled, setImageDisabled] = useState(false)
 
     const [response, setResponse] = useState()
     const [warningClasses, setWarningClasses] = useState({})
@@ -177,14 +176,13 @@ export const EntityProvider = ({ children }) => {
     const updateBaseOnMode = useEffectEvent(() => {
         if (data !== null && isEditMode()) {
             setDisabled(isPublic())
-            setImageDisabled(isPublic())
             const el = document.getElementById('__next')
             log.debug('useEffect observable', el)
             observePage(el, observeForm)
         }
     })
 
-    
+
     useEffect(() => {
        updateBaseOnMode()
     }, [data, editMode])
@@ -321,7 +319,7 @@ export const EntityProvider = ({ children }) => {
         setModalTitle(<span><span className={'title-text'}>Validating {titleTopic} ...</span></span>)
         setModalBody(body)
     }
-    
+
     const setSubmissionModal = (body, hasError, entityType = 'dataset') => {
         const icon = hasError ? errIcon() : successIcon()
         setHasSubmissionError(hasError)
@@ -457,7 +455,7 @@ export const EntityProvider = ({ children }) => {
                 values, setValues,
                 errorMessage, setErrorMessage,
                 validated, setValidated,
-                handleClose, handleHome, 
+                handleClose, handleHome,
                 showModal, setShowModal,
                 modalBody, setModalBody,
                 modalTitle, setModalTitle, setAllModalDetails,
@@ -467,7 +465,7 @@ export const EntityProvider = ({ children }) => {
                 getEntityConstraints, getSampleEntityConstraints, buildConstraint,
                 getMetadataNote, successIcon, errIcon, checkProtocolUrl,
                 warningClasses, setWarningClasses, getCancelBtn, setModalProps, handleValidate,
-                isAdminOrHasValue, getAssignedToGroupNames, entityForm, disabled, setDisabled, disableElements, imageDisabled,
+                isAdminOrHasValue, getAssignedToGroupNames, entityForm, disabled, setDisabled, disableElements,
                 contactsTSV, contacts, setContacts, contributors, setContributors, setContactsAttributes, setContactsAttributesOnFail
             }}
         >

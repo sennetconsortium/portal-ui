@@ -1,5 +1,5 @@
 import PropTypes from "prop-types"
-import React, {createContext, useEffect, useState} from 'react'
+import {createContext, useEffect, useState} from 'react'
 import {useRouter} from 'next/router'
 import {eq} from '@/components/custom/js/functions'
 import {deleteCookie, getCookie, setCookie} from 'cookies-next'
@@ -193,18 +193,6 @@ export const AppProvider = ({banners, children}) => {
         return msg
     }
 
-    const filterImageFilesToAdd = values => {
-        if (!values.image_files_to_add) {
-            return
-        }
-        const filtered = values.image_files_to_add.filter(i => i.temp_file_id !== undefined)
-        if (filtered.length !== 0) {
-            values['image_files_to_add'] = filtered
-        } else {
-            delete values.image_files_to_add
-        }
-    }
-
     const supportedMetadata = () => {
         if (!cache) {
             return {}
@@ -311,7 +299,6 @@ export const AppProvider = ({banners, children}) => {
                 cache,
                 banners,
                 router,
-                filterImageFilesToAdd,
                 supportedMetadata,
                 handleSidebar,
                 sidebarVisible,
