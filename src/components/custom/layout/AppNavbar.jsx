@@ -182,16 +182,9 @@ const AppNavbar = ({hidden, signoutHidden, innerRef}) => {
                                         }
                                         style={{cursor: 'pointer'}}
                                     >
-                                        Register Entity
+                                        Register
                                     </Nav.Link>
                                 )}
-                                <Nav.Link hidden={hidden || !isLoggedIn()} key={`submenuItem-md-all`}
-                                          href={`/edit/bulk/metadata`}
-                                          id={'nav-dropdown--upload-metadata'}
-                                          className={'is-subItem'}>
-                                    <span>Upload metadata</span>
-                                </Nav.Link>
-
 
                                 {isLoggedIn() ?
                                     (
@@ -340,10 +333,10 @@ const AppNavbar = ({hidden, signoutHidden, innerRef}) => {
                     setRegistatrationDrawerOpen(false)
                 }
                 anchor="right"
-                title="Register Entity"
+                title="Register"
                 sections={[
                     {
-                        title: 'Single',
+                        title: 'Single Entity',
                         items: [
                             ...supportedSingleRegister().map(
                                 entity => ({
@@ -372,7 +365,7 @@ const AppNavbar = ({hidden, signoutHidden, innerRef}) => {
                     },
 
                     {
-                        title: 'Bulk',
+                        title: 'Bulk Entities',
                         items:
                             supportedBulkRegister().map(
                                 entity => ({
@@ -390,6 +383,15 @@ const AppNavbar = ({hidden, signoutHidden, innerRef}) => {
                                     )
                                 })
                             )
+                    },
+                    {
+                        title: 'Upload',
+                        items: [
+                            {
+                                label: 'Metadata',
+                                href: '/edit/bulk/metadata'
+                            }
+                        ]
                     }
                 ]}
             />
