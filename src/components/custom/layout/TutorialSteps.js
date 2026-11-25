@@ -72,7 +72,7 @@ function TutorialSteps(loggedIn, name = "app") {
     ]
     if (loggedIn) {
         _steps.push({
-            element: '#nav-dropdown',
+            element: '#app-nav-register',
             popover: {
                 title: `Registering entities`,
                 description:
@@ -81,7 +81,7 @@ function TutorialSteps(loggedIn, name = "app") {
         })
 
         _steps.push({
-            element: '#nav-dropdown--upload-metadata',
+            element: '#app-nav-register',
             popover: {
                 title: `Bulk uploading metadata`,
                 description: "<span>Select this menu to bulk upload metadata. <br/> <small class='text-muted'>Note: You may also upload metadata for a single entity during registration. See previous step for details.</small>"
