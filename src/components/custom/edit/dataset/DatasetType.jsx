@@ -33,7 +33,7 @@ export default function DatasetType({datasetTypes, data, label, labelDescription
                                      value={
                                          dataValue
                                              ? (values?.[dataValue] ?? data?.[dataValue] ?? '')
-                                             : (values?.source_type ?? data?.dataset_type ?? '')
+                                             : (values?.dataset_type ?? data?.dataset_type ?? '')
                                      }>
                             <option value="">----</option>
                             {[...(datasetTypes || [])]
