@@ -1,5 +1,5 @@
 import PropTypes from "prop-types"
-import React, {createContext, useEffect, useState} from 'react'
+import {createContext, useEffect, useState} from 'react'
 import {useRouter} from 'next/router'
 import {eq} from '@/components/custom/js/functions'
 import {deleteCookie, getCookie, setCookie} from 'cookies-next'
@@ -148,7 +148,7 @@ export const AppProvider = ({banners, children}) => {
     }
 
     const deleteTutorialCookies = () => {
-        console.log(tutorialCookieKey)
+        log.debug(tutorialCookieKey)
         deleteCookie(`${tutorialCookieKey}app_true`)
         deleteCookie(`${tutorialCookieKey}app_false`)
         deleteCookie(`${tutorialCookieKey}searchActions_true`)

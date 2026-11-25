@@ -1,5 +1,5 @@
 import PropTypes from "prop-types"
-import React, {createContext, useCallback, useContext, useRef, useState} from "react";
+import {createContext, useCallback, useContext, useRef, useState} from "react";
 import $ from 'jquery';
 import log from 'xac-loglevel'
 import {datasetIs, fetchEntity, getDatasetTypeDisplay} from "@/components/custom/js/functions";
@@ -73,7 +73,7 @@ export const DerivedProvider = ({children, showVitessceList, setShowVitessceList
             } else {
                 // Call `/prov-info` and check if processed datasets are returned
                 const prov_info = await getProvInfo(data.uuid)
-                console.log(prov_info)
+                log.debug(prov_info)
                 if (Object.keys(prov_info).length) {
                     const processed_datasets = prov_info['processed_dataset_uuid']
                     const processed_dataset_statuses = prov_info['processed_dataset_status']

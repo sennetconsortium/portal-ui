@@ -56,7 +56,7 @@ function MyApp({Component, pageProps}) {
                     entities: cacheData.entities
                 })
             } catch (error) {
-                console.error(error)
+                log.error(error)
             }
         }
 

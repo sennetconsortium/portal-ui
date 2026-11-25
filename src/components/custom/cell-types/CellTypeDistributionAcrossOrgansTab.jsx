@@ -1,5 +1,5 @@
 import PropTypes from "prop-types"
-import React, {useState, memo} from 'react'
+import {useState, memo} from 'react'
 import CellTypeDistributionAcrossOrgansLayout from './CellTypeDistributionAcrossOrgansLayout'
 import { VisualizationsProvider } from '@/context/VisualizationsContext'
 import ChartContainer from '../visualizations/ChartContainer'
@@ -7,6 +7,7 @@ import { formatNum, percentage } from '../js/functions'
 import { prepareOverlapData } from '../visualizations/charts/OverlappedBar'
 import * as d3 from 'd3';
 import $ from 'jquery';
+import log from 'xac-loglevel'
 
 /**
  * @param {object} organ The current organ
@@ -62,7 +63,7 @@ const CellTypeDistributionAcrossOrgansTab = memo(({organ, tabData, cell}) => {
       </div>`
 
       ops.tooltip.getD3(ops.id)
-          .html(html) 
+          .html(html)
           .attr('data-left', ops.xPos)
           .attr('class', 'c-visualizations__tooltip c-visualizations__tooltip--flexWidth c-visualizations__tooltip--multiLine')
           .style('left', ops.xPos - 40 + 'px')
@@ -91,8 +92,7 @@ const CellTypeDistributionAcrossOrgansTab = memo(({organ, tabData, cell}) => {
       const borderRadiusOnTooltipDiv = 5
       const distance = getDistanceBetweenElements($el[0], ops.e.currentTarget)
       $el[0].style.setProperty('--tooltip-left', distance - borderRadiusOnTooltipDiv - ($(ops.e.currentTarget).width() * .1)   + 'px')
-      console.log(distance)
-   
+      log.debug(distance)
   }
 
   const onRectClick = (eventData) => {
@@ -117,7 +117,7 @@ const CellTypeDistributionAcrossOrgansTab = memo(({organ, tabData, cell}) => {
             transform: 'translate(0, 30)',
             margin: {bottom: 5},
             key: organ._id,
-            height: 70, 
+            height: 70,
             colorScheme: d3.schemeTableau10,
             //colorScale
           }}
@@ -126,7 +126,7 @@ const CellTypeDistributionAcrossOrgansTab = memo(({organ, tabData, cell}) => {
           <CellTypeDistributionAcrossOrgansLayout organ={organ} cell={cell} tabData={tabData} legend={legend}>
           </CellTypeDistributionAcrossOrgansLayout>
       </VisualizationsProvider>
-      
+
     </div>
   )
 });

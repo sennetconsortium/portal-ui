@@ -22,7 +22,7 @@ export default async function handler(req, res) {
         if (id) {
             // need to convert into an ES ready query
             let queryBody = simple_query_builder(key, id, [], excludeProperties)
-            console.log('QUERY', formatMessageForCloudwatch(queryBody))
+            log.debug('QUERY', formatMessageForCloudwatch(queryBody))
             var myHeaders = new Headers();
             if(req.headers.authorization !== undefined) {
                 myHeaders.append("Authorization", req.headers.authorization);
@@ -36,7 +36,7 @@ export default async function handler(req, res) {
             };
             // request("POST", "search", queryBody, getAuth(), getSearchEndPoint()).then(json =>
             //       //adaptResponse(json, this.indexName)
-            //       console.log(json)
+            //       log.debug(json)
             //       //res.status(200).json(json)
             //     )
             await fetch(getSearchEndPoint() + getEntitiesIndex() + "/search", requestOptions)
@@ -66,7 +66,7 @@ export default async function handler(req, res) {
                     }
                 })
                 .catch(error => {
-                    console.log('ERROR IN FIND API...', formatMessageForCloudwatch(error))
+                    log.error('ERROR IN FIND API...', formatMessageForCloudwatch(error))
                     res.status(500).json(error)
                 });
         } else {

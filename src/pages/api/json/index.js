@@ -1,3 +1,4 @@
+import log from 'xac-loglevel'
 
 export default async function handler(req, res) {
 
@@ -11,7 +12,7 @@ export default async function handler(req, res) {
                 res.status(404).json({error: 'Invalid data resource'})
             }
         } catch(e) {
-            console.error('JSON View', e)
+            log.error('JSON View', e)
         }
     }
 

@@ -10,6 +10,7 @@ import {Skeleton} from '@mui/material'
 import {getOrganByCode} from "@/config/organs"
 import {SEARCH_ENTITIES} from '@/config/search/entities'
 import {encodeSearchQueryParam} from "@/search-ui/lib/search-tools"
+import log from 'xac-loglevel'
 
 /**
  * Displays the latest integrated maps in a table.
@@ -76,7 +77,7 @@ function IntegratedMaps({id, title, organ, setShowIntegratedMapsSide = null}) {
                 mouseDict[r.tissue.uberoncode] = mouseDict[r.tissue.uberoncode] || []
                 mouseDict[r.tissue.uberoncode].push(r)
             }
-            console.log(mouseDict)
+            log.debug(mouseDict)
             if (!organ) {
                 // For the main integrated maps page display information for all organs
                 // an array of arrays

@@ -29,8 +29,8 @@ async function getOntologyFromCache(key) {
     try {
         const response = await fetch(url)
         ontology = await response.json()
-    } catch (error) {
-        console.error(`ONTOLOGY API > ${key} cache not initialized`)
+    } catch {
+        log.error(`ONTOLOGY API > ${key} cache not initialized`)
     }
     return ontology
 }

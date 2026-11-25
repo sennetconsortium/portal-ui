@@ -105,7 +105,7 @@ class RUIIntegration extends Component {
         };
 
         rui.register = function (tissueBlockSpatialData) {
-            console.log(tissueBlockSpatialData);
+            log.debug(tissueBlockSpatialData);
             self.props.setRuiLocation(tissueBlockSpatialData);
             self.props.setShowRui(false);
         };

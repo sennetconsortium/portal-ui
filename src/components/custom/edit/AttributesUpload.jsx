@@ -1,5 +1,5 @@
 import dynamic from "next/dynamic";
-import React, {useEffect, useState, useRef} from 'react'
+import {useEffect, useState, useRef} from 'react'
 import PropTypes from 'prop-types'
 import {Button} from 'react-bootstrap';
 import {InputGroup} from 'react-bootstrap';
@@ -54,7 +54,7 @@ export const tableColumns = (d = ['`', '"', "'"]) => [
             }
             let err = handleErrorRow(row)
             err = formatError(err)
-            return <div className="error-details" data-tag="allowRowEvents"><span dangerouslySetInnerHTML={{__html: urlify(err)}} /></div> 
+            return <div className="error-details" data-tag="allowRowEvents"><span dangerouslySetInnerHTML={{__html: urlify(err)}} /></div>
         }
     }
 ]
@@ -100,7 +100,7 @@ export const getErrorList = (details) => {
         log.debug('Metadata errors', data)
 
     } catch (e) {
-        console.error(e)
+        log.error(e)
     }
     return {data, columns: tableColumns()};
 }
@@ -198,7 +198,7 @@ function AttributesUpload({ setAttribute, attribute = 'metadata', ingestEndpoint
             }
             setIsValidating(false)
         } catch(e) {
-            console.error(e)
+            log.error(e)
         }
     }
 
@@ -216,7 +216,7 @@ function AttributesUpload({ setAttribute, attribute = 'metadata', ingestEndpoint
             a.remove()
             window.URL.revokeObjectURL(url)
         } catch (e) {
-            console.error(e)
+            log.error(e)
         }
     }
 

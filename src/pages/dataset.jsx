@@ -547,7 +547,7 @@ export async function getServerSideProps(context) {
                     initialData.doi_url
                 )
             } catch (e) {
-                console.error(
+                log.error(
                     'Failed to fetch citation data',
                     e
                 )

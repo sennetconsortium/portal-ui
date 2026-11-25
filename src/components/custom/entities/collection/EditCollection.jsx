@@ -135,7 +135,7 @@ export default function EditCollection({ collectionType = 'Collection', entities
             } else {
                 // fetch collection data
                 fetchData(router.query.uuid)
-                    .catch(console.error);
+                    .catch(log.error);
             }
         } else {
             setData(null);

@@ -21,11 +21,6 @@ function SampleCategory({
 
     const {cache} = useContext(AppContext)
 
-    useEffect(() => {
-        console.log("===== data", data);
-        console.log("===== sample_categories", sample_categories);
-    }, [data, sample_categories]);
-
     const handleSampleCategoryChange = (e, onChange) => {
         // If sample category is 'Organ' then display the organ type input group
         if (eq(e.target.value, cache?.sampleCategories?.Organ)) {

@@ -10,7 +10,6 @@ function SiteMap() {
 
 export const getServerSideProps = async ({ res, params }) => {
     const { entityType } = params
-    console.log('===============', entityType)
     if (!entityType.endsWith('.xml')) {
         return { notFound: true }
     }

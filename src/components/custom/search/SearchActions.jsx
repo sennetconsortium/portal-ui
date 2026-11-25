@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import Button from '@mui/material/Button';
 import MenuItem from '@mui/material/MenuItem';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-
+import log from 'xac-loglevel'
 import {PagingInfo} from "@elastic/react-search-ui";
 import {autoBlobDownloader, eq, goToTransfers} from "@/components/custom/js/functions";
 import SenNetPopover from "@/components/SenNetPopover";
@@ -83,7 +83,7 @@ function SearchActions({
                 }
             }
         } catch (e) {
-            console.error(e);
+            log.error(e);
         }
 
         return tableDataTSV
@@ -123,11 +123,11 @@ function SearchActions({
             if (!isAll) {
                 for (let f of modalSelectedFiles) {
                     manifestData += `${f.uuid} ${f.path}\n`
-                }  
+                }
             }
-            
+
         } catch (e) {
-            console.error(e);
+            log.error(e);
         }
 
         return manifestData
@@ -259,7 +259,7 @@ function SearchActions({
                 </SenNetPopover>
                 </MenuItem>
             )
-           
+
             i++
         }
         return results
@@ -285,9 +285,9 @@ function SearchActions({
                 if (!ops.excludeHasViz) {
                     if (eq(f.field, 'has_visualization') && f.values.contains('true')) {
                         hasViz = true
-                    } 
+                    }
                 }
-                
+
             }
         }
         for (let e of selectedRows.current) {
@@ -339,19 +339,19 @@ function SearchActions({
         if (actionHandlers.getModalSelectedFiles) {
             for (let l of actionHandlers.getModalSelectedFiles()) {
                 _list.push({
-                    dataset: l.uuid, 
+                    dataset: l.uuid,
                     dataset_type: l.dataset_type,
                     file_path: l.path
                 })
             }
         }
-        
+
         if (inModal) {
             handleOnRowClicked(_list, e)
         } else {
            goToTransfers(_list)
         }
-        
+
     }
 
     const clearSelections = () => {
@@ -409,15 +409,15 @@ function SearchActions({
                 open={open}
                 onClose={handleClose}
             >
-                
-            
-                <NestedMenuItem idPrefix={'export-all'} 
-                parentClassName={'snMenu-item snMenu-item--export'} 
+
+
+                <NestedMenuItem idPrefix={'export-all'}
+                parentClassName={'snMenu-item snMenu-item--export'}
                 parentLabel={<span> Export all to &nbsp;</span>}>{getMenuItems('all')}</NestedMenuItem>
 
-           
-                {hasSelectedRows() && <NestedMenuItem idPrefix={'export-selected'} 
-                parentClassName={'snMenu-item snMenu-item--export'} 
+
+                {hasSelectedRows() && <NestedMenuItem idPrefix={'export-selected'}
+                parentClassName={'snMenu-item snMenu-item--export'}
                 parentLabel={<span> Export selected to &nbsp;</span>}>{getMenuItems()}</NestedMenuItem>}
 
                 {itemEnabled &&
@@ -432,22 +432,22 @@ function SearchActions({
                     </MenuItem>}
 
                     {itemEnabled && eq(context, 'entities') &&
-                        
+
                     <MenuItem className={`snMenu-item ${hasSelectedDatasetsWithViz() ? '' : 'text-disabled'}`}
                               key={`export-all`} onClick={hasSelectedDatasetsWithViz() ? goCompare : undefined}>
                         <ListItemText>
-                            
+
                         <span>Compare Datasets &nbsp;</span>
                             <SenNetPopover
                             text={<span>Select up to 4 datasets of the same <code>Dataset Type</code> to compare the visualizations. You must have <code>Dataset</code> from the <i>Entity Type</i> facet and <code>True</code> from <i>Has Visualization</i> facet selected to enable this option.</span>}>
                             <i className="bi bi-question-circle-fill"></i>
                         </SenNetPopover>
                         </ListItemText>
-                        
+
                     </MenuItem>
                     }
 
-                
+
                 {hasSelectedRows() && <Divider/>}
                 {(hasSelectedRows() || isTransfersEnabled) &&
                     <MenuItem className={'snMenu-item'} onClick={clearSelections}><i

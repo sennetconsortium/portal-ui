@@ -1,5 +1,6 @@
 import { getCookie } from 'cookies-next';
 import { cloneDeep } from 'lodash';
+import log from 'xac-loglevel'
 import { APP_ROUTES } from './constants';
 import { SEARCH_ENTITIES } from "./search/entities";
 
@@ -39,7 +40,7 @@ export function valuesRuiSupported(values, dict) {
             return values.some(supported)
         }
     } catch (e) {
-        console.error(e)
+        log.error(e)
     }
     return false
 }

@@ -1,4 +1,4 @@
-import React, {Fragment, useContext, useEffect, useRef, useState} from 'react';
+import {Fragment, useContext, useEffect, useRef, useState} from 'react';
 import Card from 'react-bootstrap/Card';
 import SenNetAccordion from "@/components/custom/layout/SenNetAccordion";
 import Link from "next/link";
@@ -14,8 +14,7 @@ import InputGroup from 'react-bootstrap/InputGroup';
 import {Tree} from 'primereact/tree';
 import 'primeicons/primeicons.css';
 import PropTypes from "prop-types";
-
-
+import log from 'xac-loglevel'
 
 function FileTreeView({
                           data,
@@ -443,10 +442,10 @@ function FileTreeView({
                     }
                 }
             });
-            console.log("Tree data: " + JSON.stringify(data))
+            log.debug("Tree data: " + JSON.stringify(data))
             setTreeData(data)
         } catch (e) {
-            console.error(e)
+            log.error(e)
         }
     }
 

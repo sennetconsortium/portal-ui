@@ -89,7 +89,7 @@ function EditUpload() {
                 // call the function
                 fetchData(router.query.uuid)
                     // make sure to catch any error
-                    .catch(console.error);
+                    .catch(log.error);
             }
         } else {
             setData(null);

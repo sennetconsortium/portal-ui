@@ -56,15 +56,15 @@ export default async function handler(req, res) {
         } else {
             if (ontologyBackUp && ontologyBackUp.length) {
                 res.status(200).json(ontologyBackUp)
-                return 
+                return
             } else {
-                console.warn(errMsg)
+                log.warn(errMsg)
                 res.status(404).json([])
             }
         }
     } catch (error) {
-        console.error(`ONTOLOGY API`, error)
+        log.error(`ONTOLOGY API`, error)
     }
-    console.warn(errMsg)
+    log.warn(errMsg)
     res.status(404).json([])
 }

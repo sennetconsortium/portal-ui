@@ -242,7 +242,7 @@ export default function AncestorIdsBulkButton({
                         $field.value = userReducedInput.join(',')
                     }
                 } catch (e) {
-                    console.error(e)
+                    log.error(e)
                 }
             }
         }

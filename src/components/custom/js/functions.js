@@ -698,7 +698,7 @@ export const extractSourceSex = (source) => {
             if (metadataObject['grouping_concept_preferred_term'] === 'Sex') {
                 // Check that the value for Sex is Male or Female, otherwise set to `undefined`
                 sex = (metadataObject['preferred_term'] === 'Male' || metadataObject['preferred_term'] === 'Female') ? metadataObject['preferred_term'] : undefined
-                console.log(sex)
+                log.debug(sex)
                 return sex
             }
         })

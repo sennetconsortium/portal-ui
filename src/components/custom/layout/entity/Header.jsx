@@ -8,6 +8,7 @@ import ClipboardCopy from "../../../ClipboardCopy";
 import SenNetAlert from "../../../SenNetAlert";
 import SenNetPopover from "../../../SenNetPopover";
 import {fetchPipelineMessages} from "@/lib/services";
+import log from 'xac-loglevel'
 
 function EntityHeader({entity, data, values, showGroup = true}) {
     const { _t, getGroupName, adminGroup } = useContext(AppContext)
@@ -24,7 +25,7 @@ function EntityHeader({entity, data, values, showGroup = true}) {
             }
         }
 
-        fetchPipelineMessage().catch(console.error);
+        fetchPipelineMessage().catch(log.error);
     }, []);
 
 

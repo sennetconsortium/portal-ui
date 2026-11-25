@@ -1,10 +1,11 @@
 import dynamic from "next/dynamic";
-import React, {useContext} from 'react';
+import {useContext} from 'react';
 import {useRouter} from 'next/router'
 import EntityContext, {EntityProvider} from "@/context/EntityContext";
 import AppContext from "@/context/AppContext";
 import {JobQueueProvider} from "@/context/JobQueueContext";
 import {APP_TITLE} from "@/config/config";
+import log from 'xac-loglevel'
 
 const AppFooter = dynamic(() => import("../../../components/custom/layout/AppFooter"))
 const AppNavbar = dynamic(() => import("../../../components/custom/layout/AppNavbar"))
@@ -48,7 +49,7 @@ export default function EditBulk() {
 
         let supportedEntities = Object.values(cache?.entities ?? {})
         const isSupported = () => {
-            console.log('DETAILS', entityType, subType)
+            log.debug('DETAILS', entityType, subType)
             if (isMetadata) {
                 return true
             } else {

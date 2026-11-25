@@ -1,9 +1,10 @@
 import dynamic from "next/dynamic";
-import React, {createContext, useContext, useEffect, useRef, useState} from 'react'
+import {createContext, useContext, useEffect, useRef, useState} from 'react'
 import {getAuthHeader, getJsonHeader} from "@/lib/services";
 import {getEntityEndPoint} from "@/config/config";
 import {createDownloadUrl, eq} from "@/components/custom/js/functions";
 import AppContext from "./AppContext";
+import log from 'xac-loglevel'
 
 const DataTable = dynamic(() => import('react-data-table-component'), {
   ssr: false,
@@ -134,7 +135,7 @@ export const JobQueueProvider = ({ children }) => {
                 tableDataTSV += "\n"
             }
         } catch (e) {
-            console.error(e);
+            log.error(e);
         }
 
         return createDownloadUrl(tableDataTSV, 'text/tab-separated-values')
@@ -149,7 +150,7 @@ export const JobQueueProvider = ({ children }) => {
 
         let columns = getDefaultModalTableCols(entityType)
 
-        console.log('ENT', entityType, eq(entityType, cache?.entities?.sample))
+        log.debug('ENT', entityType, eq(entityType, cache?.entities?.sample))
         if (eq(entityType, cache?.entities?.sample)) {
             columns.push({
                 name: 'organ_type',

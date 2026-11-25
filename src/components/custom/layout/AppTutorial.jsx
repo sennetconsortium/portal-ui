@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react'
+import {useContext, useEffect, useState} from 'react'
 import {getCookie, setCookie} from "cookies-next";
 import TutorialSteps from "./TutorialSteps";
 import AppContext from "../../../context/AppContext";
@@ -7,6 +7,7 @@ import {Alert} from 'react-bootstrap'
 import {useRouter} from 'next/router'
 import {driver} from "driver.js";
 import "driver.js/dist/driver.css";
+import log from 'xac-loglevel'
 
 function AppTutorial({name = "app", autoStart = false, lastButtonLabel = 'Finish Tutorial', showProgress = true}) {
     const router = useRouter()
@@ -41,7 +42,7 @@ function AppTutorial({name = "app", autoStart = false, lastButtonLabel = 'Finish
 
     useEffect(() => {
         if (steps.length > 0) {
-            console.log('steps', steps)
+            log.debug('steps', steps)
             setDriverObj(driver({
                 popoverClass: 'driverjs-theme',
                 animate: false,

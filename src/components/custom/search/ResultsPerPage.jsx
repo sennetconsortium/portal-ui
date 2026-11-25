@@ -2,12 +2,13 @@ import {RESULTS_PER_PAGE} from "@/config/config";
 import React, {useState} from "react";
 import Select from 'react-select'
 import $ from 'jquery';
+import log from 'xac-loglevel'
 
 export const handleTableControls = () => {
     try {
         //handleCheckAll()
     } catch (e) {
-        console.error(e)
+        log.error(e)
     }
 }
 

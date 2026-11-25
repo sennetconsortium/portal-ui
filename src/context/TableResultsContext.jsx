@@ -101,7 +101,6 @@ export const TableResultsProvider = ({
                 });
             } catch (e) {
                 // Swallow errors silently or log if you prefer:
-                // console.warn('Failed to create RDT theme', e);
             }
         })();
 

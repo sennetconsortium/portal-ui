@@ -25,7 +25,7 @@ export default async function handler(req, res) {
                     results.push({description: filePath})
                 }
             } catch (e) {
-                console.error(e)
+                log.error(e)
                 results.push({description: e})
             }
         }

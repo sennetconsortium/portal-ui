@@ -71,7 +71,7 @@ function ViewSource({initialData, initialError}) {
         }
 
         fetchData(router.query.uuid)
-            .catch(console.error)
+            .catch(log.error)
 
     }, [router.query.uuid])
 

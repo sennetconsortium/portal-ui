@@ -1,5 +1,5 @@
 import dynamic from "next/dynamic";
-import React, {useContext, useEffect, useEffectEvent, useRef, useState} from 'react'
+import {useContext, useEffect, useEffectEvent, useRef, useState} from 'react'
 import PropTypes from 'prop-types'
 import AppContext from "@/context/AppContext";
 import LinearProgress from '@mui/material/LinearProgress';
@@ -667,7 +667,7 @@ function ViewJobs({isAdmin = false}) {
 
     const updateTutorial = useEffectEvent(() => {
         if (steps.length > 0) {
-            console.log('steps', steps)
+            log.debug('steps', steps)
             setDriverObj(
                 driver({
                     popoverClass: 'driverjs-theme',

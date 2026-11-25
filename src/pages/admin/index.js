@@ -10,6 +10,7 @@ import {APP_TITLE} from "@/config/config";
 import {toast} from "react-toastify";
 import Grid from "@mui/material/Grid"
 import AdminContext, {AdminProvider} from "../../context/AdminContext";
+import log from 'xac-loglevel'
 
 const AppFooter = dynamic(() => import("../../components/custom/layout/AppFooter"))
 const AppNavbar = dynamic(() => import("../../components/custom/layout/AppNavbar"))
@@ -37,8 +38,8 @@ function AdminIndex() {
                     error: 'Something went wrong with clearing the cache. 🤯'
                 }
             )
-        } catch (error) {
-            console.error(`ONTOLOGY: cache could not be cleared`)
+        } catch {
+            log.error(`ONTOLOGY: cache could not be cleared`)
         }
         setBusy(false)
     }
