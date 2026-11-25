@@ -1,5 +1,5 @@
 import dynamic from "next/dynamic";
-import {createContext, useContext, useEffect, useRef, useState} from 'react'
+import {createContext, useContext, useRef, useState} from 'react'
 import {getAuthHeader, getJsonHeader} from "@/lib/services";
 import {getEntityEndPoint} from "@/config/config";
 import {createDownloadUrl, eq} from "@/components/custom/js/functions";
@@ -21,11 +21,6 @@ export const JobQueueProvider = ({ children }) => {
     const [file, setFile] = useState(null)
     const [isMetadata, setIsMetadata] = useState(false)
     const [bulkData, setBulkData] = useState(null)
-
-
-    useEffect(() => {
-
-    }, [])
 
     const jobHasFailed = (job) => ['error', 'failed'].contains(job.status)
 
@@ -209,7 +204,7 @@ export const JobQueueProvider = ({ children }) => {
             <p key={'modal-subtitle'}>{sentencePre} <code>{entityType}s'</code> metadata were {getVerb(true, true)}.</p>
         )
 
-        let {typeCol, labIdCol} = getColNames(entityType)
+        let {labIdCol} = getColNames(entityType)
         let columns = getDefaultModalTableCols(entityType)
 
         if (data.passes.length) {

@@ -32,13 +32,7 @@ export default async function handler(req, res) {
                 method: 'POST',
                 headers: myHeaders,
                 body: JSON.stringify(queryBody)
-                //redirect: 'follow'
             };
-            // request("POST", "search", queryBody, getAuth(), getSearchEndPoint()).then(json =>
-            //       //adaptResponse(json, this.indexName)
-            //       log.debug(json)
-            //       //res.status(200).json(json)
-            //     )
             await fetch(getSearchEndPoint() + getEntitiesIndex() + "/search", requestOptions)
                 .then(response => response.json())
                 .then(result => {
