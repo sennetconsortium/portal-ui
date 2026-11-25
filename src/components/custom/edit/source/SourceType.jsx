@@ -33,8 +33,8 @@ function SourceType({data, dataValue, onChange, label, labelDescription, values,
                              }}
                              value={
                                  dataValue
-                                     ? (values?.[dataValue] ?? '')
-                                     : (values?.source_type ?? '')
+                                     ? (values?.[dataValue] ?? data?.[dataValue] ?? '')
+                                     : (values?.source_type ?? data?.source_type ?? '')
                              }>
                     <option value="">----</option>
                     {Object.entries(cache?.sourceTypes || {}).map(op => {
